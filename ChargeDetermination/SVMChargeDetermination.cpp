@@ -1028,7 +1028,7 @@ namespace Engine
 				{
 					throw toCatch ; 
 				}
-				catch(const exception &toCatch)
+				catch(const std::exception &toCatch)
 				{
 					throw toCatch.what() ; 
 				}

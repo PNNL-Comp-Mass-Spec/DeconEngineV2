@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="DeconEngine"
+	Name="DeconEngineV2"
 	ProjectGUID="{1A747672-EF23-475B-8945-F065B7EDFEEE}"
 	RootNamespace="DeconEngine"
 	Keyword="ManagedCProj"
@@ -50,9 +50,10 @@
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				StructMemberAlignment="3"
+				TreatWChar_tAsBuiltInType="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 				CallingConvention="0"
 			/>
 			<Tool
@@ -66,10 +67,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mscoree.lib msvcrtd.lib Ws2_32.lib xerces-c_2.lib"
+				AdditionalDependencies="mscoree.lib msvcrtd.lib Ws2_32.lib xerces-c_2.lib msvcrt.lib xerces-c_2D.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\lib&quot;;&quot;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\lib&quot;;C:\Projects\Decon2LS\DeconEngine\bin"
+				AdditionalLibraryDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\lib&quot;"
 				ForceSymbolReferences="__DllMainCRTStartup@12"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -124,12 +125,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Zl"
 				AdditionalIncludeDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\include\&quot;;&quot;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;MASSLYNX_4_INSTALLED;ANALYST_INSTALLED;XCALIBUR_INSTALLED"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				StructMemberAlignment="3"
+				TreatWChar_tAsBuiltInType="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -145,7 +146,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/noentry"
 				AdditionalDependencies="mscoree.lib msvcrt.lib Ws2_32.lib xerces-c_2.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
@@ -212,12 +212,6 @@
 		<AssemblyReference
 			RelativePath=".\Library\UIMFLibrary2003.dll"
 			AssemblyName="UIMFLibrary2003, Version=0.0.0.0, processorArchitecture=MSIL"
-			CopyLocal="false"
-			MinFrameworkVersion="0"
-		/>
-		<AssemblyReference
-			RelativePath=".\Library\YafmsLibrary.dll"
-			AssemblyName="YafmsLibrary, Version=0.0.0.0, processorArchitecture=MSIL"
 			CopyLocal="false"
 			MinFrameworkVersion="0"
 		/>
@@ -471,10 +465,6 @@
 					RelativePath=".\Readers\UIMFRawData.cpp"
 					>
 				</File>
-				<File
-					RelativePath=".\Readers\YafmsRawData.cpp"
-					>
-				</File>
 				<Filter
 					Name="RAMP"
 					>
@@ -541,10 +531,6 @@
 				</File>
 				<File
 					RelativePath=".\Readers\UIMFRawData.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Readers\YafmsRawData.h"
 					>
 				</File>
 				<Filter

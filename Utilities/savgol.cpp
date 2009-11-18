@@ -155,7 +155,7 @@ namespace Engine
 			sum=b[0];
 			fac=1.0;
 			for(mm=1;mm<=m;mm++) sum += b[mm]*(fac *= k);
-			kk=((np-k) % np)+1;
+			int kk=((np-k) % np)+1;
 			c[kk]=sum;
 		}
 		return 0;

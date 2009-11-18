@@ -411,7 +411,7 @@ namespace Engine
 			}
 			else
 			{
-				if (num_pts <= 0 || num_pts > mint_num_points_in_scan*pow(2,mshort_num_zeros))
+				if (num_pts <= 0 || num_pts > mint_num_points_in_scan * pow((float)2,(float)mshort_num_zeros))
 					num_pts = mint_num_points_in_scan*(1<<mshort_num_zeros) ; 
 				memcpy((char *)mptr_data, (char *)mptr_data_copy, num_pts) ; 
 			}

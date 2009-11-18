@@ -21,7 +21,7 @@
 //ExploreDataObjectsps.dll
 #ifdef ANALYST_INSTALLED
 
-#import "..\bin\exploredataobjects.dll"
+#import "..\Library\exploredataobjects.dll"
 
 #include <map> 
 

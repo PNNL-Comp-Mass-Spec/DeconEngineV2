@@ -2071,7 +2071,7 @@ namespace Engine
 					delete parser ; 
 					throw toCatch ; 
 				}
-				catch(const exception &toCatch)
+				catch(const std::exception &toCatch)
 				{
 					SetDefaultIsotopeDistribution() ; 
 					delete parser ; 

@@ -15,10 +15,10 @@ namespace Engine
 {
 	namespace Exception
 	{
-		class InterpolationException : public exception
+		class InterpolationException : public std::exception
 		{
 		public:
-			InterpolationException(const char* const &mesg): exception(mesg)
+			InterpolationException(const char* const &mesg): std::exception(mesg)
 			{
 			}; 
 			~InterpolationException() 

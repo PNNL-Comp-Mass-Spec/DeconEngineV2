@@ -451,7 +451,8 @@ namespace Engine
 			}
 			else
 			{
-				for (int chNum = 0; chNum < 512; chNum++)
+				int chNum;
+				for (chNum = 0; chNum < 512; chNum++)
 				{
 					if (ch_filter[chNum] == '@')
 					{

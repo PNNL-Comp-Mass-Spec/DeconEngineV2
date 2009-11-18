@@ -16,6 +16,9 @@
 #include <io.h>
 #include <fcntl.h>
 #include <float.h> 
+#include <stdio.h>
+#include <errno.h>
+
 
 namespace Engine 
 {
@@ -176,7 +179,7 @@ namespace Engine
 			// Now we need to get the size of the data so we can find out the number of scans. 
 			int fh;
 			fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
-			if (fh == ENOENT || fh == -1 )
+			if (fh ==  ENOENT || fh == -1 )
 			{
 				// try using the fid extention instead of the .ser business.
 				int len = strlen(marr_serName) ; 
@@ -308,7 +311,9 @@ namespace Engine
 			int n = mobj_calibrator->GetRawPointsApplyFFT(marr_temp_data_block, mzs, intensities, num_pts) ; 
 			// lets only take points whose mz is less than MAX_MZ.
 			// these are going to be sorted so just start at the right end. 
-			for (int pt_num = 0 ; pt_num < num_pts ; pt_num++)
+			
+			int pt_num;
+			for (pt_num = 0 ; pt_num < num_pts ; pt_num++)
 			{
 				if((*mzs)[pt_num] > MAX_MZ)
 					break ; 

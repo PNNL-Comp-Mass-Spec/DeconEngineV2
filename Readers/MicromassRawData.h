@@ -17,7 +17,7 @@
 // Also make sure that DacServer.dll exists in c:\Masslynx or change the path
 // below accordingly. 
 #ifdef MASSLYNX_4_INSTALLED
-#import "..\bin\DacServer.dll"
+#import "..\Library\DacServer.dll"
 #endif
 
 namespace Engine {

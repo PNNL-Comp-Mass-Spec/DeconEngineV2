@@ -34,7 +34,7 @@
 //XRawfile2.dll
 
 #ifdef XCALIBUR_INSTALLED
-#import "..\bin\xrawfile2.dll"
+#import "..\Library\xrawfile2.dll"
 
 #include <iostream>
 #include <hash_map>

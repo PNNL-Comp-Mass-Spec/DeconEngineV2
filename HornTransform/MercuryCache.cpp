@@ -231,7 +231,7 @@ namespace Engine
 			
 		}
 
-		inline MercuryCache::GetIsotopeDistributionCachedAtPosition(int position, short charge, 
+		inline int MercuryCache::GetIsotopeDistributionCachedAtPosition(int position, short charge, 
 			double FWHM, double min_theoretical_intensity, std::vector<double> &mzs, std::vector<double> &intensities)
 		{
 			
@@ -330,7 +330,9 @@ namespace Engine
 							intensities.push_back(intensity_calc) ; 
 						}
 					}
+		
 				}
+				return 0;
 		}
 		bool MercuryCache::GetIsotopeDistributionCached(double observed_most_abundant_mass, short charge, double FWHM, 
 			double min_theoretical_intensity, std::vector<double>&mzs, std::vector<double>&intensities)

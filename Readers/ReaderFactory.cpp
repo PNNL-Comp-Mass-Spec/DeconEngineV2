@@ -20,7 +20,7 @@
 #include "MZXmlRawData.h" 
 #include "IMSRawData.h" 
 #include "UIMFRawData.h" 
-#include "YafmsRawData.h"
+//#include "YafmsRawData.h"
 
 namespace Engine 
 {
@@ -101,11 +101,11 @@ namespace Engine
 					uimf_raw_data->Load(file_name) ; 
 					return uimf_raw_data ; 
 					break ; 
-				case YAFMS:
+			/*	case YAFMS:
 					YafmsRawData *yafms_raw_data ; 
 					yafms_raw_data = new YafmsRawData() ; 
 					yafms_raw_data->Load(file_name) ; 
-					return yafms_raw_data ; 
+					return yafms_raw_data ; */
 					break ; 
 				default:
 					break ; 
@@ -159,10 +159,10 @@ namespace Engine
 					*raw_data = new UIMFRawData() ; 
 					return ;
 					break ; 
-				case YAFMS:
+				/*case YAFMS:
 					*raw_data = new YafmsRawData() ; 
 					return ;
-					break ; 
+					break ; */
 				case BRUKER_ASCII:
 					*raw_data = new BrukerAsciiRawData() ; 
 					return ; 
@@ -231,11 +231,11 @@ namespace Engine
 					uimf_raw_data = new UIMFRawData() ; 
 					return uimf_raw_data ; 
 					break ; 
-				case YAFMS:
+			/*	case YAFMS:
 					YafmsRawData *yafms_raw_data ; 
 					yafms_raw_data = new YafmsRawData() ; 
 					return yafms_raw_data ; 
-					break ; 
+					break ; */
 				case BRUKER_ASCII:
 					BrukerAsciiRawData *bruker_baf_raw_data ; 
 					bruker_baf_raw_data = new BrukerAsciiRawData() ; 
