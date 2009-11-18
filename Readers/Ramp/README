@@ -1,0 +1,4 @@
+RAMP (Random Access Minimal Parser)
+
+RAMP is a non-sequential parser for mzXML instance documents.
+For an example of the use of RAMP please take a look at readmzXML.

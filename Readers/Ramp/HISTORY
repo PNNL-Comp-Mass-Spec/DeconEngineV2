@@ -1,0 +1,13 @@
+1.1
+
+-Improved precursorMz parsing
+-Add check of sizeof(off_t) to determine whether to call atoll or atol
+-Added functions to read MS instrument info
+-Added readStartMz ; readEndMz
+-Added startMz and endMz to readRunHeader
+-Fixed highMZ bug in readRunHeader
+
+
+1.0
+
+-Initial release

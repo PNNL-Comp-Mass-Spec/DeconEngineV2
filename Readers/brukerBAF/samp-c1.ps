@@ -1,0 +1,252 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: SAMPLE - "Conventional" RIC
+%%BoundingBox: 52 60 557 425
+%%DocumentFonts: Times-Roman Helvetica-Bold
+%%Creator: MSGraph Release 2.0 by J. Hau <joerg.hau(at)dplanet.ch>
+%%Pages: 1 1
+%%EndComments
+%%BeginProlog
+/bd { bind def } bind def
+/M  { moveto } bd
+/L  { lineto } bd
+/RM { rmoveto } bd
+/RL { rlineto } bd
+/S  { stroke } bd
+/N  { newpath } bd
+/G  { setgray } bd
+/C  { setrgbcolor } bd
+/CP { closepath fill S N } bd
+/GS { gsave } bd
+/GR { grestore } bd
+/R  { /ob exch def
+          % Rectangle
+      /re exch def
+      /un exch def
+      /li exch def
+  	li un M li ob L re ob L re un L CP } bd
+/Font   { exch findfont exch scalefont setfont } bd
+/Fontht { currentfont /FontMatrix get 3 get 1000 mul } bd
+/SetFreq { currentscreen 3 -1 roll pop	setscreen } bd
+/CenterText    { dup stringwidth pop 2 div neg 0 RM show } bd
+/RightText     { dup stringwidth pop neg 0 RM show } bd
+/LeftText      { show } bd
+/Skala { %Creates tick marks for axis.
+         %Usage: Start End Unit LabelUnit PSUnit (Title) Direction Skala
+/horiz exch def                 % get flag
+/titel exch def                 % get label
+/psunit exch def                % get PS interval for 1 user unit
+/labelunit exch def             % get label interval in user coords
+/unit exch def                  % get smallest interval of user coords
+/ende exch def                  % get endpoint of user coords
+/start exch def                 % get startpoint of user coords
+/buffer 10 string def           % def buffer for string conversion
+/tick Fontht -1 mul def         % def length of tick marker
+/label start def                % set first label to start value
+/ende ende unit sub def         % avoid to run out of the image
+start unit ende                 % loop from (start) to (ende) with increment (step)
+  {                                      % beginning of loop
+  /laenge tick 0.25 mul def              % set length of smallest tick mark
+  dup                                    % duplicate cnt for use in next line
+  labelunit unit mul mod 0 eq            % is cnt mult. of labelunit?
+    {/laenge tick 0.5 mul def} if        % if yes, increase length of tick mark
+  GS horiz 0 eq {0 laenge RL S} {laenge 0 RL S} ifelse GR      % draw tick mark
+  label labelunit mod 0 eq
+     { GS
+       horiz 0 eq {0 tick 1.5 mul RM} {tick 0 RM} ifelse
+       label buffer cvs                               % convert cnt to string
+       horiz 0 eq {CenterText} {RightText} ifelse     % and print
+       GR
+     } if
+    /label label unit add def    % increase label
+    horiz 0 eq {psunit unit mul 0 RM} {0 psunit unit mul RM} ifelse
+    pop                          % clear stack
+  } for                          % that's the loop
+ horiz 0 eq {0 tick 1.5 mul RM} {tick 0 RM} ifelse
+ titel RightText
+} bd
+/tief { 0 Fontht 3 div neg RM
+        0.8 0.8 scale show 1.25 1.25 scale
+        0 Fontht 3 div RM } bd
+/hoch { 0 Fontht 3 div RM
+        0.8 0.8 scale show 1.25 1.25 scale
+        0 Fontht 3 div neg RM } bd
+%%EndProlog
+0 0 M N
+/Helvetica-Bold 12.0 Font
+85 402 M ("Conventional" RIC) show
+/Times-Roman 9.0 Font
+0.0 setlinewidth
+0 G
+85 373 M (SAMPLE: m/z 150 > 410.) show
+%Draw right axis
+539.8 85.2 M 539.8 351.3 L S N 
+%Draw top of box
+85.2 360.3 M
+85.2 369.3 L
+539.8 369.3 L
+539.8 360.3 L S N
+%Create x-axis
+85.2 85.2 M
+0 132 1 20 3.44352 (scan) 0 Skala
+539.772 63.6271 M (min) RightText
+85.2 63.6 M
+(0:00) CenterText
+154.2 63.6 M
+(1:44) CenterText
+223.3 63.6 M
+(3:28) CenterText
+292.3 63.6 M
+(5:12) CenterText
+361.3 63.6 M
+(6:56) CenterText
+430.3 63.6 M
+(8:40) CenterText
+499.4 63.6 M
+(10:24) CenterText
+85.2 85.2 M 539.8 85.2 L
+%Create y-axis
+85.2 85.2 M
+0 699 10 100 0.380673 (Inty) 1 Skala
+85.2 85.2 M 85.2 351.3 L
+S N
+0.5 setlinewidth
+%Display of data starts here
+85.23 109.30 M
+88.68 167.76 L
+92.13 128.02 L
+95.58 136.43 L
+99.03 129.93 L
+102.48 116.94 L
+105.93 157.06 L
+109.38 123.82 L
+112.84 176.93 L
+116.29 146.36 L
+119.74 160.50 L
+123.19 144.45 L
+126.64 122.29 L
+130.09 192.22 L
+133.54 126.11 L
+136.99 157.83 L
+140.44 134.14 L
+143.90 165.47 L
+147.35 152.48 L
+150.80 146.36 L
+154.25 161.27 L
+157.70 200.62 L
+161.15 128.40 L
+164.60 176.17 L
+168.05 178.46 L
+171.50 164.32 L
+174.96 147.13 L
+178.41 168.91 L
+181.86 163.56 L
+185.31 115.03 L
+188.76 148.27 L
+192.21 137.96 L
+195.66 142.54 L
+199.11 131.46 L
+202.56 187.63 L
+206.02 148.66 L
+209.47 152.10 L
+212.92 182.66 L
+216.37 232.72 L
+219.82 185.34 L
+223.27 225.46 L
+226.72 203.68 L
+230.17 171.96 L
+233.62 150.18 L
+237.08 156.30 L
+240.53 157.06 L
+243.98 171.20 L
+247.43 175.79 L
+250.88 153.24 L
+254.33 205.21 L
+257.78 121.91 L
+261.23 146.36 L
+264.68 131.84 L
+268.14 154.77 L
+271.59 171.96 L
+275.04 155.53 L
+278.49 200.62 L
+281.94 151.33 L
+285.39 222.78 L
+288.84 170.44 L
+292.29 131.08 L
+295.74 137.19 L
+299.20 115.80 L
+302.65 125.35 L
+306.10 137.96 L
+309.55 188.01 L
+313.00 176.55 L
+316.45 228.13 L
+319.90 175.02 L
+323.35 154.77 L
+326.80 181.14 L
+330.26 167.76 L
+333.71 351.32 L
+337.16 222.40 L
+340.61 167.76 L
+344.06 194.51 L
+347.51 152.10 L
+350.96 142.92 L
+354.41 230.43 L
+357.86 153.24 L
+361.31 154.77 L
+364.77 181.14 L
+368.22 153.24 L
+371.67 177.70 L
+375.12 121.14 L
+378.57 128.79 L
+382.02 104.33 L
+385.47 124.97 L
+388.92 138.34 L
+392.37 185.34 L
+395.83 181.14 L
+399.28 135.28 L
+402.73 178.84 L
+406.18 166.23 L
+409.63 166.62 L
+413.08 207.88 L
+416.53 161.65 L
+419.98 161.65 L
+423.43 233.87 L
+426.89 149.42 L
+S 426.89 149.42 M %This is to avoid stack overflow
+430.34 140.25 L
+433.79 135.28 L
+437.24 132.61 L
+440.69 112.36 L
+444.14 123.44 L
+447.59 140.25 L
+451.04 149.80 L
+454.49 151.33 L
+457.95 189.92 L
+461.40 181.52 L
+464.85 163.18 L
+468.30 144.45 L
+471.75 129.93 L
+475.20 200.24 L
+478.65 150.95 L
+482.10 168.14 L
+485.55 108.92 L
+489.01 148.66 L
+492.46 142.92 L
+495.91 109.68 L
+499.36 133.37 L
+502.81 134.14 L
+506.26 114.65 L
+509.71 147.89 L
+513.16 129.17 L
+516.61 136.43 L
+520.07 205.21 L
+523.52 213.61 L
+526.97 156.68 L
+530.42 189.54 L
+533.87 196.42 L
+216.369 241.719 M (3:18) CenterText
+333.706 355.818 M (6:14) CenterText
+423.435 242.865 M (8:30) CenterText
+S
+%%EndScript
+showpage
+%%Trailer

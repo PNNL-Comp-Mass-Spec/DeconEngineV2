@@ -1,0 +1,1 @@
+the versions of MercuryCache stored in this folder reflect the versions which will use charge also as a criteria for caching. The parallel for MercuryIsotopeDistribution is in the TheoreticalProfile folder.
