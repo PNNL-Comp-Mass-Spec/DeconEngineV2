@@ -46,6 +46,14 @@ namespace DeconToolsV2
 			return mobj_raw_data->GetFirstScanNum() ; 
 		}
 
+		void clsRawData::SetCalibrationValues()
+		{
+
+			return;
+
+		}
+
+
 
 		void clsRawData::LoadFile(char *file_name, DeconToolsV2::Readers::FileType file_type)
 		{

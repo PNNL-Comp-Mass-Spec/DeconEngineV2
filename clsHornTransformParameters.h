@@ -19,6 +19,8 @@ namespace DeconToolsV2
 	namespace HornTransform
 	{
 
+		public __value enum enmExportFileType {TEXT = 0, SQLITE}; 
+
 		public __gc class clsHornTransformParameters: public System::ICloneable
 		{
 			static System::String *DEFAULT_ISOTOPE_FILE = S"isotope.xml" ; 
@@ -69,6 +71,14 @@ namespace DeconToolsV2
 
 			bool mbln_useRAPIDDeconvolution;
 			bool mbln_replaceRAPIDScoreWithHornFitScore;
+			enmExportFileType menmExportFileType;
+			short mshort_numPeaksUsedInAbundance;     // when abundance for an IsosResult is reported... this is how many peaks are summed. Typically the most abundant peak's abundance is reported. 
+
+			int mint_numScansToAdvance;
+			bool mbln_detectPeaksWithNoDeconvolution;
+			bool mbln_processMS;    // parameter that will allow skipping of MSLevel data
+
+
 
 
 
@@ -132,6 +142,13 @@ namespace DeconToolsV2
 				new_params->set_RightFitStringencyFactor(this->get_RightFitStringencyFactor()) ;
 				new_params->set_UseRAPIDDeconvolution(this->get_UseRAPIDDeconvolution()) ; 
 				new_params->set_ReplaceRAPIDScoreWithHornFitScore(this->get_ReplaceRAPIDScoreWithHornFitScore()) ; 
+				new_params->set_ExportFileType(this->get_ExportFileType());
+				new_params->set_NumPeaksUsedInAbundance(this->get_NumPeaksUsedInAbundance());
+				new_params->set_NumScansToAdvance(this->get_NumScansToAdvance());
+			    new_params->set_DetectPeaksOnlyWithNoDeconvolution(this->get_DetectPeaksOnlyWithNoDeconvolution());
+				new_params->set_ProcessMS(this->get_ProcessMS());
+
+			
 
 
 				return new_params ; 
@@ -531,6 +548,46 @@ namespace DeconToolsV2
 			__property void set_ReplaceRAPIDScoreWithHornFitScore(bool value)
 			{
 				mbln_replaceRAPIDScoreWithHornFitScore = value ; 
+			}
+			__property enmExportFileType get_ExportFileType()
+			{
+				return menmExportFileType;
+			}
+			__property void set_ExportFileType(enmExportFileType value)
+			{
+				menmExportFileType = value;
+			}
+			__property short get_NumPeaksUsedInAbundance()
+			{
+				return mshort_numPeaksUsedInAbundance ;
+			}
+			__property void set_NumPeaksUsedInAbundance(short value)
+			{
+				mshort_numPeaksUsedInAbundance = value ; 
+			}
+			__property short get_NumScansToAdvance()
+			{
+				return mint_numScansToAdvance ;
+			}
+			__property void set_NumScansToAdvance(short value)
+			{
+				mint_numScansToAdvance = value ; 
+			}
+			__property bool get_DetectPeaksOnlyWithNoDeconvolution()
+			{
+				return mbln_detectPeaksWithNoDeconvolution;
+			}
+			__property void set_DetectPeaksOnlyWithNoDeconvolution(bool value)
+			{
+				mbln_detectPeaksWithNoDeconvolution = value;
+			}
+			__property bool get_ProcessMS()
+			{
+				return mbln_processMS;
+			}
+			__property void set_ProcessMS(bool value)
+			{
+				mbln_processMS = value;
 			}
 
 		}

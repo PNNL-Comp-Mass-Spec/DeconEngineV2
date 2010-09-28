@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\include\&quot;;&quot;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\include\&quot;;&quot;C:\xerces\xerces-c-windows_2000-msvc_60\include\&quot;"
 				AdditionalUsingDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;MASSLYNX_4_INSTALLED;ANALYST_INSTALLED;XCALIBUR_INSTALLED"
 				MinimalRebuild="false"
@@ -70,7 +70,7 @@
 				AdditionalDependencies="mscoree.lib msvcrtd.lib Ws2_32.lib xerces-c_2.lib msvcrt.lib xerces-c_2D.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\xerces\xerces-c-windows_2000-msvc_60\lib&quot;;&quot;C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\lib&quot;"
 				ForceSymbolReferences="__DllMainCRTStartup@12"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CalibrationSettings.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\clsAveragine.cpp"
 				>
 			</File>
@@ -308,6 +312,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\CalibrationSettings.h"
+				>
+			</File>
 			<File
 				RelativePath=".\clsAveragine.h"
 				>

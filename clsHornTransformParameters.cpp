@@ -60,8 +60,10 @@ namespace DeconToolsV2
 			mdbl_rightFitStringencyFactor = 1;
 			mbln_useRAPIDDeconvolution = false;
 			mbln_replaceRAPIDScoreWithHornFitScore = false;
-
-
+			menmExportFileType = enmExportFileType::TEXT;
+			mshort_numPeaksUsedInAbundance = 1 ;
+			mbln_detectPeaksWithNoDeconvolution= false;
+			mbln_processMS = true;
 		}
 
 		clsHornTransformParameters::~clsHornTransformParameters(void)
@@ -122,6 +124,9 @@ namespace DeconToolsV2
 			xwriter->WriteElementString(S"NumberOfScansToSumOver",this->NumScansToSumOver.ToString()) ; 
 			xwriter->WriteWhitespace(S"\n\t") ; 
 
+			xwriter->WriteElementString(S"NumberOfScansToAdvance",this->NumScansToAdvance.ToString()) ; 
+			xwriter->WriteWhitespace(S"\n\t") ; 
+
 			xwriter->WriteElementString(S"SumSpectraAcrossFrameRange",this->SumSpectraAcrossFrameRange.ToString()) ; 
 			xwriter->WriteWhitespace(S"\n\t") ; 	
 
@@ -141,10 +146,12 @@ namespace DeconToolsV2
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"ReplaceRAPIDScoreWithHornFitScore",this->ReplaceRAPIDScoreWithHornFitScore.ToString()) ;
+			xwriter->WriteWhitespace(S"\n\t\t") ;
+
+			xwriter->WriteElementString(S"NumPeaksUsedInAbundance",this->NumPeaksUsedInAbundance.ToString()) ;
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
-
-			xwriter->WriteEndElement();
+				xwriter->WriteEndElement();
 			xwriter->WriteWhitespace(S"\n\t") ; 
 		}
 
@@ -174,7 +181,7 @@ namespace DeconToolsV2
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"SGOrder", Convert::ToString(this->SGOrder)); 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			
 			xwriter->WriteElementString(S"ZeroFillDiscontinousAreas", Convert::ToString(this->ZeroFill)) ;
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
@@ -182,10 +189,18 @@ namespace DeconToolsV2
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			
 			xwriter->WriteElementString(S"ProcessMSMS",this->ProcessMSMS.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 	
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
-
+			xwriter->WriteElementString(S"ExportFileType",__box(this->ExportFileType)->ToString()) ;
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			
+			xwriter->WriteElementString(S"DetectPeaksOnly_NoDeconvolution", this->DetectPeaksOnlyWithNoDeconvolution.ToString()) ;
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
+
+			xwriter->WriteElementString(S"Process_MS",this->ProcessMS.ToString()) ;
+			xwriter->WriteWhitespace(S"\n\t") ; 
+
+
 			xwriter->WriteEndElement();
 			xwriter->WriteWhitespace(S"\n\t") ; 
 			
@@ -733,6 +748,41 @@ namespace DeconToolsV2
 								this->ReplaceRAPIDScoreWithHornFitScore = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
+						else if (rdr->Name->Equals(S"NumPeaksUsedInAbundance"))
+						{
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							if (rdr->NodeType != XmlNodeType::Text)
+							{
+								throw new Exception (S"No parameters was specified for 'NumPeaksUsedInAbundance' in parameter file") ; 
+							}
+							else
+							{
+								this->set_NumPeaksUsedInAbundance(Convert::ToInt16(rdr->Value)) ; 
+							}
+						}
+						
+						else if (rdr->Name->Equals(S"NumberOfScansToAdvance"))
+						{
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							if (rdr->NodeType != XmlNodeType::Text)
+							{
+								throw new Exception (S"No parameters was specified for 'NumScansToAdvance' in parameter file") ; 
+							}
+							else
+							{
+								this->set_NumScansToAdvance(Convert::ToInt32(rdr->Value)) ; 
+							}
+						}
+
+
 
 
 						break ; 
@@ -928,6 +978,65 @@ namespace DeconToolsV2
 							}
 
 						}
+						else if (rdr->Name->Equals(S"ExportFileType"))
+						{
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							if (rdr->NodeType != XmlNodeType::Text)
+							{
+								throw new System::Exception (S"Missing information for ExportFileType in parameter file") ; 
+							}
+							if (rdr->Value->Equals(__box(enmExportFileType::TEXT)->ToString()))
+							{
+								this->ExportFileType = enmExportFileType::TEXT ;
+							}
+							else if (rdr->Value->Equals(__box(enmExportFileType::SQLITE)->ToString()))
+							{
+								this->ExportFileType = enmExportFileType::SQLITE;
+							}
+							else 
+							{
+								this->ExportFileType = enmExportFileType::TEXT;
+							}
+						}
+						else if (rdr->Name->Equals(S"Process_MS"))
+						{
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							if (rdr->NodeType != XmlNodeType::Text)
+							{
+								throw new Exception (S"No parameters was specified for ProcessMS in parameter file") ; 
+							}
+							else
+							{
+								this->set_ProcessMS(Convert::ToBoolean(rdr->Value)) ; 
+							}
+
+						}
+					    else if (rdr->Name->Equals(S"DetectPeaksOnly_NoDeconvolution"))
+						{
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							if (rdr->NodeType != XmlNodeType::Text)
+							{
+								throw new Exception (S"No parameters was specified for 'DetectPeaksOnlyWithNoDeconvolution' in parameter file") ; 
+							}
+							else
+							{
+								this->set_DetectPeaksOnlyWithNoDeconvolution(Convert::ToBoolean(rdr->Value)) ; 
+							}
+
+						}
+
 				
 						break ; 
 					case XmlNodeType::EndElement:

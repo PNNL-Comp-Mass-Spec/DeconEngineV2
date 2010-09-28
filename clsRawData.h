@@ -12,6 +12,7 @@
 #include "Readers\ReaderFactory.h"
 #include "Readers\AsciiRawData.h"
 #include "clsRawDataPreprocessOptions.h" 
+#include "CalibrationSettings.h"
 #include "DeconEngineUtils.h"
 #include "Readers\Icr2LSRawData.h" 
 
@@ -32,7 +33,11 @@ namespace DeconToolsV2
 		public:
 			clsRawData();
 			clsRawData(System::String *file_name, FileType file_type);
-			int GetFirstScanNum() ; 
+			int GetFirstScanNum() ;
+
+
+			void SetCalibrationValues();
+
 			~clsRawData(void);
 
 			__property DeconToolsV2::Readers::FileType get_FileType()
