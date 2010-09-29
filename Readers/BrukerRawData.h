@@ -37,6 +37,10 @@ namespace Engine {
 		double GetBasePeakIntensity(std::vector<double> &mzs, std::vector<double> &intensities) ; 
 		double GetTotalIonCount(std::vector<double> &mzs, std::vector<double> &intensities) ; 
 
+
+		int GetNumSpectraFromFileSizeInfo(void) ; 
+
+
 	public:
 		~BrukerRawData(void);
 		BrukerRawData(void);
@@ -62,6 +66,10 @@ namespace Engine {
 		int GetMSLevel(int scan_num) ; 
 		int GetLastScanNum() { return mint_num_spectra ; } 
 		int GetFirstScanNum() { return 1 ; } 
+
+
+		
+
 	};
 }	
 }
