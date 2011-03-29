@@ -78,30 +78,58 @@ namespace Engine
 
 			// intensities need to be put in increasing order of mz. But here they are in 
 			// descending order. So insert and then reverse.  
+			//UPDATE:  [gord]   Bruker Solarix mz data is not in descending order!  so must check this.
+
+
+			int numIncreasingValuesOutOfFirst100=0; 
+			int numDecreasingValuesOutOfFirst100=0; 
+			
+			double previousMZValue = 0;
 
 			for (int i = 0 ; i < num_pts_used/2 ; i++)
 			{
+
 				double mz_val = MZVal(i) ; 
+				if (i >1 && i < 100)    // checking the first 100 points of the loop will give an idea if mz's are increasing or decreasing
+				{
+					if (mz_val >previousMZValue)
+					{
+						numIncreasingValuesOutOfFirst100++;
+					}
+					else if (mz_val < previousMZValue)
+					{
+						numDecreasingValuesOutOfFirst100++;
+					}
+				}
+
+
 				double intensity_val = sqrt(data_ptr[2*i+1] * data_ptr[2*i+1] + data_ptr[2*i] * data_ptr[2*i]) ; 
 				if (mz_val == 0 )
 					continue ;
 				mzs->push_back(mz_val) ; 
+
 				intensities->push_back(intensity_val) ; 
+				previousMZValue = mz_val;
 			}
 
 			int num_pts = (int)intensities->size() ; 
 			double temp_intensity ; 
 			double temp_mz ; 
 
-			for (int i = 0 ; i < num_pts/2 ; i++)
+			bool mzValuesAreDecreasing = (numDecreasingValuesOutOfFirst100 > 0);
+			if (mzValuesAreDecreasing)   
 			{
-				temp_intensity = (*intensities)[i] ; 
-				(*intensities)[i] = (*intensities)[num_pts-1-i] ; 
-				(*intensities)[num_pts-1-i] = temp_intensity ; 
+				//reverses the array
+				for (int i = 0 ; i < num_pts/2 ; i++)
+				{
+					temp_intensity = (*intensities)[i] ; 
+					(*intensities)[i] = (*intensities)[num_pts-1-i] ; 
+					(*intensities)[num_pts-1-i] = temp_intensity ; 
 
-				temp_mz = (*mzs)[i] ;
-				(*mzs)[i] = (*mzs)[num_pts-1-i]; 
-				(*mzs)[num_pts-1-i] = temp_mz ;
+					temp_mz = (*mzs)[i] ;
+					(*mzs)[i] = (*mzs)[num_pts-1-i]; 
+					(*mzs)[num_pts-1-i] = temp_mz ;
+				}
 			}
 			
 			int orig_num_pts = num_pts ; 

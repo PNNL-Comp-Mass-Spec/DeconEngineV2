@@ -554,6 +554,23 @@ namespace Engine
 
 			delta = best_delta ;
 
+			double theorIntensityCutoff = 30;  // 
+
+			double peakWidth = pk.mdbl_FWHM; 
+
+			if (debug)
+				{
+						std::cout<<"Std delta = \t"<<delta<<std::endl;
+				}
+
+
+			//delta = CalculateDeltaFromSeveralObservedPeaks(delta, peakWidth, pk_data, theorPeakData, theorIntensityCutoff);
+
+		if (debug)
+				{
+						std::cout<<"Weighted delta = \t"<<delta<<std::endl;
+				}
+
 			iso_record.mdbl_fit = best_fit ; 
 			iso_record.mshort_cs = cs ; 
 			iso_record.mdbl_mz = pk.mdbl_mz ; 
@@ -738,5 +755,83 @@ namespace Engine
 		{
 			iso_comp = mobj_isotope_dist.mobj_elemental_isotope_composition ;
 		}
+
+		double IsotopeFit::CalculateDeltaFromSeveralObservedPeaks(double startingDelta, double peakWidth, PeakProcessing::PeakData &obsPeakData, PeakProcessing::PeakData &theorPeakData, double theorIntensityCutOff)
+		{
+			//the idea is to use a selected number of theor peaks
+			//and for each theor peak,  use the delta (mz offset) info
+			//to find the obs peak data and determine the delta value for that peak.
+			//accumulate delta values in an array and then calculate a weighted average
+			
+			int numTheorPeaks = theorPeakData.GetNumPeaks();
+
+			PeakProcessing::PeakData filteredTheorPeakData;
+
+			
+			//filter the theor list
+			int numFilteredTheorPeaks = 0;
+			for (int i=0; i<numTheorPeaks; i++)
+			{
+				PeakProcessing::Peak peak;
+				theorPeakData.GetPeak(i,peak);
+
+				if (peak.mdbl_intensity>= theorIntensityCutOff)
+				{
+					filteredTheorPeakData.AddPeak(peak);
+					numFilteredTheorPeaks++;
+				}
+			}
+
+			if (numFilteredTheorPeaks==0)return startingDelta;
+
+			
+
+			double* deltaArray = new double[numFilteredTheorPeaks];
+			double* intensityArray= new double [numFilteredTheorPeaks];
+			double intensitySum = 0 ;
+
+			double weightedSumOfDeltas = 0;
+
+			for (int i=0; i<numFilteredTheorPeaks; i++)
+			{
+				PeakProcessing::Peak theorPeak;
+				filteredTheorPeakData.GetPeak(i,theorPeak);
+
+				double targetMZLower = theorPeak.mdbl_mz + startingDelta - peakWidth; 
+				double targetMZUpper = theorPeak.mdbl_mz + startingDelta + peakWidth; 
+				
+				PeakProcessing::Peak foundPeak;
+				obsPeakData.FindPeak(targetMZLower,targetMZUpper,foundPeak);
+
+				if (foundPeak.mdbl_mz>0)
+				{
+					deltaArray[i] = foundPeak.mdbl_mz - theorPeak.mdbl_mz;
+					intensityArray[i] = foundPeak.mdbl_intensity;
+					intensitySum += foundPeak.mdbl_intensity;
+				}
+				else
+				{
+					deltaArray[i] = startingDelta;
+					intensityArray[i] = 0;       //obs peak was not found; therefore assign 0 intensity (will have no effect on delta calc)
+				}
+			}
+
+			if (intensitySum==0)return startingDelta;   // no obs peaks found at all;  return default
+
+
+			//now perform a weighted average
+
+			double weightedDelta = 0 ;
+			for (int i=0; i< numFilteredTheorPeaks; i++)
+			{
+				weightedDelta += intensityArray[i] / intensitySum * deltaArray[i];
+			}
+
+			return weightedDelta; 
+
+		}
+
+
+		
 	}
 }

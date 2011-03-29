@@ -22,6 +22,10 @@ namespace Engine {
 		char *marr_headerName;
 		char *marr_serName;
 
+
+
+		Engine::Calibrations::CCalibrator *mobj_calibrator;
+
 		int FindHeaderParams() ; 
 		int mint_num_spectra ; 
 		int mint_num_points_in_scan ; 
@@ -49,6 +53,9 @@ namespace Engine {
 		FileType GetFileType() { return BRUKER ; } ;  
 
 		void Open(char *header_n, char *ser_file_name);
+
+		void SetCalibrator(Engine::Calibrations::CCalibrator *calib);
+
 
 		virtual void Load(char *file_n) ; 
 		bool GetRawData(std::vector<double> *mzs, std::vector<double> *intensities, int scan_num) ;  

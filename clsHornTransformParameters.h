@@ -540,7 +540,6 @@ namespace DeconToolsV2
 			{
 				mbln_useRAPIDDeconvolution = value ; 
 			}
-
 			__property bool get_ReplaceRAPIDScoreWithHornFitScore()
 			{
 				return mbln_replaceRAPIDScoreWithHornFitScore ; 
@@ -589,6 +588,11 @@ namespace DeconToolsV2
 			{
 				mbln_processMS = value;
 			}
+
+
+
+
+
 
 		}
 	; }

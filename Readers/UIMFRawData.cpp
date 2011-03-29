@@ -71,200 +71,209 @@ namespace Engine
 		}
 
 		void UIMFRawData::Load(char *file)
-		{			
-			strcpy(marr_filename, file)	; 
+		{
+			return;
 
-			// Open UIMF file
-			DataReader *ReadUIMF = new DataReader();
-			ReadUIMF->OpenUIMF(marr_filename);
 
-			// Get data_type, num_frames & num_scans
-			System::String *data_type;
-			data_type = System::Convert::ToString(ReadUIMF->GetGlobalParameters("TOFIntensityType"));
-			mint_num_frames = System::Convert::ToInt32(ReadUIMF->GetGlobalParameters("NumFrames"));
-			mint_startFrame = 1;
-			
-			//[gord] i don't think there is any point to this loop...  just need one line of it. 
-			//[yan] This part is needed if StartFrame is greater than 1, 8/12/2009
-			mint_num_scans_in_a_frame = 0;
-			while (mint_num_scans_in_a_frame == 0)
-			{
-				mint_num_scans_in_a_frame = System::Convert::ToInt32(ReadUIMF->GetFrameParameters(mint_startFrame,"Scans"));
-				mint_startFrame++;
-			}
-			mint_startFrame--;
-			mint_endFrame = mint_num_frames + mint_startFrame - 1;
-			int startScan = 0;
-			int endScan = mint_num_scans_in_a_frame - 1; 
+	//		strcpy(marr_filename, file)	; 
 
-			//Get TIC
-			mint_num_scans = mint_num_scans_in_a_frame * mint_num_frames;
-	/*		if (System::String::Compare(data_type,"ADC") == 0)
-			{
-				int TICs __gc[] = new int __gc[mint_num_scans];
-				ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
-				for (int i = 0 ; i < mint_num_scans ; i++)
-				{
-					int temp_tic = TICs[i];
-					mvect_scan_bpi.push_back(temp_tic) ; 
-				}
-			}
-			else if (System::String::Compare(data_type,"FOLDED") == 0)
-			{
-				float TICs __gc[] = new float __gc[mint_num_scans];
-				ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
-				for (int i = 0 ; i < mint_num_scans ; i++)
-				{
-					float temp_tic = TICs[i];
-					mvect_scan_bpi.push_back(temp_tic) ; 
-				}
-			}
-			else if (System::String::Compare(data_type,"TDC") == 0)
-			{
-				short TICs __gc[] = new short __gc[mint_num_scans];
-				ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
-				for (int i = 0 ; i < mint_num_scans ; i++)
-				{
-					short temp_tic = TICs[i];
-					mvect_scan_bpi.push_back(temp_tic) ; 
-				}
-			}
-			else
-			{
-				double TICs __gc[] = new double __gc[mint_num_scans];
-				ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
-				for (int i = 0 ; i < mint_num_scans ; i++)
-				{
-					double temp_tic = TICs[i];
-					mvect_scan_bpi.push_back(temp_tic) ; 
-				}
-			}*/
-			// Close UIMF file
-			ReadUIMF->CloseUIMF(marr_filename);
+	//		// Open UIMF file
+	//		DataReader *ReadUIMF = new DataReader();
+	//		ReadUIMF->OpenUIMF(marr_filename);
+
+	//		// Get data_type, num_frames & num_scans
+	//		System::String *data_type;
+	//		data_type = System::Convert::ToString(ReadUIMF->GetGlobalParameters("TOFIntensityType"));
+	//		mint_num_frames = System::Convert::ToInt32(ReadUIMF->GetGlobalParameters("NumFrames"));
+	//		mint_startFrame = 1;
+	//		
+	//		//[gord] i don't think there is any point to this loop...  just need one line of it. 
+	//		//[yan] This part is needed if StartFrame is greater than 1, 8/12/2009
+	//		mint_num_scans_in_a_frame = 0;
+	//		while (mint_num_scans_in_a_frame == 0)
+	//		{
+	//			mint_num_scans_in_a_frame = System::Convert::ToInt32(ReadUIMF->GetFrameParameters(mint_startFrame,"Scans"));
+	//			mint_startFrame++;
+	//		}
+	//		mint_startFrame--;
+	//		mint_endFrame = mint_num_frames + mint_startFrame - 1;
+	//		int startScan = 0;
+	//		int endScan = mint_num_scans_in_a_frame - 1; 
+
+	//		//Get TIC
+	//		mint_num_scans = mint_num_scans_in_a_frame * mint_num_frames;
+	///*		if (System::String::Compare(data_type,"ADC") == 0)
+	//		{
+	//			int TICs __gc[] = new int __gc[mint_num_scans];
+	//			ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
+	//			for (int i = 0 ; i < mint_num_scans ; i++)
+	//			{
+	//				int temp_tic = TICs[i];
+	//				mvect_scan_bpi.push_back(temp_tic) ; 
+	//			}
+	//		}
+	//		else if (System::String::Compare(data_type,"FOLDED") == 0)
+	//		{
+	//			float TICs __gc[] = new float __gc[mint_num_scans];
+	//			ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
+	//			for (int i = 0 ; i < mint_num_scans ; i++)
+	//			{
+	//				float temp_tic = TICs[i];
+	//				mvect_scan_bpi.push_back(temp_tic) ; 
+	//			}
+	//		}
+	//		else if (System::String::Compare(data_type,"TDC") == 0)
+	//		{
+	//			short TICs __gc[] = new short __gc[mint_num_scans];
+	//			ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
+	//			for (int i = 0 ; i < mint_num_scans ; i++)
+	//			{
+	//				short temp_tic = TICs[i];
+	//				mvect_scan_bpi.push_back(temp_tic) ; 
+	//			}
+	//		}
+	//		else
+	//		{
+	//			double TICs __gc[] = new double __gc[mint_num_scans];
+	//			ReadUIMF->GetTIC(TICs, 0,mint_startFrame, mint_endFrame, startScan, endScan);			
+	//			for (int i = 0 ; i < mint_num_scans ; i++)
+	//			{
+	//				double temp_tic = TICs[i];
+	//				mvect_scan_bpi.push_back(temp_tic) ; 
+	//			}
+	//		}*/
+	//		// Close UIMF file
+	//		ReadUIMF->CloseUIMF(marr_filename);
 
 		}
 
 	//returns the number of points in the spectrum
 		int UIMFRawData::GetUIMFSpectrum( char *marr_filename, int scan_num)
 		{
-			// Open UIMF file
-			DataReader *reader = new DataReader();
-			reader->OpenUIMF(marr_filename);
-			
-			// Get bin_width, num_bins, etc
-			if ( mdbl_bin_width == 0){
-				mdbl_bin_width = System::Convert::ToInt32(reader->GetGlobalParameters("BinWidth"));
-			}
 
-			if (mint_num_bins == 0 ){
-				mint_num_bins = System::Convert::ToInt32(reader->GetGlobalParameters("Bins"));
-			}
+			return 0;
 
-			if (mint_time_offset == -1){
-				mint_time_offset = System::Convert::ToInt32(reader->GetGlobalParameters("TimeOffset"));
-			}
 
-			if (mint_scans_per_frame == 0){
-				mint_scans_per_frame = System::Convert::ToInt32(reader->GetFrameParameters(mint_startFrame,"Scans"));
-			}
-			
-			//mint_max_scan_size = mint_num_scans * mint_num_bins ;			
-			mint_max_scan_size = 0;			
-			mint_frame_num = scan_num / mint_num_scans_in_a_frame + mint_startFrame;
-			int	scanNum = scan_num  % mint_scans_per_frame;
-			if ((mint_frame_num - mint_startFrame + 1) > mint_num_frames) 
-			{
-				mint_frame_num = mint_num_frames + mint_startFrame - 1;
-				scanNum = mint_num_scans_in_a_frame -1;
-			}
-			
-			// Get data_type, TOF_length, calibration values, & spectrum_length for each scan
-			System::String *data_type;
-			data_type = System::Convert::ToString(reader->GetGlobalParameters("TOFIntensityType"));
-			mdbl_avg_tof_length = System::Convert::ToDouble(reader->GetFrameParameters(mint_frame_num,"AverageTOFLength"));
-			mdbl_t0  = System::Convert::ToDouble(reader->GetFrameParameters(mint_frame_num,"CalibrationIntercept"));
-			mdbl_k0 =  System::Convert::ToDouble(reader->GetFrameParameters(mint_frame_num,"CalibrationSlope"));
-			int mint_spectrum_length = reader->GetCountPerSpectrum(mint_frame_num, scanNum);
-			
-			// Get Spectrum
-			if ( mint_spectrum_length != 0)
-			{
-				UIMFRecord<int, int>  rec ; 
-				UIMFRecord<int, float>  mxed_rec ;
-				UIMFRecord<int, int>  adc_rec ;
-				
-				// Check data type
-				if (System::String::Compare(data_type,"ADC") == 0)
-				{			
-					if (mvect_adc_data.size() != 0) mvect_adc_data.clear() ;
-					int intensities __gc[] = new int __gc[mint_spectrum_length];
-					int bins __gc[] = new int __gc[mint_spectrum_length];
-					mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
-					mvect_adc_data.reserve(mint_spectrum_length);
-					mbln_is_multiplexed_data = false ; 
-					mbln_is_adc_data  = true ; 
-					for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
-					{
-						adc_rec.intensity = (int)intensities[bin_num];
-						adc_rec.tof_bin = bins[bin_num];			
-						mvect_adc_data.push_back(adc_rec) ; 
-					}
-				}
-				else if (System::String::Compare(data_type,"FOLDED") == 0)
-				{
-					if (mvect_mxed_data.size() != 0) mvect_mxed_data.clear() ;
-					float intensities __gc[] = new float __gc[mint_spectrum_length];
-					int bins __gc[] = new int __gc[mint_spectrum_length];
-					mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
 
-					mvect_mxed_data.reserve(mint_spectrum_length);
-					mbln_is_multiplexed_data = true ; 
-					mbln_is_adc_data  = false ; 
-					for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
-					{
-						mxed_rec.intensity = (float)intensities[bin_num];
-						mxed_rec.tof_bin = bins[bin_num];				
-						mvect_mxed_data.push_back(mxed_rec) ; 
-					}
-				}
-				else if (System::String::Compare(data_type,"TDC") == 0)
-				{
-					if (mvect_mxed_data.size() != 0) mvect_mxed_data.clear() ;
-					short intensities __gc[] = new short __gc[mint_spectrum_length];
-					int bins __gc[] = new int __gc[mint_spectrum_length];
-					mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
 
-					mvect_mxed_data.reserve(mint_spectrum_length);
-					mbln_is_multiplexed_data = true ; 
-					mbln_is_adc_data  = false ; 
-					for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
-					{
-						mxed_rec.intensity = (short)intensities[bin_num];
-						mxed_rec.tof_bin = bins[bin_num];				
-						mvect_mxed_data.push_back(mxed_rec) ; 
-					}
-				}
-				else 
-				{
-					if (mvect_data.size() != 0) mvect_data.clear() ;
-					double intensities __gc[] = new double __gc[mint_spectrum_length];
-					int bins __gc[] = new int __gc[mint_spectrum_length];
-					mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
-					mvect_data.reserve(mint_spectrum_length);					
-					for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
-					{
-						rec.intensity = (int)intensities[bin_num];
-						rec.tof_bin = bins[bin_num];		
-						mvect_data.push_back(rec) ; 
-					}
-				}
-			
-				mint_scan_start_index = 0 ;
-				mint_scan_end_index = mint_num_bins-1 ;
-			}
-				
-			reader->CloseUIMF(marr_filename);
-			return mint_spectrum_length;
+			//// Open UIMF file
+			//DataReader *reader = new DataReader();
+			//reader->OpenUIMF(marr_filename);
+			//
+			//// Get bin_width, num_bins, etc
+			//if ( mdbl_bin_width == 0){
+			//	mdbl_bin_width = System::Convert::ToInt32(reader->GetGlobalParameters("BinWidth"));
+			//}
+
+			//if (mint_num_bins == 0 ){
+			//	mint_num_bins = System::Convert::ToInt32(reader->GetGlobalParameters("Bins"));
+			//}
+
+			//if (mint_time_offset == -1){
+			//	mint_time_offset = System::Convert::ToInt32(reader->GetGlobalParameters("TimeOffset"));
+			//}
+
+			//if (mint_scans_per_frame == 0){
+			//	mint_scans_per_frame = System::Convert::ToInt32(reader->GetFrameParameters(mint_startFrame,"Scans"));
+			//}
+			//
+			////mint_max_scan_size = mint_num_scans * mint_num_bins ;			
+			//mint_max_scan_size = 0;			
+			//mint_frame_num = scan_num / mint_num_scans_in_a_frame + mint_startFrame;
+			//int	scanNum = scan_num  % mint_scans_per_frame;
+			//if ((mint_frame_num - mint_startFrame + 1) > mint_num_frames) 
+			//{
+			//	mint_frame_num = mint_num_frames + mint_startFrame - 1;
+			//	scanNum = mint_num_scans_in_a_frame -1;
+			//}
+			//
+			//// Get data_type, TOF_length, calibration values, & spectrum_length for each scan
+			//System::String *data_type;
+			//data_type = System::Convert::ToString(reader->GetGlobalParameters("TOFIntensityType"));
+			//mdbl_avg_tof_length = System::Convert::ToDouble(reader->GetFrameParameters(mint_frame_num,"AverageTOFLength"));
+			//mdbl_t0  = System::Convert::ToDouble(reader->GetFrameParameters(mint_frame_num,"CalibrationIntercept"));
+			//mdbl_k0 =  System::Convert::ToDouble(reader->GetFrameParameters(mint_frame_num,"CalibrationSlope"));
+			//int mint_spectrum_length = reader->GetCountPerSpectrum(mint_frame_num, scanNum);
+			//
+			//// Get Spectrum
+			//if ( mint_spectrum_length != 0)
+			//{
+			//	UIMFRecord<int, int>  rec ; 
+			//	UIMFRecord<int, float>  mxed_rec ;
+			//	UIMFRecord<int, int>  adc_rec ;
+			//	
+			//	// Check data type
+			//	if (System::String::Compare(data_type,"ADC") == 0)
+			//	{			
+			//		if (mvect_adc_data.size() != 0) mvect_adc_data.clear() ;
+			//		int intensities __gc[] = new int __gc[mint_spectrum_length];
+			//		int bins __gc[] = new int __gc[mint_spectrum_length];
+			//		mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
+			//		mvect_adc_data.reserve(mint_spectrum_length);
+			//		mbln_is_multiplexed_data = false ; 
+			//		mbln_is_adc_data  = true ; 
+			//		for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
+			//		{
+			//			adc_rec.intensity = (int)intensities[bin_num];
+			//			adc_rec.tof_bin = bins[bin_num];			
+			//			mvect_adc_data.push_back(adc_rec) ; 
+			//		}
+			//	}
+			//	else if (System::String::Compare(data_type,"FOLDED") == 0)
+			//	{
+			//		if (mvect_mxed_data.size() != 0) mvect_mxed_data.clear() ;
+			//		float intensities __gc[] = new float __gc[mint_spectrum_length];
+			//		int bins __gc[] = new int __gc[mint_spectrum_length];
+			//		mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
+
+			//		mvect_mxed_data.reserve(mint_spectrum_length);
+			//		mbln_is_multiplexed_data = true ; 
+			//		mbln_is_adc_data  = false ; 
+			//		for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
+			//		{
+			//			mxed_rec.intensity = (float)intensities[bin_num];
+			//			mxed_rec.tof_bin = bins[bin_num];				
+			//			mvect_mxed_data.push_back(mxed_rec) ; 
+			//		}
+			//	}
+			//	else if (System::String::Compare(data_type,"TDC") == 0)
+			//	{
+			//		if (mvect_mxed_data.size() != 0) mvect_mxed_data.clear() ;
+			//		short intensities __gc[] = new short __gc[mint_spectrum_length];
+			//		int bins __gc[] = new int __gc[mint_spectrum_length];
+			//		mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
+
+			//		mvect_mxed_data.reserve(mint_spectrum_length);
+			//		mbln_is_multiplexed_data = true ; 
+			//		mbln_is_adc_data  = false ; 
+			//		for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
+			//		{
+			//			mxed_rec.intensity = (short)intensities[bin_num];
+			//			mxed_rec.tof_bin = bins[bin_num];				
+			//			mvect_mxed_data.push_back(mxed_rec) ; 
+			//		}
+			//	}
+			//	else 
+			//	{
+			//		if (mvect_data.size() != 0) mvect_data.clear() ;
+			//		double intensities __gc[] = new double __gc[mint_spectrum_length];
+			//		int bins __gc[] = new int __gc[mint_spectrum_length];
+			//		mint_spectrum_length = reader->GetSpectrum(mint_frame_num, scanNum, intensities, bins);				
+			//		mvect_data.reserve(mint_spectrum_length);					
+			//		for (int bin_num = 0 ; bin_num < mint_spectrum_length; bin_num++)
+			//		{
+			//			rec.intensity = (int)intensities[bin_num];
+			//			rec.tof_bin = bins[bin_num];		
+			//			mvect_data.push_back(rec) ; 
+			//		}
+			//	}
+			//
+			//	mint_scan_start_index = 0 ;
+			//	mint_scan_end_index = mint_num_bins-1 ;
+			//}
+			//	
+			//reader->CloseUIMF(marr_filename);
+			//return mint_spectrum_length;
 		}
 		int UIMFRawData::GetFirstScanNum()
 		{
@@ -277,42 +286,46 @@ namespace Engine
 
 
 		int UIMFRawData::GetNumScansInFrame(){
+			return 0;
 			
-			if (mint_num_scans_in_a_frame <= 0){
+			/*if (mint_num_scans_in_a_frame <= 0){
 				DataReader *ReadUIMF = new DataReader();
 				ReadUIMF->OpenUIMF(marr_filename);
 				mint_num_scans_in_a_frame = System::Convert::ToInt32(ReadUIMF->GetFrameParameters(1,"Scans"));
 
 			}
 
-			return mint_num_scans_in_a_frame;
+			return mint_num_scans_in_a_frame;*/
 		}
 
 		int UIMFRawData::GetLastScanNum()
 		{
-			if ( mint_num_scans == 0){
 
-				//you have to retrieve it from the database
-				DataReader *ReadUIMF = new DataReader();
-				ReadUIMF->OpenUIMF(marr_filename);
+			return 0;
 
-				mint_num_frames = System::Convert::ToInt32(ReadUIMF->GetGlobalParameters("NumFrames"));
-				mint_startFrame = 1;
-				mint_num_scans_in_a_frame = 0;
-				while (mint_num_scans_in_a_frame == 0)
-				{
-					mint_num_scans_in_a_frame = System::Convert::ToInt32(ReadUIMF->GetFrameParameters(mint_startFrame,"Scans"));
-					mint_startFrame++;
-				}
-				mint_startFrame--;
-				mint_endFrame = mint_num_frames + mint_startFrame - 1;
-				int startScan = 0;
-				int endScan = mint_num_scans_in_a_frame - 1; 
+			//if ( mint_num_scans == 0){
 
-				mint_num_scans = mint_num_scans_in_a_frame * mint_num_frames;
-				ReadUIMF->CloseUIMF(marr_filename);
-			}
-			return mint_num_scans ; 
+			//	//you have to retrieve it from the database
+			//	DataReader *ReadUIMF = new DataReader();
+			//	ReadUIMF->OpenUIMF(marr_filename);
+
+			//	mint_num_frames = System::Convert::ToInt32(ReadUIMF->GetGlobalParameters("NumFrames"));
+			//	mint_startFrame = 1;
+			//	mint_num_scans_in_a_frame = 0;
+			//	while (mint_num_scans_in_a_frame == 0)
+			//	{
+			//		mint_num_scans_in_a_frame = System::Convert::ToInt32(ReadUIMF->GetFrameParameters(mint_startFrame,"Scans"));
+			//		mint_startFrame++;
+			//	}
+			//	mint_startFrame--;
+			//	mint_endFrame = mint_num_frames + mint_startFrame - 1;
+			//	int startScan = 0;
+			//	int endScan = mint_num_scans_in_a_frame - 1; 
+
+			//	mint_num_scans = mint_num_scans_in_a_frame * mint_num_frames;
+			//	ReadUIMF->CloseUIMF(marr_filename);
+			//}
+			//return mint_num_scans ; 
 		}
 		
 		int UIMFRawData::GetFrameNumber() 
@@ -728,12 +741,15 @@ namespace Engine
 
 		//returns the total number of frames in this dataset
 		int UIMFRawData:: GetNumOfFrames(){
+			return 0;
+
+/*
 			DataReader *ReadUIMF = new DataReader();
 			ReadUIMF->OpenUIMF(marr_filename);
 			int numOfFrames = System::Convert::ToInt32(ReadUIMF->GetGlobalParameters("NumFrames"));
 			ReadUIMF->CloseUIMF(marr_filename);
 
-			return numOfFrames;
+			return numOfFrames;*/
 		}
 
 
@@ -1126,7 +1142,7 @@ namespace Engine
 		}
 		double UIMFRawData::GetFramePressure(int frame_number){
 			double pressure = 0;
-			try{
+			/*try{
 				DataReader *ReadUIMF = new DataReader();
 				ReadUIMF->OpenUIMF(marr_filename);
 				double pressureBack = System::Convert::ToDouble(ReadUIMF->GetFrameParameters(mint_startFrame,"PressureBack"));
@@ -1137,7 +1153,7 @@ namespace Engine
 			}
 			catch(char * e){
 
-			}
+			}*/
 
 			return pressure;
 

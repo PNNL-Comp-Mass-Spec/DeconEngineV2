@@ -33,10 +33,10 @@ namespace DeconToolsV2
 		public:
 			clsRawData();
 			clsRawData(System::String *file_name, FileType file_type);
-			int GetFirstScanNum() ;
+			int GetFirstScanNum() ; 
 
 
-			void SetCalibrationValues();
+			void SetFFTCalibrationValues(CalibrationSettings *calSettings);
 
 			~clsRawData(void);
 

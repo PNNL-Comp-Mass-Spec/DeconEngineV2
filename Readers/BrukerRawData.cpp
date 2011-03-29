@@ -64,6 +64,14 @@ namespace Engine
 			return marr_serName ; 
 		}
 
+
+		void  BrukerRawData::SetCalibrator(Engine::Calibrations::CCalibrator *calib)
+				{
+					mobj_calibrator = calib ;
+					SetDataSize(mobj_calibrator->GetSize());
+					mint_num_spectra = GetNumSpectraFromFileSizeInfo();
+				}
+
 		void BrukerRawData::Open(char *header_n, char *ser_file_name)
 		{
 	
@@ -110,6 +118,13 @@ namespace Engine
 		{
 			Open("acqus", file_n) ; 
 		}
+
+
+
+	
+
+
+
 
 		void BrukerRawData::SetDataSize(int sz) 
 		{
@@ -419,6 +434,7 @@ namespace Engine
 
 			int numSpectra = 0;
 
+			if (mint_num_points_in_scan==0)return 0 ;      // prevent divide by 0
 
 			int fh;
 			fh = _open(marr_serName, _O_RDONLY | _O_BINARY );

@@ -210,10 +210,9 @@
 			MinFrameworkVersion="131072"
 		/>
 		<AssemblyReference
-			RelativePath=".\Library\UIMFLibrary2003.dll"
-			AssemblyName="UIMFLibrary2003, Version=0.0.0.0, processorArchitecture=MSIL"
-			CopyLocal="false"
-			MinFrameworkVersion="0"
+			RelativePath="..\DeconTools\Library\UIMFLibrary.dll"
+			AssemblyName="UIMFLibrary, Version=1.2.3987.1806, processorArchitecture=MSIL"
+			MinFrameworkVersion="131072"
 		/>
 	</References>
 	<Files>

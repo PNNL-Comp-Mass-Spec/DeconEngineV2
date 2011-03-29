@@ -46,11 +46,16 @@ namespace DeconToolsV2
 			return mobj_raw_data->GetFirstScanNum() ; 
 		}
 
-		void clsRawData::SetCalibrationValues()
+		void clsRawData::SetFFTCalibrationValues(CalibrationSettings *calSettings)
 		{
+			Engine::Calibrations::CCalibrator *calib = new Engine::Calibrations::CCalibrator(A_OVER_F_PLUS_B);
+			calib->SetSize(calSettings->TD);
+			calib->SetLowMassFrequency(calSettings->FRLow);
+			calib->SetSampleRate(calSettings->SW_h);
+			calib->SetCalibrationEquationParams(calSettings->ML1,calSettings->ML2,0.0);
 
+			mobj_raw_data->SetCalibrator(calib);
 			return;
-
 		}
 
 
@@ -454,7 +459,8 @@ namespace DeconToolsV2
 			System::String *data_type;
 
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
-			data_type = System::Convert::ToString(uimfDataReader->GetGlobalParameters("TOFIntensityType"));
+			UIMFLibrary::GlobalParameters *gp = uimfDataReader->GetGlobalParameters();
+			data_type = gp->TOFIntensityType;
 
 			std::vector<double> vect_mzs ;
 			std::vector<double> vect_intensities; 

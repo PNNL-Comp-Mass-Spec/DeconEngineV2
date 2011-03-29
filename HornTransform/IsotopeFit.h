@@ -135,6 +135,12 @@ namespace Engine
 			
 			PeakProcessing::PeakData GetTheoreticalIsotopicDistributionPeakList(std::vector<double> *xvals, std::vector<double> *yvals);
 
+
+			//will calculate the delta mz (referenced to the theor) based on several of the observed peaks
+			double CalculateDeltaFromSeveralObservedPeaks(double startingDelta, double peakWidth, PeakProcessing::PeakData &obsPeakData, PeakProcessing::PeakData &theorPeakData, double theorIntensityCutOff);
+
+
+
 			/*
 
 			*/
