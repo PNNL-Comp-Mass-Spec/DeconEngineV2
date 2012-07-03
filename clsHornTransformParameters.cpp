@@ -64,6 +64,8 @@ namespace DeconToolsV2
 			mshort_numPeaksUsedInAbundance = 1 ;
 			mbln_detectPeaksWithNoDeconvolution= false;
 			mbln_processMS = true;
+			_scanBasedWorkflowType = "standard";
+			_saturationThreshold = 90000;
 		}
 
 		clsHornTransformParameters::~clsHornTransformParameters(void)
@@ -72,6 +74,7 @@ namespace DeconToolsV2
 
 		void clsHornTransformParameters::SaveV1HornTransformParameters(System::Xml::XmlTextWriter *xwriter)
 		{
+			xwriter->WriteWhitespace(S"\n\t") ; 
 			xwriter->WriteStartElement(S"HornTransformParameters");
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			xwriter->WriteElementString(S"TagFormula",this->TagFormula) ; 
@@ -113,50 +116,51 @@ namespace DeconToolsV2
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"UseMercuryCaching",this->UseMercuryCaching.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"SumSpectra",this->SumSpectra.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 		
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"SumSpectraAcrossScanRange",this->SumSpectraAcrossScanRange.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 		
-	
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+
 			xwriter->WriteElementString(S"NumberOfScansToSumOver",this->NumScansToSumOver.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"NumberOfScansToAdvance",this->NumScansToAdvance.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"SumSpectraAcrossFrameRange",this->SumSpectraAcrossFrameRange.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 	
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"NumberOfFramesToSumOver",this->NumFramesToSumOver.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 			
 			xwriter->WriteElementString(S"IsActualMonoMZUsed",this->IsActualMonoMZUsed.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"LeftFitStringencyFactor",this->LeftFitStringencyFactor.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"RightFitStringencyFactor",this->RightFitStringencyFactor.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"UseRAPIDDeconvolution",this->UseRAPIDDeconvolution.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 		
 
 			xwriter->WriteElementString(S"ReplaceRAPIDScoreWithHornFitScore",this->ReplaceRAPIDScoreWithHornFitScore.ToString()) ;
 			xwriter->WriteWhitespace(S"\n\t\t") ;
 
 			xwriter->WriteElementString(S"NumPeaksUsedInAbundance",this->NumPeaksUsedInAbundance.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
-				xwriter->WriteEndElement();
 			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteEndElement();
+			
 		}
 
 		void clsHornTransformParameters::SaveV1MiscellaneousParameters(System::Xml::XmlTextWriter *xwriter)
 		{
+			xwriter->WriteWhitespace(S"\n\t") ; 
 			xwriter->WriteStartElement(S"Miscellaneous") ; 
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			xwriter->WriteElementString(S"UseScanRange", Convert::ToString(this->UseScanRange)); 
@@ -198,11 +202,15 @@ namespace DeconToolsV2
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"Process_MS",this->ProcessMS.ToString()) ;
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
+
+			xwriter->WriteElementString(S"ScanBasedWorkflowType",this->ScanBasedWorkflowType) ;
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
+
+			xwriter->WriteElementString(S"SaturationThreshold",this->SaturationThreshold.ToString()) ;
+			
 			xwriter->WriteWhitespace(S"\n\t") ; 
-
-
 			xwriter->WriteEndElement();
-			xwriter->WriteWhitespace(S"\n\t") ; 
 			
 		}
 
@@ -1036,8 +1044,37 @@ namespace DeconToolsV2
 							}
 
 						}
+						else if (rdr->Name->Equals(S"ScanBasedWorkflowType"))
+						{
+							if (rdr->IsEmptyElement)
+							{
+								this->ScanBasedWorkflowType = "" ; 
+								continue ; 
+							}
 
-
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							this->ScanBasedWorkflowType = rdr->Value ; 
+						}
+						else if (rdr->Name->Equals(S"SaturationThreshold"))
+						{
+							rdr->Read() ; 
+							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
+							{
+								rdr->Read() ; 
+							}
+							if (rdr->NodeType != XmlNodeType::Text)
+							{
+								throw new Exception (S"No parameters were specified for 'SaturationThreshold'") ; 
+							}
+							else
+							{
+								this->set_SaturationThreshold(Convert::ToDouble(rdr->Value)) ; 
+							}
+						}
 				
 						break ; 
 					case XmlNodeType::EndElement:

@@ -67,14 +67,21 @@ namespace Engine
 			mzs->clear() ; 
 			intensities->clear() ; 
 
+
+			for (int i = 0 ; i < num_pts_used/2 ; i++)
+			{
+				double point1 = data_ptr[2*i];
+				double point2 = data_ptr[2*i+1];
+			}
+
 			if ((int)mzs->capacity() < num_pts_used/2)
 				mzs->reserve(num_pts_used/2) ; 
 
 			if ((int)intensities->capacity() < num_pts_used/2)
 				intensities->reserve(num_pts_used/2) ; 
 
-			int temp = 1 ; 
-			int result = FFT::realft(num_pts_used, data_ptr, temp) ; 
+			int sign = 1 ; 
+			int result = FFT::realft(num_pts_used, data_ptr, sign) ; 
 
 			// intensities need to be put in increasing order of mz. But here they are in 
 			// descending order. So insert and then reverse.  
@@ -102,8 +109,14 @@ namespace Engine
 					}
 				}
 
+				double point1 = data_ptr[2*i];
+				double point2 = data_ptr[2*i+1];
 
-				double intensity_val = sqrt(data_ptr[2*i+1] * data_ptr[2*i+1] + data_ptr[2*i] * data_ptr[2*i]) ; 
+
+
+				//double intensity_val = sqrt(data_ptr[2*i+1] * data_ptr[2*i+1] + data_ptr[2*i] * data_ptr[2*i]) ; 
+				double intensity_val = sqrt(point2 * point2 + point1 * point1) ; 
+
 				if (mz_val == 0 )
 					continue ;
 				mzs->push_back(mz_val) ; 

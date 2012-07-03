@@ -21,7 +21,7 @@ namespace DeconToolsV2
 
 		public __value enum enmExportFileType {TEXT = 0, SQLITE}; 
 
-		public __gc class clsHornTransformParameters: public System::ICloneable
+	public __gc class clsHornTransformParameters: public System::ICloneable
 		{
 			static System::String *DEFAULT_ISOTOPE_FILE = S"isotope.xml" ; 
 			short mshort_max_charge  ;
@@ -77,6 +77,9 @@ namespace DeconToolsV2
 			int mint_numScansToAdvance;
 			bool mbln_detectPeaksWithNoDeconvolution;
 			bool mbln_processMS;    // parameter that will allow skipping of MSLevel data
+			System::String *_scanBasedWorkflowType; 
+
+			double _saturationThreshold ;
 
 
 
@@ -147,6 +150,7 @@ namespace DeconToolsV2
 				new_params->set_NumScansToAdvance(this->get_NumScansToAdvance());
 			    new_params->set_DetectPeaksOnlyWithNoDeconvolution(this->get_DetectPeaksOnlyWithNoDeconvolution());
 				new_params->set_ProcessMS(this->get_ProcessMS());
+				new_params->set_ScanBasedWorkflowType(static_cast<System::String *>(this->get_ScanBasedWorkflowType()->Clone())) ; 
 
 			
 
@@ -588,6 +592,27 @@ namespace DeconToolsV2
 			{
 				mbln_processMS = value;
 			}
+
+			__property System::String* get_ScanBasedWorkflowType()
+			{
+				return _scanBasedWorkflowType;
+			}
+			__property void set_ScanBasedWorkflowType(System::String* value)
+			{
+				_scanBasedWorkflowType = value;
+			}
+
+			__property double get_SaturationThreshold()
+			{
+				return _saturationThreshold ; 
+			}
+
+			__property void set_SaturationThreshold(double value)
+			{
+				_saturationThreshold = value ; 
+			}
+
+
 
 
 

@@ -31,6 +31,7 @@ namespace DeconToolsV2
 
 		void clsPeakProcessorParameters::SaveV1PeakParameters(System::Xml::XmlTextWriter *xwriter)
 		{
+			xwriter->WriteWhitespace(S"\n\t") ;
 			xwriter->WriteStartElement(S"PeakParameters");
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
@@ -39,13 +40,12 @@ namespace DeconToolsV2
 			xwriter->WriteElementString(S"SignalToNoiseThreshold", this->SignalToNoiseThreshold.ToString()) ; 
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			xwriter->WriteElementString(S"PeakFitType",__box(this->PeakFitType)->ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			xwriter->WriteElementString(S"WritePeaksToTextFile",__box(this->WritePeaksToTextFile)->ToString()) ;
+		
 			xwriter->WriteWhitespace(S"\n\t") ; 
-
-			
 			xwriter->WriteEndElement();
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			
 		}
 
 		void clsPeakProcessorParameters::LoadV1PeakParameters(XmlReader *rdr)

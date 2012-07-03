@@ -12,11 +12,10 @@
 #include ".\clsrawdata.h"
 #include "Readers\ReaderFactory.h"
 #include "Readers\Icr2LSRawData.h" 
-#include "Readers/UIMFRawData.h"
 #include "Readers/IMSRawData.h"
 #include "DeconEngineUtils.h"
 
-using namespace UIMFLibrary;
+//using namespace UIMFLibrary;
 
 namespace DeconToolsV2
 {
@@ -371,7 +370,7 @@ namespace DeconToolsV2
 		}
 
 
-		double clsRawData::GetDriftTime(int scanNum)
+	/*	double clsRawData::GetDriftTime(int scanNum)
 		{
 
 		if (get_FileType() != FileType::PNNL_UIMF)
@@ -382,9 +381,9 @@ namespace DeconToolsV2
 		Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 		return uimfRawData->GetDriftTime(scanNum) ;
 
-				}
+				}*/
 
-		double clsRawData::GetFramePressure(int frameNum)
+	/*	double clsRawData::GetFramePressure(int frameNum)
 		{
 			if (get_FileType() != FileType::PNNL_UIMF)
 				throw new System::Exception("FileType is not UIMF") ; 
@@ -394,9 +393,9 @@ namespace DeconToolsV2
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 			return uimfRawData->GetFramePressure(frameNum) ; 
 
-		}
+		}*/
 
-		int clsRawData::GetNumOfFrames()
+		/*int clsRawData::GetNumOfFrames()
 		{
 			if (get_FileType() != FileType::PNNL_UIMF)
 				throw new System::Exception("FileType is not UIMF") ; 
@@ -406,7 +405,7 @@ namespace DeconToolsV2
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 			return uimfRawData->GetNumOfFrames();
 
-		}
+		}*/
 
 		/*void clsRawData::GetSummedFrameSpectra(double (&mzs) __gc[], double (&intensities) __gc[], 
 			int startFrame, int endFrame, double min_mz, double max_mz, int imsScanNum)
@@ -447,7 +446,7 @@ namespace DeconToolsV2
 
 		}*/
 
-		void clsRawData::GetSummedFrameAndScanSpectra(DataReader *uimfDataReader, double (&mzs) __gc[], 
+		/*void clsRawData::GetSummedFrameAndScanSpectra(DataReader *uimfDataReader, double (&mzs) __gc[], 
 			double (&intensities) __gc[], int start_frame, int end_frame, int ims_start_scan, 
 			int ims_end_scan, double min_mz, double max_mz, int numBins )
 		{
@@ -487,7 +486,7 @@ namespace DeconToolsV2
 			}			
 
 
-		}
+		}*/
 
 
 

@@ -70,7 +70,7 @@ namespace Engine {
 		const char* GetFileName() ;
 		void SetFileName(const char * file_name);
 		
-		UIMFLibrary::DataReader* OpenUIMFFile();
+		//UIMFLibrary::DataReader* OpenUIMFFile();
 		void CloseUIMFFile();
 		int GetUIMFSpectrum(char *marr_filename, int scan_num);
 		bool GetRawData(std::vector <double> *mzs, std::vector<double> *intensities, int scan_num) ; 
@@ -90,7 +90,7 @@ namespace Engine {
 		void GetSummedSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int start_scan, int stop_scan, double min_mz, double max_mz)  ; 
 		bool GetSummedFrameSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int start_frame, int stop_frame, double min_mz, double max_mz, int scan_num);
 		bool GetSummedFrameAndScanSpectra(std::vector <double> *mzs, std::vector <double> *intensities, int start_frame, int end_frame, int start_scan, int end_scan, double min_mz, double max_mz );
-		bool YanGetSummedFrameAndScanSpectra(UIMFLibrary::DataReader* ReadUIMF, std::vector <double> *mzs, std::vector <double> *intensities, int start_frame, int end_frame, int start_scan, int end_scan, double min_mz, double max_mz, int num_bins, System::String *data_type);
+		//bool YanGetSummedFrameAndScanSpectra(UIMFLibrary::DataReader* ReadUIMF, std::vector <double> *mzs, std::vector <double> *intensities, int start_frame, int end_frame, int start_scan, int end_scan, double min_mz, double max_mz, int num_bins, System::String *data_type);
 		int GetTICandbpi(int frameNum, int scanNum, double &bpi, double &bpi_mz);
 		double GetSignalRange(int scan_num) ; 
 		void GetTicFromFile(std::vector<double> *intensities, std::vector<double> *scan_times, bool base_peak_tic) ; 

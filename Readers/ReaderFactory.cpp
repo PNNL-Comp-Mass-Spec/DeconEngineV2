@@ -19,7 +19,7 @@
 #include "MicromassRawData.h"
 #include "MZXmlRawData.h" 
 #include "IMSRawData.h" 
-#include "UIMFRawData.h" 
+//#include "UIMFRawData.h" 
 //#include "YafmsRawData.h"
 
 namespace Engine 
@@ -95,11 +95,11 @@ namespace Engine
 					ims_raw_data->Load(file_name) ; 
 					return ims_raw_data ; 
 					break ; 
-				case PNNL_UIMF:
-					UIMFRawData *uimf_raw_data ; 
-					uimf_raw_data = new UIMFRawData() ; 
-					uimf_raw_data->Load(file_name) ; 
-					return uimf_raw_data ; 
+				//case PNNL_UIMF:
+				//	UIMFRawData *uimf_raw_data ; 
+				//	uimf_raw_data = new UIMFRawData() ; 
+				//	uimf_raw_data->Load(file_name) ; 
+				//	return uimf_raw_data ; 
 					break ; 
 			/*	case YAFMS:
 					YafmsRawData *yafms_raw_data ; 
@@ -155,10 +155,10 @@ namespace Engine
 					*raw_data = new IMSRawData() ; 
 					return ;
 					break ; 
-				case PNNL_UIMF:
+		/*		case PNNL_UIMF:
 					*raw_data = new UIMFRawData() ; 
 					return ;
-					break ; 
+					break ; */
 				/*case YAFMS:
 					*raw_data = new YafmsRawData() ; 
 					return ;
@@ -226,11 +226,11 @@ namespace Engine
 					ims_raw_data = new IMSRawData() ; 
 					return ims_raw_data ; 
 					break ; 
-				case PNNL_UIMF:
+		/*		case PNNL_UIMF:
 					UIMFRawData *uimf_raw_data ; 
 					uimf_raw_data = new UIMFRawData() ; 
 					return uimf_raw_data ; 
-					break ; 
+					break ; */
 			/*	case YAFMS:
 					YafmsRawData *yafms_raw_data ; 
 					yafms_raw_data = new YafmsRawData() ; 

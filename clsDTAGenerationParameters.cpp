@@ -54,6 +54,7 @@ namespace DeconToolsV2
 
 		void clsDTAGenerationParameters::SaveV1DTAGenerationParameters(System::Xml::XmlTextWriter *xwriter)
 		{
+			xwriter->WriteWhitespace(S"\n\t") ; 
 			xwriter->WriteStartElement(S"DTAGenerationParameters");
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			xwriter->WriteElementString(S"MinScan", System::Convert::ToString(this->MinScan)) ; 
@@ -88,19 +89,19 @@ namespace DeconToolsV2
 			xwriter->WriteWhitespace(S"\n\t\t") ; 
 			
 			xwriter->WriteElementString(S"ConsiderMultiplePrecursors", System::Convert::ToString(this->ConsiderMultiplePrecursors)) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"IsolationWindowSize", System::Convert::ToString(this->IsolationWindowSize)) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"OutputType", __box(this->OutputType)->ToString()); 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"IsProfileDataForMzXML", System::Convert::ToString(this->IsProfileDataForMzXML)) ; 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace(S"\n\t\t") ; 
 
 			xwriter->WriteElementString(S"IgnoreMSnScans", System::Convert::ToString(this->IgnoreMSnScans)); 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			
 			
 			if(this->IgnoreMSnScans)
 			{
@@ -108,12 +109,14 @@ namespace DeconToolsV2
 				for (int levelNum = 0 ; levelNum < numLevels ; levelNum++)
 				{
 					int level = (*mvect_msn_levels_to_ignore)[levelNum] ; 
+					xwriter->WriteWhitespace(S"\n\t\t") ; 
 					xwriter->WriteElementString(S"MSnLevelToIgnore", System::Convert::ToString(level)); 
-					xwriter->WriteWhitespace(S"\n\t") ; 
+					
 				}
 			}			
+			xwriter->WriteWhitespace(S"\n\t") ; 
 			xwriter->WriteEndElement();
-			xwriter->WriteWhitespace(S"\n\t") ; 		
+					
 		}
 
 		void clsDTAGenerationParameters::LoadV1DTAGenerationParameters(XmlReader *rdr)

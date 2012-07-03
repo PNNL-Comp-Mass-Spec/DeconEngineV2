@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>DeconEngineV2</ProjectName>
+    <ProjectGuid>{1A747672-EF23-475B-8945-F065B7EDFEEE}</ProjectGuid>
+    <RootNamespace>DeconEngine</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>OldSyntax</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>OldSyntax</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\include\;C:\xerces\xerces-c-windows_2000-msvc_60\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;MASSLYNX_4_INSTALLED;ANALYST_INSTALLED;XCALIBUR_INSTALLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mscoree.lib;msvcrtd.lib;Ws2_32.lib;xerces-c_2.lib;msvcrt.lib;xerces-c_2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>C:\xerces\xerces-c-windows_2000-msvc_60\lib;C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ForceSymbolReferences>__DllMainCRTStartup%4012;%(ForceSymbolReferences)</ForceSymbolReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\xerces\xerces-c-windows_2000-msvc_60\include\;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;MASSLYNX_4_INSTALLED;ANALYST_INSTALLED;XCALIBUR_INSTALLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>4Bytes</StructMemberAlignment>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>mscoree.lib;msvcrt.lib;Ws2_32.lib;xerces-c_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>C:\xerces\xerces-c-windows_2000-msvc_60\lib;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\lib;C:\Projects\Decon2LS\DeconEngine\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ForceSymbolReferences>__DllMainCRTStartup%4012;%(ForceSymbolReferences)</ForceSymbolReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Data">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Xml">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="CalibrationSettings.cpp" />
+    <ClCompile Include="clsAveragine.cpp" />
+    <ClCompile Include="clsDTAGenerationParameters.cpp" />
+    <ClCompile Include="clsElementIsotopes.cpp" />
+    <ClCompile Include="clsHornTransform.cpp" />
+    <ClCompile Include="clsHornTransformParameters.cpp" />
+    <ClCompile Include="clsHornTransformResults.cpp" />
+    <ClCompile Include="clsHyperTransform.cpp" />
+    <ClCompile Include="clsIsotopeFit.cpp" />
+    <ClCompile Include="clsMercuryIsotopeDistribution.cpp" />
+    <ClCompile Include="clsPeak.cpp" />
+    <ClCompile Include="clsPeakProcessor.cpp" />
+    <ClCompile Include="clsPeakProcessorParameters.cpp" />
+    <ClCompile Include="clsProcRunner.cpp" />
+    <ClCompile Include="clsRawData.cpp" />
+    <ClCompile Include="clsRawDataPreprocessOptions.cpp" />
+    <ClCompile Include="clsTransformFile.cpp" />
+    <ClCompile Include="clsTransformResults.cpp" />
+    <ClCompile Include="DeconEngine.cpp" />
+    <ClCompile Include="DeconEngineUtils.cpp" />
+    <ClCompile Include="Readers\AgilentRawData.cpp" />
+    <ClCompile Include="Readers\AsciiRawData.cpp" />
+    <ClCompile Include="Readers\BrukerAsciiRawData.cpp" />
+    <ClCompile Include="Readers\BrukerRawData.cpp" />
+    <ClCompile Include="Readers\FinniganRawData.cpp" />
+    <ClCompile Include="Readers\Ic2LSRawData.cpp" />
+    <ClCompile Include="Readers\IMSRawData.cpp" />
+    <ClCompile Include="Readers\MicromassRawData.cpp" />
+    <ClCompile Include="Readers\MZXmlRawData.cpp" />
+    <ClCompile Include="Readers\RawData.cpp" />
+    <ClCompile Include="Readers\ReaderFactory.cpp" />
+    <ClCompile Include="Readers\SunExtrelRawData.cpp" />
+    <ClCompile Include="Readers\Ramp\base64.cpp" />
+    <ClCompile Include="Readers\Ramp\ramp.cpp" />
+    <ClCompile Include="Calibrations\Calibrator.cpp" />
+    <ClCompile Include="Calibrations\CalibratorImp.cpp" />
+    <ClCompile Include="Utilities\Apodization.cpp" />
+    <ClCompile Include="Utilities\BlockDeque.cpp" />
+    <ClCompile Include="Utilities\DeconException.cpp" />
+    <ClCompile Include="Utilities\Fft32.cpp" />
+    <ClCompile Include="Utilities\helpers.cpp" />
+    <ClCompile Include="Utilities\Interpolation.cpp" />
+    <ClCompile Include="Utilities\Matrix.cpp" />
+    <ClCompile Include="Utilities\savgol.cpp" />
+    <ClCompile Include="Utilities\SavGolSmoother.cpp" />
+    <ClCompile Include="PeakProcessor\Peak.cpp" />
+    <ClCompile Include="PeakProcessor\PeakData.cpp" />
+    <ClCompile Include="PeakProcessor\PeakFit.cpp" />
+    <ClCompile Include="PeakProcessor\PeakProcessor.cpp" />
+    <ClCompile Include="HornTransform\AreaFit.cpp" />
+    <ClCompile Include="HornTransform\ChiSqFit.cpp" />
+    <ClCompile Include="HornTransform\IsotopeFit.cpp" />
+    <ClCompile Include="HornTransform\IsotopeFitRecord.cpp" />
+    <ClCompile Include="HornTransform\MassTransform.cpp" />
+    <ClCompile Include="HornTransform\MercuryCache.cpp" />
+    <ClCompile Include="HornTransform\PeakFit.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="TheoreticalProfile\AtomicInformation.cpp" />
+    <ClCompile Include="TheoreticalProfile\Averagine.cpp" />
+    <ClCompile Include="TheoreticalProfile\MercuryIsotopeDistribution.cpp" />
+    <ClCompile Include="TheoreticalProfile\MolecularFormula.cpp" />
+    <ClCompile Include="ChargeDetermination\AutoCorrelationChargeDetermination.cpp" />
+    <ClCompile Include="ChargeDetermination\FeatureSpace.cpp" />
+    <ClCompile Include="ChargeDetermination\SVMChargeDetermination.cpp" />
+    <ClCompile Include="Results\LCMSTransformResults.cpp" />
+    <ClCompile Include="DTAGeneration\DTAGeneration.cpp" />
+    <ClCompile Include="DTAGeneration\MSnInformationRecord.cpp" />
+    <ClCompile Include="DTAGeneration\ProfileRecord.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CalibrationSettings.h" />
+    <ClInclude Include="clsAveragine.h" />
+    <ClInclude Include="clsDTAGenerationParameters.h" />
+    <ClInclude Include="clsElementIsotopes.h" />
+    <ClInclude Include="clsHornTransform.h" />
+    <ClInclude Include="clsHornTransformParameters.h" />
+    <ClInclude Include="clsHornTransformResults.h" />
+    <ClInclude Include="clsHyperTransform.h" />
+    <ClInclude Include="clsIsotopeFit.h" />
+    <ClInclude Include="clsLCMSPeak.h" />
+    <ClInclude Include="clsMercuryIsotopeDistribution.h" />
+    <ClInclude Include="clsPeak.h" />
+    <ClInclude Include="clsPeakProcessor.h" />
+    <ClInclude Include="clsPeakProcessorParameters.h" />
+    <ClInclude Include="clsProcRunner.h" />
+    <ClInclude Include="clsRawData.h" />
+    <ClInclude Include="clsRawDataPreprocessOptions.h" />
+    <ClInclude Include="clsTransformFile.h" />
+    <ClInclude Include="clsTransformResults.h" />
+    <ClInclude Include="DeconEngine.h" />
+    <ClInclude Include="DeconEngineUtils.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Readers\AgilentRawData.h" />
+    <ClInclude Include="Readers\AsciiRawData.h" />
+    <ClInclude Include="Readers\BrukerAsciiRawData.h" />
+    <ClInclude Include="Readers\BrukerRawData.h" />
+    <ClInclude Include="Readers\FinniganRawData.h" />
+    <ClInclude Include="Readers\Icr2lsRawData.h" />
+    <ClInclude Include="Readers\IMSRawData.h" />
+    <ClInclude Include="Readers\MicromassRawData.h" />
+    <ClInclude Include="Readers\MZXmlRawData.h" />
+    <ClInclude Include="Readers\RawData.h" />
+    <ClInclude Include="Readers\ReaderFactory.h" />
+    <ClInclude Include="Readers\SunExtrelRawData.h" />
+    <ClInclude Include="Readers\Ramp\base64.h" />
+    <ClInclude Include="Readers\Ramp\ramp.h" />
+    <ClInclude Include="Calibrations\Calibrator.h" />
+    <ClInclude Include="Calibrations\CalibratorImp.h" />
+    <ClInclude Include="Utilities\Apodization.h" />
+    <ClInclude Include="Utilities\BlockDeque.h" />
+    <ClInclude Include="Utilities\DeconException.h" />
+    <ClInclude Include="Utilities\Fft32.h" />
+    <ClInclude Include="Utilities\helpers.h" />
+    <ClInclude Include="Utilities\Interpolation.h" />
+    <ClInclude Include="Utilities\Matrix.h" />
+    <ClInclude Include="Utilities\SavGolSmoother.h" />
+    <ClInclude Include="PeakProcessor\Peak.h" />
+    <ClInclude Include="PeakProcessor\PeakData.h" />
+    <ClInclude Include="PeakProcessor\PeakFit.h" />
+    <ClInclude Include="PeakProcessor\PeakIndex.h" />
+    <ClInclude Include="PeakProcessor\PeakProcessor.h" />
+    <ClInclude Include="PeakProcessor\PeakStatistician.h" />
+    <ClInclude Include="HornTransform\AreaFit.h" />
+    <ClInclude Include="HornTransform\ChiSqFit.h" />
+    <ClInclude Include="HornTransform\IsotopeFit.h" />
+    <ClInclude Include="HornTransform\IsotopeFitRecord.h" />
+    <ClInclude Include="HornTransform\MassTransform.h" />
+    <ClInclude Include="HornTransform\MercuryCache.h" />
+    <ClInclude Include="HornTransform\PeakFit.h" />
+    <ClInclude Include="TheoreticalProfile\AtomicInformation.h" />
+    <ClInclude Include="TheoreticalProfile\Averagine.h" />
+    <ClInclude Include="TheoreticalProfile\MercuryIsotopeDistribution.h" />
+    <ClInclude Include="TheoreticalProfile\MolecularFormula.h" />
+    <ClInclude Include="ChargeDetermination\AutoCorrelationChargeDetermination.h" />
+    <ClInclude Include="ChargeDetermination\FeatureSpace.h" />
+    <ClInclude Include="ChargeDetermination\SVMChargeDetermination.h" />
+    <ClInclude Include="Results\LCMSPeak.h" />
+    <ClInclude Include="Results\LCMSPeakIndex.h" />
+    <ClInclude Include="Results\LCMSTransformResults.h" />
+    <ClInclude Include="DTAGeneration\DTAGeneration.h" />
+    <ClInclude Include="DTAGeneration\MSnInformationRecord.h" />
+    <ClInclude Include="DTAGeneration\ProfileRecord.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

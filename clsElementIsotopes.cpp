@@ -156,6 +156,7 @@ namespace DeconToolsV2
 
 		int numElements = GetNumberOfElements();			
 
+		xwriter->WriteWhitespace("\n\t") ; 
 		xwriter->WriteStartElement("ElementIsotopes");
 		xwriter->WriteWhitespace("\n\t\t") ; 
 		xwriter->WriteElementString("NumElements",numElements.ToString()) ; 

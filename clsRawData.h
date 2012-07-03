@@ -17,7 +17,7 @@
 #include "Readers\Icr2LSRawData.h" 
 
 #using <mscorlib.dll>
-using namespace UIMFLibrary;
+//using namespace UIMFLibrary;
 
 namespace DeconToolsV2
 {
@@ -134,14 +134,14 @@ namespace DeconToolsV2
 			void GetSummedSpectra(int current_scan , int scan_range, double (&mzs) __gc[], double (&intensities) __gc[]) ; 
 			void GetSummedSpectra(int start_scan, int stop_scan, double min_mz, double max_mz, double (&mzs) __gc[], double (&intensities) __gc[]) ; 
 
-			double GetDriftTime(int scanNum);
+			/*double GetDriftTime(int scanNum);
 			double GetFramePressure(int frameNum);
-			int GetNumOfFrames();
+			int GetNumOfFrames();*/
 			/*void GetSummedFrameSpectra(double (&mzs) __gc[], double (&intensities) __gc[], 
 				int startFrame, int endFrame, double min_mz, double max_mz, int imsScanNum);*/
 
-			void GetSummedFrameAndScanSpectra(DataReader *uimfDataReader, double (&mzs) __gc[], double (&intensities) __gc[],
-				int start_frame, int end_frame, int ims_start_scan, int ims_end_scan, double min_mz, double max_mz, int numBins );
+			/*void GetSummedFrameAndScanSpectra(DataReader *uimfDataReader, double (&mzs) __gc[], double (&intensities) __gc[],
+				int start_frame, int end_frame, int ims_start_scan, int ims_end_scan, double min_mz, double max_mz, int numBins );*/
 
 
 

@@ -18,7 +18,6 @@
 #include "HornTransform/MassTransform.h"
 #include "DTAGeneration/DTAGeneration.h"
 #include "Utilities/SavGolSmoother.h"
-#include "Readers/UIMFRawData.h"
 #include "Readers/IMSRawData.h"
 #include <time.h>
 
@@ -316,21 +315,24 @@ namespace DeconToolsV2
 				raw_data_read_time += (clock() - current_time) ; 
 
 				scan_time = raw_data->GetScanTime(scan_num) ;
-				if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
-				{
-					drift_time =  ((Engine::Readers::UIMFRawData *)raw_data)->GetDriftTime(scan_num) ; 
-				}
-				else
-					drift_time = - 1; 
+				//if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
+				//{
+
+				//	//drift_time =  ((Engine::Readers::UIMFRawData *)raw_data)->GetDriftTime(scan_num) ; 
+				//}
+				//else
+				//	drift_time = - 1; 
 			
 				if (vect_mzs.size() == 0)
 				{
 					if (save_peaks)
 					{
-						if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
+						lcms_results->AddInfoForScan(scan_num, 0, 0, 0, 0, 0, 0, scan_time, scan_ms_level) ;
+
+						/*if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
 							lcms_results->AddInfoForUIMFScan(scan_num, 0, 0, 0, 0, 0, 0, scan_time, scan_ms_level, drift_time) ; 
 						else
-							lcms_results->AddInfoForScan(scan_num, 0, 0, 0, 0, 0, 0, scan_time, scan_ms_level) ;
+							lcms_results->AddInfoForScan(scan_num, 0, 0, 0, 0, 0, 0, scan_time, scan_ms_level) ;*/
 					}
 					continue ;
 				}
@@ -544,10 +546,11 @@ namespace DeconToolsV2
 				if (save_peaks)
 				{
 					double signal_range = raw_data->GetSignalRange(scan_num) ; 
-					if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
+					lcms_results->AddInfoForScan(scan_num, bp_mz, bpi, tic_intensity, signal_range, numPeaks, numDeisotoped, scan_time, scan_ms_level) ;
+					/*if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
 						lcms_results->AddInfoForUIMFScan(scan_num, bp_mz, bpi, tic_intensity, signal_range, numPeaks, numDeisotoped, scan_time, scan_ms_level, drift_time) ;							
 					else
-						lcms_results->AddInfoForScan(scan_num, bp_mz, bpi, tic_intensity, signal_range, numPeaks, numDeisotoped, scan_time, scan_ms_level) ; 
+						lcms_results->AddInfoForScan(scan_num, bp_mz, bpi, tic_intensity, signal_range, numPeaks, numDeisotoped, scan_time, scan_ms_level) ; */
 				}
 
 			}			
