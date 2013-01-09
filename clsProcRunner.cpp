@@ -833,7 +833,9 @@ namespace DeconToolsV2
 				{						
                     //Get MS spectra					
 					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																												
-					for(int msN_scan = scan_num +1; msN_scan < num_scans && !dta_processor->mobj_raw_data_dta->IsMSScan(msN_scan)  ; msN_scan++)
+
+					int msN_scan= scan_num+1;
+					for(msN_scan = scan_num +1; msN_scan < num_scans && !dta_processor->mobj_raw_data_dta->IsMSScan(msN_scan)  ; msN_scan++)
 					{
 						//GetMS level and see if it is to be ignored
 						if(mobj_dta_generation_parameters->get_IgnoreMSnScans())

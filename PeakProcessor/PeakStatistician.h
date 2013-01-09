@@ -227,12 +227,12 @@ namespace Engine
 			}
 
 
-			//! Calculate Least Square error mapping y = f(x). 
+			//! Calculate Least Square error mapping y = f(x).  [GORD] This is linear regression - that's it! 
 			/*!
 				\param x std::vector of x values. 
 				\param y std::vector of y values. 
 				\param n number of points in std::vector.
-				\param terms output coefficients of Least Square Error parameters. 
+				\param terms output coefficients of Least Square Error parameters. Coefficients are slope and intercept! 
 				\param nterms order of the function y = f(x).
 				\param mse minimum square error value.
 				\return returns 0 if successful an -1 if not. 

@@ -168,25 +168,25 @@ namespace Engine
 			
 			double resolution = pk.mdbl_mz / pk.mdbl_FWHM ; 
 
-			short CS = mobj_autocorrelation_dermine_cs.GetChargeState(pk, pk_data, mbln_debug) ; 			
+			short chargeState = mobj_autocorrelation_dermine_cs.GetChargeState(pk, pk_data, mbln_debug) ; 			
 			
-			if (CS == -1 && mbln_check_against_charge1) 
+			if (chargeState == -1 && mbln_check_against_charge1) 
 			{
-				CS = 1 ; 
+				chargeState = 1 ; 
 			}
 
 			if (mbln_debug)
 			{
 				std::cerr<<"Deisotoping :"<<pk.mdbl_mz ; 
-				std::cerr<<"Charge = "<<CS<<std::endl ; 
+				std::cerr<<"Charge = "<<chargeState<<std::endl ; 
 			}
 
-			if (CS == -1)
+			if (chargeState == -1)
 			{
 				return false ; 
 			}
 
-			if ((pk.mdbl_mz + mdbl_cc_mass) * CS > mdbl_max_mw)
+			if ((pk.mdbl_mz + mdbl_cc_mass) * chargeState > mdbl_max_mw)
 			{
 				return false ; 
 			}
@@ -194,11 +194,11 @@ namespace Engine
 			if (mbln_chk_o18_pairs)
 			{
 				PeakProcessing::Peak o16_peak ;
-				if (pk.mdbl_FWHM < 1/CS)
+				if (pk.mdbl_FWHM < 1/chargeState)
 				{
 					// move back by 4 Da and see if there is a peak.
-					double min_mz = pk.mdbl_mz - 4.0/CS - pk.mdbl_FWHM ; 
-					double max_mz = pk.mdbl_mz - 4.0/CS + pk.mdbl_FWHM ; 
+					double min_mz = pk.mdbl_mz - 4.0/chargeState - pk.mdbl_FWHM ; 
+					double max_mz = pk.mdbl_mz - 4.0/chargeState + pk.mdbl_FWHM ; 
 					bool found = pk_data.GetPeak(min_mz, max_mz, o16_peak) ; 
 					if (found && o16_peak.mdbl_mz != pk.mdbl_mz)
 					{
@@ -227,14 +227,14 @@ namespace Engine
 			//if (background_intensity ==0 || delete_threshold > mdbl_delete_intensity_threshold)
 			//	delete_threshold = mdbl_delete_intensity_threshold ; 
 			double delete_threshold = mdbl_delete_intensity_threshold ; 
-			best_fit = mobj_isotope_fitter->GetFitScore(pk_data, CS, pk, record, delete_threshold, mdbl_min_theoretical_intensity_for_score,
+			best_fit = mobj_isotope_fitter->GetFitScore(pk_data, chargeState, pk, record, delete_threshold, mdbl_min_theoretical_intensity_for_score,
 				mdbl_leftFitStringencyFactor,mdbl_rightFitStringencyFactor, mbln_debug) ; 
 
 			mobj_isotope_fitter->GetZeroingMassRange(mdbl_zeroing_start_mz, mdbl_zeroing_stop_mz, record.mdbl_delta_mz, delete_threshold, mbln_debug) ;
 			//best_fit = mobj_isotope_fitter->GetFitScore(pk_data, CS, pk, record, mdbl_delete_intensity_threshold, mdbl_min_theoretical_intensity_for_score, mbln_debug) ; 
 			//mobj_isotope_fitter->GetZeroingMassRange(mdbl_zeroing_start_mz, mdbl_zeroing_stop_mz, record.mdbl_delta_mz, mdbl_delete_intensity_threshold, mbln_debug) ;
 
-			if (mbln_check_against_charge1 && CS != 1)
+			if (mbln_check_against_charge1 && chargeState != 1)
 			{
 				IsotopeFitRecord recordCharge1 ; 
 				double best_fit_charge1 = mobj_isotope_fitter->GetFitScore(pk_data, 1, pkCharge1, recordCharge1, delete_threshold, 
@@ -251,7 +251,7 @@ namespace Engine
 					record = recordCharge1 ; 
 					mdbl_zeroing_start_mz = start_mz1 ; 
 					mdbl_zeroing_stop_mz = stop_mz1 ; 
-					CS = 1 ; 
+					chargeState = 1 ; 
 				}
 			}
 
@@ -264,7 +264,7 @@ namespace Engine
 				std::cerr<<"\tBack with fit = "<<record.mdbl_fit<<std::endl ; 
 
 			record.mint_abundance = (int) pk.mdbl_intensity ; 
-			record.mshort_cs = CS ; 
+			record.mshort_cs = chargeState ; 
 
 			PeakProcessing::Peak mono_peak ; 
 			double mono_mz = record.mdbl_mono_mw/record.mshort_cs + mdbl_cc_mass ; 
@@ -287,7 +287,7 @@ namespace Engine
 			record.mint_peak_index = pk.mint_peak_index ;
 
 	
-			SetIsotopeDistributionToZero(pk_data, pk, record.mdbl_mono_mw, CS, true, record, mbln_debug) ; 
+			SetIsotopeDistributionToZero(pk_data, pk, record.mdbl_mono_mw, chargeState, true, record, mbln_debug) ; 
 			if (mbln_debug)
 			{
 				std::cerr<<"Performed deisotoping of "<<pk.mdbl_mz<<std::endl ; 

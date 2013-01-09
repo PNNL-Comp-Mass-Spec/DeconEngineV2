@@ -171,7 +171,9 @@ namespace Engine
 				}	
 				else if (menm_profile_type == PROFILE)
 				{
-					 if(current_intensity >= last_intensity && current_intensity >= next_intensity
+					 
+					//three point peak picking. Check if peak is greater than both the previous and next points
+					if(current_intensity >= last_intensity && current_intensity >= next_intensity
 							&& current_intensity >= this->mdbl_peak_intensity_threshold)
 					{
 						//See if the peak meets the conditions.
