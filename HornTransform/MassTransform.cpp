@@ -214,8 +214,9 @@ namespace Engine
 				}
 			}
 			double best_fit = 0 ; 
-			clock_t start_t = clock() ; 
-
+			
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ; 
 
 			PeakProcessing::Peak pkCharge1 = pk ;
 
@@ -255,7 +256,8 @@ namespace Engine
 				}
 			}
 
-			mint_get_fit_score_time += (clock() - start_t) ; 
+			// Disable timing (MEM 2013)
+			// mint_get_fit_score_time += (clock() - start_t) ; 
 
 			if (best_fit > mdbl_max_fit)       // check if fit is good enough
 				return false ; 
@@ -273,11 +275,14 @@ namespace Engine
 			PeakProcessing::Peak m3_peak ; 
 			double mono_pls_two_mz = record.mdbl_mono_mw / record.mshort_cs + 2.0/record.mshort_cs  + mdbl_cc_mass ; 
 
-			start_t = clock() ; 
+			// Disable timing (MEM 2013)
+			// start_t = clock() ; 
 			pk_data.FindPeak(mono_mz - pk.mdbl_FWHM, mono_mz + pk.mdbl_FWHM, mono_peak) ; 
 			
 			pk_data.FindPeak(mono_pls_two_mz - pk.mdbl_FWHM, mono_pls_two_mz + pk.mdbl_FWHM, m3_peak) ; 
-			mint_remaining_time += (clock() - start_t) ; 
+			
+			// Disable timing (MEM 2013)
+			// mint_remaining_time += (clock() - start_t) ; 
 
 			record.mint_mono_intensity = (int) mono_peak.mdbl_intensity ; 
 			record.mint_iplus2_intensity = (int) m3_peak.mdbl_intensity ; 

@@ -54,11 +54,13 @@ namespace Engine
 
 		bool IsotopeFit::FindPeak(double min_mz, double max_mz, double &mz_value, double &intensity, bool debug)
 		{
-			clock_t start_t = clock() ; 
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ; 
 			if (!mbln_last_value_was_cached)
 			{
 				bool found = mobj_isotope_dist.FindPeak(min_mz, max_mz, mz_value, intensity) ; 
-				mint_find_peak_calc += (clock() - start_t) ; 
+				// Disable timing (MEM 2013)
+				// mint_find_peak_calc += (clock() - start_t) ; 
 				return found ; 
 			}
 
@@ -106,7 +108,8 @@ namespace Engine
 			}
 			if (max_index == -1)
 			{
-				mint_find_peak_cached += (clock() - start_t) ; 
+				// Disable timing (MEM 2013)
+				// mint_find_peak_cached += (clock() - start_t) ; 
 				return false ; 
 			}
 
@@ -141,13 +144,16 @@ namespace Engine
 					mz_value = X2 ; 
 					intensity = mvect_distribution_intensities[max_index] ; 
 				}
-				mint_find_peak_cached += (clock() - start_t) ; 
+				// Disable timing (MEM 2013)
+				// mint_find_peak_cached += (clock() - start_t) ; 
 				return true ; 
 			}
 
 			mz_value = X2 ; 
 			intensity = mvect_distribution_intensities[max_index] ; 
-			mint_find_peak_cached += (clock() - start_t) ; 
+			
+			// Disable timing (MEM 2013)
+			// mint_find_peak_cached += (clock() - start_t) ; 
 			return true ; 
 		}
 
@@ -687,9 +693,9 @@ namespace Engine
 		{
 			double current_mz = most_abundant_mass/charge + mdbl_cc_mass ;
 			double FWHM = current_mz / resolution ; 
-			clock_t start_t = clock() ;
-
-
+			
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ;
 
 			//first check the UseCaching option; then check if it is in the cache or not. 
 			//if it is in the cache, the data is retrieved and the method returns true
@@ -733,8 +739,10 @@ namespace Engine
 				mobj_isotope_dist.mdbl_most_intense_mw = mobj_mercury_cache.mdbl_most_intense_mw ; 
 				mobj_isotope_dist.mdbl_max_peak_mz =  mobj_mercury_cache.mdbl_most_intense_mw/charge + mdbl_cc_mass - ELECTRON_MASS ; 
 			}
-			clock_t stop_t = clock() ; 
-			mint_distribution_processing_time  += (stop_t - start_t) ; 
+			
+			// Disable timing (MEM 2013)
+			// clock_t stop_t = clock() ; 
+			// mint_distribution_processing_time  += (stop_t - start_t) ; 
 			
 			return ; 
 		}

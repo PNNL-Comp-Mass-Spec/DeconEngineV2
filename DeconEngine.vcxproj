@@ -68,7 +68,7 @@
     <Link>
       <AdditionalDependencies>mscoree.lib;msvcrtd.lib;Ws2_32.lib;xerces-c_2.lib;msvcrt.lib;xerces-c_2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>C:\xerces\xerces-c-windows_2000-msvc_60\lib;C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\lib;C:\xerces\xerces-c-windows_2000-msvc_60\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ForceSymbolReferences>__DllMainCRTStartup%4012;%(ForceSymbolReferences)</ForceSymbolReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
@@ -79,7 +79,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\xerces\xerces-c-windows_2000-msvc_60\include\;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\include\;C:\xerces\xerces-c-windows_2000-msvc_60\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;MASSLYNX_4_INSTALLED;ANALYST_INSTALLED;XCALIBUR_INSTALLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -93,7 +93,7 @@
     <Link>
       <AdditionalDependencies>mscoree.lib;msvcrt.lib;Ws2_32.lib;xerces-c_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-      <AdditionalLibraryDirectories>C:\xerces\xerces-c-windows_2000-msvc_60\lib;C:\PNL\LTE\Proteomics\xerces-c-windows_2000-msvc_60\lib;C:\Projects\Decon2LS\DeconEngine\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\xerces\xerces-c_2_8_0-x86-windows-vc_7_1\lib;C:\xerces\xerces-c-windows_2000-msvc_60\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ForceSymbolReferences>__DllMainCRTStartup%4012;%(ForceSymbolReferences)</ForceSymbolReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>

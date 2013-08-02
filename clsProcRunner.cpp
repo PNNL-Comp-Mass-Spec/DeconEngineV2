@@ -218,7 +218,8 @@ namespace DeconToolsV2
 			
 			for(int scan_num = min_scan ; scan_num <= max_scan && scan_num != -1 ; scan_num = raw_data->GetNextScanNum(scan_num))
 			{					
-				clock_t start_time = clock() ; 
+				// Disable timing (MEM 2013)
+				// clock_t start_time = clock() ; 
 				peak_processor->Clear() ;
 				original_peak_processor->Clear() ;
 				mint_current_scan = scan_num ;
@@ -229,7 +230,8 @@ namespace DeconToolsV2
 				temp_vect_mzs.clear() ; 
 				temp_vect_intensities.clear() ; 
 
-				clock_t current_time = clock() ; 
+				// Disable timing (MEM 2013)
+				// clock_t current_time = clock() ; 
 
 				//Check if it needs to be processed
 				if (raw_data->IsMSScan(scan_num))
@@ -312,7 +314,8 @@ namespace DeconToolsV2
 					raw_data->GetSummedSpectra(&vect_mzs, &vect_intensities, scan_num, scan_range) ; 					
 				}
 				
-				raw_data_read_time += (clock() - current_time) ; 
+				// Disable timing (MEM 2013)
+				// raw_data_read_time += (clock() - current_time) ; 
 
 				scan_time = raw_data->GetScanTime(scan_num) ;
 				//if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
@@ -353,12 +356,19 @@ namespace DeconToolsV2
 				double minMZ = vect_mzs[0] ;
 				double maxMZ = vect_mzs[(int)vect_mzs.size()-1] ;
 
-				current_time = clock() ; 
+				// Disable timing (MEM 2013)
+				// current_time = clock() ; 
 				double thres = DeconEngine::Utils::GetAverage(vect_intensities, FLT_MAX) ;
 				double background_intensity = DeconEngine::Utils::GetAverage(vect_intensities, (float)(5*thres)) ;
-				average_time += clock() - current_time ; 
+				
+				// Disable timing (MEM 2013)
+				// average_time += clock() - current_time ; 
+
 				double bpi = 0, bp_mz = 0 ;
-				current_time = clock() ; 
+				
+				// Disable timing (MEM 2013)
+				// current_time = clock() ; 
+
 				double tic_intensity = 0 ; 
 				if (mobj_transform_parameters->get_UseMZRange())
 				{
@@ -372,38 +382,55 @@ namespace DeconToolsV2
 					tic_intensity = DeconEngine::Utils::GetTIC(400.0, 2000.0, vect_mzs, vect_intensities, 
 						(float)(background_intensity * peak_parameters->get_PeakBackgroundRatio()), bpi, bp_mz) ;
 				}
-				tic_time += clock() - current_time ; 
+				
+				// Disable timing (MEM 2013)
+				// tic_time += clock() - current_time ; 
 
 				peak_processor->SetPeakIntensityThreshold(background_intensity * peak_parameters->get_PeakBackgroundRatio()) ;
 				int numPeaks = 0 ; 
 				if (mobj_transform_parameters->get_UseMZRange())
 				{
-					current_time = clock() ; 
+					// Disable timing (MEM 2013)
+					// current_time = clock() ; 
 					numPeaks = peak_processor->DiscoverPeaks(&vect_mzs, &vect_intensities, mobj_transform_parameters->get_MinMZ(), mobj_transform_parameters->get_MaxMZ()) ;
-					peak_discover_time += clock() - current_time ; 
+					
+					// Disable timing (MEM 2013)
+					// peak_discover_time += clock() - current_time ; 
 				}
 				else
 				{
-					current_time = clock() ; 
+					// Disable timing (MEM 2013)
+					// current_time = clock() ; 
+
 					numPeaks = peak_processor->DiscoverPeaks(&vect_mzs, &vect_intensities) ;
-					peak_discover_time += clock() - current_time ; 
+					
+					// Disable timing (MEM 2013)
+					// peak_discover_time += clock() - current_time ; 
 				}
 
 				if (save_peaks)
 				{
-					current_time = clock() ; 
+					// Disable timing (MEM 2013)
+					// current_time = clock() ; 
 					lcms_results->AddPeaksForScan(scan_num, peak_processor->mobj_peak_data->mvect_peak_tops) ;
-					peak_save_time += clock() - current_time ; 
+					// Disable timing (MEM 2013)
+					// peak_save_time += clock() - current_time ; 
 				}
-				preprocessing_time += (clock() - current_time) ; 
+				// Disable timing (MEM 2013)
+				// preprocessing_time += (clock() - current_time) ; 
 
 				int numDeisotoped = 0 ;
-				preprocessing_time += clock() - start_time ; 
+				
+				// Disable timing (MEM 2013)
+				// preprocessing_time += clock() - start_time ; 
 
 				if (file_type != DeconToolsV2::Readers::PNNL_UIMF && scan_num % 20 == 0)
 				{
-					clock_t current_t = clock() ;
-					int all = current_t - start_t ;
+					// Disable timing (MEM 2013)
+					// clock_t current_t = clock() ;
+					// int all = current_t - start_t ;
+
+					/*
 					Console::WriteLine(System::String::Concat(
 						S" Raw Reading Time = ", Convert::ToString(raw_data_read_time), 
 						S" Average Time = ", Convert::ToString(average_time), 
@@ -413,6 +440,7 @@ namespace DeconToolsV2
 						S" PreProcessing Time = ", Convert::ToString(preprocessing_time), 
 						S" preprocess-read= ", Convert::ToString(preprocessing_time-raw_data_read_time)
 						)) ;
+					 */
 				}
 
 				
@@ -443,12 +471,16 @@ namespace DeconToolsV2
 							break ;
 
 						bool found_transform = false ;
-						current_time = clock() ;
+						
+						// Disable timing (MEM 2013)
+						// current_time = clock() ;
 						try
 						{
 							found_transform = mass_transform->FindTransform(*peak_processor->mobj_peak_data, 
 								currentPeak, transformRecord, background_intensity) ;
-							transform_time += (clock() - current_time) ; 
+							
+							// Disable timing (MEM 2013)
+							// transform_time += (clock() - current_time) ; 
 
 							// AM: if summing over a window, reinsert the original intensity     // [gord]  why?
 							if(found_transform && transformRecord.mshort_cs <= transform_parameters->get_MaxCharge()
@@ -523,10 +555,13 @@ namespace DeconToolsV2
 					{
 						int iso_time=0, spline_time=0, ac_time=0, fit_time = 0, cs_time =0, get_fit_score_time = 0, 
 							remainder_time = 0, find_peak_calc = 0, find_peak_cached = 0   ;
+						
 						clock_t current_t = clock() ;
 						int all = current_t - start_t ;
+
 						mass_transform->GetProcessingTimes(cs_time, ac_time, spline_time, iso_time, fit_time,
 							remainder_time, get_fit_score_time, find_peak_calc, find_peak_cached) ;
+						
 						Console::WriteLine(System::String::Concat(S"Scan # =", Convert::ToString(scan_num), 
 							S" CS= ", Convert::ToString(cs_time),
 							S" Isotope= ", Convert::ToString(iso_time),

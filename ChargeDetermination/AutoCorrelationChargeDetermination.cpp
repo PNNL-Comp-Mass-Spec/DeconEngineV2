@@ -35,26 +35,27 @@ namespace Engine
 
 		void AutoCorrelationChargeDetermine::ACss(std::vector<double> &Iv, std::vector<double> &Ov)
 		{
-			int     i,j;
-			float   sum,ave;
+			int     i,j,topIndex;
+			double  sum,ave;
 
 			int IvN = (int)Iv.size() ; 
 
 			ave=0.0;
 			for(j=0;j<IvN;j++) 
-				ave += (float) Iv[j];
+				ave += Iv[j];
 			ave = ave/IvN;
 			//	for(i=0;i<IvN/2;i++)  GAA 09/27/03
 			for(i=0;i<IvN;i++)
 			{
 				sum = 0.0;
-				for(j=0;j<IvN-i-1;j++)
-					sum += (float)((Iv[j]-ave) * (Iv[j+i]-ave));
+				topIndex = IvN-i-1;
+				for(j=0;j<topIndex;j++)
+					sum += ((Iv[j]-ave) * (Iv[j+i]-ave));
 
 				if(j > 0)
 				{
 					// too much weight given to high charges this way. DJ Jan 07 2007
-					Ov.push_back(sum/IvN) ;
+					Ov.push_back((float)(sum/IvN)) ;
 					//Ov.push_back(sum/j) ;
 				}
 				else
@@ -64,7 +65,8 @@ namespace Engine
 
 		short AutoCorrelationChargeDetermine::GetChargeState(PeakProcessing::Peak &pk, PeakProcessing::PeakData &peak_data, bool debug)
 		{
-			clock_t auto_start_t = clock() ;
+			// Disable timing (MEM 2013)
+			// clock_t auto_start_t = clock() ;
 			debug = false ; 
 
 			double minMZ, maxMZ ; 
@@ -102,7 +104,8 @@ namespace Engine
 				mvect_Y.push_back(intensity) ; 
 			}
 
-			clock_t start_t = clock() ;
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ;
 			mobj_interpolation.Spline(mvect_X, mvect_Y, 0, 0) ; 
 
 			minMZ = mvect_X[0];
@@ -118,8 +121,9 @@ namespace Engine
 				fVal = mobj_interpolation.Splint(mvect_X, mvect_Y, xVal);
 				mvect_Iv.push_back(fVal) ;
 			}
-			clock_t stop_t = clock() ; 
-			mint_spline_time += (stop_t - start_t) ; 
+			// Disable timing (MEM 2013)
+			// clock_t stop_t = clock() ; 
+			// mint_spline_time += (stop_t - start_t) ; 
 
 			if (debug)
 			{
@@ -132,7 +136,9 @@ namespace Engine
 				}
 			}
 
-			start_t = clock() ;
+			// Disable timing (MEM 2013)
+			// start_t = clock() ;
+
 			ACss(mvect_Iv, mvect_autocorrelation_scores);
 			if (debug)
 			{
@@ -145,8 +151,9 @@ namespace Engine
 				}
 			}
 
-			stop_t = clock() ; 
-			mint_autocorrelation_time += (stop_t - start_t) ; 
+			// Disable timing (MEM 2013)
+			// stop_t = clock() ; 
+			// mint_autocorrelation_time += (stop_t - start_t) ; 
 
 			int j=0;
 			int minN ; 
@@ -209,7 +216,8 @@ namespace Engine
 						found = peak_data.GetPeakFromAllOriginalIntensity(peakA - FWHM, peakA + FWHM, iso_peak) ;
 						if (found)
 						{
-							mint_total_cs_time += (clock() - auto_start_t) ; 
+							// Disable timing (MEM 2013)
+							// mint_total_cs_time += (clock() - auto_start_t) ; 
 							return tmp ; 
 						}
 					}
@@ -219,14 +227,16 @@ namespace Engine
 						found = peak_data.GetPeakFromAllOriginalIntensity(peakA - FWHM, peakA + FWHM, iso_peak) ; 
 						if (found && iso_peak.mdbl_mz * tmp < 3000)
 						{
-							mint_total_cs_time += (clock() - auto_start_t) ; 
+							// Disable timing (MEM 2013)
+							// mint_total_cs_time += (clock() - auto_start_t) ; 
 							return tmp ; 
 						}
 					}
 				}
 			}
 
-			mint_total_cs_time += (clock() - auto_start_t) ; 
+			// Disable timing (MEM 2013)
+			// mint_total_cs_time += (clock() - auto_start_t) ; 
 			return returnCSVal;
 		}
 

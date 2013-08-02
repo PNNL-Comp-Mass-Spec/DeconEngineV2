@@ -30,7 +30,8 @@ namespace Engine
 			bool debug)
 		{
 
-			clock_t start_t = clock() ; 
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ; 
 			int num_points = (int)mvect_distribution_mzs.size() ; 
 			if (num_points < 3)
 				return 1 ; 
@@ -63,8 +64,9 @@ namespace Engine
 				}
 			}
 
-			clock_t stop_t = clock() ; 
-			mint_fit_processing_time += (stop_t - start_t) ; 
+			// Disable timing (MEM 2013)
+			// clock_t stop_t = clock() ; 
+			// mint_fit_processing_time += (stop_t - start_t) ; 
 
 			return fit/(sum + 0.001) ; 
 		}
@@ -73,7 +75,8 @@ namespace Engine
 			double intensity_normalizer, double mz_delta, double min_intensity_for_score,
 			bool debug )
 		{
-			clock_t start_t = clock() ; 
+			// Disable timing (MEM 2013)
+			// clock_t start_t = clock() ; 
 			int num_points = (int)mvect_distribution_mzs.size() ; 
 			if (num_points < 3)
 				return 1 ; 
@@ -95,8 +98,10 @@ namespace Engine
 					sum += theoretical_intensity * theoretical_intensity ; 
 				}
 			}
-			clock_t stop_t = clock() ; 
-			mint_fit_processing_time += (stop_t - start_t) ; 
+			
+			// Disable timing (MEM 2013)
+			// clock_t stop_t = clock() ; 
+			// mint_fit_processing_time += (stop_t - start_t) ; 
 
 			return fit/(sum + 0.001) ; 
 		}
