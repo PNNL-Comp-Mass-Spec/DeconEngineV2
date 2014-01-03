@@ -327,8 +327,10 @@ namespace Engine
 		double IsotopeFit::GetFitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
 				IsotopeFitRecord &iso_record, double delete_intensity_threshold, 
 				double min_theoretical_intensity_for_score, double leftFitStringencyFactor, 
-				double rightFitStringencyFactor, bool debug)
+				double rightFitStringencyFactor, int &points_used, bool debug)
 		{
+			points_used = 0;
+
 			if (cs <= 0)
 			{
 				std::cout<<"Negative value for charge state. "<<cs<<std::endl ; 
@@ -368,9 +370,6 @@ namespace Engine
 				std::cout<<"---------------------------------------- END THEORETICAL PEAKS ------------------"<<std::endl;
 			}
 
-
-
-
 			
 			// Anoop April 9 2007: For checking if the distribution does not overlap/link with any other distribution
 			// Beginnings of deisotoping correction			
@@ -379,14 +378,11 @@ namespace Engine
 
 			double delta =  pk.mdbl_mz - mobj_isotope_dist.mdbl_max_peak_mz ; 
 
-
-			
-
-
 			double fit ; 
+
 			//if(debug)
 			//	std::cout<<"Going for first fit"<<std::endl ; 
-			fit = FitScore(pk_data, cs, pk, delta, min_theoretical_intensity_for_score, debug) ; 
+			fit = FitScore(pk_data, cs, pk, delta, min_theoretical_intensity_for_score, points_used, debug) ; 
 			
 
 			if (debug)
@@ -403,6 +399,7 @@ namespace Engine
 			if (!mbln_thrash )
 			{
 				iso_record.mdbl_fit = fit ; 
+				iso_record.mint_fit_count_basis = points_used ;	
 				iso_record.mdbl_mz = pk.mdbl_mz ; 
 				iso_record.mdbl_average_mw = mobj_isotope_dist.mdbl_average_mw + delta * cs ; 
 				iso_record.mdbl_mono_mw = mobj_isotope_dist.mdbl_mono_mw + delta*cs ; 
@@ -416,9 +413,11 @@ namespace Engine
 			PeakProcessing::Peak nxt_peak ; 
 
 			double best_fit = fit ; 
+			int best_fit_count_basis = points_used ;	
 			double best_delta = delta ; 
 			double MaxY = pk.mdbl_intensity ;
 
+			int fit_count_basis = 0;
 
 
 			//------------- Slide to the LEFT --------------------------------------------------
@@ -443,7 +442,7 @@ namespace Engine
 					delta = pk.mdbl_mz - mz ;       // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
 					PeakProcessing::Peak current_peak_copy = pk ;                   // in c++ this copy is created by value;
 					current_peak_copy.mdbl_intensity = nxt_peak.mdbl_intensity ; 
-					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score) ; 
+					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score, fit_count_basis) ; 
 					if (debug)
 					{
 						//std::cout<<" isotopes. Fit ="<<fit<<" Charge = "<<cs<<" Intensity = "<<nxt_peak.mdbl_intensity<<" delta = "<<delta<<std::endl ;
@@ -475,6 +474,7 @@ namespace Engine
 						pk.mdbl_intensity = nxt_peak.mdbl_intensity ; 
 					MaxY = pk.mdbl_intensity ; 
 					best_fit = fit ; 
+					best_fit_count_basis = fit_count_basis ;
 					best_delta = delta ; 
 				}
 				else
@@ -510,7 +510,7 @@ namespace Engine
 					delta = pk.mdbl_mz - mz ; 
 					PeakProcessing::Peak current_peak_copy = pk ; 
 					current_peak_copy.mdbl_intensity = nxt_peak.mdbl_intensity ; 
-					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score) ; 
+					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score, fit_count_basis) ; 
 					//fit = FitScore(pk_data, cs, nxt_peak.mdbl_intensity, delta) ; 
 					if (debug)
 					{
@@ -545,6 +545,7 @@ namespace Engine
 						pk.mdbl_intensity = nxt_peak.mdbl_intensity ; 
 					MaxY = pk.mdbl_intensity ; 
 					best_fit = fit ; 
+					best_fit_count_basis = fit_count_basis ;
 					best_delta = delta ; 
 				}
 				
@@ -565,19 +566,20 @@ namespace Engine
 			double peakWidth = pk.mdbl_FWHM; 
 
 			if (debug)
-				{
-						std::cout<<"Std delta = \t"<<delta<<std::endl;
-				}
+			{
+					std::cout<<"Std delta = \t"<<delta<<std::endl;
+			}
 
 
 			//delta = CalculateDeltaFromSeveralObservedPeaks(delta, peakWidth, pk_data, theorPeakData, theorIntensityCutoff);
 
-		if (debug)
-				{
-						std::cout<<"Weighted delta = \t"<<delta<<std::endl;
-				}
+			if (debug)
+			{
+					std::cout<<"Weighted delta = \t"<<delta<<std::endl;
+			}
 
 			iso_record.mdbl_fit = best_fit ; 
+			iso_record.mint_fit_count_basis = best_fit_count_basis;
 			iso_record.mshort_cs = cs ; 
 			iso_record.mdbl_mz = pk.mdbl_mz ; 
 			iso_record.mdbl_delta_mz = delta ; 
@@ -587,6 +589,7 @@ namespace Engine
 
 
 			//iso_record.mbln_flag_isotope_link = is_linked ; 
+			points_used = best_fit_count_basis;
 			return best_fit ; 
 		}
 
@@ -617,7 +620,9 @@ namespace Engine
 			double fit ; 
 			if(debug)
 				std::cout<<"Going for first fit"<<std::endl ; 
-			fit = FitScore(pk_data, cs, pk, delta, min_theoretical_intensity_for_score, debug) ; 
+			int fit_count_basis = 0;
+
+			fit = FitScore(pk_data, cs, pk, delta, min_theoretical_intensity_for_score, fit_count_basis, debug) ; 
 			return fit ; 
 		}
 

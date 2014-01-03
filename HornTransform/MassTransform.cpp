@@ -213,8 +213,10 @@ namespace Engine
 					}
 				}
 			}
-			double best_fit = 0 ; 
 			
+			double best_fit = 0 ; 
+			int fit_count_basis = 0;
+
 			// Disable timing (MEM 2013)
 			// clock_t start_t = clock() ; 
 
@@ -229,7 +231,7 @@ namespace Engine
 			//	delete_threshold = mdbl_delete_intensity_threshold ; 
 			double delete_threshold = mdbl_delete_intensity_threshold ; 
 			best_fit = mobj_isotope_fitter->GetFitScore(pk_data, chargeState, pk, record, delete_threshold, mdbl_min_theoretical_intensity_for_score,
-				mdbl_leftFitStringencyFactor,mdbl_rightFitStringencyFactor, mbln_debug) ; 
+				mdbl_leftFitStringencyFactor,mdbl_rightFitStringencyFactor, fit_count_basis, mbln_debug) ; 
 
 			mobj_isotope_fitter->GetZeroingMassRange(mdbl_zeroing_start_mz, mdbl_zeroing_stop_mz, record.mdbl_delta_mz, delete_threshold, mbln_debug) ;
 			//best_fit = mobj_isotope_fitter->GetFitScore(pk_data, CS, pk, record, mdbl_delete_intensity_threshold, mdbl_min_theoretical_intensity_for_score, mbln_debug) ; 
@@ -238,8 +240,11 @@ namespace Engine
 			if (mbln_check_against_charge1 && chargeState != 1)
 			{
 				IsotopeFitRecord recordCharge1 ; 
+				int fit_count_basis_charge1 = 0;
+
 				double best_fit_charge1 = mobj_isotope_fitter->GetFitScore(pk_data, 1, pkCharge1, recordCharge1, delete_threshold, 
-					mdbl_min_theoretical_intensity_for_score, mdbl_leftFitStringencyFactor,mdbl_rightFitStringencyFactor, mbln_debug) ; 
+					mdbl_min_theoretical_intensity_for_score, mdbl_leftFitStringencyFactor, mdbl_rightFitStringencyFactor, fit_count_basis_charge1, mbln_debug) ; 
+
 				//double best_fit_charge1 = mobj_isotope_fitter->GetFitScore(pk_data, 1, pkCharge1, recordCharge1, mdbl_delete_intensity_threshold, mdbl_min_theoretical_intensity_for_score, mbln_debug) ; 
 				//mobj_isotope_fitter->GetZeroingMassRange(mdbl_zeroing_start_mz, mdbl_zeroing_stop_mz, record.mdbl_delta_mz, mdbl_delete_intensity_threshold, mbln_debug) ;
 				double start_mz1 = 0 ; 
@@ -248,6 +253,7 @@ namespace Engine
 				if (best_fit > mdbl_max_fit && best_fit_charge1 < mdbl_max_fit)
 				{
 					best_fit = best_fit_charge1 ; 
+					fit_count_basis = fit_count_basis_charge1;
 					pk = pkCharge1 ; 
 					record = recordCharge1 ; 
 					mdbl_zeroing_start_mz = start_mz1 ; 

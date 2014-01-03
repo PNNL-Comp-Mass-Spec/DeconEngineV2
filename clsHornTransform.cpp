@@ -140,17 +140,9 @@ namespace DeconToolsV2
 						{
 							transformRecord.mdbl_mono_mw = monoPeak.mdbl_mz * transformRecord.mshort_cs - 1.00727638 * transformRecord.mshort_cs;
 						}
-						else
-						{
-
-						}
-
-
-
+			
 
 					}
-
-
 
 
 					vectTransformRecord.push_back(transformRecord) ;

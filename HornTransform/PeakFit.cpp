@@ -25,8 +25,10 @@ namespace Engine
 		}
 
 		double PeakFit::FitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, double mz_delta, 
-			double min_intensity_for_score, bool debug)
+			double min_intensity_for_score, int &points_used, bool debug)
 		{
+			points_used = 0;
+
 			// Disable timing (MEM 2013)
 			// clock_t start_t = clock() ; 
 			int num_points = (int)mvect_distribution_mzs.size() ; 
@@ -50,7 +52,7 @@ namespace Engine
 				if (theoretical_intensity >= min_intensity_for_score && diff >= 0 && theoretical_intensity < last_yval)
 				{
 					bool found = false ; 
-					// remember you migth be searching for the current peak (which has already been 
+					// remember you might be searching for the current peak (which has already been 
 					// taken out of the list of peaks. So first check it.
 					if (abs(pk.mdbl_mz - mz) < 2*pk.mdbl_FWHM)
 					{
@@ -63,6 +65,7 @@ namespace Engine
 						if (peak_pk.mdbl_mz > 0)
 							found = true ; 
 					}
+
 					if (found)
 					{
 						double observed_intensity = 100 * peak_pk.mdbl_intensity / pk.mdbl_intensity ; 
@@ -76,6 +79,8 @@ namespace Engine
 						fit += theoretical_intensity * theoretical_intensity ;
 						sum += theoretical_intensity * theoretical_intensity ; 
 					}
+					points_used++;
+
 				}
 				diff = theoretical_intensity - last_yval ; 
 				last_yval = theoretical_intensity ; 

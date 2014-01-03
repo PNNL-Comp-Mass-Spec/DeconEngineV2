@@ -164,7 +164,7 @@ namespace Engine
 			double GetFitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
 				IsotopeFitRecord &iso_record, double delete_intensity_threshold, 
 				double min_theoretical_intensity_for_score, double leftFitStringencyFactor, double rightFitStringencyFactor,
-				bool debug = false) ; 
+				int &points_used, bool debug = false) ; 
 			//! calculates the fit score for a peak against a molecular formula.
 			/*
 				\param pk_data  variable which stores the data itself
@@ -187,7 +187,7 @@ namespace Engine
 				\param min_intensity minimum intensity for score
 			*/
 			virtual double FitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, 
-				double mz_delta, double min_intensity_for_score, bool debug = false ) = 0   ;
+				double mz_delta, double min_intensity_for_score, int &points_used, bool debug = false ) = 0   ;
 			//! calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed intensity by specified intensity.
 			/*
 				\param pk_data  variable which stores the data itself

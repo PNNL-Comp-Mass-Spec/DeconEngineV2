@@ -24,8 +24,11 @@ namespace Engine
 		}
 
 		double ChiSqFit::FitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, double mz_delta, 
-			double min_intensity_for_score, bool debug)
+			double min_intensity_for_score, int &points_used, bool debug)
 		{
+
+			points_used = 0;
+
 			// Disable timing (MEM 2013)
 			// clock_t start_t = clock() ; 
 			int num_points = (int)mvect_distribution_mzs.size() ; 
@@ -48,6 +51,7 @@ namespace Engine
 					double intensity_sum = (observed_intensity + theoretical_intensity) ;
 					fit += (intensity_diff * intensity_diff) / intensity_sum ; 
 					sum += theoretical_intensity * observed_intensity ; 
+					points_used++;
 				}
 			}
 

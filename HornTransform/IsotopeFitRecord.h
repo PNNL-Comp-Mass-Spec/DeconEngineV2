@@ -23,6 +23,8 @@ namespace Engine
 			double mdbl_mz ;
 			//! fit value .
 			double mdbl_fit ;
+			//! Number of data points used to compute the fit value
+			int mint_fit_count_basis;
 			//! average mw for the feature. 
 			double mdbl_average_mw ;
 			//! monoisotopic mw of feature.

@@ -21,7 +21,7 @@ namespace Engine
 			AreaFit(void);
 			~AreaFit(void);
 			double FitScore(PeakProcessing::PeakData &pk_data, short cs, PeakProcessing::Peak &pk, double mz_delta, 
-				double min_intensity_for_score, bool debug = false) ;
+				double min_intensity_for_score, int &points_used, bool debug = false) ;
 			double FitScore(PeakProcessing::PeakData &pk_data, short cs, double normalizer, double mz_delta, 
 				double min_intensity_for_score, bool debug = false) ;
 		};

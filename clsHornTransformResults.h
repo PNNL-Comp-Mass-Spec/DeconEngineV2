@@ -29,6 +29,8 @@ namespace DeconToolsV2
 			double mdbl_mz ;
 			//! fit value .
 			double mdbl_fit ;
+			//! Number of data points used to compute the fit value
+			int mint_fit_count_basis;
 			//! average mw for the feature. 
 			double mdbl_average_mw ;
 			//! monoisotopic mw of feature.
@@ -64,6 +66,7 @@ namespace DeconToolsV2
 				result->mint_abundance = this->mint_abundance ;
 				result->mdbl_mz = this->mdbl_mz ;
 				result->mdbl_fit = this->mdbl_fit ;
+				result->mint_fit_count_basis = this->mint_fit_count_basis ;
 				result->mdbl_average_mw = this->mdbl_average_mw ;
 				result->mdbl_mono_mw = this->mdbl_mono_mw ;
 				result->mdbl_most_intense_mw = this->mdbl_most_intense_mw ; 
@@ -89,6 +92,7 @@ namespace DeconToolsV2
 				mint_abundance = fitRecord.mint_abundance ;
 				mdbl_mz = fitRecord.mdbl_mz ;
 				mdbl_fit = fitRecord.mdbl_fit ;
+				mint_fit_count_basis = fitRecord.mint_fit_count_basis ;
 				mdbl_average_mw = fitRecord.mdbl_average_mw ;
 				mdbl_mono_mw = fitRecord.mdbl_mono_mw ;
 				mdbl_most_intense_mw = fitRecord.mdbl_most_intense_mw ; 

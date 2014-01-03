@@ -170,6 +170,7 @@ namespace Engine
 							mobj_transformRecord.mshort_cs = cs ; 
 							mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 			
 							mobj_transformRecord.mdbl_fit = 1 ; 
+							mobj_transformRecord.mint_fit_count_basis = 0 ; 
 							mobj_transformRecord.mint_peak_index = pk_index ; 
 							mobj_transformRecord.mint_mono_intensity = (int) pk_prev.mdbl_intensity ; 
 							mvect_transformRecords.push_back(mobj_transformRecord) ; 
@@ -187,6 +188,7 @@ namespace Engine
 						mobj_transformRecord.mshort_cs = cs ; 
 						mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 				
 						mobj_transformRecord.mdbl_fit = 1 ; 
+						mobj_transformRecord.mint_fit_count_basis = 0 ; 
 						mobj_transformRecord.mint_mono_intensity = (int) mdbl_parent_Intensity ; 
 						mobj_transformRecord.mint_peak_index = mobj_parentPeak.mint_peak_index ; 
 						mvect_transformRecords.push_back(mobj_transformRecord) ; 
@@ -366,12 +368,13 @@ namespace Engine
 			mobj_transformRecord.mshort_cs = 0 ; 
 			mobj_transformRecord.mdbl_mono_mw  = 0.0 ; 
 			mobj_transformRecord.mdbl_fit = -1 ; 
+			mobj_transformRecord.mint_fit_count_basis = 0 ; 
 			mobj_transformRecord.mint_mono_intensity = 0 ;  
 			mobj_msn_record.mdbl_mono_mw = 0.0 ; 
 			mobj_msn_record.mint_mono_intensity = 0 ; 
 			mobj_msn_record.mdbl_mono_mz = 0 ; 
 			mobj_msn_record.mshort_cs = 0 ; 
-			mobj_msn_record.mdbl_fit = -1 ; 		
+			mobj_msn_record.mdbl_fit = -1 ;
 						
 			//check if we have enough values in the ms2						
 			int numPeaks = mvect_mzs_msN.size();
@@ -403,6 +406,7 @@ namespace Engine
 				mobj_transformRecord.mshort_cs = mint_consider_charge ;				
 				mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 				mobj_transformRecord.mdbl_fit = 1 ; 
+				mobj_transformRecord.mint_fit_count_basis = 0 ; 
 				mobj_transformRecord.mint_mono_intensity = (int) mdbl_parent_Intensity ; 
 				mvect_transformRecords.push_back(mobj_transformRecord) ; 
 				return true; 
@@ -584,12 +588,14 @@ namespace Engine
 				mobj_transformRecord.mshort_cs = 2 ;				
 				mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 				mobj_transformRecord.mdbl_fit = 1 ; 
+				mobj_transformRecord.mint_fit_count_basis = 0 ; 
 				mobj_transformRecord.mint_mono_intensity = (int)mdbl_parent_Intensity ; 
 				mvect_transformRecords.push_back(mobj_transformRecord) ; 
 				mobj_transformRecord.mdbl_mz = mdbl_parent_Mz ; 
 				mobj_transformRecord.mshort_cs = 3 ;				
 				mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 				mobj_transformRecord.mdbl_fit = 1 ; 
+				mobj_transformRecord.mint_fit_count_basis = 0 ; 
 				mobj_transformRecord.mint_mono_intensity= (int)  mdbl_parent_Intensity ; 
 				mvect_transformRecords.push_back(mobj_transformRecord) ; 					
 				return true ; 				
@@ -650,6 +656,7 @@ namespace Engine
 				mobj_transformRecord.mshort_cs = mint_consider_charge ;				
 				mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 				mobj_transformRecord.mdbl_fit = 1 ; 
+				mobj_transformRecord.mint_fit_count_basis = 0 ; 
 				mobj_transformRecord.mint_mono_intensity = mdbl_parent_Intensity ; 
 				mvect_transformRecords.push_back(mobj_transformRecord) ; 
 				return true; 
@@ -666,6 +673,7 @@ namespace Engine
 				mobj_transformRecord.mshort_cs = 1 ;				
 				mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 				mobj_transformRecord.mdbl_fit = 1 ; 
+				mobj_transformRecord.mint_fit_count_basis = 0 ; 
 				mobj_transformRecord.mint_mono_intensity = mdbl_parent_Intensity ; 
 				mvect_transformRecords.push_back(mobj_transformRecord) ; 
 				return true; 				
@@ -1189,6 +1197,7 @@ namespace Engine
 					mobj_transformRecord.mshort_cs = cs; 
 					mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 					mobj_transformRecord.mdbl_fit = 1 ; 		
+					mobj_transformRecord.mint_fit_count_basis = 1 ;					
 					mobj_transformRecord.mint_mono_intensity = mdbl_parent_Intensity ; 
 					mvect_transformRecords.push_back(mobj_transformRecord) ; 
 				}
@@ -1280,6 +1289,7 @@ namespace Engine
 					mobj_transformRecord.mshort_cs = cs; 
 					mobj_transformRecord.mdbl_mono_mw  = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs ; 
 					mobj_transformRecord.mdbl_fit = 1 ; 
+					mobj_transformRecord.mint_fit_count_basis = 1 ;					
 					mobj_transformRecord.mint_mono_intensity = mdbl_parent_Intensity ; 
 					mvect_transformRecords.push_back(mobj_transformRecord) ; 
 				}			
