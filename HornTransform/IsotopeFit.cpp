@@ -376,7 +376,7 @@ namespace Engine
 			//bool is_linked = false ; 
 			//is_linked =  IsIsotopeLinkedDistribution(delete_intensity_threshold) ; 
 
-			double delta =  pk.mdbl_mz - mobj_isotope_dist.mdbl_max_peak_mz ; 
+			double delta = pk.mdbl_mz - mobj_isotope_dist.mdbl_max_peak_mz ; 
 
 			double fit ; 
 
@@ -423,10 +423,11 @@ namespace Engine
 			//------------- Slide to the LEFT --------------------------------------------------
 			for (double dd = 1.003/cs ; dd <= 10.03/cs ; dd+= 1.003/cs)          
 			{
-				double mz, intensity ;    //[gord] should these be reset to '0'?
-				
+				double mzLeft = 0;
+				double intensityLeft = 0;
+
 				//check for theoretical peak to the right of TheoreticalMaxPeak; store mz and intensity
-				bool found_peak = FindPeak(Mpeak+dd - 0.2/cs, Mpeak+dd+ 0.2 /cs, mz, intensity, debug) ; 
+				bool found_peak = FindPeak(Mpeak+dd - 0.2/cs, Mpeak+dd+ 0.2 /cs, mzLeft, intensityLeft, debug) ; 
 				
 				// if the above theoretical peak was found,  look one peak to the LEFT in the Experimental peaklist
 				if (found_peak)  
@@ -437,9 +438,9 @@ namespace Engine
 				//if (debug)
 				//	std::cout<<"\t\t Move by "<<dd ; 
 
-				if (mz > 0 && nxt_peak.mdbl_mz > 0)    //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
+				if (mzLeft > 0 && nxt_peak.mdbl_mz > 0)    //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
 				{
-					delta = pk.mdbl_mz - mz ;       // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
+					delta = pk.mdbl_mz - mzLeft ;       // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
 					PeakProcessing::Peak current_peak_copy = pk ;                   // in c++ this copy is created by value;
 					current_peak_copy.mdbl_intensity = nxt_peak.mdbl_intensity ; 
 					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score, fit_count_basis) ; 
@@ -490,12 +491,11 @@ namespace Engine
 			//		std::cout<<"\n---------------- Sliding to the RIGHT -------------------------" ; 
 			for (double dd = 1.003/cs ; dd <= 10.03/cs ; dd+= 1.003/cs)
 			{
-				double mz, intensity ;
-				mz = 0 ; 
-				intensity = 0 ; 
+				double mzRight = 0;
+				double intensityRight = 0;
 
 				////check for theoretical peak to the LEFT of TheoreticalMaxPeak; store mz and intensity
-				bool found_peak = FindPeak(Mpeak - dd - 0.2/cs, Mpeak - dd + 0.2 /cs, mz, intensity, debug) ; 
+				bool found_peak = FindPeak(Mpeak - dd - 0.2/cs, Mpeak - dd + 0.2 /cs, mzRight, intensityRight, debug) ; 
 				
 				
 				// if the above theoretical peak was found,  look one peak to the RIGHT in the Experimental peaklist
@@ -505,9 +505,10 @@ namespace Engine
 				}
 				//if (debug)
 				//	std::cout<<"\t\t Move back by "<<dd ;
-				if (mz > 0 && nxt_peak.mdbl_mz > 0)
+			
+				if (mzRight > 0 && nxt_peak.mdbl_mz > 0)
 				{
-					delta = pk.mdbl_mz - mz ; 
+					delta = pk.mdbl_mz - mzRight ; 
 					PeakProcessing::Peak current_peak_copy = pk ; 
 					current_peak_copy.mdbl_intensity = nxt_peak.mdbl_intensity ; 
 					fit = FitScore(pk_data, cs, current_peak_copy, delta, min_theoretical_intensity_for_score, fit_count_basis) ; 
@@ -559,33 +560,31 @@ namespace Engine
 				}
 			}
 
-			delta = best_delta ;
-
 			double theorIntensityCutoff = 30;  // 
 
 			double peakWidth = pk.mdbl_FWHM; 
 
 			if (debug)
 			{
-					std::cout<<"Std delta = \t"<<delta<<std::endl;
+					std::cout<<"Std delta = \t"<<best_delta<<std::endl;
 			}
 
 
-			//delta = CalculateDeltaFromSeveralObservedPeaks(delta, peakWidth, pk_data, theorPeakData, theorIntensityCutoff);
+			//best_delta = CalculateDeltaFromSeveralObservedPeaks(best_delta, peakWidth, pk_data, theorPeakData, theorIntensityCutoff);
 
 			if (debug)
 			{
-					std::cout<<"Weighted delta = \t"<<delta<<std::endl;
+					std::cout<<"Weighted delta = \t"<<best_delta<<std::endl;
 			}
 
 			iso_record.mdbl_fit = best_fit ; 
 			iso_record.mint_fit_count_basis = best_fit_count_basis;
 			iso_record.mshort_cs = cs ; 
 			iso_record.mdbl_mz = pk.mdbl_mz ; 
-			iso_record.mdbl_delta_mz = delta ; 
-			iso_record.mdbl_average_mw = mobj_isotope_dist.mdbl_average_mw + delta * cs ; 
-			iso_record.mdbl_mono_mw = mobj_isotope_dist.mdbl_mono_mw + delta*cs ; 
-			iso_record.mdbl_most_intense_mw = mobj_isotope_dist.mdbl_most_intense_mw + delta*cs ; 
+			iso_record.mdbl_delta_mz = best_delta ; 
+			iso_record.mdbl_average_mw = mobj_isotope_dist.mdbl_average_mw + best_delta * cs ; 
+			iso_record.mdbl_mono_mw = mobj_isotope_dist.mdbl_mono_mw + best_delta*cs ; 
+			iso_record.mdbl_most_intense_mw = mobj_isotope_dist.mdbl_most_intense_mw + best_delta*cs ; 
 
 
 			//iso_record.mbln_flag_isotope_link = is_linked ; 
