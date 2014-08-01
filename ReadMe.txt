@@ -1,31 +1,12 @@
-========================================================================
-    DYNAMIC LINK LIBRARY : Engine Project Overview
-========================================================================
+The DeconEngine includes routines for deconvoluting (deisotoping) observed isotopic signatures in mass spectrometry data to detect features.
 
-AppWizard has created this Engine DLL for you.  
+-------------------------------------------------------------------------------
+Originally written by Deep Jaitly for the Department of Energy (PNNL, Richland, WA)
 
-This file contains a summary of what you will find in each of the files that
-make up your Engine application.
+E-mail: matthew.monroe@pnnl.gov or samuel.payne@pnnl.gov
+Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov
+-------------------------------------------------------------------------------
 
-Engine.vcproj
-    This is the main project file for VC++ projects generated using an Application Wizard. 
-    It contains information about the version of Visual C++ that generated the file, and 
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
-
-Engine.cpp
-    This is the main DLL source file.
-
-Engine.h
-    This file contains a class declaration.
-
-AssemblyInfo.cpp
-	Contains custom attributes for modifying assembly metadata.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+Licensed under the Apache License, Version 2.0; you may not use this file except 
+in compliance with the License.  You may obtain a copy of the License at 
+http://www.apache.org/licenses/LICENSE-2.0
