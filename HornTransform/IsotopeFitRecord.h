@@ -17,8 +17,10 @@ namespace Engine
 			int mint_scan_num ; 
 			//! charge state 
 			short mshort_cs ;
-			//! intensity of feature.
+			//! intensity of feature; maximum value that can be represented is 2147483648
 			int mint_abundance ;
+			//! intensity of feature (as a double)
+			double mdbl_abundance;
 			//! m/z value of most abundant peak in the feature.
 			double mdbl_mz ;
 			//! fit value .

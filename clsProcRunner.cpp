@@ -482,7 +482,7 @@ namespace DeconToolsV2
 							// Disable timing (MEM 2013)
 							// transform_time += (clock() - current_time) ; 
 
-							// AM: if summing over a window, reinsert the original intensity     // [gord]  why?
+							// AM (anoop?): if summing over a window, reinsert the original intensity     // [gord]  why?
 							if(found_transform && transformRecord.mshort_cs <= transform_parameters->get_MaxCharge()
 								 && transform_parameters->get_SumSpectraAcrossScanRange())
 							{
@@ -493,6 +493,7 @@ namespace DeconToolsV2
  								if (originalPeak.mdbl_intensity > 0) 
 								{	
 									transformRecord.mint_abundance =  (int)originalPeak.mdbl_intensity ; 
+									transformRecord.mdbl_abundance = originalPeak.mdbl_intensity;
 									transformRecord.mdbl_fwhm = originalPeak.mdbl_FWHM   ;       // [gord] this might be the source of why FWHM is sometimes 0
 								}
 								else

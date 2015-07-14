@@ -8,6 +8,7 @@ namespace Engine
 		IsotopeFitRecord::IsotopeFitRecord()
 		{
 			mint_abundance = 0 ;
+			mdbl_abundance = 0;
 			mshort_cs = -1 ;
 			mdbl_mz = 0 ;
 			mdbl_fit = 1 ;

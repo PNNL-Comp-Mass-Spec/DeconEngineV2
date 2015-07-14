@@ -13,5 +13,5 @@ C# DeconTools (with ThrashV2)
 	Port of DeconEngine to C#
 	See file DeconTools.Backend\ProcessingTasks\Deconvoluters\HornDeconvolutor\ThrashDeconvolutorV2.cs
 	Used by DeconConsole if parameter file has:
-		<UseThrashV1>true</UseThrashV1>
+		<DeconvolutionType>ThrashV2</DeconvolutionType>
 

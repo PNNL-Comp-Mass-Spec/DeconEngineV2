@@ -271,7 +271,18 @@ namespace Engine
 			if (mbln_debug)
 				std::cerr<<"\tBack with fit = "<<record.mdbl_fit<<std::endl ; 
 
-			record.mint_abundance = (int) pk.mdbl_intensity ; 
+			// Abundance has always been reported as a 32-bit integer
+			// Added field mdbl_abundance in 2015 to allow tracking it as a double
+			// For backwards compatibility, if the peak intensity is too large for a 32-bit integer, mint_abundance will be 2147483648
+
+			if (pk.mdbl_intensity < 2147483648)
+				record.mint_abundance = (int)pk.mdbl_intensity; 
+			else
+				record.mint_abundance = 2147483648;
+
+			// Applications using this DLL should use mdbl_abundance instead of mint_abundance
+			record.mdbl_abundance = pk.mdbl_intensity;
+
 			record.mshort_cs = chargeState ; 
 
 			PeakProcessing::Peak mono_peak ; 

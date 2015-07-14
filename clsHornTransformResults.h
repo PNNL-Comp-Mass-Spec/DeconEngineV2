@@ -23,8 +23,10 @@ namespace DeconToolsV2
 			int mint_scan_num ; 
 			//! charge state 
 			short mshort_cs ;
-			//! intensity of feature.
-			int mint_abundance ;
+			//! intensity of feature; maximum value that can be represented is 2147483648
+			int mint_abundance;
+			//! intensity of feature (as a double)
+			double mdbl_abundance;
 			//! m/z value of most abundant peak in the feature.
 			double mdbl_mz ;
 			//! fit value .
@@ -64,6 +66,7 @@ namespace DeconToolsV2
 				result->mint_scan_num = this->mint_scan_num ; 
 				result->mshort_cs = this->mshort_cs ;
 				result->mint_abundance = this->mint_abundance ;
+				result->mdbl_abundance = this->mdbl_abundance;
 				result->mdbl_mz = this->mdbl_mz ;
 				result->mdbl_fit = this->mdbl_fit ;
 				result->mint_fit_count_basis = this->mint_fit_count_basis ;
@@ -90,6 +93,7 @@ namespace DeconToolsV2
 				mint_scan_num = fitRecord.mint_scan_num ; 
 				mshort_cs = fitRecord.mshort_cs ;
 				mint_abundance = fitRecord.mint_abundance ;
+				mdbl_abundance = fitRecord.mdbl_abundance;
 				mdbl_mz = fitRecord.mdbl_mz ;
 				mdbl_fit = fitRecord.mdbl_fit ;
 				mint_fit_count_basis = fitRecord.mint_fit_count_basis ;
