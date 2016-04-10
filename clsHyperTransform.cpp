@@ -12,9 +12,9 @@ namespace DeconToolsV2
 	{
 	}
 
-	void clsHyperTransform::GetHyperTransformSpectrum(DeconToolsV2::HornTransform::clsHornTransformResults* (&marr_transformResults) __gc [], double mostAbundantMW,
-		short charge, float (&sumMZs) __gc [], float (&sumIntensities) __gc[], float (&mzs) __gc [], 
-		float (&intensities) __gc[])
+	void clsHyperTransform::GetHyperTransformSpectrum(array<DeconToolsV2::HornTransform::clsHornTransformResults^>^ (&marr_transformResults), double mostAbundantMW,
+        short charge, array<float> ^ (&sumMZs), array<float> ^ (&sumIntensities), array<float> ^ (&mzs),
+        array<float> ^ (&intensities))
 	{
 		std::vector<int> vectIndicesToConsider ; 
 		// go through all the transforms and find which ones have most abundant mass between current value and 
@@ -25,7 +25,7 @@ namespace DeconToolsV2
 
 		for (int transformNum = 0 ; transformNum < numResults ; transformNum++)
 		{
-			DeconToolsV2::HornTransform::clsHornTransformResults* result = marr_transformResults[transformNum] ; 
+			DeconToolsV2::HornTransform::clsHornTransformResults^ result = marr_transformResults[transformNum] ; 
 			double massDiff = System::Math::Abs((result->mdbl_most_intense_mw - mostAbundantMW)/1.003) ; 
 			double massDiffRound = (double) ((int)(massDiff+0.5)) ; 
 			if (massDiffRound > 3)
@@ -58,8 +58,8 @@ namespace DeconToolsV2
 		const int numPointsForOut = 4*1024 ; 
 		double currentMZ = minMZForOut ; 
 		double mzInterval = (maxMZForOut - minMZForOut) / numPointsForOut ; 
-		sumMZs = new float __gc[numPointsForOut] ; 
-		sumIntensities = new float __gc[numPointsForOut] ; 
+        sumMZs = gcnew array<float>(numPointsForOut);
+        sumIntensities = gcnew array<float>(numPointsForOut);
 		for (int ptNum = 0 ; ptNum < numPointsForOut ; ptNum++)
 		{
 			sumMZs[ptNum] = (float)currentMZ ; 
@@ -82,7 +82,7 @@ namespace DeconToolsV2
 		interp.Spline(vectMz, vectIntensity, 0,0) ; 
 		for (int index = 0 ; index < (int) vectIndicesToConsider.size() ; index++)
 		{
-			DeconToolsV2::HornTransform::clsHornTransformResults* result = marr_transformResults[vectIndicesToConsider[index]] ; 
+			DeconToolsV2::HornTransform::clsHornTransformResults^ result = marr_transformResults[vectIndicesToConsider[index]] ; 
 			double currentMZ = ((minMZForOut-1.00727638) * charge)/result->mshort_cs + 1.00727638 ; 
 			for (int ptNum = 0 ; ptNum < numPointsForOut ; ptNum++)
 			{

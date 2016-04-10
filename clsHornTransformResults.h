@@ -14,7 +14,7 @@ namespace DeconToolsV2
 {
 	namespace HornTransform
 	{
-		public __gc class clsHornTransformResults
+		public ref class clsHornTransformResults
 		{
 		public:
 			//! peak index of the peak.
@@ -54,14 +54,14 @@ namespace DeconToolsV2
 			//! number of isotope peaks
 			int mint_num_isotopes_observed ; 
 			//! array of indices of peak tops
-			int marr_isotope_peak_indices __gc [] ; 
+			array<int>^ marr_isotope_peak_indices; 
 
 		public:
 			clsHornTransformResults(void);
 			~clsHornTransformResults(void);
-			virtual Object* Clone()
+			virtual Object^ Clone()
 			{
-				clsHornTransformResults *result = new clsHornTransformResults() ; 
+				clsHornTransformResults ^result = gcnew clsHornTransformResults() ; 
 				result->mint_peak_index = this->mint_peak_index ; 
 				result->mint_scan_num = this->mint_scan_num ; 
 				result->mshort_cs = this->mshort_cs ;
@@ -79,7 +79,7 @@ namespace DeconToolsV2
 				result->mint_iplus2_intensity = this->mint_iplus2_intensity ;
 				result->mdbl_delta_mz = this->mdbl_delta_mz ; 
 				result->mint_num_isotopes_observed = this->mint_num_isotopes_observed ; 
-				result->marr_isotope_peak_indices = new int __gc [mint_num_isotopes_observed] ; 
+				result->marr_isotope_peak_indices = gcnew array<int> (mint_num_isotopes_observed); 
 				for (int i = 0 ; i < mint_num_isotopes_observed ; i++)
 				{
 					result->marr_isotope_peak_indices[i] = this->marr_isotope_peak_indices[i] ; 
@@ -106,7 +106,7 @@ namespace DeconToolsV2
 				mint_iplus2_intensity = fitRecord.mint_iplus2_intensity ;
 				mdbl_delta_mz = fitRecord.mdbl_delta_mz ; 
 				mint_num_isotopes_observed = fitRecord.mint_num_isotopes_observed ; 
-				marr_isotope_peak_indices = new int __gc [mint_num_isotopes_observed] ; 
+				marr_isotope_peak_indices = gcnew array<int>(mint_num_isotopes_observed);
 				for (int i = 0 ; i < mint_num_isotopes_observed ; i++)
 				{
 					marr_isotope_peak_indices[i] = fitRecord.marr_isotope_peak_indices[i] ; 

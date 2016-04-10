@@ -14,7 +14,7 @@ namespace DeconToolsV2
 {
 	namespace Results
 	{
-		public __gc class clsLCMSPeak
+		public ref class clsLCMSPeak
 		{
 		public: 
 			int mint_scan ; 

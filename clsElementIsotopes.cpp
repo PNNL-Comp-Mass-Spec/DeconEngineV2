@@ -19,7 +19,7 @@ namespace DeconToolsV2
 		mobjAtomicInfo = new Engine::TheoreticalProfile::AtomicInformation() ;
 	}
 
-	clsElementIsotopes::clsElementIsotopes(System::String *file_name)
+	clsElementIsotopes::clsElementIsotopes(System::String ^file_name)
 	{
 		mobjAtomicInfo = new Engine::TheoreticalProfile::AtomicInformation() ; 	
 		try
@@ -28,8 +28,8 @@ namespace DeconToolsV2
 		}
 		catch (char *mesg)
 		{
-			System::String *exception_msg = new System::String(mesg) ; 
-			throw new System::Exception(exception_msg) ; 
+			System::String ^exception_msg = gcnew System::String(mesg) ; 
+			throw gcnew System::Exception(exception_msg) ; 
 		}
 	}
 
@@ -40,14 +40,14 @@ namespace DeconToolsV2
 		mobjAtomicInfo = NULL ; 
 	}
 
-	Object* clsElementIsotopes::Clone()
+	Object^ clsElementIsotopes::Clone()
 	{
-		clsElementIsotopes *elem_isotopes = new clsElementIsotopes() ; 
+		clsElementIsotopes ^elem_isotopes = gcnew clsElementIsotopes() ; 
 		*(elem_isotopes->mobjAtomicInfo) = *this->GetElementalIsotopeComposition() ; 
 		return elem_isotopes ; 
 	}
 
-	clsElementIsotopes* clsElementIsotopes::Assign(clsElementIsotopes* otherOne)
+	clsElementIsotopes^ clsElementIsotopes::Assign(clsElementIsotopes^ otherOne)
 	{
 		if (mobjAtomicInfo != NULL)
 		{
@@ -59,14 +59,14 @@ namespace DeconToolsV2
 		return this ; 
 	}
 
-	void clsElementIsotopes::Load(System::String *file_name)
+	void clsElementIsotopes::Load(System::String ^file_name)
 	{
 		char file_name_ch[256];
 		DeconEngine::Utils::GetStr(file_name, file_name_ch);
 		mobjAtomicInfo->LoadData(file_name_ch);			
 	}
 
-	void clsElementIsotopes::Write(System::String *file_name)
+	void clsElementIsotopes::Write(System::String ^file_name)
 	{
 		char file_name_ch[256];			
 		DeconEngine::Utils::GetStr(file_name, file_name_ch);
@@ -81,20 +81,20 @@ namespace DeconToolsV2
 	}
 
 	void clsElementIsotopes::GetElementalIsotope(int index, Int32& atomicity, Int32& num_isotopes, 
-		System::String* (&element_name), System::String* (&element_symbol),
-		float __gc& average_mass, float __gc& mass_variance, float (&isotope_mass) __gc[], 
-		float (&isotope_prob) __gc[]) 
+		System::String^ (&element_name), System::String^ (&element_symbol),
+        float& average_mass, float& mass_variance, array<float> ^ (&isotope_mass),
+        array<float> ^ (&isotope_prob))
 	{
 		Engine::TheoreticalProfile::ElementalIsotopes element_isotopes = mobjAtomicInfo->mvect_elemental_isotopes[index];	
 
 		atomicity =  element_isotopes.mint_atomicity;
 		num_isotopes = element_isotopes.mint_num_isotopes ;
 
-		element_name = new String(element_isotopes.marr_name) ;
-		element_symbol = new  String(element_isotopes.marr_symbol);
+		element_name = gcnew String(element_isotopes.marr_name) ;
+		element_symbol = gcnew  String(element_isotopes.marr_symbol);
 
-		isotope_mass = new float __gc[num_isotopes];
-		isotope_prob = new float __gc[num_isotopes];			
+        isotope_mass = gcnew array<float>(num_isotopes);
+        isotope_prob = gcnew array<float>(num_isotopes);
 
 		for (int isotope_num = 0; isotope_num < num_isotopes ; isotope_num++)
 		{
@@ -107,8 +107,8 @@ namespace DeconToolsV2
 	}		
 
 	void clsElementIsotopes::UpdateElementalIsotope(int index, Int32& atomicity, Int32& isotope_num, 
-		System::String* (&element_name), System::String* (&element_symbol), double __gc& isotope_mass, 
-		double __gc &isotope_prob) 
+		System::String^ (&element_name), System::String^ (&element_symbol), double& isotope_mass, 
+		double& isotope_prob) 
 	{
 		
 		Engine::TheoreticalProfile::ElementalIsotopes element_isotopes = mobjAtomicInfo->mvect_elemental_isotopes[index];	
@@ -127,8 +127,7 @@ namespace DeconToolsV2
 		mobjAtomicInfo->mvect_elemental_isotopes[index] = element_isotopes;
 	}
 
-	void clsElementIsotopes::SetElementalIsotopeComposition(Engine::TheoreticalProfile::AtomicInformation 
-	__nogc *atomic_info)
+	void clsElementIsotopes::SetElementalIsotopeComposition(Engine::TheoreticalProfile::AtomicInformation *atomic_info)
 	{
 		if (mobjAtomicInfo != NULL)
 		{
@@ -143,14 +142,14 @@ namespace DeconToolsV2
 		return mobjAtomicInfo ; 
 	}
 
-	void clsElementIsotopes::SaveV1ElementIsotopes(System::Xml::XmlTextWriter *xwriter)
+	void clsElementIsotopes::SaveV1ElementIsotopes(System::Xml::XmlTextWriter ^xwriter)
 	{
-		System::String *elementSymbol = S"" ;
-		System::String *elementName = S"";
+		System::String ^elementSymbol = "" ;
+		System::String ^elementName = "";
 		int atomicity = 0 ;
 		int numIsotopes = 0 ;
-		float isotope_mass __gc [] = new float __gc [1];
-		float isotope_probability __gc [] = new float __gc [1];
+        array<float>^  isotope_mass = gcnew array<float>(1);
+        array<float>^  isotope_probability = gcnew array<float>(1);
 		float average_mass = 0 ;
 		float mass_variance = 0 ;
 
@@ -197,18 +196,18 @@ namespace DeconToolsV2
 		xwriter->WriteWhitespace("\n") ; 
 	}
 
-	void clsElementIsotopes::LoadV1ElementIsotopes(System::Xml::XmlReader *rdr)
+	void clsElementIsotopes::LoadV1ElementIsotopes(System::Xml::XmlReader ^rdr)
 	{
 		int num_elements = 0, num_isotopes = 0, atomicity = 0, isotope_num = 0, element_num = 0 ; 
 		double isotope_mass = 0 , isotope_probability = 0 ; 
-		System::String *symbol, *name ; 
+		System::String ^symbol, ^name ; 
 		//Read each node in the tree.
 		while (rdr->Read())
 		{
 			switch (rdr->NodeType)
 			{
 				case XmlNodeType::Element:
-					if (rdr->Name->Equals(S"NumElements"))
+					if (rdr->Name->Equals("NumElements"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -217,17 +216,17 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for number of elements in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for number of elements in parameter file") ; 
 						}
 						num_elements = System::Convert::ToInt32(rdr->Value) ; 
 						isotope_num = 0 ; 
 					}
-					else if (rdr->Name->Equals(S"Element"))
+					else if (rdr->Name->Equals("Element"))
 					{
 						num_isotopes = 0 ;
 						isotope_num = 0 ; 
 					}
-					else if (rdr->Name->Equals(S"NumIsotopes"))
+					else if (rdr->Name->Equals("NumIsotopes"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -236,11 +235,11 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for NumIsotopes in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for NumIsotopes in parameter file") ; 
 						}
 						num_isotopes = System::Convert::ToInt32(rdr->Value) ; 
 					}
-					else if (rdr->Name->Equals(S"Atomicity"))
+					else if (rdr->Name->Equals("Atomicity"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -249,11 +248,11 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for Atomicity in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for Atomicity in parameter file") ; 
 						}
 						atomicity = System::Convert::ToInt32(rdr->Value) ; 
 					}
-					else if (rdr->Name->Equals(S"Symbol"))
+					else if (rdr->Name->Equals("Symbol"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -262,11 +261,11 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for Symbol in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for Symbol in parameter file") ; 
 						}
 						symbol = rdr->Value ; 
 					}
-					else if (rdr->Name->Equals(S"Name"))
+					else if (rdr->Name->Equals("Name"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -275,16 +274,16 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for Element Name in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for Element Name in parameter file") ; 
 						}
 						name = rdr->Value ; 
 					}
-					else if (rdr->Name->Equals(S"Isotope"))
+					else if (rdr->Name->Equals("Isotope"))
 					{
 						isotope_mass = 0 ; 
 						isotope_probability = 0 ; 
 					}
-					else if (rdr->Name->Equals(S"Mass"))
+					else if (rdr->Name->Equals("Mass"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -293,11 +292,11 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for Mass in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for Mass in parameter file") ; 
 						}
 						isotope_mass = System::Convert::ToSingle(rdr->Value) ; 
 					}
-					else if (rdr->Name->Equals(S"Probability"))
+					else if (rdr->Name->Equals("Probability"))
 					{
 						rdr->Read() ; 
 						while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -306,25 +305,25 @@ namespace DeconToolsV2
 						}
 						if (rdr->NodeType != XmlNodeType::Text)
 						{
-							throw new System::Exception (S"Missing information for Probability in parameter file") ; 
+							throw gcnew System::Exception ("Missing information for Probability in parameter file") ; 
 						}
 						isotope_probability = System::Convert::ToSingle(rdr->Value) ; 
 					}
 					break ; 
 				case XmlNodeType::EndElement:
-					if (rdr->Name->Equals(S"Isotope"))
+					if (rdr->Name->Equals("Isotope"))
 					{
 						UpdateElementalIsotope(element_num, atomicity, isotope_num, name, symbol, isotope_mass, isotope_probability) ; 
 						isotope_num++ ; 
 					}
-					else if (rdr->Name->Equals(S"Element"))
+					else if (rdr->Name->Equals("Element"))
 					{
 						/*Console::Write(System::Convert::ToString(element_num)) ; 
-						Console::WriteLine(S" ") ; 
+						Console::WriteLine(" ") ; 
 						Console::WriteLine(name) ; */
 						element_num++ ;
 					}
-					else if (rdr->Name->Equals(S"ElementIsotopes"))
+					else if (rdr->Name->Equals("ElementIsotopes"))
 					{
 						return ; 
 					}

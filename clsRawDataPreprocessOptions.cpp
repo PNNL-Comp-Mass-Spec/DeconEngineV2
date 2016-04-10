@@ -8,8 +8,7 @@
 // in compliance with the License.  You may obtain a copy of the License at 
 // http://www.apache.org/licenses/LICENSE-2.0
 
-#include "clsRawDataPreProcessOptions.h" 
-#using <mscorlib.dll>
+#include "clsRawDataPreProcessOptions.h"
 
 using namespace System ; 
 using namespace System::Xml ; 
@@ -18,55 +17,55 @@ namespace DeconToolsV2
 {
  namespace Readers
 	{
-		void clsRawDataPreprocessOptions::SaveV1FTICRPreProcessOptions(System::Xml::XmlTextWriter *xwriter)
+		void clsRawDataPreprocessOptions::SaveV1FTICRPreProcessOptions(System::Xml::XmlTextWriter ^xwriter)
 		{
-			xwriter->WriteStartElement(S"FTICRRawPreProcessingOptions") ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"ApodizationType",__box(this->ApodizationType)->ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"ApodizationMinX", Convert::ToString(this->ApodizationMinX)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"ApodizationMaxX", Convert::ToString(this->ApodizationMaxX)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"ApodizationPercent", Convert::ToString(this->ApodizationPercent)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"NumZeroFills", Convert::ToString(this->NumZeroFills)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteStartElement(S"Calibration"); 
-			xwriter->WriteWhitespace(S"\n\t\t\t") ; 
-			xwriter->WriteElementString(S"ApplyCalibration", Convert::ToString(this->ApplyCalibration)); 
-			xwriter->WriteWhitespace(S"\n\t\t\t") ; 
-			xwriter->WriteElementString(S"CalibrationType", __box(this->CalibrationType)->ToString()); 
-			xwriter->WriteWhitespace(S"\n\t\t\t") ; 
-			xwriter->WriteElementString(S"A", Convert::ToString(this->A)); 
-			xwriter->WriteWhitespace(S"\n\t\t\t") ; 
-			xwriter->WriteElementString(S"B", Convert::ToString(this->B)); 
-			xwriter->WriteWhitespace(S"\n\t\t\t") ; 
-			xwriter->WriteElementString(S"C", Convert::ToString(this->C)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteStartElement("FTICRRawPreProcessingOptions") ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("ApodizationType",this->ApodizationType.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("ApodizationMinX", Convert::ToString(this->ApodizationMinX)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("ApodizationMaxX", Convert::ToString(this->ApodizationMaxX)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("ApodizationPercent", Convert::ToString(this->ApodizationPercent)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("NumZeroFills", Convert::ToString(this->NumZeroFills)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteStartElement("Calibration"); 
+			xwriter->WriteWhitespace("\n\t\t\t") ; 
+			xwriter->WriteElementString("ApplyCalibration", Convert::ToString(this->ApplyCalibration())); 
+			xwriter->WriteWhitespace("\n\t\t\t") ; 
+			xwriter->WriteElementString("CalibrationType", this->CalibrationType.ToString()); 
+			xwriter->WriteWhitespace("\n\t\t\t") ; 
+			xwriter->WriteElementString("A", Convert::ToString(this->A)); 
+			xwriter->WriteWhitespace("\n\t\t\t") ; 
+			xwriter->WriteElementString("B", Convert::ToString(this->B)); 
+			xwriter->WriteWhitespace("\n\t\t\t") ; 
+			xwriter->WriteElementString("C", Convert::ToString(this->C)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 			xwriter->WriteEndElement();
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace("\n\t") ; 
 			xwriter->WriteEndElement();
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace("\n\t") ; 
 		}
 
-		Object* clsRawDataPreprocessOptions::Clone()
+		Object^ clsRawDataPreprocessOptions::Clone()
 		{
-			clsRawDataPreprocessOptions *new_params = new clsRawDataPreprocessOptions() ; 
-			new_params->set_ApodizationMaxX(this->get_ApodizationMaxX()) ; 
-			new_params->set_ApodizationMinX(this->get_ApodizationMinX()) ; 
-			new_params->set_ApodizationPercent(this->get_ApodizationPercent()) ; 
-			new_params->set_ApodizationType(this->get_ApodizationType()) ; 
-			new_params->set_NumZeroFills(this->get_NumZeroFills()) ; 
-			new_params->set_CalibrationType(this->get_CalibrationType()) ; 
-			new_params->set_A(this->get_A()) ; 
-			new_params->set_B(this->get_B()) ; 
-			new_params->set_C(this->get_C()) ; 
+			clsRawDataPreprocessOptions ^new_params = gcnew clsRawDataPreprocessOptions() ; 
+			new_params->ApodizationMaxX = this->ApodizationMaxX;
+			new_params->ApodizationMinX = this->ApodizationMinX;
+            new_params->ApodizationPercent = this->ApodizationPercent;
+			new_params->ApodizationType = this->ApodizationType;
+            new_params->NumZeroFills = this->NumZeroFills;
+			new_params->CalibrationType = this->CalibrationType;
+			new_params->A = this->A;
+			new_params->B = this->B;
+			new_params->C = this->C;
 			return new_params ; 
 		}
 
 
-		void clsRawDataPreprocessOptions::LoadV1FTICRPreProcessOptions(System::Xml::XmlReader *rdr)
+		void clsRawDataPreprocessOptions::LoadV1FTICRPreProcessOptions(System::Xml::XmlReader ^rdr)
 		{
 			//Add code to handle empty nodes.
 			bool readingCalibrations ; 
@@ -77,11 +76,11 @@ namespace DeconToolsV2
 				switch (rdr->NodeType)
 				{
 					case System::Xml::XmlNodeType::Element:
-						if (rdr->Name->Equals(S"ApodizationType"))
+						if (rdr->Name->Equals("ApodizationType"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								this->set_ApodizationType(NOAPODIZATION) ; 
+                                this->ApodizationType = Readers::ApodizationType::NOAPODIZATION;
 								continue ; 
 							}
 
@@ -92,25 +91,25 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new System::Exception (S"Missing information for ApodizationType in parameter file") ; 
+								throw gcnew System::Exception ("Missing information for ApodizationType in parameter file") ; 
 							}
-							if (rdr->Value->Equals(__box(DeconToolsV2::Readers::ApodizationType::HANNING)->ToString()))
+							if (rdr->Value->Equals(DeconToolsV2::Readers::ApodizationType::HANNING.ToString()))
 							{
 								this->ApodizationType = DeconToolsV2::Readers::ApodizationType::HANNING ;
 							}
-							else if (rdr->Value->Equals(__box(DeconToolsV2::Readers::ApodizationType::PARZEN)->ToString()))
+							else if (rdr->Value->Equals(DeconToolsV2::Readers::ApodizationType::PARZEN.ToString()))
 							{
 								this->ApodizationType = DeconToolsV2::Readers::ApodizationType::PARZEN ;
 							}
-							else if (rdr->Value->Equals(__box(DeconToolsV2::Readers::ApodizationType::SQUARE)->ToString()))
+							else if (rdr->Value->Equals(DeconToolsV2::Readers::ApodizationType::SQUARE.ToString()))
 							{
 								this->ApodizationType = DeconToolsV2::Readers::ApodizationType::SQUARE ;
 							}
-							else if (rdr->Value->Equals(__box(DeconToolsV2::Readers::ApodizationType::TRIANGLE)->ToString()))
+							else if (rdr->Value->Equals(DeconToolsV2::Readers::ApodizationType::TRIANGLE.ToString()))
 							{
 								this->ApodizationType = DeconToolsV2::Readers::ApodizationType::TRIANGLE ;
 							}
-							else if (rdr->Value->Equals(__box(DeconToolsV2::Readers::ApodizationType::WELCH)->ToString()))
+							else if (rdr->Value->Equals(DeconToolsV2::Readers::ApodizationType::WELCH.ToString()))
 							{
 								this->ApodizationType = DeconToolsV2::Readers::ApodizationType::WELCH ;
 							}
@@ -119,7 +118,7 @@ namespace DeconToolsV2
 								this->ApodizationType = DeconToolsV2::Readers::ApodizationType::NOAPODIZATION ;
 							}
 						}
-						else if (rdr->Name->Equals(S"ApodizationMinX"))
+						else if (rdr->Name->Equals("ApodizationMinX"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -128,14 +127,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No Apodization Min X value was specified in parameter file") ; 
+								throw gcnew Exception ("No Apodization Min X value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_ApodizationMinX(Convert::ToDouble(rdr->Value)) ; 
+                                this->ApodizationMinX = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"ApodizationMaxX"))
+						else if (rdr->Name->Equals("ApodizationMaxX"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -144,14 +143,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No Apodization Max X value was specified in parameter file") ; 
+								throw gcnew Exception ("No Apodization Max X value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_ApodizationMaxX(Convert::ToDouble(rdr->Value)) ; 
+                                this->ApodizationMaxX = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"ApodizationPercent"))
+						else if (rdr->Name->Equals("ApodizationPercent"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -160,14 +159,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No ApodizationPercent value was specified in parameter file") ; 
+								throw gcnew Exception ("No ApodizationPercent value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_ApodizationPercent(Convert::ToInt32(rdr->Value)) ; 
+                                this->ApodizationPercent = Convert::ToInt32(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"NumZeroFills"))
+						else if (rdr->Name->Equals("NumZeroFills"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -176,18 +175,18 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No NumZeroFills value was specified in parameter file") ; 
+								throw gcnew Exception ("No NumZeroFills value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_NumZeroFills(Convert::ToInt16(rdr->Value)) ; 
+                                this->NumZeroFills = Convert::ToInt16(rdr->Value);
 							}
 						}
-					else if (rdr->Name->Equals(S"A"))
+					else if (rdr->Name->Equals("A"))
 						{
 							if (!readingCalibrations)
 							{
-								throw new Exception (S"Node A, needs to be inside node: Calibration.") ; 
+								throw gcnew Exception ("Node A, needs to be inside node: Calibration.") ; 
 							}
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -196,18 +195,18 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No value for calibration constant Awas specified in parameter file") ; 
+								throw gcnew Exception ("No value for calibration constant Awas specified in parameter file") ; 
 							}
 							else
 							{
 								this->A = Convert::ToDouble(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"B"))
+						else if (rdr->Name->Equals("B"))
 						{
 							if (!readingCalibrations)
 							{
-								throw new Exception (S"Node B, needs to be inside node: Calibration.") ; 
+								throw gcnew Exception ("Node B, needs to be inside node: Calibration.") ; 
 							}
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -216,18 +215,18 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No value for calibration constant B was specified in parameter file") ; 
+								throw gcnew Exception ("No value for calibration constant B was specified in parameter file") ; 
 							}
 							else
 							{
 								this->B = Convert::ToDouble(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"C"))
+						else if (rdr->Name->Equals("C"))
 						{
 							if (!readingCalibrations)
 							{
-								throw new Exception (S"Node C, needs to be inside node: Calibration.") ; 
+								throw gcnew Exception ("Node C, needs to be inside node: Calibration.") ; 
 							}
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -236,18 +235,18 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No value for calibration constant C was specified in parameter file") ; 
+								throw gcnew Exception ("No value for calibration constant C was specified in parameter file") ; 
 							}
 							else
 							{
 								this->C = Convert::ToDouble(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"CalibrationType"))
+						else if (rdr->Name->Equals("CalibrationType"))
 						{
 							if (!readingCalibrations)
 							{
-								throw new Exception (S"Node CalibrationType, needs to be inside node: Calibration.") ; 
+								throw gcnew Exception ("Node CalibrationType, needs to be inside node: Calibration.") ; 
 							}
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -255,20 +254,20 @@ namespace DeconToolsV2
 								rdr->Read() ; 
 							}
 
-							System::Type *type = __typeof(DeconToolsV2::Readers::CalibrationType) ; 
-							//System::Type::GetType(S"DeconToolsV2::Readers::CalibrationType") ; 
-							DeconToolsV2::Readers::CalibrationType calibrationType = *dynamic_cast<__box DeconToolsV2::Readers::CalibrationType*>(Enum::Parse(type, rdr->Value));
+							System::Type ^type = DeconToolsV2::Readers::CalibrationType::typeid ; 
+							//System::Type::GetType("DeconToolsV2::Readers::CalibrationType") ; 
+							DeconToolsV2::Readers::CalibrationType calibrationType = *dynamic_cast<DeconToolsV2::Readers::CalibrationType^>(Enum::Parse(type, rdr->Value));
 							this->CalibrationType = calibrationType ; 
 						}
-						else if (rdr->Name->Equals(S"Calibration"))
+						else if (rdr->Name->Equals("Calibration"))
 						{
 							readingCalibrations = true ; 
 						}
 						break ; 
 					case System::Xml::XmlNodeType::EndElement:
-						if (rdr->Name->Equals(S"HornTransformParameters"))
+						if (rdr->Name->Equals("HornTransformParameters"))
 							return ;
-						if (!rdr->Name->Equals(S"Calibration"))
+						if (!rdr->Name->Equals("Calibration"))
 							break ;
 						else
 						{

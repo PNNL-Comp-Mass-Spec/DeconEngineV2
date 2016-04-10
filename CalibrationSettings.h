@@ -3,7 +3,7 @@
 #pragma once
 namespace DeconToolsV2
 {
-	public __gc class CalibrationSettings
+	public ref class CalibrationSettings
 	{
 	public: 
 

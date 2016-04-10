@@ -27,56 +27,56 @@ namespace DeconToolsV2
 	{
 		mint_percent_done = 0;
 		menm_state = IDLE ;
-		mstr_file_name = NULL ;
-		mstr_output_path_for_dta_creation = NULL ; 
-		mobj_peak_parameters = new DeconToolsV2::Peaks::clsPeakProcessorParameters();
-		mobj_transform_parameters = new DeconToolsV2::HornTransform::clsHornTransformParameters();
-		mobj_dta_generation_parameters = new DeconToolsV2::DTAGeneration::clsDTAGenerationParameters() ; 
-		mobj_results = NULL ;
+		mstr_file_name = nullptr ;
+		mstr_output_path_for_dta_creation = nullptr ; 
+		mobj_peak_parameters = gcnew DeconToolsV2::Peaks::clsPeakProcessorParameters();
+		mobj_transform_parameters = gcnew DeconToolsV2::HornTransform::clsHornTransformParameters();
+		mobj_dta_generation_parameters = gcnew DeconToolsV2::DTAGeneration::clsDTAGenerationParameters() ; 
+		mobj_results = nullptr ;
 	}
 
 	clsProcRunner::~clsProcRunner(void)
 	{
-		if (mobj_results != NULL)
+		if (mobj_results != nullptr)
 		{
 			delete mobj_results ; 
-			mobj_results = NULL ; 
+			mobj_results = nullptr ; 
 		}			
 	}
 
-	DeconToolsV2::Results::clsTransformResults* clsProcRunner::CreateTransformResults(System::String *file_name,
-		DeconToolsV2::Readers::FileType file_type, DeconToolsV2::Peaks::clsPeakProcessorParameters *peak_parameters,
-		DeconToolsV2::HornTransform::clsHornTransformParameters *transform_parameters, 
-		DeconToolsV2::Readers::clsRawDataPreprocessOptions *fticr_preprocess_parameters, 
+	DeconToolsV2::Results::clsTransformResults^ clsProcRunner::CreateTransformResults(System::String ^file_name,
+		DeconToolsV2::Readers::FileType file_type, DeconToolsV2::Peaks::clsPeakProcessorParameters ^peak_parameters,
+		DeconToolsV2::HornTransform::clsHornTransformParameters ^transform_parameters, 
+		DeconToolsV2::Readers::clsRawDataPreprocessOptions ^fticr_preprocess_parameters, 
 		bool save_peaks, bool transform)
 	{
 		if (menm_state == RUNNING)
 		{
-			throw new System::Exception(S"Process already running in clsProcRunner. Cannot run two processes with same object");
+			throw gcnew System::Exception("Process already running in clsProcRunner. Cannot run two processes with same object");
 		}
 
-		if (file_name == NULL || file_name == S"")
+		if (file_name == nullptr || file_name == "")
 		{
-			throw new System::Exception(S"Please enter a file name to process");
+			throw gcnew System::Exception("Please enter a file name to process");
 		}
 
-		if (peak_parameters == NULL)
+		if (peak_parameters == nullptr)
 		{
-			throw new System::Exception(S"Please specify peak processing parameters.");
+			throw gcnew System::Exception("Please specify peak processing parameters.");
 		}
-		if (transform_parameters == NULL)
+		if (transform_parameters == nullptr)
 		{
-			throw new System::Exception(S"Please specify mass transform parameters.");
+			throw gcnew System::Exception("Please specify mass transform parameters.");
 		}
-		Engine::Readers::RawData __nogc *raw_data = NULL ; 
-		Engine::Results::LCMSTransformResults __nogc *lcms_results = NULL ; 
-		Engine::PeakProcessing::PeakProcessor __nogc *peak_processor = NULL ;
-		Engine::PeakProcessing::PeakProcessor __nogc *original_peak_processor = NULL ; 
-		Engine::HornTransform::MassTransform __nogc *mass_transform = NULL ;
-		Engine::Utilities::SavGolSmoother __nogc *sgSmoother = NULL ;
-		Engine::Utilities::Interpolation __nogc *interpolator = NULL ;
-//		Engine::ResultChecker::LCMSCheckResults __nogc *lcms_checker = NULL ; 
-		DeconToolsV2::Results::clsTransformResults *transform_results = __gc new DeconToolsV2::Results::clsTransformResults() ;
+		Engine::Readers::RawData *raw_data = NULL ; 
+		Engine::Results::LCMSTransformResults *lcms_results = NULL ; 
+		Engine::PeakProcessing::PeakProcessor *peak_processor = NULL ;
+		Engine::PeakProcessing::PeakProcessor *original_peak_processor = NULL ; 
+		Engine::HornTransform::MassTransform *mass_transform = NULL ;
+		Engine::Utilities::SavGolSmoother *sgSmoother = NULL ;
+		Engine::Utilities::Interpolation *interpolator = NULL ;
+//		Engine::ResultChecker::LCMSCheckResults *lcms_checker = NULL ; 
+		DeconToolsV2::Results::clsTransformResults ^transform_results = gcnew DeconToolsV2::Results::clsTransformResults() ;
 
 
 		try
@@ -89,7 +89,7 @@ namespace DeconToolsV2
 			if (file_type == DeconToolsV2::Readers::FINNIGAN || file_type == DeconToolsV2::Readers::MZXMLRAWDATA)
 				thresholded = true ;
 			else
-				thresholded = peak_parameters->get_ThresholdedData() ;
+				thresholded = peak_parameters->ThresholdedData ;
 
 
 			mint_percent_done = 0 ;
@@ -102,23 +102,23 @@ namespace DeconToolsV2
 			// enumerations of file type are the same in Readers namespace and
 			// DeconWrapperManaged namespace.
 			raw_data = Engine::Readers::ReaderFactory::GetRawData((Engine::Readers::FileType)file_type, file_name_ch) ;
-			if (file_type == DeconToolsV2::Readers::ICR2LSRAWDATA && fticr_preprocess_parameters != NULL)
+			if (file_type == DeconToolsV2::Readers::ICR2LSRAWDATA && fticr_preprocess_parameters != nullptr)
 			{
 				Engine::Readers::Icr2lsRawData *icr_raw_data = (Engine::Readers::Icr2lsRawData *)raw_data ; 
-				icr_raw_data->SetApodizationZeroFillOptions((Engine::Utilities::ApodizationType)fticr_preprocess_parameters->get_ApodizationType(),
-					fticr_preprocess_parameters->get_ApodizationMinX(), fticr_preprocess_parameters->get_ApodizationMaxX(), 
-					fticr_preprocess_parameters->get_ApodizationPercent(), fticr_preprocess_parameters->get_NumZeroFills()) ; 
-				if (fticr_preprocess_parameters->get_ApplyCalibration())
+				icr_raw_data->SetApodizationZeroFillOptions((Engine::Utilities::ApodizationType)fticr_preprocess_parameters->ApodizationType,
+					fticr_preprocess_parameters->ApodizationMinX, fticr_preprocess_parameters->ApodizationMaxX, 
+					fticr_preprocess_parameters->ApodizationPercent, fticr_preprocess_parameters->NumZeroFills) ; 
+				if (fticr_preprocess_parameters->ApplyCalibration())
 				{
-					icr_raw_data->OverrideDefaultCalibrator((Engine::Readers::CalibrationType) fticr_preprocess_parameters->get_CalibrationType(),
-							fticr_preprocess_parameters->get_A(), fticr_preprocess_parameters->get_B(), 
-							fticr_preprocess_parameters->get_C()) ; 
+					icr_raw_data->OverrideDefaultCalibrator((Engine::Readers::CalibrationType) fticr_preprocess_parameters->CalibrationType,
+							fticr_preprocess_parameters->A, fticr_preprocess_parameters->B, 
+							fticr_preprocess_parameters->C) ; 
 				}
 			}
 
 			if (raw_data == NULL)
 			{
-				throw new System::Exception(System::String::Concat(S"Could not open raw file: ", file_name));
+				throw gcnew System::Exception(System::String::Concat("Could not open raw file: ", file_name));
 			}
 
 			lcms_results = new Engine::Results::LCMSTransformResults() ;
@@ -128,40 +128,40 @@ namespace DeconToolsV2
 			
 			//lcms_checker = new Engine::ResultChecker::LCMSCheckResults()  ; 
 			// Set parameters for discovering peaks. intensity threshold is set below.
-			peak_processor->SetOptions(peak_parameters->get_SignalToNoiseThreshold(), 0, thresholded, (Engine::PeakProcessing::PEAK_FIT_TYPE)peak_parameters->get_PeakFitType()) ;
-			original_peak_processor->SetOptions(peak_parameters->get_SignalToNoiseThreshold(), 0, thresholded, (Engine::PeakProcessing::PEAK_FIT_TYPE)peak_parameters->get_PeakFitType()) ;
+			peak_processor->SetOptions(peak_parameters->SignalToNoiseThreshold, 0, thresholded, (Engine::PeakProcessing::PEAK_FIT_TYPE)peak_parameters->PeakFitType) ;
+			original_peak_processor->SetOptions(peak_parameters->SignalToNoiseThreshold, 0, thresholded, (Engine::PeakProcessing::PEAK_FIT_TYPE)peak_parameters->PeakFitType) ;
 			
 			if (transform)
 			{
 				mass_transform = new Engine::HornTransform::MassTransform() ;
-				mass_transform->SetElementalIsotopeComposition(*transform_parameters->get_ElementIsotopeComposition()->mobjAtomicInfo) ;
-				if (transform_parameters != NULL)
+				mass_transform->SetElementalIsotopeComposition(*transform_parameters->ElementIsotopeComposition()->mobjAtomicInfo) ;
+				if (transform_parameters != nullptr)
 				{
 					char averagine_formula[512] ;
 					char tag_formula[512] ;
-					//mass_transform->SetOptions(transform_parameters->get_MaxCharge(), transform_parameters->get_MaxMW(), transform_parameters->get_MaxFit(),
-					//	transform_parameters->get_MinS2N(), transform_parameters->get_CCMass(),transform_parameters->get_DeleteIntensityThreshold(),
-					//	transform_parameters->get_MinIntensityForScore(), transform_parameters->get_NumPeaksForShoulder(),
-					//	transform_parameters->get_CheckAllPatternsAgainstCharge1(), transform_parameters->get_UseMercuryCaching(), transform_parameters->get_O16O18Media()) ;
+					//mass_transform->SetOptions(transform_parameters->MaxCharge(), transform_parameters->MaxMW(), transform_parameters->MaxFit(),
+					//	transform_parameters->MinS2N(), transform_parameters->CCMass(),transform_parameters->DeleteIntensityThreshold(),
+					//	transform_parameters->MinIntensityForScore(), transform_parameters->NumPeaksForShoulder(),
+					//	transform_parameters->CheckAllPatternsAgainstCharge1(), transform_parameters->UseMercuryCaching(), transform_parameters->O16O18Media()) ;
 
 
-					mass_transform->SetOptions(transform_parameters->get_MaxCharge(), transform_parameters->get_MaxMW(), transform_parameters->get_MaxFit(),
-						transform_parameters->get_MinS2N(), transform_parameters->get_CCMass(),transform_parameters->get_DeleteIntensityThreshold(),
-						transform_parameters->get_MinIntensityForScore(), transform_parameters->get_NumPeaksForShoulder(),
-						transform_parameters->get_CheckAllPatternsAgainstCharge1(), transform_parameters->get_UseMercuryCaching(),
-						transform_parameters->get_O16O18Media(), transform_parameters->get_LeftFitStringencyFactor(), 
-						transform_parameters->get_RightFitStringencyFactor(), transform_parameters->get_IsActualMonoMZUsed());
+					mass_transform->SetOptions(transform_parameters->MaxCharge, transform_parameters->MaxMW, transform_parameters->MaxFit,
+						transform_parameters->MinS2N, transform_parameters->CCMass,transform_parameters->DeleteIntensityThreshold,
+						transform_parameters->MinIntensityForScore, transform_parameters->NumPeaksForShoulder,
+						transform_parameters->CheckAllPatternsAgainstCharge1, transform_parameters->UseMercuryCaching,
+						transform_parameters->O16O18Media, transform_parameters->LeftFitStringencyFactor, 
+						transform_parameters->RightFitStringencyFactor, transform_parameters->IsActualMonoMZUsed);
 
 					averagine_formula[0] = '\0' ;
 					tag_formula[0] = '\0' ;
 
-					DeconEngine::Utils::GetStr(transform_parameters->get_AveragineFormula(), averagine_formula) ;
-					if (transform_parameters->get_TagFormula() != NULL)
+					DeconEngine::Utils::GetStr(transform_parameters->AveragineFormula, averagine_formula) ;
+					if (transform_parameters->TagFormula != nullptr)
 					{
-						DeconEngine::Utils::GetStr(transform_parameters->get_TagFormula(), tag_formula) ;
+						DeconEngine::Utils::GetStr(transform_parameters->TagFormula, tag_formula) ;
 					}
-					mass_transform->SetIsotopeFitOptions(averagine_formula, tag_formula, transform_parameters->get_ThrashOrNot(), transform_parameters->get_CompleteFit()) ;
-					mass_transform->SetIsotopeFitType((Engine::HornTransform::IsotopicFittingType) transform_parameters->get_IsotopeFitType()) ; 
+					mass_transform->SetIsotopeFitOptions(averagine_formula, tag_formula, transform_parameters->ThrashOrNot, transform_parameters->CompleteFit) ;
+					mass_transform->SetIsotopeFitType((Engine::HornTransform::IsotopicFittingType) transform_parameters->IsotopeFitType) ; 
 				}
 
 			}
@@ -174,24 +174,24 @@ namespace DeconToolsV2
 			clock_t start_t = clock() ;
 
 			int min_scan = 1 ; 
-			if (transform_parameters->get_UseScanRange() && transform_parameters->get_MinScan() > 1)
-				min_scan = transform_parameters->get_MinScan() ;
+			if (transform_parameters->UseScanRange && transform_parameters->MinScan > 1)
+				min_scan = transform_parameters->MinScan ;
 			if (min_scan < raw_data->GetFirstScanNum())
 				min_scan = raw_data->GetFirstScanNum() ; 
 			int max_scan = raw_data->GetLastScanNum() ; 
-			if (transform_parameters->get_UseScanRange() && transform_parameters->get_MaxScan() < max_scan)
-				max_scan = transform_parameters->get_MaxScan() ;
+			if (transform_parameters->UseScanRange && transform_parameters->MaxScan < max_scan)
+				max_scan = transform_parameters->MaxScan ;
 			
 
-			if (transform_parameters->get_ZeroFill())
+			if (transform_parameters->ZeroFill)
 			{
-				interpolator = __nogc new Engine::Utilities::Interpolation() ;
+				interpolator = new Engine::Utilities::Interpolation() ;
 			}
 
-			if (transform_parameters->get_UseSavitzkyGolaySmooth())
+			if (transform_parameters->UseSavitzkyGolaySmooth)
 			{
-				sgSmoother = __nogc new  Engine::Utilities::SavGolSmoother(transform_parameters->get_SGNumLeft(),
-					transform_parameters->get_SGNumRight(),transform_parameters->get_SGOrder()) ;
+				sgSmoother = new Engine::Utilities::SavGolSmoother(transform_parameters->SGNumLeft,
+					transform_parameters->SGNumRight,transform_parameters->SGOrder) ;
 			}
 
 			int raw_data_read_time = 0 ;
@@ -208,12 +208,12 @@ namespace DeconToolsV2
 			int peak_save_time = 0 ;
 			
 			//2009-04-03 [gord] will no longer use the SlidingWindow. It has litte speed benefit and there might be a bug
-			/*if (transform_parameters->get_SumSpectraAcrossScanRange())
+			/*if (transform_parameters->SumSpectraAcrossScanRange)
 			{
 				if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
-					((Engine::Readers::UIMFRawData *)raw_data)->InitializeSlidingWindow(transform_parameters->get_NumScansToSumOver());
+					((Engine::Readers::UIMFRawData *)raw_data)->InitializeSlidingWindow(transform_parameters->NumScansToSumOver);
 				else if (file_type == DeconToolsV2::Readers::PNNL_IMS)
-					((Engine::Readers::IMSRawData *)raw_data)->InitializeSlidingWindow(transform_parameters->get_NumScansToSumOver());
+					((Engine::Readers::IMSRawData *)raw_data)->InitializeSlidingWindow(transform_parameters->NumScansToSumOver);
 			}*/
 			
 			for(int scan_num = min_scan ; scan_num <= max_scan && scan_num != -1 ; scan_num = raw_data->GetNextScanNum(scan_num))
@@ -242,10 +242,10 @@ namespace DeconToolsV2
 				{
 					scan_ms_level = 2 ; 
 				}
-				if (scan_ms_level != 1 && !transform_parameters->get_ProcessMSMS())
+				if (scan_ms_level != 1 && !transform_parameters->ProcessMSMS)
 					continue ; 
 				
-				if (scan_ms_level != 1 && transform_parameters->get_ProcessMSMS() && 
+				if (scan_ms_level != 1 && transform_parameters->ProcessMSMS && 
 					!raw_data->IsFTScan(scan_num)) 
 					continue ; 
 
@@ -256,14 +256,14 @@ namespace DeconToolsV2
 				
 
 				// ------------------------------ Spectra summing ----------------------------------
-				if (transform_parameters->get_SumSpectra())                    // sum all spectra
+				if (transform_parameters->SumSpectra)                    // sum all spectra
 				{
 					double min_mz ; 
 					double max_mz ; 
-					if (transform_parameters->get_UseMZRange())
+					if (transform_parameters->UseMZRange)
 					{					
-						min_mz = transform_parameters->get_MinMZ() ; 
-						max_mz = transform_parameters->get_MaxMZ() ; 
+						min_mz = transform_parameters->MinMZ ; 
+						max_mz = transform_parameters->MaxMZ ; 
 					}
 					else
 					{
@@ -277,30 +277,30 @@ namespace DeconToolsV2
 					scan_num = max_scan ;
 					mint_percent_done = 50 ; 						
 				}
-				else if (transform_parameters->get_SumSpectraAcrossScanRange())    // sum across range
+				else if (transform_parameters->SumSpectraAcrossScanRange)    // sum across range
 				{
 					//// AM: Save original intensity of peaks prior to peaks
-					if (transform_parameters->get_ZeroFill())
+					if (transform_parameters->ZeroFill)
 					{
-						interpolator->ZeroFillMissing(vect_mzs, vect_intensities, transform_parameters->get_NumZerosToFill()) ;
+						interpolator->ZeroFillMissing(vect_mzs, vect_intensities, transform_parameters->NumZerosToFill) ;
 					}
-					if (transform_parameters->get_UseSavitzkyGolaySmooth())
+					if (transform_parameters->UseSavitzkyGolaySmooth)
 					{
 						sgSmoother->Smooth(&vect_mzs, &vect_intensities) ;
 					}
 					double orig_thres = DeconEngine::Utils::GetAverage(vect_intensities, FLT_MAX) ;
 					double orig_background_intensity = DeconEngine::Utils::GetAverage(vect_intensities, (float)(5*orig_thres)) ;
-					original_peak_processor->SetPeakIntensityThreshold(orig_background_intensity * peak_parameters->get_PeakBackgroundRatio()) ;
+					original_peak_processor->SetPeakIntensityThreshold(orig_background_intensity * peak_parameters->PeakBackgroundRatio) ;
 					int orig_numPeaks = 0 ; 
-					if (mobj_transform_parameters->get_UseMZRange())
-						orig_numPeaks = original_peak_processor->DiscoverPeaks(&temp_vect_mzs, &temp_vect_intensities, mobj_transform_parameters->get_MinMZ(), mobj_transform_parameters->get_MaxMZ()) ;
+					if (mobj_transform_parameters->UseMZRange)
+						orig_numPeaks = original_peak_processor->DiscoverPeaks(&temp_vect_mzs, &temp_vect_intensities, mobj_transform_parameters->MinMZ, mobj_transform_parameters->MaxMZ) ;
 					else
 						orig_numPeaks = original_peak_processor->DiscoverPeaks(&temp_vect_mzs, &temp_vect_intensities) ; 
 
 					// now sum
 					vect_mzs.clear() ; 
 					vect_intensities.clear() ; 
-					int scan_range = transform_parameters->get_NumScansToSumOver() ; 	
+					int scan_range = transform_parameters->NumScansToSumOver ; 	
 					
 					//2009-04-03 [gord] will no longer use the SlidingWindow. It has litte speed benefit and there might be a bug
 					//if (file_type == DeconToolsV2::Readers::PNNL_UIMF)
@@ -342,13 +342,13 @@ namespace DeconToolsV2
 
 				
 				//------------------------------------- Zero fill --------------------------------------
-				if (transform_parameters->get_ZeroFill())
+				if (transform_parameters->ZeroFill)
 				{
-					interpolator->ZeroFillMissing(vect_mzs, vect_intensities, transform_parameters->get_NumZerosToFill()) ;
+					interpolator->ZeroFillMissing(vect_mzs, vect_intensities, transform_parameters->NumZerosToFill) ;
 				}
 				
 				// ------------------------------------ Smooth -----------------------------------------
-				if (transform_parameters->get_UseSavitzkyGolaySmooth())
+				if (transform_parameters->UseSavitzkyGolaySmooth)
 				{
 					sgSmoother->Smooth(&vect_mzs, &vect_intensities) ;
 				}
@@ -370,29 +370,29 @@ namespace DeconToolsV2
 				// current_time = clock() ; 
 
 				double tic_intensity = 0 ; 
-				if (mobj_transform_parameters->get_UseMZRange())
+				if (mobj_transform_parameters->UseMZRange)
 				{
-					tic_intensity = DeconEngine::Utils::GetTIC(mobj_transform_parameters->get_MinMZ(),
-						mobj_transform_parameters->get_MaxMZ(), vect_mzs, vect_intensities, 
-						(float)(background_intensity * peak_parameters->get_PeakBackgroundRatio()),
+					tic_intensity = DeconEngine::Utils::GetTIC(mobj_transform_parameters->MinMZ,
+						mobj_transform_parameters->MaxMZ, vect_mzs, vect_intensities, 
+						(float)(background_intensity * peak_parameters->PeakBackgroundRatio),
 						bpi, bp_mz) ;
 				}
 				else
 				{
 					tic_intensity = DeconEngine::Utils::GetTIC(400.0, 2000.0, vect_mzs, vect_intensities, 
-						(float)(background_intensity * peak_parameters->get_PeakBackgroundRatio()), bpi, bp_mz) ;
+						(float)(background_intensity * peak_parameters->PeakBackgroundRatio), bpi, bp_mz) ;
 				}
 				
 				// Disable timing (MEM 2013)
 				// tic_time += clock() - current_time ; 
 
-				peak_processor->SetPeakIntensityThreshold(background_intensity * peak_parameters->get_PeakBackgroundRatio()) ;
+				peak_processor->SetPeakIntensityThreshold(background_intensity * peak_parameters->PeakBackgroundRatio) ;
 				int numPeaks = 0 ; 
-				if (mobj_transform_parameters->get_UseMZRange())
+				if (mobj_transform_parameters->UseMZRange)
 				{
 					// Disable timing (MEM 2013)
 					// current_time = clock() ; 
-					numPeaks = peak_processor->DiscoverPeaks(&vect_mzs, &vect_intensities, mobj_transform_parameters->get_MinMZ(), mobj_transform_parameters->get_MaxMZ()) ;
+					numPeaks = peak_processor->DiscoverPeaks(&vect_mzs, &vect_intensities, mobj_transform_parameters->MinMZ, mobj_transform_parameters->MaxMZ) ;
 					
 					// Disable timing (MEM 2013)
 					// peak_discover_time += clock() - current_time ; 
@@ -447,11 +447,11 @@ namespace DeconToolsV2
 				// ------------------------ Mass Transform -----------------------------------------
 				if(transform)
 				{
-					double min_peptide_intensity = background_intensity * transform_parameters->get_PeptideMinBackgroundRatio() ;
-					if (transform_parameters->get_UseAbsolutePeptideIntensity())
+					double min_peptide_intensity = background_intensity * transform_parameters->PeptideMinBackgroundRatio ;
+					if (transform_parameters->UseAbsolutePeptideIntensity)
 					{
-						if (min_peptide_intensity < transform_parameters->get_AbsolutePeptideIntensity())
-							min_peptide_intensity = transform_parameters->get_AbsolutePeptideIntensity() ;
+						if (min_peptide_intensity < transform_parameters->AbsolutePeptideIntensity)
+							min_peptide_intensity = transform_parameters->AbsolutePeptideIntensity ;
 					}
 
 					Engine::PeakProcessing::Peak currentPeak ;
@@ -483,8 +483,8 @@ namespace DeconToolsV2
 							// transform_time += (clock() - current_time) ; 
 
 							// AM (anoop?): if summing over a window, reinsert the original intensity     // [gord]  why?
-							if(found_transform && transformRecord.mshort_cs <= transform_parameters->get_MaxCharge()
-								 && transform_parameters->get_SumSpectraAcrossScanRange())
+							if(found_transform && transformRecord.mshort_cs <= transform_parameters->MaxCharge
+								 && transform_parameters->SumSpectraAcrossScanRange)
 							{
 								original_peak_processor->mobj_peak_data->InitializeUnprocessedPeakData() ; 
 								originalPeak.mdbl_intensity = -1.0 ; 
@@ -503,13 +503,13 @@ namespace DeconToolsV2
 							}
 
 
-							if (found_transform && transformRecord.mshort_cs <= transform_parameters->get_MaxCharge())
+							if (found_transform && transformRecord.mshort_cs <= transform_parameters->MaxCharge)
 							{
 								numDeisotoped++ ;
 								transformRecord.mint_scan_num = scan_num ;
 
 
-								if (transform_parameters->get_IsActualMonoMZUsed())
+								if (transform_parameters->IsActualMonoMZUsed)
 								{
 									//retrieve experimental monoisotopic peak
 									int monoPeakIndex = transformRecord.marr_isotope_peak_indices[0];
@@ -554,28 +554,28 @@ namespace DeconToolsV2
 					if (file_type != DeconToolsV2::Readers::PNNL_UIMF )
 					//if (file_type != DeconToolsV2::Readers::PNNL_UIMF && scan_num % 20 == 0)
 					{
-						int iso_time=0, spline_time=0, ac_time=0, fit_time = 0, cs_time =0, get_fit_score_time = 0, 
+						int iso_time=0, spline_time=0, ac_time=0, fit_time = 0, cs_time =0, fit_score_time = 0, 
 							remainder_time = 0, find_peak_calc = 0, find_peak_cached = 0   ;
 						
 						clock_t current_t = clock() ;
 						int all = current_t - start_t ;
 
 						mass_transform->GetProcessingTimes(cs_time, ac_time, spline_time, iso_time, fit_time,
-							remainder_time, get_fit_score_time, find_peak_calc, find_peak_cached) ;
+							remainder_time, fit_score_time, find_peak_calc, find_peak_cached) ;
 						
-						Console::WriteLine(System::String::Concat(S"Scan # =", Convert::ToString(scan_num), 
-							S" CS= ", Convert::ToString(cs_time),
-							S" Isotope= ", Convert::ToString(iso_time),
-							S" FitScore= ", Convert::ToString(fit_time), 
-							S" GetFitScore= ", Convert::ToString(get_fit_score_time), 
-							S" GetFitScore-Isotope-FitScore-FindPeak= ", Convert::ToString(get_fit_score_time-fit_time-find_peak_cached-find_peak_calc-iso_time), 
-//							S" Raw Reading Time = ", Convert::ToString(raw_data_read_time), 
-//							S" PreProcessing Time = ", Convert::ToString(preprocessing_time), 
-							S" Transform= ", Convert::ToString(transform_time), 
-							S" Remaining= ", Convert::ToString(remainder_time), 
-							S" transform-cs-get_fit= ", Convert::ToString(transform_time-cs_time-get_fit_score_time), 
-							S" All= ", Convert::ToString(all)
-//							S" all-transform-preprocess-read= ", Convert::ToString(all-transform_time-preprocessing_time-raw_data_read_time)
+						Console::WriteLine(System::String::Concat("Scan # =", Convert::ToString(scan_num), 
+							" CS= ", Convert::ToString(cs_time),
+							" Isotope= ", Convert::ToString(iso_time),
+							" FitScore= ", Convert::ToString(fit_time), 
+							" GetFitScore= ", Convert::ToString(fit_score_time), 
+							" GetFitScore-Isotope-FitScore-FindPeak= ", Convert::ToString(fit_score_time-fit_time-find_peak_cached-find_peak_calc-iso_time), 
+//							" Raw Reading Time = ", Convert::ToString(raw_data_read_time), 
+//							" PreProcessing Time = ", Convert::ToString(preprocessing_time), 
+							" Transform= ", Convert::ToString(transform_time), 
+							" Remaining= ", Convert::ToString(remainder_time), 
+							" transform-cs-fit= ", Convert::ToString(transform_time-cs_time-fit_score_time), 
+							" All= ", Convert::ToString(all)
+//							" all-transform-preprocess-read= ", Convert::ToString(all-transform_time-preprocessing_time-raw_data_read_time)
 							)) ;
 					}
 				}
@@ -638,9 +638,9 @@ namespace DeconToolsV2
 				delete mass_transform ;
 				mass_transform = NULL ; 
 			}
-			System::String *exception_msg = new System::String(mesg) ; 
+			System::String ^exception_msg = gcnew System::String(mesg) ; 
 			menm_state = enmProcessState::ERROR ;
-			throw new System::Exception(exception_msg) ; 
+			throw gcnew System::Exception(exception_msg) ; 
 		}
 
 		if (sgSmoother != NULL)
@@ -679,25 +679,25 @@ namespace DeconToolsV2
 		//Main function to create DTA files 
 
 		//check if we have everything
-		if (mobj_peak_parameters == NULL)
+		if (mobj_peak_parameters == nullptr)
 		{
-			throw new System::Exception(S"Peak parameters not set.") ;
+			throw gcnew System::Exception("Peak parameters not set.") ;
 		}
-		if (mobj_transform_parameters == NULL)
+		if (mobj_transform_parameters == nullptr)
 		{
-			throw new System::Exception(S"Horn Transform parameters not set.") ;
+			throw gcnew System::Exception("Horn Transform parameters not set.") ;
 		}
-		if (mobj_dta_generation_parameters == NULL)
+		if (mobj_dta_generation_parameters == nullptr)
 		{
-			throw new System::Exception(S"DTA Generation parameters not set.") ; 
+			throw gcnew System::Exception("DTA Generation parameters not set.") ; 
 		}
 
 		if (menm_state == RUNNING)
 		{
-			throw new System::Exception(S"Process already running in clsProcRunner. Cannot run two processes with same object");
+			throw gcnew System::Exception("Process already running in clsProcRunner. Cannot run two processes with same object");
 		}
 	
-		Engine::DTAProcessing::DTAProcessor __nogc *dta_processor = NULL;
+		Engine::DTAProcessing::DTAProcessor *dta_processor = NULL;
 
 
 		try
@@ -720,7 +720,7 @@ namespace DeconToolsV2
 			// Check input format
 			int dotIndex = mstr_file_name->IndexOf(".");
 			char input_file_format[256] ; 
-			System::String __gc *inpFileFormat = mstr_file_name->Remove(0, dotIndex+1) ;
+			System::String ^inpFileFormat = mstr_file_name->Remove(0, dotIndex+1) ;
 			DeconEngine::Utils::GetStr(inpFileFormat, input_file_format) ;
 			if ((strcmp(input_file_format, "RAW")==0) || (strcmp(input_file_format, "raw")==0))
 				menm_file_type = DeconToolsV2::Readers::FileType::FINNIGAN;
@@ -728,18 +728,18 @@ namespace DeconToolsV2
 				menm_file_type = DeconToolsV2::Readers::FileType::MZXMLRAWDATA ; 				
 			else
 			{
-				throw new System::Exception(S"Invalid input file format.") ; 
+				throw gcnew System::Exception("Invalid input file format.") ; 
 			}			
 
 			// Set output path and filename
 			char  *output_file_ch  = NULL ; 
-			if (mstr_output_path_for_dta_creation != NULL)
+			if (mstr_output_path_for_dta_creation != nullptr)
 			{				
 				char output_path_ch[256] ; 
 				char raw_file_ch[256] ; 
 				int slashIndex = mstr_file_name->LastIndexOf("\\") ; 					
-				System::String __gc *raw_name_plus_extension = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex);
-				System::String __gc *raw_name = raw_name_plus_extension->Remove(0, slashIndex) ; 
+				System::String ^raw_name_plus_extension = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex);
+				System::String ^raw_name = raw_name_plus_extension->Remove(0, slashIndex) ; 
 				DeconEngine::Utils::GetStr(raw_name, raw_file_ch) ;
 				DeconEngine::Utils::GetStr(mstr_output_path_for_dta_creation, output_path_ch) ; 
 				output_file_ch = strcat(output_path_ch, raw_file_ch) ; 
@@ -747,16 +747,16 @@ namespace DeconToolsV2
 			else
 			{
 				char outfile[256] ; 
-				System::String __gc *output_file_str = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex) ; 
+				System::String ^output_file_str = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex) ; 
 				DeconEngine::Utils::GetStr(output_file_str, outfile) ; 
 				output_file_ch = outfile ; 
 			}
 
 			bool thresholded ; 
-			if (menm_file_type == DeconToolsV2::Readers::FileType::FINNIGAN || menm_file_type == DeconToolsV2::Readers::FileType::MZXMLRAWDATA)
-				thresholded = true ;
-			else
-				thresholded = mobj_peak_parameters->get_ThresholdedData() ;
+            if (menm_file_type == DeconToolsV2::Readers::FileType::FINNIGAN || menm_file_type == DeconToolsV2::Readers::FileType::MZXMLRAWDATA)
+                thresholded = true;
+            else
+                thresholded = mobj_peak_parameters->ThresholdedData;
 			
 			//Raw Object
 			dta_processor->mobj_raw_data_dta = Engine::Readers::ReaderFactory::GetRawData((Engine::Readers::FileType)menm_file_type, file_name_ch) ;
@@ -767,8 +767,8 @@ namespace DeconToolsV2
 
 			//Datasetname
 			int lastSlashIndex = mstr_file_name->LastIndexOf("\\") ; 					
-			System::String __gc *data_name_plus_extension = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex);
-			System::String __gc *data_name = data_name_plus_extension->Remove(0, lastSlashIndex+1) ; 
+			System::String ^data_name_plus_extension = mstr_file_name->Remove(dotIndex, mstr_file_name->Length - dotIndex);
+			System::String ^data_name = data_name_plus_extension->Remove(0, lastSlashIndex+1) ; 
 			DeconEngine::Utils::GetStr(data_name, dta_processor->mch_dataset_name) ;
 
 			// File name for log file
@@ -780,13 +780,13 @@ namespace DeconToolsV2
 			strcpy(dta_processor->mch_profile_filename, output_file_ch) ; 
 			strcat(dta_processor->mch_profile_filename, "_profile.txt") ; 
 			
-			if (mobj_dta_generation_parameters->get_OutputType() == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::LOG)		
+			if (mobj_dta_generation_parameters->OutputType == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::LOG)		
 			{
 				create_log_file_only = true ; 
 			}
 			//file name for composite dta file
 			bool create_composite_dta = false ; 
-			if (mobj_dta_generation_parameters->get_OutputType() == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::CDTA)
+			if (mobj_dta_generation_parameters->OutputType == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::CDTA)
 			{
 					strcpy(dta_processor->mch_comb_dta_filename, output_file_ch);
 					strcat(dta_processor->mch_comb_dta_filename, "_dta.txt");
@@ -794,7 +794,7 @@ namespace DeconToolsV2
 					create_composite_dta = true ; 
 			}
 			//file name for .mgf file
-			if (mobj_dta_generation_parameters->get_OutputType() == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)		
+			if (mobj_dta_generation_parameters->OutputType == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)		
 			{
 				strcpy(dta_processor->mch_mgf_filename, output_file_ch);
 				strcat(dta_processor->mch_mgf_filename, ".mgf") ; 
@@ -806,15 +806,15 @@ namespace DeconToolsV2
 			char tag_formula[512] ;
 			averagine_formula[0] = '\0' ;
 			tag_formula[0] = '\0' ;			
-			DeconEngine::Utils::GetStr(mobj_transform_parameters->get_AveragineFormula(), averagine_formula) ;
-			if (mobj_transform_parameters->get_TagFormula() != NULL)
-				DeconEngine::Utils::GetStr(mobj_transform_parameters->get_TagFormula(), tag_formula) ;
+			DeconEngine::Utils::GetStr(mobj_transform_parameters->AveragineFormula, averagine_formula) ;
+			if (mobj_transform_parameters->TagFormula != nullptr)
+				DeconEngine::Utils::GetStr(mobj_transform_parameters->TagFormula, tag_formula) ;
 
 			//Check if any dtas have to be ignored
 			std::vector<int> vect_msn_ignore ; 			
-			if (mobj_dta_generation_parameters->get_IgnoreMSnScans())
+			if (mobj_dta_generation_parameters->IgnoreMSnScans)
 			{
-				int numLevels = mobj_dta_generation_parameters->get_NumMSnLevelsToIgnore() ; 
+				int numLevels = mobj_dta_generation_parameters->NumMSnLevelsToIgnore ; 
 				for (int levelNum = 0 ; levelNum < numLevels ; levelNum++)
 				{	
 					int level = mobj_dta_generation_parameters->get_MSnLevelToIgnore(levelNum) ; 
@@ -826,39 +826,39 @@ namespace DeconToolsV2
 			
 
 			
-			dta_processor->SetDTAOptions(mobj_dta_generation_parameters->get_MinIonCount(), 
-				mobj_dta_generation_parameters->get_MinScan(), mobj_dta_generation_parameters->get_MaxScan(), 
-				mobj_dta_generation_parameters->get_MinMass(), mobj_dta_generation_parameters->get_MaxMass(), 
-				create_log_file_only, create_composite_dta , mobj_dta_generation_parameters->get_ConsiderChargeValue(), mobj_dta_generation_parameters->get_ConsiderMultiplePrecursors(), 
-				mobj_dta_generation_parameters->get_IsolationWindowSize(), mobj_dta_generation_parameters->get_IsProfileDataForMzXML()) ; 
-			dta_processor->SetPeakProcessorOptions(mobj_peak_parameters->get_SignalToNoiseThreshold(), 0, thresholded, 
-				(Engine::PeakProcessing::PEAK_FIT_TYPE)mobj_peak_parameters->get_PeakFitType()) ;
-			dta_processor->SetMassTransformOptions(mobj_transform_parameters->get_MaxCharge(), mobj_transform_parameters->get_MaxMW(), 
-				mobj_transform_parameters->get_MaxFit(), mobj_transform_parameters->get_MinS2N(), mobj_transform_parameters->get_CCMass(), 
-				mobj_transform_parameters->get_DeleteIntensityThreshold(), mobj_transform_parameters->get_MinIntensityForScore(), 
-				mobj_transform_parameters->get_NumPeaksForShoulder(), mobj_transform_parameters->get_UseMercuryCaching(), mobj_transform_parameters->get_O16O18Media(), averagine_formula, tag_formula, 
-				mobj_transform_parameters->get_ThrashOrNot(), mobj_transform_parameters->get_CompleteFit(), 
-				mobj_transform_parameters->get_CheckAllPatternsAgainstCharge1(),(Engine::HornTransform::IsotopicFittingType)mobj_transform_parameters->get_IsotopeFitType(), 
-				*mobj_transform_parameters->get_ElementIsotopeComposition()->mobjAtomicInfo);
+			dta_processor->SetDTAOptions(mobj_dta_generation_parameters->MinIonCount, 
+				mobj_dta_generation_parameters->MinScan, mobj_dta_generation_parameters->MaxScan, 
+				mobj_dta_generation_parameters->MinMass, mobj_dta_generation_parameters->MaxMass, 
+				create_log_file_only, create_composite_dta , mobj_dta_generation_parameters->ConsiderChargeValue, mobj_dta_generation_parameters->ConsiderMultiplePrecursors, 
+				mobj_dta_generation_parameters->IsolationWindowSize, mobj_dta_generation_parameters->IsProfileDataForMzXML) ; 
+			dta_processor->SetPeakProcessorOptions(mobj_peak_parameters->SignalToNoiseThreshold, 0, thresholded, 
+				(Engine::PeakProcessing::PEAK_FIT_TYPE)mobj_peak_parameters->PeakFitType) ;
+			dta_processor->SetMassTransformOptions(mobj_transform_parameters->MaxCharge, mobj_transform_parameters->MaxMW, 
+				mobj_transform_parameters->MaxFit, mobj_transform_parameters->MinS2N, mobj_transform_parameters->CCMass, 
+				mobj_transform_parameters->DeleteIntensityThreshold, mobj_transform_parameters->MinIntensityForScore, 
+				mobj_transform_parameters->NumPeaksForShoulder, mobj_transform_parameters->UseMercuryCaching, mobj_transform_parameters->O16O18Media, averagine_formula, tag_formula, 
+				mobj_transform_parameters->ThrashOrNot, mobj_transform_parameters->CompleteFit, 
+				mobj_transform_parameters->CheckAllPatternsAgainstCharge1,(Engine::HornTransform::IsotopicFittingType)mobj_transform_parameters->IsotopeFitType, 
+				*mobj_transform_parameters->ElementIsotopeComposition()->mobjAtomicInfo);
 
-			System::String __gc *svm_file = mobj_dta_generation_parameters->get_SVMParamFile() ; 
+			System::String ^svm_file = mobj_dta_generation_parameters->SVMParamFile ; 
 			char svm_file_ch [256] ; 
 			svm_file_ch[0] = '\0' ; 
 			DeconEngine::Utils::GetStr(svm_file, svm_file_ch) ; 
 			dta_processor->InitializeSVM(svm_file_ch);
-			dta_processor->SetPeakParametersLowResolution(mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio()) ; 
+			dta_processor->SetPeakParametersLowResolution(mobj_peak_parameters->PeakBackgroundRatio, mobj_transform_parameters->PeptideMinBackgroundRatio) ; 
 
             //begin process
 			//stick in range
-			int scan_num = mobj_dta_generation_parameters->get_MinScan();
+			int scan_num = mobj_dta_generation_parameters->MinScan;
 			int msNScanIndex = 0;
 			int num_scans ;
 			int parent_scan ;
 			double parent_mz = 0 ; 
 			bool low_resolution = false ;
 
-			if (mobj_dta_generation_parameters->get_MaxScan() <= dta_processor->mobj_raw_data_dta->GetNumScans())
-				num_scans = mobj_dta_generation_parameters->get_MaxScan() ;
+			if (mobj_dta_generation_parameters->MaxScan <= dta_processor->mobj_raw_data_dta->GetNumScans())
+				num_scans = mobj_dta_generation_parameters->MaxScan ;
 			else
 				num_scans = dta_processor->mobj_raw_data_dta->GetNumScans();	
 
@@ -868,13 +868,13 @@ namespace DeconToolsV2
 				if (dta_processor->mobj_raw_data_dta->IsMSScan(scan_num))
 				{						
                     //Get MS spectra					
-					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																												
+					dta_processor->GetParentScanSpectra(scan_num, mobj_peak_parameters->PeakBackgroundRatio, mobj_transform_parameters->PeptideMinBackgroundRatio );																												
 
 					int msN_scan= scan_num+1;
 					for(msN_scan = scan_num +1; msN_scan < num_scans && !dta_processor->mobj_raw_data_dta->IsMSScan(msN_scan)  ; msN_scan++)
 					{
 						//GetMS level and see if it is to be ignored
-						if(mobj_dta_generation_parameters->get_IgnoreMSnScans())
+						if(mobj_dta_generation_parameters->IgnoreMSnScans)
 						{							 
 							int msN_level =  dta_processor->mobj_raw_data_dta->GetMSLevel(msN_scan) ; 
 							bool found_msN_level = false ; 
@@ -891,11 +891,11 @@ namespace DeconToolsV2
 								continue ; 
 						}						
 						//Get msN spectra								
-						dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio());										
+						dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->PeakBackgroundRatio, mobj_transform_parameters->PeptideMinBackgroundRatio);										
 						//Identify which is parent_scan
 						parent_scan = dta_processor->mobj_raw_data_dta->GetParentScan(msN_scan);	
 						// AM Modified to recieve new spectra everytime if (parent_scan != scan_num) //MSN data 
-						dta_processor->GetParentScanSpectra(parent_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																										
+						dta_processor->GetParentScanSpectra(parent_scan, mobj_peak_parameters->PeakBackgroundRatio, mobj_transform_parameters->PeptideMinBackgroundRatio );																										
 						
 						if(dta_processor->IsFTData(parent_scan))
 						{
@@ -904,7 +904,7 @@ namespace DeconToolsV2
 							if (dta_success)
 							{
 								//write out dta
-								if (mobj_dta_generation_parameters->get_OutputType()== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
+								if (mobj_dta_generation_parameters->OutputType== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
 									dta_processor->WriteToMGF(msN_scan, parent_scan) ;
 						 		else
 									dta_processor->WriteDTAFile(msN_scan, parent_scan);		
@@ -918,7 +918,7 @@ namespace DeconToolsV2
 							bool dta_success = dta_processor->GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex) ; 
 							if (dta_success)
 							{							
-								if (mobj_dta_generation_parameters->get_OutputType()== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
+								if (mobj_dta_generation_parameters->OutputType== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
 									dta_processor->WriteToMGF(msN_scan, parent_scan) ;
 						 		else
 									dta_processor->WriteDTAFile(msN_scan, parent_scan);						
@@ -935,7 +935,7 @@ namespace DeconToolsV2
 					int msN_scan = scan_num ;
 					 
 					//GetMS level and see if it is to be ignored
-					if(mobj_dta_generation_parameters->get_IgnoreMSnScans())
+					if(mobj_dta_generation_parameters->IgnoreMSnScans)
 					{							 
 						int msN_level =  dta_processor->mobj_raw_data_dta->GetMSLevel(msN_scan) ; 
 						bool found_msN_level = false ; 
@@ -955,7 +955,7 @@ namespace DeconToolsV2
 						}
 					}
 
-					dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio());				
+					dta_processor->GetMsNSpectra(msN_scan, mobj_peak_parameters->PeakBackgroundRatio, mobj_transform_parameters->PeptideMinBackgroundRatio);				
 
 					//Identify which is parent_scan
 					parent_scan = dta_processor->mobj_raw_data_dta->GetParentScan(msN_scan);	
@@ -967,7 +967,7 @@ namespace DeconToolsV2
 					}
 
 					// get parent data
-					dta_processor->GetParentScanSpectra(parent_scan, mobj_peak_parameters->get_PeakBackgroundRatio(), mobj_transform_parameters->get_PeptideMinBackgroundRatio() );																										
+					dta_processor->GetParentScanSpectra(parent_scan, mobj_peak_parameters->PeakBackgroundRatio, mobj_transform_parameters->PeptideMinBackgroundRatio );																										
 					
 					if(dta_processor->IsFTData(parent_scan))					
 					{
@@ -976,7 +976,7 @@ namespace DeconToolsV2
 						if (dta_success)
 						{
 							//write out dta
-							if (mobj_dta_generation_parameters->get_OutputType()== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
+							if (mobj_dta_generation_parameters->OutputType== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
 								dta_processor->WriteToMGF(msN_scan, parent_scan) ;
 						 	else
 								dta_processor->WriteDTAFile(msN_scan, parent_scan);						
@@ -989,7 +989,7 @@ namespace DeconToolsV2
 						bool dta_success = dta_processor->GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex) ; 
 						if (dta_success)
 						{							
-							if (mobj_dta_generation_parameters->get_OutputType()== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
+							if (mobj_dta_generation_parameters->OutputType== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
 								dta_processor->WriteToMGF(msN_scan, parent_scan) ;
 						 	else
 								dta_processor->WriteDTAFile(msN_scan, parent_scan);						
@@ -999,12 +999,12 @@ namespace DeconToolsV2
 				scan_num++;
 			}
 
-			if (low_resolution && !mobj_dta_generation_parameters->get_ConsiderChargeValue())
+			if (low_resolution && !mobj_dta_generation_parameters->ConsiderChargeValue)
 			{
 				std::cout<<"Determining charge"<<std::endl;
 				dta_processor->DetermineChargeForEachScan();
 				std::cout<<"Generating DTAs for low-resolution data"<<std::endl;				
-				if (mobj_dta_generation_parameters->get_OutputType()== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
+				if (mobj_dta_generation_parameters->OutputType== DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)
 					dta_processor->WriteLowResolutionMGFFile() ; 
 				else
 					dta_processor->WriteLowResolutionDTAFile();
@@ -1017,9 +1017,9 @@ namespace DeconToolsV2
 			dta_processor->WriteProfileFile() ; 
 			//Shutdown
 			//dta_processor->mfile_log.close() ;
-			if (mobj_dta_generation_parameters->get_OutputType() == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::CDTA)
+			if (mobj_dta_generation_parameters->OutputType == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::CDTA)
 				dta_processor->mfile_comb_dta.close() ; 
-			if (mobj_dta_generation_parameters->get_OutputType() == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)		
+			if (mobj_dta_generation_parameters->OutputType == DeconToolsV2::DTAGeneration::OUTPUT_TYPE::MGF)		
 				dta_processor->mfile_mgf.close() ; 
 		
 
@@ -1032,8 +1032,8 @@ namespace DeconToolsV2
 			{
 				delete dta_processor ; 
 			}
-			System::String *exception_msg = new System::String(mesg) ; 
-			throw new System::Exception(exception_msg) ; 
+			System::String ^exception_msg = gcnew System::String(mesg) ; 
+			throw gcnew System::Exception(exception_msg) ; 
 		}
 
 		if(dta_processor != NULL)
@@ -1044,13 +1044,13 @@ namespace DeconToolsV2
 	
 	void clsProcRunner::CreateTransformResultWithPeaksOnly()
 	{
-		if (mstr_file_name == NULL)
+		if (mstr_file_name == nullptr)
 		{
-			throw new System::Exception(S"File name is not set.") ;
+			throw gcnew System::Exception("File name is not set.") ;
 		}
-		if (mobj_peak_parameters == NULL)
+		if (mobj_peak_parameters == nullptr)
 		{
-			throw new System::Exception(S"Peak parameters not set.") ;
+			throw gcnew System::Exception("Peak parameters not set.") ;
 		}
 		mobj_results = CreateTransformResults(mstr_file_name, menm_file_type, mobj_peak_parameters, 
 			mobj_transform_parameters, mobj_fticr_preprocess_parameters, true, false) ;
@@ -1058,17 +1058,17 @@ namespace DeconToolsV2
 
 	void clsProcRunner::CreateTransformResultWithNoPeaks()
 	{
-		if (mstr_file_name == NULL)
+		if (mstr_file_name == nullptr)
 		{
-			throw new System::Exception(S"File name is not set.") ;
+			throw gcnew System::Exception("File name is not set.") ;
 		}
-		if (mobj_peak_parameters == NULL)
+		if (mobj_peak_parameters == nullptr)
 		{
-			throw new System::Exception(S"Peak parameters not set.") ;
+			throw gcnew System::Exception("Peak parameters not set.") ;
 		}
-		if (mobj_transform_parameters == NULL)
+		if (mobj_transform_parameters == nullptr)
 		{
-			throw new System::Exception(S"Horn Transform parameters not set.") ;
+			throw gcnew System::Exception("Horn Transform parameters not set.") ;
 		}
 		mobj_results = CreateTransformResults(mstr_file_name, menm_file_type, mobj_peak_parameters,
 			mobj_transform_parameters, mobj_fticr_preprocess_parameters, false, true) ;
@@ -1076,17 +1076,17 @@ namespace DeconToolsV2
 
 	void clsProcRunner::CreateTransformResults()
 	{
-		if (mstr_file_name == NULL)
+		if (mstr_file_name == nullptr)
 		{
-			throw new System::Exception(S"File name is not set.") ;
+			throw gcnew System::Exception("File name is not set.") ;
 		}
-		if (mobj_peak_parameters == NULL)
+		if (mobj_peak_parameters == nullptr)
 		{
-			throw new System::Exception(S"Peak parameters not set.") ;
+			throw gcnew System::Exception("Peak parameters not set.") ;
 		}
-		if (mobj_transform_parameters == NULL)
+		if (mobj_transform_parameters == nullptr)
 		{
-			throw new System::Exception(S"Horn Transform parameters not set.") ;
+			throw gcnew System::Exception("Horn Transform parameters not set.") ;
 		}
 		mobj_results = CreateTransformResults(mstr_file_name, menm_file_type, mobj_peak_parameters, 
 			mobj_transform_parameters, mobj_fticr_preprocess_parameters, true, true) ;	

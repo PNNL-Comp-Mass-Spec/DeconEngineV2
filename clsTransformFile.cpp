@@ -21,33 +21,33 @@ namespace DeconToolsV2
 	{
 	}
 
-	void clsTransformFile::ReadFile(System::String *file_name, DeconToolsV2::Results::clsTransformResults *results, 
-		Peaks::clsPeakProcessorParameters *peak_parameters, HornTransform::clsHornTransformParameters *transform_parameters)
+	void clsTransformFile::ReadFile(System::String ^file_name, DeconToolsV2::Results::clsTransformResults ^results, 
+		Peaks::clsPeakProcessorParameters ^peak_parameters, HornTransform::clsHornTransformParameters ^transform_parameters)
 	{
 	}
 
-	void clsTransformFile::WritePeakParameters(std::fstream &fout, Peaks::clsPeakProcessorParameters *peak_parameters)
+	void clsTransformFile::WritePeakParameters(std::fstream &fout, Peaks::clsPeakProcessorParameters ^peak_parameters)
 	{
 		// In a wierd pseudo xml/raw file format, we will write out tags in text
 		// but keep all the data in binary. 
 		// We will not use a specialized SAX parser because our vocabulary on the XML file 
 		// will not be increasing to a point where we actually want to go through the effort
 		// of incorporating an XML parser with our binary data. 
-		if (peak_parameters != NULL)
+		if (peak_parameters != nullptr)
 		{
 			fout<<"<PeakParameters>" ; 
-			fout<<"<MinBackgroundRatio>"<<peak_parameters->get_PeakBackgroundRatio()<<"</MinBackgroundRatio>" ; 
+			fout<<"<MinBackgroundRatio>"<<peak_parameters->PeakBackgroundRatio<<"</MinBackgroundRatio>" ; 
 			
 			fout<<"<PeakFitType>" ; 
-			switch(peak_parameters->get_PeakFitType())
+			switch(peak_parameters->PeakFitType)
 			{
-				case Peaks::APEX:
+                case Peaks::PEAK_FIT_TYPE::APEX:
 					fout<<"APEX" ; 
 					break ; 
-				case Peaks::QUADRATIC:
+                case Peaks::PEAK_FIT_TYPE::QUADRATIC:
 					fout<<"QUADRATIC" ; 
 					break ; 
-				case Peaks::LORENTZIAN:
+                case Peaks::PEAK_FIT_TYPE::LORENTZIAN:
 					fout<<"LORENTZIAN" ; 
 					break ; 
 				default:
@@ -55,7 +55,7 @@ namespace DeconToolsV2
 			}
 			fout<<"</PeakFitType>";
 			
-			fout<<"<S2NThreshold>"<<peak_parameters->get_SignalToNoiseThreshold()<<"</S2NThreshold>"; 
+			fout<<"<S2NThreshold>"<<peak_parameters->SignalToNoiseThreshold<<"</S2NThreshold>"; 
 			fout<<"</PeakParameters>" ; 
 		}
 
@@ -63,25 +63,25 @@ namespace DeconToolsV2
 
 
 	void clsTransformFile::WriteTransformParameters(std::fstream &fout, 
-					HornTransform::clsHornTransformParameters *transform_parameters)
+					HornTransform::clsHornTransformParameters ^transform_parameters)
 	{
-		if (transform_parameters != NULL)
+		if (transform_parameters != nullptr)
 		{
 			fout<<"<HornTransformParameters>" ; 
-			fout<<"<MaxCharge>"<<transform_parameters->get_MaxCharge()<<"</MaxCharge>" ; 
-			fout<<"<NumPeaksForShoulder>"<<transform_parameters->get_NumPeaksForShoulder()<<"</NumPeaksForShoulder>" ; 
-			fout<<"<MaxMW>"<<transform_parameters->get_MaxMW()<<"</MaxMW>" ; 
-			fout<<"<MaxFit>"<<transform_parameters->get_MaxFit()<<"</MaxFit>" ; 
-			fout<<"<CCMass>"<<transform_parameters->get_CCMass()<<"</CCMass>" ; 
-			fout<<"<DeleteIntensityThreshold>"<<transform_parameters->get_DeleteIntensityThreshold()<<"</DeleteIntensityThreshold>" ; 
-			fout<<"<MinTheoreticalIntensityForScore>"<<transform_parameters->get_MinIntensityForScore()<<"</MinTheoreticalIntensityForScore>" ; 
-			fout<<"<O16O18Media>"<<transform_parameters->get_O16O18Media()<<"</O16O18Media>" ; 
+			fout<<"<MaxCharge>"<<transform_parameters->MaxCharge<<"</MaxCharge>" ; 
+			fout<<"<NumPeaksForShoulder>"<<transform_parameters->NumPeaksForShoulder<<"</NumPeaksForShoulder>" ; 
+			fout<<"<MaxMW>"<<transform_parameters->MaxMW<<"</MaxMW>" ; 
+			fout<<"<MaxFit>"<<transform_parameters->MaxFit<<"</MaxFit>" ; 
+			fout<<"<CCMass>"<<transform_parameters->CCMass<<"</CCMass>" ; 
+			fout<<"<DeleteIntensityThreshold>"<<transform_parameters->DeleteIntensityThreshold<<"</DeleteIntensityThreshold>" ; 
+			fout<<"<MinTheoreticalIntensityForScore>"<<transform_parameters->MinIntensityForScore<<"</MinTheoreticalIntensityForScore>" ; 
+			fout<<"<O16O18Media>"<<transform_parameters->O16O18Media<<"</O16O18Media>" ; 
 			fout<<"</HornTransformParameters>" ; 
 		}
 	}
 
 
-	void clsTransformFile::WritePeaks(std::fstream &fout, DeconToolsV2::Results::clsTransformResults *results)
+	void clsTransformFile::WritePeaks(std::fstream &fout, DeconToolsV2::Results::clsTransformResults ^results)
 	{
 		const int PK_SIZE = sizeof(Engine::Results::LCMSPeak<Engine::Results::PeakMinInfo>) ; 
 		int num_peaks = results->GetNumPeaks() ; 
@@ -100,8 +100,8 @@ namespace DeconToolsV2
 		delete [] peaks ; 
 	}
 
-	void clsTransformFile::WriteFile(System::String *file_name, DeconToolsV2::Results::clsTransformResults *results, 
-		Peaks::clsPeakProcessorParameters *peak_parameters, HornTransform::clsHornTransformParameters *transform_parameters)
+	void clsTransformFile::WriteFile(System::String ^file_name, DeconToolsV2::Results::clsTransformResults ^results, 
+		Peaks::clsPeakProcessorParameters ^peak_parameters, HornTransform::clsHornTransformParameters ^transform_parameters)
 	{
 		char file_name_ch[512] ; 
 		DeconEngine::Utils::GetStr(file_name, file_name_ch) ; 
@@ -111,8 +111,8 @@ namespace DeconToolsV2
 
 	
 	
-	void clsTransformFile::WriteFile(char *file_name, DeconToolsV2::Results::clsTransformResults *results, 
-		Peaks::clsPeakProcessorParameters *peak_parameters, HornTransform::clsHornTransformParameters *transform_parameters)
+	void clsTransformFile::WriteFile(char *file_name, DeconToolsV2::Results::clsTransformResults ^results, 
+		Peaks::clsPeakProcessorParameters ^peak_parameters, HornTransform::clsHornTransformParameters ^transform_parameters)
 	{
 		std::fstream fout(file_name, std::ios::binary) ; 
 

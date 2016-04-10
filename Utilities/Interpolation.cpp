@@ -78,7 +78,7 @@ namespace Engine
 					mvect_Y2[k]=y2_val* y2_next_val + temp;
 				}
 			}
-			catch (System::NullReferenceException *err)
+			catch (System::NullReferenceException ^err)
 			{
 				return ; 
 			}
@@ -203,7 +203,7 @@ namespace Engine
 			if (x.size() != y.size())
 			{
 				char *mesg = "x and y need to be of the same size in ZeroFillMissing" ; 
-				//throw new Engine::Exception::InterpolationException(mesg) ; 
+				//throw gcnew Engine::Exception::InterpolationException(mesg) ; 
 				return 0 ; 
 			}
 
@@ -314,7 +314,7 @@ namespace Engine
 				return num_pts_added ; 
 
 			}
-			catch (System::NullReferenceException *err)
+			catch (System::NullReferenceException ^err)
 			{
 				return 0 ; 
 				x.clear() ; 

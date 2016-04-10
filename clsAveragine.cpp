@@ -20,7 +20,7 @@ namespace DeconToolsV2
 		clsAveragine::clsAveragine(void)
 		{
 			mobjAveragine = new Engine::TheoreticalProfile::Averagine() ; 
-			mobjElementIsotopes = new clsElementIsotopes() ; 
+			mobjElementIsotopes = gcnew clsElementIsotopes() ; 
 			mobjAveragine->SetElementalIsotopeComposition(*mobjElementIsotopes->GetElementalIsotopeComposition()) ; 
 		}
 
@@ -28,8 +28,8 @@ namespace DeconToolsV2
 		{
 		}
 
-		System::String* clsAveragine::GenerateAveragineFormula(double averageMass, System::String *averagineFormula, 
-			System::String *tagFormula)
+		System::String^ clsAveragine::GenerateAveragineFormula(double averageMass, System::String ^averagineFormula, 
+			System::String ^tagFormula)
 		{
 			char averagine_formula[512] ;
 			char tag_formula[512] ;
@@ -38,7 +38,7 @@ namespace DeconToolsV2
 			tag_formula[0] = '\0' ;
 
 			DeconEngine::Utils::GetStr(averagineFormula, averagine_formula) ;
-			if (tagFormula != NULL)
+			if (tagFormula != nullptr)
 			{
 				DeconEngine::Utils::GetStr(tagFormula, tag_formula) ;
 			}
@@ -46,8 +46,8 @@ namespace DeconToolsV2
 			mobjAveragine->SetTagFormula(tag_formula); 
 			Engine::TheoreticalProfile::MolecularFormula empirical_formula ; 
 			mobjAveragine->GetAverageFormulaForMass(averageMass, empirical_formula) ; 
-			// Conver to String. 
-			System::String *empiricalFormula = new System::String(S"") ; 
+			// Convert to String. 
+			System::String ^empiricalFormula = gcnew System::String("") ; 
 			
 			const Engine::TheoreticalProfile::AtomicInformation *atomicInfo = mobjElementIsotopes->GetElementalIsotopeComposition() ;
 
@@ -56,7 +56,7 @@ namespace DeconToolsV2
 			{
 				Engine::TheoreticalProfile::AtomicCount atomic_count = 
 					empirical_formula.mvect_elemental_composition[elementNum] ; 
-				empiricalFormula = System::String::Concat(empiricalFormula, atomicInfo->mvect_elemental_isotopes [atomic_count.mint_index].marr_symbol, 
+                empiricalFormula = System::String::Concat(empiricalFormula, System::Convert::ToString(atomicInfo->mvect_elemental_isotopes[atomic_count.mint_index].marr_symbol),
 					System::Convert::ToString(Convert::ToInt32(atomic_count.mdbl_num_copies))) ; 
 			}
 			return empiricalFormula ;

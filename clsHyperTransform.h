@@ -4,13 +4,13 @@
 
 namespace DeconToolsV2
 {
-	public __gc class clsHyperTransform
+	public ref class clsHyperTransform
 	{
 	public:
 		clsHyperTransform(void);
 		~clsHyperTransform(void);
-		void GetHyperTransformSpectrum(DeconToolsV2::HornTransform::clsHornTransformResults* (&marr_transformResults) __gc [], double mostAbundantMW, 
-			short charge, float (&sumMZs) __gc [], float (&sumIntensities) __gc[], float (&mzs) __gc [], 
-			float (&intensities) __gc[]) ;
+		void GetHyperTransformSpectrum(array<DeconToolsV2::HornTransform::clsHornTransformResults^>^ (&marr_transformResults), double mostAbundantMW, 
+            short charge, array<float> ^ (&sumMZs), array<float> ^ (&sumIntensities), array<float> ^ (&mzs),
+            array<float> ^ (&intensities));
 	};
 }

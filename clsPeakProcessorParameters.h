@@ -18,77 +18,30 @@ namespace DeconToolsV2
 	namespace Peaks
 	{
 		//! enumeration for type of fit. 
-		public __value enum PEAK_FIT_TYPE { APEX = 0, QUADRATIC, LORENTZIAN } ; 
+		public enum class PEAK_FIT_TYPE { APEX = 0, QUADRATIC, LORENTZIAN } ; 
 
-		public __gc class clsPeakProcessorParameters: public System::ICloneable
+		public ref class clsPeakProcessorParameters: public System::ICloneable
 		{
-			double mdbl_SNThreshold ; 
-			double mdbl_PeakBackgroundRatio ; 
-			bool mbln_thresholded_data ; 
-			PEAK_FIT_TYPE menm_FitType ;
-			bool mbln_writePeaksToTextFile ; 
-
 
 		public:
 			clsPeakProcessorParameters(void);
 			clsPeakProcessorParameters(double sn, double peak_bg_ratio, bool thresholded_data, PEAK_FIT_TYPE fit_type);
 			~clsPeakProcessorParameters(void);
-			void LoadV1PeakParameters(XmlReader *rdr) ; 
-			void SaveV1PeakParameters(System::Xml::XmlTextWriter *xwriter) ; 
+			void LoadV1PeakParameters(XmlReader ^rdr) ; 
+			void SaveV1PeakParameters(System::Xml::XmlTextWriter ^xwriter) ; 
 
-			virtual Object* Clone()
+			virtual Object^ Clone()
 			{
-				clsPeakProcessorParameters *new_params = new clsPeakProcessorParameters(mdbl_SNThreshold,
-					mdbl_PeakBackgroundRatio, mbln_thresholded_data, menm_FitType) ; 
+				clsPeakProcessorParameters ^new_params = gcnew clsPeakProcessorParameters(SignalToNoiseThreshold,
+					PeakBackgroundRatio, ThresholdedData, PeakFitType) ; 
 				return new_params ; 
 			}
 
-			__property bool get_ThresholdedData()
-			{
-				return mbln_thresholded_data ; 
-			}
-			__property void set_ThresholdedData(bool value)
-			{
-				mbln_thresholded_data = value ; 
-			}
-
-			__property double get_PeakBackgroundRatio()
-			{
-				return mdbl_PeakBackgroundRatio ; 
-			}
-			__property void set_PeakBackgroundRatio(double value)
-			{
-				mdbl_PeakBackgroundRatio = value ; 
-			}
-
-			__property double get_SignalToNoiseThreshold()
-			{
-				return mdbl_SNThreshold ; 
-			}
-			__property void set_SignalToNoiseThreshold(double value)
-			{
-				mdbl_SNThreshold = value ; 
-			}
-
-			__property PEAK_FIT_TYPE get_PeakFitType()
-			{
-				return menm_FitType ; 
-			}
-			__property void set_PeakFitType(PEAK_FIT_TYPE value)
-			{
-				menm_FitType = value ; 
-			}
-
-			__property bool get_WritePeaksToTextFile()
-			{
-				return mbln_writePeaksToTextFile;
-			}
-			__property void set_WritePeaksToTextFile(bool value)
-			{
-				mbln_writePeaksToTextFile = value;
-
-			}
-
+            property bool ThresholdedData;
+            property double PeakBackgroundRatio;
+            property double SignalToNoiseThreshold;
+            property PEAK_FIT_TYPE PeakFitType;
+            property bool WritePeaksToTextFile;
 
 		};
 	}

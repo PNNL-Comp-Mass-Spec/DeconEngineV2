@@ -17,12 +17,12 @@
 
 namespace DeconToolsV2
 {
-	public __value enum ApodizationType {Unknown, Gaussian, Lorentzian } ; 
+	public enum ApodizationType {Unknown, Gaussian, Lorentzian } ; 
 
-	public __gc class clsMercuryIsotopeDistribution
+	public ref class clsMercuryIsotopeDistribution
 	{
 	private:
-		Engine::TheoreticalProfile::MercuryIsotopeDistribution __nogc *mMercuryIsotopeDistribution;
+		Engine::TheoreticalProfile::MercuryIsotopeDistribution *mMercuryIsotopeDistribution;
 		double mResolution;
 		int mChargeState;
 
@@ -30,20 +30,20 @@ namespace DeconToolsV2
 		clsMercuryIsotopeDistribution();
 		~clsMercuryIsotopeDistribution();
 
-		void CalculateMasses(System::Collections::Hashtable* elementCounts);
+		void CalculateMasses(System::Collections::Hashtable^ elementCounts);
 
 		// Call the mMercuryIsotopeDistribution method, passing in the currently set resolution and other 
 		// settings.  Copy the result into an array of PointF.
-		System::Drawing::PointF CalculateDistribution(System::Collections::Hashtable* elementCounts)[];
+		array<System::Drawing::PointF^>^ CalculateDistribution(System::Collections::Hashtable^ elementCounts);
 
-		__property int get_MercurySize() {
+		int MercurySize() {
 			return mMercuryIsotopeDistribution->mint_mercury_size;
 		}
 
 		/// Sets the mercury size.  Only accepts multiples of 2.
-		__property void set_MercurySize(int size) {
+		void MercurySize(int size) {
 			if (size <= 0) {
-				throw new System::ArgumentOutOfRangeException(S"MercurySize", __box(size),S"Mercury size must be greater than 0");
+				throw gcnew System::ArgumentOutOfRangeException("MercurySize", size,"Mercury size must be greater than 0");
 			}
 
 			bool goodSize = false;
@@ -54,21 +54,21 @@ namespace DeconToolsV2
 				}
 			}
 			if (!goodSize) {
-				throw new System::ArgumentException(S"MercurySize", S"MercurySize must be a power of two.");
+				throw gcnew System::ArgumentException("MercurySize", "MercurySize must be a power of two.");
 			}
 
 			mMercuryIsotopeDistribution->mint_mercury_size = size;
 		}
 
-		__property double get_ChargeCarrierMass() {
+		double ChargeCarrierMass() {
 			return mMercuryIsotopeDistribution->mdbl_cc_mass;
 		}
 
-		__property void set_ChargeCarrierMass(double cc_mass) {
+		void ChargeCarrierMass(double cc_mass) {
 			mMercuryIsotopeDistribution->mdbl_cc_mass = cc_mass;
 		}
 
-		__property ApodizationType get_ApodizationType() {
+		ApodizationType ApodizationType() {
 			short type = (short) mMercuryIsotopeDistribution->menm_ap_type;
 			if (type == 1) {
 				return ApodizationType::Gaussian;
@@ -79,7 +79,7 @@ namespace DeconToolsV2
 			}
 		}
 
-		__property void set_ApodizationType(DeconToolsV2::ApodizationType type) {
+		void ApodizationType(DeconToolsV2::ApodizationType type) {
 			if (type == ApodizationType::Gaussian) {
 				mMercuryIsotopeDistribution->menm_ap_type = Engine::TheoreticalProfile::GAUSSIAN ;
 			}
@@ -88,44 +88,44 @@ namespace DeconToolsV2
 			}
 		}
 
-		__property double get_Resolution() {
+		double Resolution() {
 			return mResolution;
 		}
 
-		__property void set_Resolution(double res) {
+		void Resolution(double res) {
 			mResolution = res;
 		}
 
 		/* Gets and sets charge state property */
-		__property short get_ChargeState() {
+		short ChargeState() {
 			return mChargeState;
 		}
 
-		__property void set_ChargeState(short charge) {
+		void ChargeState(short charge) {
 			mChargeState = charge;
 		}
 
 		/* Gets average molecular weight of the last call to CalculateDistribution */
-		__property double get_AverageMolecularMass() {
+		double AverageMolecularMass() {
 			return mMercuryIsotopeDistribution->mdbl_average_mw;
 		}
 
 		/* Gets the monoisotopic molecular weight of the last call to CalculateDistribution */
-		__property double get_MonoMolecularMass() {
+		double MonoMolecularMass() {
 			return mMercuryIsotopeDistribution->mdbl_mono_mw;
 		}
 
 		/* Gets the most abundant MZ of the last call to CalculateDistribution */
-		__property double get_MostAbundantMZ() {
+		double MostAbundantMZ() {
 			return mMercuryIsotopeDistribution->mdbl_max_peak_mz;
 		}
 
 		/* Gets the mass variance of the last call to CalculateDistribution */
-		__property double get_MassVariance() {
+		double MassVariance() {
 			return mMercuryIsotopeDistribution->GetMassVariance() ;
 		}
 
-		__property void set_ElementIsotopes(DeconToolsV2::clsElementIsotopes* elementalIsotopes) 
+		void ElementIsotopes(DeconToolsV2::clsElementIsotopes^ elementalIsotopes) 
 		{
 			mMercuryIsotopeDistribution->SetElementalIsotopeComposition(*elementalIsotopes->GetElementalIsotopeComposition()) ; 
 		}

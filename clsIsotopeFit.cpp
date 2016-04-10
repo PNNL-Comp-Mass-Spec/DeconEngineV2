@@ -19,15 +19,15 @@ namespace DeconToolsV2
 {
 	clsIsotopeFit::clsIsotopeFit(void)
 	{
-		set_IsotopeFitType(AREA) ; 
+		IsotopeFitType(enmIsotopeFitType::AREA) ; 
 	}
 
 	clsIsotopeFit::~clsIsotopeFit(void)
 	{
 	}
-	double clsIsotopeFit::GetFitScore(float (&mzs) __gc [], float (&intensities) __gc [], 
-		DeconToolsV2::Peaks::clsPeak* (&peaks) __gc [], short charge, int peak_index, double delete_intensity_threshold,
-		double min_intensity_for_score, System::Collections::Hashtable* elementCounts)
+    double clsIsotopeFit::GetFitScore(array<float> ^ (&mzs), array<float> ^ (&intensities),
+		array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks), short charge, int peak_index, double delete_intensity_threshold,
+		double min_intensity_for_score, System::Collections::Hashtable^ elementCounts)
 	{
 		std::vector<double> vectMzs ;
 		std::vector<double> vectIntensities ;
@@ -35,7 +35,7 @@ namespace DeconToolsV2
 
 		if (mzs->Length == 0)
 		{
-			throw new System::Exception(S"No data provided for the observed spectrum to match to") ; 
+			throw gcnew System::Exception("No data provided for the observed spectrum to match to") ; 
 		}
 
 		// mzs should be in sorted order

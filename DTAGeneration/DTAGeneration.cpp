@@ -1007,7 +1007,7 @@ namespace Engine
 			char chArray[512] ; 
 
 			if(mbln_consider_multiple_precursors)
-				throw new System::Exception(S"Can only consider multiple precursors for MGF creation. Change param value. ") ; 
+				throw gcnew System::Exception("Can only consider multiple precursors for MGF creation. Change param value. ") ; 
 			
 			//check size, else has failed params
 			if (numTransforms == 0)
@@ -1119,7 +1119,7 @@ namespace Engine
 						}
 						catch (char *mesg)
 						{
-							throw new System::Exception(S"Trouble with writing out Peaks in CDTA") ; 
+							throw gcnew System::Exception("Trouble with writing out Peaks in CDTA") ; 
 						}
 					}
 

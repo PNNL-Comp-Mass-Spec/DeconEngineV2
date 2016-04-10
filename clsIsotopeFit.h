@@ -16,20 +16,20 @@
 #include "DeconEngineUtils.h"
 namespace DeconToolsV2
 {
-	public __value enum enmIsotopeFitType {PEAK = 0, AREA, CHISQ}; 
+	public enum class enmIsotopeFitType {PEAK = 0, AREA, CHISQ}; 
 	
-	public __gc class clsIsotopeFit
+	public ref class clsIsotopeFit
 	{
-		enmIsotopeFitType menmFitType ;
-		Engine::HornTransform::IsotopeFit __nogc *mobj_fit ; 
+        enmIsotopeFitType m_IsotopeFitType;
+		Engine::HornTransform::IsotopeFit *mobj_fit ; 
 
 	public:
-		double GetFitScore(float (&mzs) __gc [], float (&intensities) __gc [], 
-			DeconToolsV2::Peaks::clsPeak* (&peaks) __gc [], short charge, int peak_index,
+        double GetFitScore(array<float> ^ (&mzs), array<float> ^ (&intensities),
+			array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks), short charge, int peak_index,
 			double delete_intensity_threshold, double min_intensity_for_score, 
-			System::Collections::Hashtable* elementCounts) ; 
+			System::Collections::Hashtable^ elementCounts) ; 
 
-		void SetOptions(System::String *averagine_mf, System::String *tag_mf, 
+		void SetOptions(System::String ^averagine_mf, System::String ^tag_mf, 
 			double cc_mass, bool thrash_or_not, bool complete_fit)
 		{
 			char averagine_formula[512] ;
@@ -38,36 +38,36 @@ namespace DeconToolsV2
 			averagine_formula[0] = '\0' ;
 			tag_formula[0] = '\0' ;
 
-			if (averagine_mf != NULL)
+			if (averagine_mf != nullptr)
 			{
 				DeconEngine::Utils::GetStr(averagine_mf, averagine_formula) ;
 			}
-			if (tag_mf != NULL)
+			if (tag_mf != nullptr)
 			{
 				DeconEngine::Utils::GetStr(tag_mf, tag_formula) ;
 			}
 			mobj_fit->SetOptions(averagine_formula, tag_formula, cc_mass, thrash_or_not, complete_fit) ; 
 		}
 
-		__property enmIsotopeFitType get_IsotopeFitType()
+		enmIsotopeFitType IsotopeFitType()
 		{
-			return menmFitType ; 
+			return m_IsotopeFitType ; 
 		}
 
-		__property void set_IsotopeFitType(enmIsotopeFitType type)
+		void IsotopeFitType(enmIsotopeFitType type)
 		{
-			menmFitType = type ; 
-			Engine::HornTransform::IsotopeFit __nogc *new_fit ; 
-			switch(menmFitType)
+            m_IsotopeFitType = type;
+			Engine::HornTransform::IsotopeFit *new_fit ; 
+            switch (m_IsotopeFitType)
 			{
-				case PEAK:
-					new_fit = __nogc new Engine::HornTransform::PeakFit() ; 
+                case enmIsotopeFitType::PEAK:
+					new_fit = new Engine::HornTransform::PeakFit() ; 
 					break ; 
-				case AREA:
-					new_fit = __nogc new Engine::HornTransform::AreaFit() ; 
+                case enmIsotopeFitType::AREA:
+					new_fit = new Engine::HornTransform::AreaFit() ; 
 					break ; 
-				case CHISQ:
-					new_fit = __nogc new Engine::HornTransform::ChiSqFit() ; 
+                case enmIsotopeFitType::CHISQ:
+					new_fit = new Engine::HornTransform::ChiSqFit() ; 
 					break ;
 				default:
 					return ; 

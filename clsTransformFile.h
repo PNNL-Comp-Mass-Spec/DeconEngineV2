@@ -16,19 +16,19 @@
 
 namespace DeconToolsV2
 {
-	public __gc class clsTransformFile
+	public ref class clsTransformFile
 	{
-		void WritePeakParameters(std::fstream &fout, Peaks::clsPeakProcessorParameters *peak_parameters) ; 
-		void WriteTransformParameters(std::fstream &fout, HornTransform::clsHornTransformParameters *transform_parameters) ;
-		void WritePeaks(std::fstream &fout, DeconToolsV2::Results::clsTransformResults *results) ; 
+		void WritePeakParameters(std::fstream &fout, Peaks::clsPeakProcessorParameters ^peak_parameters) ; 
+		void WriteTransformParameters(std::fstream &fout, HornTransform::clsHornTransformParameters ^transform_parameters) ;
+		void WritePeaks(std::fstream &fout, DeconToolsV2::Results::clsTransformResults ^results) ; 
 	public:
 		clsTransformFile(void);
 		~clsTransformFile(void);
-		void ReadFile(System::String *file_name, DeconToolsV2::Results::clsTransformResults *results, 
-			Peaks::clsPeakProcessorParameters *peak_parameters, HornTransform::clsHornTransformParameters *transform_parameters) ; 
-		void WriteFile(System::String *file_name, DeconToolsV2::Results::clsTransformResults *results, 
-			Peaks::clsPeakProcessorParameters *peak_parameters, HornTransform::clsHornTransformParameters *transform_parameters) ; 
-		void WriteFile(char *file_name, DeconToolsV2::Results::clsTransformResults *results, 
-			Peaks::clsPeakProcessorParameters *peak_parameters, HornTransform::clsHornTransformParameters *transform_parameters) ; 
+		void ReadFile(System::String ^file_name, DeconToolsV2::Results::clsTransformResults ^results, 
+			Peaks::clsPeakProcessorParameters ^peak_parameters, HornTransform::clsHornTransformParameters ^transform_parameters) ; 
+		void WriteFile(System::String ^file_name, DeconToolsV2::Results::clsTransformResults ^results, 
+			Peaks::clsPeakProcessorParameters ^peak_parameters, HornTransform::clsHornTransformParameters ^transform_parameters) ; 
+		void WriteFile(char *file_name, DeconToolsV2::Results::clsTransformResults ^results, 
+			Peaks::clsPeakProcessorParameters ^peak_parameters, HornTransform::clsHornTransformParameters ^transform_parameters) ; 
 	};
 }

@@ -16,28 +16,28 @@
 
 namespace DeconToolsV2
 {
-	public __value enum enmProfileType {CENTROIDED = 0, PROFILE}; 
+	public enum enmProfileType {CENTROIDED = 0, PROFILE}; 
 
 	namespace Peaks
 	{
-		public __gc class clsPeakProcessor
+		public ref class clsPeakProcessor
 		{
 			enmProfileType menmProfileType ; 
-			clsPeakProcessorParameters *mobj_parameters ; 
-			Engine::PeakProcessing::PeakProcessor __nogc *mobj_peak_processor ;
+			clsPeakProcessorParameters ^mobj_parameters ; 
+			Engine::PeakProcessing::PeakProcessor *mobj_peak_processor ;
 		public:
 			clsPeakProcessor(void);
 			~clsPeakProcessor(void);
-			double GetBackgroundIntensity(float (&intensities) __gc []) ; 
-			void DiscoverPeaks(float (&mzs) __gc [], float (&intensities) __gc [], DeconToolsV2::Peaks::clsPeak* (&peaks) __gc [], 
+            double GetBackgroundIntensity(array<float> ^ (&intensities));
+            void DiscoverPeaks(array<float> ^ (&mzs), array<float> ^ (&intensities), array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks),
 				float start_mz, float stop_mz) ;
-			void SetOptions(clsPeakProcessorParameters *parameters) ;
-			__property enmProfileType get_ProfileType()
+			void SetOptions(clsPeakProcessorParameters ^parameters) ;
+			enmProfileType ProfileType()
 			{
 				return  menmProfileType ; 
 			}
 
-			__property void set_ProfileType(enmProfileType type)
+			void ProfileType(enmProfileType type)
 			{
 				menmProfileType = type ; 
 			}

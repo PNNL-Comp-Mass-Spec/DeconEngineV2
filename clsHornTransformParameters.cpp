@@ -8,7 +8,6 @@
 // in compliance with the License.  You may obtain a copy of the License at 
 // http://www.apache.org/licenses/LICENSE-2.0
 #include ".\clshorntransformparameters.h"
-#using <mscorlib.dll>
 
 #using <System.Xml.dll>
 namespace DeconToolsV2
@@ -17,204 +16,204 @@ namespace DeconToolsV2
 	{
 		clsHornTransformParameters::clsHornTransformParameters(void)
 		{
-			mshort_max_charge = 10 ;
-			mshort_num_peaks_for_shoulder = 1 ;
-			mdbl_max_mw = 10000 ; 
-			mdbl_max_fit = 0.25 ; 
-			mdbl_cc_mass = 1.00727638;
-			mdbl_delete_threshold_intensity = 10 ; 
-			mdbl_min_theoretical_intensity_for_score = 10 ;
-			mbln_o16_o18_media = false ; 
-			mdbl_min_s2n = 3 ; 
-			mdbl_min_backgroun_ratio_for_peptide = 5 ; 
-			mstr_averagine_formula = S"C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
-			mstr_tag_formula = S"" ;
-			mbln_o16_o18_media = false ; 
-			mbln_thrash = true ; 
-			mbln_complete_fit = false ; 
-			mbln_use_mercury_caching = true ; 
-			mobjElementIsotopes = new DeconToolsV2::clsElementIsotopes() ; 
-			mbln_use_mz_range = true ; 
-			mdbl_min_mz = 400 ; 
-			mdbl_max_mz = 2000 ; 
-			mint_min_scan = System::Int32::MinValue ; 
-			mint_max_scan = System::Int32::MaxValue ; 
-			mbln_use_scan_range = false ; 
-			mbln_use_sg_smooth = false ; 
-			mshort_sg_left = 2  ;
-			mshort_sg_right = 2  ;
-			mshort_sg_order = 2  ;
-			menmFitType = DeconToolsV2::enmIsotopeFitType::AREA ;
-			mbln_use_absolute_peptide_intensity_threshold = false ; 
-			mdbl_absolute_peptide_intensity_threshold = 0 ; 
-			mshort_num_zeros_to_fill = 3; 
-			mbln_zero_fill = false ;
-			mbln_check_against_charge1 = false ;
-			mint_num_scans_to_sum_over = 0 ; 
-			mbln_sum_spectra = false ; 
-			mbln_process_msms = false ; 
-			mbln_sum_spectra_across_frame_range = true;
-			mint_num_frames_to_sum_over = 3;
-			mbln_isActualMonoMZUsed = false;
-			mdbl_leftFitStringencyFactor = 1;
-			mdbl_rightFitStringencyFactor = 1;
-			mbln_useRAPIDDeconvolution = false;
-			mbln_replaceRAPIDScoreWithHornFitScore = false;
-			menmExportFileType = enmExportFileType::TEXT;
-			mshort_numPeaksUsedInAbundance = 1 ;
-			mbln_detectPeaksWithNoDeconvolution= false;
-			mbln_processMS = true;
-			_scanBasedWorkflowType = "standard";
-			_saturationThreshold = 90000;
+			MaxCharge = 10 ;
+			NumPeaksForShoulder = 1 ;
+			MaxMW = 10000 ; 
+			MaxFit = 0.25 ; 
+			CCMass = 1.00727638;
+			DeleteIntensityThreshold = 10 ; 
+			MinIntensityForScore = 10 ;
+			O16O18Media = false ; 
+			MinS2N = 3 ; 
+			PeptideMinBackgroundRatio = 5 ; 
+			AveragineFormula = "C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
+			TagFormula = "" ;
+			O16O18Media = false ; 
+			ThrashOrNot = true ; 
+			CompleteFit = false ; 
+			UseMercuryCaching = true ; 
+			mobjElementIsotopes = gcnew DeconToolsV2::clsElementIsotopes() ; 
+			UseMZRange = true ; 
+			MinMZ = 400 ; 
+			MaxMZ = 2000 ; 
+			MinScan = System::Int32::MinValue ; 
+			MaxScan = System::Int32::MaxValue ; 
+			UseScanRange = false ; 
+			UseSavitzkyGolaySmooth = false ; 
+			SGNumLeft = 2  ;
+			SGNumRight = 2  ;
+			SGOrder = 2  ;
+			IsotopeFitType = DeconToolsV2::enmIsotopeFitType::AREA ;
+			UseAbsolutePeptideIntensity = false ; 
+			AbsolutePeptideIntensity = 0 ; 
+			NumZerosToFill = 3; 
+			ZeroFill = false ;
+			CheckAllPatternsAgainstCharge1 = false ;
+			NumScansToSumOver = 0 ; 
+			SumSpectra = false ; 
+			ProcessMSMS = false ; 
+			SumSpectraAcrossFrameRange = true;
+			NumFramesToSumOver = 3;
+			IsActualMonoMZUsed = false;
+			LeftFitStringencyFactor = 1;
+			RightFitStringencyFactor = 1;
+			UseRAPIDDeconvolution = false;
+			ReplaceRAPIDScoreWithHornFitScore = false;
+			ExportFileType = enmExportFileType::TEXT;
+			NumPeaksUsedInAbundance = 1 ;
+			DetectPeaksOnlyWithNoDeconvolution= false;
+			ProcessMS = true;
+			ScanBasedWorkflowType = "standard";
+			SaturationThreshold = 90000;
 		}
 
 		clsHornTransformParameters::~clsHornTransformParameters(void)
 		{
 		}
 
-		void clsHornTransformParameters::SaveV1HornTransformParameters(System::Xml::XmlTextWriter *xwriter)
+		void clsHornTransformParameters::SaveV1HornTransformParameters(System::Xml::XmlTextWriter ^xwriter)
 		{
-			xwriter->WriteWhitespace(S"\n\t") ; 
-			xwriter->WriteStartElement(S"HornTransformParameters");
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"TagFormula",this->TagFormula) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"AveragineFormula",this->AveragineFormula) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteWhitespace("\n\t") ; 
+			xwriter->WriteStartElement("HornTransformParameters");
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("TagFormula",this->TagFormula) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("AveragineFormula",this->AveragineFormula) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"DeleteIntensityThreshold",this->DeleteIntensityThreshold.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MaxFit",this->MaxFit.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MinIntensityForScore",this->MinIntensityForScore.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("DeleteIntensityThreshold",this->DeleteIntensityThreshold.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MaxFit",this->MaxFit.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MinIntensityForScore",this->MinIntensityForScore.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"MaxCharge",this->MaxCharge.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MaxMW",this->MaxMW.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("MaxCharge",this->MaxCharge.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MaxMW",this->MaxMW.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"NumPeaksForShoulder",this->NumPeaksForShoulder.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"O16O18Media",this->O16O18Media.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"PeptideMinBackgroundRatio",this->PeptideMinBackgroundRatio.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"UseAbsolutePeptideIntensity",this->UseAbsolutePeptideIntensity.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"AbsolutePeptideIntensity",this->AbsolutePeptideIntensity.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"ThrashOrNot",this->ThrashOrNot.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"CheckAllPatternsAgainstCharge1",this->CheckAllPatternsAgainstCharge1.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"CompleteFit",this->CompleteFit.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"CCMass",this->CCMass.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"IsotopeFitType",__box(this->IsotopeFitType)->ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("NumPeaksForShoulder",this->NumPeaksForShoulder.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("O16O18Media",this->O16O18Media.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("PeptideMinBackgroundRatio",this->PeptideMinBackgroundRatio.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("UseAbsolutePeptideIntensity",this->UseAbsolutePeptideIntensity.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("AbsolutePeptideIntensity",this->AbsolutePeptideIntensity.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("ThrashOrNot",this->ThrashOrNot.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("CheckAllPatternsAgainstCharge1",this->CheckAllPatternsAgainstCharge1.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("CompleteFit",this->CompleteFit.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("CCMass",this->CCMass.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("IsotopeFitType",this->IsotopeFitType.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"UseMercuryCaching",this->UseMercuryCaching.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("UseMercuryCaching",this->UseMercuryCaching.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"SumSpectra",this->SumSpectra.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("SumSpectra",this->SumSpectra.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"SumSpectraAcrossScanRange",this->SumSpectraAcrossScanRange.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("SumSpectraAcrossScanRange",this->SumSpectraAcrossScanRange.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"NumberOfScansToSumOver",this->NumScansToSumOver.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("NumberOfScansToSumOver",this->NumScansToSumOver.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"NumberOfScansToAdvance",this->NumScansToAdvance.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("NumberOfScansToAdvance",this->NumScansToAdvance.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"SumSpectraAcrossFrameRange",this->SumSpectraAcrossFrameRange.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("SumSpectraAcrossFrameRange",this->SumSpectraAcrossFrameRange.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"NumberOfFramesToSumOver",this->NumFramesToSumOver.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("NumberOfFramesToSumOver",this->NumFramesToSumOver.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 			
-			xwriter->WriteElementString(S"IsActualMonoMZUsed",this->IsActualMonoMZUsed.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("IsActualMonoMZUsed",this->IsActualMonoMZUsed.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"LeftFitStringencyFactor",this->LeftFitStringencyFactor.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("LeftFitStringencyFactor",this->LeftFitStringencyFactor.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"RightFitStringencyFactor",this->RightFitStringencyFactor.ToString()) ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("RightFitStringencyFactor",this->RightFitStringencyFactor.ToString()) ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"UseRAPIDDeconvolution",this->UseRAPIDDeconvolution.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 		
+			xwriter->WriteElementString("UseRAPIDDeconvolution",this->UseRAPIDDeconvolution.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 		
 
-			xwriter->WriteElementString(S"ReplaceRAPIDScoreWithHornFitScore",this->ReplaceRAPIDScoreWithHornFitScore.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ;
+			xwriter->WriteElementString("ReplaceRAPIDScoreWithHornFitScore",this->ReplaceRAPIDScoreWithHornFitScore.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ;
 
-			xwriter->WriteElementString(S"NumPeaksUsedInAbundance",this->NumPeaksUsedInAbundance.ToString()) ;
+			xwriter->WriteElementString("NumPeaksUsedInAbundance",this->NumPeaksUsedInAbundance.ToString()) ;
 
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace("\n\t") ; 
 			xwriter->WriteEndElement();
 			
 		}
 
-		void clsHornTransformParameters::SaveV1MiscellaneousParameters(System::Xml::XmlTextWriter *xwriter)
+		void clsHornTransformParameters::SaveV1MiscellaneousParameters(System::Xml::XmlTextWriter ^xwriter)
 		{
-			xwriter->WriteWhitespace(S"\n\t") ; 
-			xwriter->WriteStartElement(S"Miscellaneous") ; 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"UseScanRange", Convert::ToString(this->UseScanRange)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MinScan", Convert::ToString(this->MinScan)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MaxScan", Convert::ToString(this->MaxScan)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteWhitespace("\n\t") ; 
+			xwriter->WriteStartElement("Miscellaneous") ; 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("UseScanRange", Convert::ToString(this->UseScanRange)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MinScan", Convert::ToString(this->MinScan)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MaxScan", Convert::ToString(this->MaxScan)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"UseMZRange", Convert::ToString(this->UseMZRange)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MinMZ", Convert::ToString(this->MinMZ)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"MaxMZ", Convert::ToString(this->MaxMZ)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("UseMZRange", Convert::ToString(this->UseMZRange)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MinMZ", Convert::ToString(this->MinMZ)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("MaxMZ", Convert::ToString(this->MaxMZ)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"ApplySavitzkyGolay", Convert::ToString(this->UseSavitzkyGolaySmooth)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"SGNumLeft", Convert::ToString(this->SGNumLeft)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"SGNumRight", Convert::ToString(this->SGNumRight)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("ApplySavitzkyGolay", Convert::ToString(this->UseSavitzkyGolaySmooth)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("SGNumLeft", Convert::ToString(this->SGNumLeft)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("SGNumRight", Convert::ToString(this->SGNumRight)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"SGOrder", Convert::ToString(this->SGOrder)); 
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("SGOrder", Convert::ToString(this->SGOrder)); 
+			xwriter->WriteWhitespace("\n\t\t") ; 
 			
-			xwriter->WriteElementString(S"ZeroFillDiscontinousAreas", Convert::ToString(this->ZeroFill)) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
-			xwriter->WriteElementString(S"NumZerosToFill", Convert::ToString(this->NumZerosToFill)) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("ZeroFillDiscontinousAreas", Convert::ToString(this->ZeroFill)) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
+			xwriter->WriteElementString("NumZerosToFill", Convert::ToString(this->NumZerosToFill)) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 			
-			xwriter->WriteElementString(S"ProcessMSMS",this->ProcessMSMS.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("ProcessMSMS",this->ProcessMSMS.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"ExportFileType",__box(this->ExportFileType)->ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("ExportFileType",this->ExportFileType.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 			
-			xwriter->WriteElementString(S"DetectPeaksOnly_NoDeconvolution", this->DetectPeaksOnlyWithNoDeconvolution.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("DetectPeaksOnly_NoDeconvolution", this->DetectPeaksOnlyWithNoDeconvolution.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"Process_MS",this->ProcessMS.ToString()) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("Process_MS",this->ProcessMS.ToString()) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"ScanBasedWorkflowType",this->ScanBasedWorkflowType) ;
-			xwriter->WriteWhitespace(S"\n\t\t") ; 
+			xwriter->WriteElementString("ScanBasedWorkflowType",this->ScanBasedWorkflowType) ;
+			xwriter->WriteWhitespace("\n\t\t") ; 
 
-			xwriter->WriteElementString(S"SaturationThreshold",this->SaturationThreshold.ToString()) ;
+			xwriter->WriteElementString("SaturationThreshold",this->SaturationThreshold.ToString()) ;
 			
-			xwriter->WriteWhitespace(S"\n\t") ; 
+			xwriter->WriteWhitespace("\n\t") ; 
 			xwriter->WriteEndElement();
 			
 		}
 
-		void clsHornTransformParameters::LoadV1HornTransformParameters(XmlReader *rdr)
+		void clsHornTransformParameters::LoadV1HornTransformParameters(XmlReader ^rdr)
 		{
 			//Add code to handle empty nodes.
 
@@ -225,7 +224,7 @@ namespace DeconToolsV2
 				switch (rdr->NodeType)
 				{
 					case XmlNodeType::Element:
-						if (rdr->Name->Equals(S"TagFormula"))
+						if (rdr->Name->Equals("TagFormula"))
 						{
 							if (rdr->IsEmptyElement)
 							{
@@ -240,11 +239,11 @@ namespace DeconToolsV2
 							}
 							this->TagFormula = rdr->Value ; 
 						}
-						else if (rdr->Name->Equals(S"UseMercuryCaching"))
+						else if (rdr->Name->Equals("UseMercuryCaching"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for caching of Mercury in parameter file") ; 
+								throw gcnew Exception ("No information for caching of Mercury in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -255,18 +254,18 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for caching of Mercury in parameter file") ; 
+								throw gcnew Exception ("No information for caching of Mercury in parameter file") ; 
 							}
 							else
 							{
 								this->UseMercuryCaching = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"SumSpectra"))
+						else if (rdr->Name->Equals("SumSpectra"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for SumSpectra in parameter file") ; 
+								throw gcnew Exception ("No information for SumSpectra in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -277,18 +276,18 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for summing spectra in parameter file") ; 
+								throw gcnew Exception ("No information for summing spectra in parameter file") ; 
 							}
 							else
 							{
 								this->SumSpectra = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"SumSpectraAcrossScanRange"))
+						else if (rdr->Name->Equals("SumSpectraAcrossScanRange"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for SumSpectraAcrossScanRange in parameter file") ; 
+								throw gcnew Exception ("No information for SumSpectraAcrossScanRange in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -299,18 +298,18 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for summing across scan range in parameter file") ; 
+								throw gcnew Exception ("No information for summing across scan range in parameter file") ; 
 							}
 							else
 							{
 								this->SumSpectraAcrossScanRange = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"SumSpectraAcrossFrameRange"))  //FIX this
+						else if (rdr->Name->Equals("SumSpectraAcrossFrameRange"))  //FIX this
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for SumSpectraAcrossFrameRange in parameter file") ; 
+								throw gcnew Exception ("No information for SumSpectraAcrossFrameRange in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -321,18 +320,18 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for summing across frame range in parameter file") ; 
+								throw gcnew Exception ("No information for summing across frame range in parameter file") ; 
 							}
 							else
 							{
 								this->SumSpectraAcrossFrameRange = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"CheckAllPatternsAgainstCharge1"))
+						else if (rdr->Name->Equals("CheckAllPatternsAgainstCharge1"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for CheckAllPatternsAgainstCharge1 in parameter file") ; 
+								throw gcnew Exception ("No information for CheckAllPatternsAgainstCharge1 in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -343,18 +342,18 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for caching of Mercury in parameter file") ; 
+								throw gcnew Exception ("No information for caching of Mercury in parameter file") ; 
 							}
 							else
 							{
 								this->CheckAllPatternsAgainstCharge1 = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"AveragineFormula"))
+						else if (rdr->Name->Equals("AveragineFormula"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No averagine formula provided in parameter file") ; 
+								throw gcnew Exception ("No averagine formula provided in parameter file") ; 
 							}
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -364,14 +363,14 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No averagine formula provided in parameter file") ; 
+								throw gcnew Exception ("No averagine formula provided in parameter file") ; 
 							}
 							else
 							{
-								this->set_AveragineFormula(rdr->Value) ; 
+                                this->AveragineFormula = rdr->Value;
 							}
 						}
-						else if (rdr->Name->Equals(S"DeleteIntensityThreshold"))
+						else if (rdr->Name->Equals("DeleteIntensityThreshold"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -380,14 +379,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No DeleteIntensityThreshold was specified in parameter file") ; 
+								throw gcnew Exception ("No DeleteIntensityThreshold was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_DeleteIntensityThreshold(Convert::ToDouble(rdr->Value)) ; 
+                                this->DeleteIntensityThreshold = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"MaxFit"))
+						else if (rdr->Name->Equals("MaxFit"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -396,14 +395,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No MaxFit value was specified in parameter file") ; 
+								throw gcnew Exception ("No MaxFit value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_MaxFit(Convert::ToDouble(rdr->Value)) ; 
+                                this->MaxFit = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"MinIntensityForScore"))
+						else if (rdr->Name->Equals("MinIntensityForScore"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -412,14 +411,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No minimum intensity value was specified for score in parameter file") ; 
+								throw gcnew Exception ("No minimum intensity value was specified for score in parameter file") ; 
 							}
 							else
 							{
-								this->set_MinIntensityForScore(Convert::ToDouble(rdr->Value)) ; 
+                                this->MinIntensityForScore = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"MaxCharge"))
+						else if (rdr->Name->Equals("MaxCharge"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -428,14 +427,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No maximum charge value was specified in parameter file") ; 
+								throw gcnew Exception ("No maximum charge value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_MaxCharge(Convert::ToInt16(rdr->Value)) ; 
+                                this->MaxCharge = Convert::ToInt16(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"MaxMW"))
+						else if (rdr->Name->Equals("MaxMW"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -444,14 +443,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No maximum mass value was specified in parameter file") ; 
+								throw gcnew Exception ("No maximum mass value was specified in parameter file") ; 
 							}
 							else
 							{
-								this->set_MaxMW(Convert::ToDouble(rdr->Value)) ; 
+                                this->MaxMW = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"NumPeaksForShoulder"))
+						else if (rdr->Name->Equals("NumPeaksForShoulder"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -460,14 +459,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for number of peaks for shoulder in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for number of peaks for shoulder in parameter file") ; 
 							}
 							else
 							{
-								this->set_NumPeaksForShoulder(Convert::ToInt16(rdr->Value)) ; 
+                                this->NumPeaksForShoulder = Convert::ToInt16(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"O16O18Media"))
+						else if (rdr->Name->Equals("O16O18Media"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -476,14 +475,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for O16/O18 media in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for O16/O18 media in parameter file") ; 
 							}
 							else
 							{
-								this->set_O16O18Media(Convert::ToBoolean(rdr->Value)) ; 
+                                this->O16O18Media = Convert::ToBoolean(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"PeptideMinBackgroundRatio"))
+						else if (rdr->Name->Equals("PeptideMinBackgroundRatio"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -492,18 +491,18 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for min background ratio for peptide in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for min background ratio for peptide in parameter file") ; 
 							}
 							else
 							{
-								this->set_PeptideMinBackgroundRatio(Convert::ToDouble(rdr->Value)) ; 
+                                this->PeptideMinBackgroundRatio = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"UseAbsolutePeptideIntensity"))
+						else if (rdr->Name->Equals("UseAbsolutePeptideIntensity"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for use of absoluted intensity threshold in parameter file") ; 
+								throw gcnew Exception ("No information for use of absoluted intensity threshold in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -514,14 +513,14 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for use of absolute intensity threshold in parameter file") ; 
+								throw gcnew Exception ("No information for use of absolute intensity threshold in parameter file") ; 
 							}
 							else
 							{
 								this->UseAbsolutePeptideIntensity = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"AbsolutePeptideIntensity"))
+						else if (rdr->Name->Equals("AbsolutePeptideIntensity"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -530,14 +529,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for absolute peptide threshold in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for absolute peptide threshold in parameter file") ; 
 							}
 							else
 							{
-								this->set_AbsolutePeptideIntensity(Convert::ToDouble(rdr->Value)) ; 
+                                this->AbsolutePeptideIntensity = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"NumberOfScansToSumOver"))
+						else if (rdr->Name->Equals("NumberOfScansToSumOver"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -546,14 +545,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for number of peaks for shoulder in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for number of peaks for shoulder in parameter file") ; 
 							}
 							else
 							{
-								this->set_NumScansToSumOver(Convert::ToInt16(rdr->Value)) ; 
+                                this->NumScansToSumOver = Convert::ToInt16(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"NumberOfFramesToSumOver"))
+						else if (rdr->Name->Equals("NumberOfFramesToSumOver"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -562,14 +561,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for number of frames to sum over in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for number of frames to sum over in parameter file") ; 
 							}
 							else
 							{
-								this->set_NumFramesToSumOver(Convert::ToInt16(rdr->Value)) ; 
+                                this->NumFramesToSumOver = Convert::ToInt16(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"ThrashOrNot"))
+						else if (rdr->Name->Equals("ThrashOrNot"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -578,14 +577,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for thrashing in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for thrashing in parameter file") ; 
 							}
 							else
 							{
-								this->set_ThrashOrNot(Convert::ToBoolean(rdr->Value)) ; 
+                                this->ThrashOrNot = Convert::ToBoolean(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"CompleteFit"))
+						else if (rdr->Name->Equals("CompleteFit"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -594,14 +593,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for complete fit in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for complete fit in parameter file") ; 
 							}
 							else
 							{
-								this->set_CompleteFit(Convert::ToBoolean(rdr->Value)) ; 
+                                this->CompleteFit = Convert::ToBoolean(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"CCMass"))
+						else if (rdr->Name->Equals("CCMass"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -610,14 +609,14 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for charge carrier mass in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for charge carrier mass in parameter file") ; 
 							}
 							else
 							{
-								this->set_CCMass(Convert::ToDouble(rdr->Value)) ; 
+                                this->CCMass = Convert::ToDouble(rdr->Value);
 							}
 						}
-						else if (rdr->Name->Equals(S"IsotopeFitType"))
+						else if (rdr->Name->Equals("IsotopeFitType"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -626,26 +625,26 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new System::Exception (S"Missing information for IsotopeFitType in parameter file") ; 
+								throw gcnew System::Exception ("Missing information for IsotopeFitType in parameter file") ; 
 							}
-							if (rdr->Value->Equals(__box(DeconToolsV2::enmIsotopeFitType::AREA)->ToString()))
+							if (rdr->Value->Equals(DeconToolsV2::enmIsotopeFitType::AREA.ToString()))
 							{
 								this->IsotopeFitType = DeconToolsV2::enmIsotopeFitType::AREA ;
 							}
-							else if (rdr->Value->Equals(__box(DeconToolsV2::enmIsotopeFitType::PEAK)->ToString()))
+							else if (rdr->Value->Equals(DeconToolsV2::enmIsotopeFitType::PEAK.ToString()))
 							{
 								this->IsotopeFitType = DeconToolsV2::enmIsotopeFitType::PEAK ;
 							}
-							else if (rdr->Value->Equals(__box(DeconToolsV2::enmIsotopeFitType::CHISQ)->ToString()))
+							else if (rdr->Value->Equals(DeconToolsV2::enmIsotopeFitType::CHISQ.ToString()))
 							{
 								this->IsotopeFitType = DeconToolsV2::enmIsotopeFitType::CHISQ ;
 							}
 						}
-						else if (rdr->Name->Equals(S"IsActualMonoMZUsed"))
+						else if (rdr->Name->Equals("IsActualMonoMZUsed"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for parameter 'IsActualMonoMZUsed' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'IsActualMonoMZUsed' in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -656,7 +655,7 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for parameter 'IsActualMonoMZUsed' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'IsActualMonoMZUsed' in parameter file") ; 
 							}
 							else
 							{
@@ -665,11 +664,11 @@ namespace DeconToolsV2
 						}
 
 
-						else if (rdr->Name->Equals(S"LeftFitStringencyFactor"))
+						else if (rdr->Name->Equals("LeftFitStringencyFactor"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for parameter 'LeftFitStringencyFactor' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'LeftFitStringencyFactor' in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -680,7 +679,7 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for parameter 'LeftFitStringencyFactor' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'LeftFitStringencyFactor' in parameter file") ; 
 							}
 							else
 							{
@@ -689,11 +688,11 @@ namespace DeconToolsV2
 						}
 
 
-						else if (rdr->Name->Equals(S"RightFitStringencyFactor"))
+						else if (rdr->Name->Equals("RightFitStringencyFactor"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for parameter 'RightFitStringencyFactor' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'RightFitStringencyFactor' in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -704,18 +703,18 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for parameter 'RightFitStringencyFactor' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'RightFitStringencyFactor' in parameter file") ; 
 							}
 							else
 							{
 								this->RightFitStringencyFactor = Convert::ToDouble(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"UseRAPIDDeconvolution"))
+						else if (rdr->Name->Equals("UseRAPIDDeconvolution"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for parameter 'UseRAPIDDeconvolution' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'UseRAPIDDeconvolution' in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -726,7 +725,7 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for parameter 'UseRAPIDDeconvolution' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'UseRAPIDDeconvolution' in parameter file") ; 
 							}
 							else
 							{
@@ -734,11 +733,11 @@ namespace DeconToolsV2
 							}
 						}
 
-						else if (rdr->Name->Equals(S"ReplaceRAPIDScoreWithHornFitScore"))
+						else if (rdr->Name->Equals("ReplaceRAPIDScoreWithHornFitScore"))
 						{
 							if (rdr->IsEmptyElement)
 							{
-								throw new Exception (S"No information for parameter 'ReplaceRAPIDScoreWithHornFitScore' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'ReplaceRAPIDScoreWithHornFitScore' in parameter file") ; 
 							}
 							rdr->Read() ; 
 
@@ -749,14 +748,14 @@ namespace DeconToolsV2
 
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information for parameter 'ReplaceRAPIDScoreWithHornFitScore' in parameter file") ; 
+								throw gcnew Exception ("No information for parameter 'ReplaceRAPIDScoreWithHornFitScore' in parameter file") ; 
 							}
 							else
 							{
 								this->ReplaceRAPIDScoreWithHornFitScore = Convert::ToBoolean(rdr->Value) ; 
 							}
 						}
-						else if (rdr->Name->Equals(S"NumPeaksUsedInAbundance"))
+						else if (rdr->Name->Equals("NumPeaksUsedInAbundance"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -765,15 +764,15 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for 'NumPeaksUsedInAbundance' in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for 'NumPeaksUsedInAbundance' in parameter file") ; 
 							}
 							else
 							{
-								this->set_NumPeaksUsedInAbundance(Convert::ToInt16(rdr->Value)) ; 
+                                this->NumPeaksUsedInAbundance = Convert::ToInt16(rdr->Value);
 							}
 						}
 						
-						else if (rdr->Name->Equals(S"NumberOfScansToAdvance"))
+						else if (rdr->Name->Equals("NumberOfScansToAdvance"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -782,11 +781,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for 'NumScansToAdvance' in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for 'NumScansToAdvance' in parameter file") ; 
 							}
 							else
 							{
-								this->set_NumScansToAdvance(Convert::ToInt32(rdr->Value)) ; 
+                                this->NumScansToAdvance = Convert::ToInt32(rdr->Value);
 							}
 						}
 
@@ -795,7 +794,7 @@ namespace DeconToolsV2
 
 						break ; 
 					case XmlNodeType::EndElement:
-						if (rdr->Name->Equals(S"HornTransformParameters"))
+						if (rdr->Name->Equals("HornTransformParameters"))
 							return ;
 						break ; 
 					default:
@@ -804,7 +803,7 @@ namespace DeconToolsV2
 			}
 		}
 
-		void clsHornTransformParameters::LoadV1MiscellaneousParameters(XmlReader *rdr)
+		void clsHornTransformParameters::LoadV1MiscellaneousParameters(XmlReader ^rdr)
 		{
 
 			//Read each node in the tree.
@@ -813,7 +812,7 @@ namespace DeconToolsV2
 				switch (rdr->NodeType)
 				{
 					case XmlNodeType::Element:
-						if (rdr->Name->Equals(S"UseScanRange"))
+						if (rdr->Name->Equals("UseScanRange"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -822,11 +821,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for using scan range") ; 
+								throw gcnew Exception ("No information specified for using scan range") ; 
 							}
-							this->set_UseScanRange(Convert::ToBoolean(rdr->Value)) ; 
+                            this->UseScanRange = Convert::ToBoolean(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"MinScan"))
+						else if (rdr->Name->Equals("MinScan"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -835,11 +834,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for min scan number.") ; 
+								throw gcnew Exception ("No information specified for min scan number.") ; 
 							}
-							this->set_MinScan(Convert::ToInt32(rdr->Value)) ; 
+                            this->MinScan = Convert::ToInt32(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"MaxScan"))
+						else if (rdr->Name->Equals("MaxScan"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -848,11 +847,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for max scan number.") ; 
+								throw gcnew Exception ("No information specified for max scan number.") ; 
 							}
-							this->set_MaxScan(Convert::ToInt32(rdr->Value)) ; 
+                            this->MaxScan = Convert::ToInt32(rdr->Value);
 						}
-						if (rdr->Name->Equals(S"UseMZRange"))
+						if (rdr->Name->Equals("UseMZRange"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -861,11 +860,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for using mz range") ; 
+								throw gcnew Exception ("No information specified for using mz range") ; 
 							}
-							this->set_UseMZRange(Convert::ToBoolean(rdr->Value)) ; 
+                            this->UseMZRange = Convert::ToBoolean(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"MinMZ"))
+						else if (rdr->Name->Equals("MinMZ"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -874,11 +873,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for min m/z.") ; 
+								throw gcnew Exception ("No information specified for min m/z.") ; 
 							}
-							this->set_MinMZ(Convert::ToDouble(rdr->Value)) ; 
+                            this->MinMZ = Convert::ToDouble(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"MaxMZ"))
+						else if (rdr->Name->Equals("MaxMZ"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -887,11 +886,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for max m/z.") ; 
+								throw gcnew Exception ("No information specified for max m/z.") ; 
 							}
-							this->set_MaxMZ(Convert::ToDouble(rdr->Value)) ; 
+                            this->MaxMZ = Convert::ToDouble(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"ApplySavitzkyGolay"))
+						else if (rdr->Name->Equals("ApplySavitzkyGolay"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -900,11 +899,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for using Savitzky Golay") ; 
+								throw gcnew Exception ("No information specified for using Savitzky Golay") ; 
 							}
-							this->set_UseSavitzkyGolaySmooth(Convert::ToBoolean(rdr->Value)) ; 
+                            this->UseSavitzkyGolaySmooth = Convert::ToBoolean(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"SGNumLeft"))
+						else if (rdr->Name->Equals("SGNumLeft"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -913,11 +912,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for # of left points in Savitzky Golay smoothing.") ; 
+								throw gcnew Exception ("No information specified for # of left points in Savitzky Golay smoothing.") ; 
 							}
-							this->set_SGNumLeft(Convert::ToInt16(rdr->Value)) ; 
+                            this->SGNumLeft = Convert::ToInt16(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"SGNumRight"))
+						else if (rdr->Name->Equals("SGNumRight"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -926,11 +925,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for # of right points in Savitzky Golay smoothing.") ; 
+								throw gcnew Exception ("No information specified for # of right points in Savitzky Golay smoothing.") ; 
 							}
-							this->set_SGNumRight(Convert::ToInt16(rdr->Value)) ; 
+                            this->SGNumRight = Convert::ToInt16(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"SGOrder"))
+						else if (rdr->Name->Equals("SGOrder"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -939,11 +938,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for order.") ; 
+								throw gcnew Exception ("No information specified for order.") ; 
 							}
-							this->set_SGOrder(Convert::ToInt16(rdr->Value)) ; 
+                            this->SGOrder = Convert::ToInt16(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"ZeroFillDiscontinousAreas"))
+						else if (rdr->Name->Equals("ZeroFillDiscontinousAreas"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -952,11 +951,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for zero filling.") ; 
+								throw gcnew Exception ("No information specified for zero filling.") ; 
 							}
-							this->set_ZeroFill(Convert::ToBoolean(rdr->Value)) ; 
+                            this->ZeroFill = Convert::ToBoolean(rdr->Value);
 						}
-						else if (rdr->Name->Equals(S"NumZerosToFill"))
+						else if (rdr->Name->Equals("NumZerosToFill"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -965,11 +964,11 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No information specified for zero filling.") ; 
+								throw gcnew Exception ("No information specified for zero filling.") ; 
 							}
-							this->set_NumZerosToFill(Convert::ToInt16(rdr->Value)) ; 
+                            this->NumZerosToFill = Convert::ToInt16(rdr->Value);
 						}					
-						else if (rdr->Name->Equals(S"ProcessMSMS"))
+						else if (rdr->Name->Equals("ProcessMSMS"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -978,15 +977,15 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for ProcessMSMS in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for ProcessMSMS in parameter file") ; 
 							}
 							else
 							{
-								this->set_ProcessMSMS(Convert::ToBoolean(rdr->Value)) ; 
+                                this->ProcessMSMS = Convert::ToBoolean(rdr->Value);
 							}
 
 						}
-						else if (rdr->Name->Equals(S"ExportFileType"))
+						else if (rdr->Name->Equals("ExportFileType"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -995,13 +994,13 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new System::Exception (S"Missing information for ExportFileType in parameter file") ; 
+								throw gcnew System::Exception ("Missing information for ExportFileType in parameter file") ; 
 							}
-							if (rdr->Value->Equals(__box(enmExportFileType::TEXT)->ToString()))
+							if (rdr->Value->Equals(enmExportFileType::TEXT.ToString()))
 							{
 								this->ExportFileType = enmExportFileType::TEXT ;
 							}
-							else if (rdr->Value->Equals(__box(enmExportFileType::SQLITE)->ToString()))
+							else if (rdr->Value->Equals(enmExportFileType::SQLITE.ToString()))
 							{
 								this->ExportFileType = enmExportFileType::SQLITE;
 							}
@@ -1010,7 +1009,7 @@ namespace DeconToolsV2
 								this->ExportFileType = enmExportFileType::TEXT;
 							}
 						}
-						else if (rdr->Name->Equals(S"Process_MS"))
+						else if (rdr->Name->Equals("Process_MS"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -1019,15 +1018,15 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for ProcessMS in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for ProcessMS in parameter file") ; 
 							}
 							else
 							{
-								this->set_ProcessMS(Convert::ToBoolean(rdr->Value)) ; 
+                                this->ProcessMS = Convert::ToBoolean(rdr->Value);
 							}
 
 						}
-					    else if (rdr->Name->Equals(S"DetectPeaksOnly_NoDeconvolution"))
+					    else if (rdr->Name->Equals("DetectPeaksOnly_NoDeconvolution"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -1036,15 +1035,15 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters was specified for 'DetectPeaksOnlyWithNoDeconvolution' in parameter file") ; 
+								throw gcnew Exception ("No parameters was specified for 'DetectPeaksOnlyWithNoDeconvolution' in parameter file") ; 
 							}
 							else
 							{
-								this->set_DetectPeaksOnlyWithNoDeconvolution(Convert::ToBoolean(rdr->Value)) ; 
+                                this->DetectPeaksOnlyWithNoDeconvolution = Convert::ToBoolean(rdr->Value);
 							}
 
 						}
-						else if (rdr->Name->Equals(S"ScanBasedWorkflowType"))
+						else if (rdr->Name->Equals("ScanBasedWorkflowType"))
 						{
 							if (rdr->IsEmptyElement)
 							{
@@ -1059,7 +1058,7 @@ namespace DeconToolsV2
 							}
 							this->ScanBasedWorkflowType = rdr->Value ; 
 						}
-						else if (rdr->Name->Equals(S"SaturationThreshold"))
+						else if (rdr->Name->Equals("SaturationThreshold"))
 						{
 							rdr->Read() ; 
 							while(rdr->NodeType == XmlNodeType::Whitespace || rdr->NodeType == XmlNodeType::SignificantWhitespace)
@@ -1068,17 +1067,17 @@ namespace DeconToolsV2
 							}
 							if (rdr->NodeType != XmlNodeType::Text)
 							{
-								throw new Exception (S"No parameters were specified for 'SaturationThreshold'") ; 
+								throw gcnew Exception ("No parameters were specified for 'SaturationThreshold'") ; 
 							}
 							else
 							{
-								this->set_SaturationThreshold(Convert::ToDouble(rdr->Value)) ; 
+                                this->SaturationThreshold = Convert::ToDouble(rdr->Value);
 							}
 						}
 				
 						break ; 
 					case XmlNodeType::EndElement:
-						if (rdr->Name->Equals(S"Miscellaneous"))
+						if (rdr->Name->Equals("Miscellaneous"))
 							return ;
 						break ; 
 					default:

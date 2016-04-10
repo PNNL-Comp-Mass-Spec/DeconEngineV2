@@ -15,7 +15,7 @@
 #include "Utilities/FFT32.h" 
 namespace DeconEngine
 {
-	void Utils::SetData(std::vector<double> &vectData, float (&data) __gc [])
+    void Utils::SetData(std::vector<double> &vectData, array<float> ^ (&data))
 	{
 		vectData.clear() ; 
 		int numPoints = data->Length ; 
@@ -26,7 +26,7 @@ namespace DeconEngine
 		}
 	}
 
-	void Utils::SetData(std::vector<float> &vectData, float (&data) __gc [])
+    void Utils::SetData(std::vector<float> &vectData, array<float> ^ (&data))
 	{
 		vectData.clear() ; 
 		int numPoints = data->Length ; 
@@ -38,10 +38,10 @@ namespace DeconEngine
 		}
 	}
 
-	void Utils::GetData(std::vector<float> &vectData, float (&data) __gc [])
+    void Utils::GetData(std::vector<float> &vectData, array<float> ^ (&data))
 	{
 		int numPoints = vectData.size() ; 
-		data = new float __gc [numPoints] ;
+        data = gcnew array<float>(numPoints);
 
 		for (int ptNum = 0 ; ptNum < numPoints ; ptNum++)
 		{
@@ -49,10 +49,10 @@ namespace DeconEngine
 		}
 	}
 
-	void Utils::GetData(std::vector<double> &vectData, float (&data) __gc [])
+    void Utils::GetData(std::vector<double> &vectData, array<float> ^ (&data))
 	{
 		int numPoints = vectData.size() ; 
-		data = new float __gc [numPoints] ;
+        data = gcnew array<float>(numPoints);
 
 		for (int ptNum = 0 ; ptNum < numPoints ; ptNum++)
 		{
@@ -60,40 +60,40 @@ namespace DeconEngine
 		}
 	}
 
-	void Utils::GetStr(System::String *src, char *dest)
+	void Utils::GetStr(System::String ^src, char *dest)
 	{
-		if (src == 0 || src == "" || src->get_Length() == 0)
+		if (src == nullptr || src == "" || src->Length == 0)
 		{
 			dest[0] = '\0' ; 
 			return ; 
 		}
 
-		int len = src->get_Length() ; 
+		int len = src->Length ; 
 		for (int i = 0 ; i < len ; i++)
 		{
-			dest[i] = (char) src->Chars[i] ; 
+			dest[i] = (char) src[i] ; 
 		}
 		dest[len] = '\0' ; 
 	}
 
-	void Utils::GetStr(const char *src, System::String **dest)
+	void Utils::GetStr(const char *src, System::String ^*dest)
 	{
 		if (src == NULL)
 		{
-			*dest = NULL ; 
+			*dest = nullptr ; 
 			return ; 
 		}
 		if (strlen(src) == 0)
 		{
-			*dest = new System::String("") ; 
+			*dest = gcnew System::String("") ; 
 			return ; 
 		}
 
-		*dest = new System::String(src) ; 
+		*dest = gcnew System::String(src) ; 
 		return ; 
 	}
 
-	double Utils::GetAverage(float (&intensities) __gc [], float maxIntensity)
+    double Utils::GetAverage(array<float> ^ (&intensities), float maxIntensity)
 	{
 		int numPts = intensities->Length  ; 
 		if (numPts == 0)
@@ -156,11 +156,11 @@ namespace DeconEngine
 		return sum ; 
 	}
 
-	void Utils::ConvertElementTableToFormula(Engine::TheoreticalProfile::AtomicInformation &elemental_isotope_composition, System::Collections::Hashtable* elementCounts, 
+	void Utils::ConvertElementTableToFormula(Engine::TheoreticalProfile::AtomicInformation &elemental_isotope_composition, System::Collections::Hashtable^ elementCounts, 
 			Engine::TheoreticalProfile::MolecularFormula &formula)
 	{
 		char element_char[16] ; 
-		System::Collections::IEnumerator* elements = elementCounts->Keys->GetEnumerator();
+		System::Collections::IEnumerator^ elements = elementCounts->Keys->GetEnumerator();
 
 		formula.Clear() ; 
 		Engine::TheoreticalProfile::AtomicCount atomic_count ; 
@@ -168,16 +168,16 @@ namespace DeconEngine
 		while(elements->MoveNext()) 
 		{
 			// Get the next element symbol in the table
-			System::String* element = __try_cast<System::String*>(elements->Current);
+			System::String^ element = safe_cast<System::String^>(elements->Current);
 			DeconEngine::Utils::GetStr(element, element_char) ; 
 			// Put it in a character array
-			int count = *static_cast<__box int*>(elementCounts->Item[element]);
+            int count = System::Convert::ToInt32(elementCounts[element]);
 
 			// find the index of the element in the AtomicInformation
 			int index = elemental_isotope_composition.GetElementIndex(element_char) ; 
 			if (index == -1) 
 			{
-				throw new System::ApplicationException(System::String::Concat(S"Unknown element ", element));
+				throw gcnew System::ApplicationException(System::String::Concat("Unknown element ", element));
 			} 
 			else 
 			{
@@ -189,7 +189,7 @@ namespace DeconEngine
 			}
 		}
 	}
-	void Utils::SetPeaks(Engine::PeakProcessing::PeakData &pk_data, DeconToolsV2::Peaks::clsPeak* (&peaks) __gc [])
+	void Utils::SetPeaks(Engine::PeakProcessing::PeakData &pk_data, array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks))
 	{
 		Engine::PeakProcessing::Peak enginePeak ; 
 		for (int pkNum = 0 ; pkNum < peaks->Length ; pkNum++)
@@ -207,9 +207,9 @@ namespace DeconEngine
 	}
 
 
-	void Utils::SavitzkyGolaySmooth(short num_left, short num_right, short order, float (&mzs) __gc [], float (&intensities) __gc [])
+    void Utils::SavitzkyGolaySmooth(short num_left, short num_right, short order, array<float> ^ (&mzs), array<float> ^ (&intensities))
 	{
-		Engine::Utilities::SavGolSmoother *sgSmoother = __nogc new  Engine::Utilities::SavGolSmoother(num_left, num_right, order) ; 
+		Engine::Utilities::SavGolSmoother *sgSmoother = new Engine::Utilities::SavGolSmoother(num_left, num_right, order) ; 
 		std::vector<double> vectX  ; 
 		std::vector<double> vectY  ; 
 		int num_pts = mzs->Length ; 
@@ -227,7 +227,7 @@ namespace DeconEngine
 		}
 		delete sgSmoother ; 
 	}
-	int Utils::ZeroFillUnevenData(float (&mzs) __gc [], float (&intensities) __gc [], int maxPtsToAdd)
+    int Utils::ZeroFillUnevenData(array<float> ^ (&mzs), array<float> ^ (&intensities), int maxPtsToAdd)
 	{
 		std::vector<float> vectX  ; 
 		std::vector<float> vectY  ; 
@@ -241,12 +241,12 @@ namespace DeconEngine
 			vectY.push_back(currentIntensity) ; 
 		}
 		int numPtsX = vectX.size() ; 
-		Engine::Utilities::Interpolation __nogc *interp = __nogc new Engine::Utilities::Interpolation() ; 
+		Engine::Utilities::Interpolation *interp = new Engine::Utilities::Interpolation() ; 
 		interp->ZeroFillMissing(vectX, vectY, maxPtsToAdd) ; 
 
 		int num_pts_new = (int) vectX.size() ; 
-		intensities = new float __gc [num_pts_new] ;
-		mzs = new float __gc [num_pts_new] ;
+        intensities = gcnew array<float>(num_pts_new);
+        mzs = gcnew array<float>(num_pts_new);
 
 		for (int i = 0 ; i < num_pts_new ; i++)
 		{
@@ -257,9 +257,9 @@ namespace DeconEngine
 		return num_pts_new ; 
 	}
 
-	void Utils::Apodize(double minX, double maxX, double sampleRate, int apexPositionPercent, float (&intensities) __gc [], DeconToolsV2::Readers::ApodizationType type)
+    void Utils::Apodize(double minX, double maxX, double sampleRate, int apexPositionPercent, array<float> ^ (&intensities), DeconToolsV2::Readers::ApodizationType type)
 	{
-		float __nogc *arrIntensities = __nogc new float [intensities->Length] ; 
+		float *arrIntensities = new float [intensities->Length] ; 
 		for (int i = 0 ; i < intensities->Length ; i++)
 			arrIntensities[i] = intensities[i] ; 
 		Engine::Utilities::Apodization::Apodize(minX, maxX, sampleRate, false, (Engine::Utilities::ApodizationType) type, arrIntensities, 
@@ -269,12 +269,12 @@ namespace DeconEngine
 		delete [] arrIntensities ; 
 	}
 
-	void Utils::UnApodize(float (&intensities) __gc[], DeconToolsV2::Readers::ApodizationType type)
+    void Utils::UnApodize(array<float> ^ (&intensities), DeconToolsV2::Readers::ApodizationType type)
 	{
 	}
-	void Utils::FourierTransform(float (&intensities) __gc [])
+    void Utils::FourierTransform(array<float> ^ (&intensities))
 	{
-		float __nogc *arrIntensities = __nogc new float [intensities->Length] ; 
+		float *arrIntensities = new float [intensities->Length] ; 
 		for (int i = 0 ; i < intensities->Length ; i++)
 			arrIntensities[i] = intensities[i] ; 
 		Engine::FFT::realft(intensities->Length, arrIntensities, 1) ; 
@@ -282,9 +282,9 @@ namespace DeconEngine
 			intensities[i] = arrIntensities[i] ; 
 		delete [] arrIntensities ; 
 	}
-	void Utils::InverseFourierTransform(float (&intensities) __gc [])
+    void Utils::InverseFourierTransform(array<float> ^ (&intensities))
 	{
-		float __nogc *arrIntensities = __nogc new float [intensities->Length] ; 
+		float *arrIntensities = new float [intensities->Length] ; 
 		for (int i = 0 ; i < intensities->Length ; i++)
 			arrIntensities[i] = intensities[i] ; 
 		Engine::FFT::realft(intensities->Length, arrIntensities, -1) ; 

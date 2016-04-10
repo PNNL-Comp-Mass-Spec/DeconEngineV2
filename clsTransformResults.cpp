@@ -57,7 +57,7 @@ namespace DeconToolsV2
 		bool clsTransformResults::IsDeisotoped()
 		{
 			if (mobj_lcms_results == NULL)
-				throw new System::Exception(S"No results stored.") ;
+				throw gcnew System::Exception("No results stored.") ;
 			return mobj_lcms_results->IsDeisotoped() ; 
 		}
 
@@ -72,11 +72,11 @@ namespace DeconToolsV2
 			return pk1.mobj_peak.mflt_mz < pk2.mobj_peak.mflt_mz ; 
 		}
 
-		void clsTransformResults::GetRawDataSortedInIntensity(DeconToolsV2::Results::clsLCMSPeak* (&lcms_peaks) __gc [])
+		void clsTransformResults::GetRawDataSortedInIntensity(array<DeconToolsV2::Results::clsLCMSPeak^>^ (&lcms_peaks))
 		{
 			if (mobj_lcms_results == NULL)
 			{
-				lcms_peaks = NULL ; 
+				lcms_peaks = nullptr ; 
 				return ; 
 			}
 
@@ -86,7 +86,7 @@ namespace DeconToolsV2
 			mobj_lcms_results->GetAllPeaks(vectPeaks) ; 
 			std::sort(vectPeaks.begin(), vectPeaks.end(), &RawPeaksIntensityComparison) ; 
 
-			lcms_peaks = new DeconToolsV2::Results::clsLCMSPeak* __gc [num_peaks] ; 
+			lcms_peaks = gcnew array<DeconToolsV2::Results::clsLCMSPeak^>(num_peaks); 
 			int min_scan = mobj_lcms_results->GetMinScan() ; 
 			int max_scan = mobj_lcms_results->GetMaxScan() ; 
 			Engine::Results::LCMSPeak<Engine::Results::PeakMinInfo> pk ; 
@@ -95,21 +95,21 @@ namespace DeconToolsV2
 			{
 				mint_percent_done = (pk_num * 100)/num_peaks ; 
 				pk = vectPeaks[pk_num] ; 
-				lcms_peaks[pk_num] = new clsLCMSPeak(pk.mint_scan_num, pk.mobj_peak.mflt_mz, pk.mobj_peak.mflt_intensity) ; 
+				lcms_peaks[pk_num] = gcnew clsLCMSPeak(pk.mint_scan_num, pk.mobj_peak.mflt_mz, pk.mobj_peak.mflt_intensity) ; 
 			}
 			mint_percent_done = 100 ; 
 		}
 
-		void clsTransformResults::GetRawData(DeconToolsV2::Results::clsLCMSPeak* (&lcms_peaks) __gc [])
+		void clsTransformResults::GetRawData(array<DeconToolsV2::Results::clsLCMSPeak^>^ (&lcms_peaks))
 		{
 			if (mobj_lcms_results == NULL)
 			{
-				lcms_peaks = NULL ; 
+				lcms_peaks = nullptr ; 
 				return ; 
 			}
 
 			int num_peaks = mobj_lcms_results->GetNumPeaks() ; 
-			lcms_peaks = new DeconToolsV2::Results::clsLCMSPeak* __gc [num_peaks] ; 
+            lcms_peaks = gcnew array<DeconToolsV2::Results::clsLCMSPeak^>(num_peaks);
 			int min_scan = mobj_lcms_results->GetMinScan() ; 
 			int max_scan = mobj_lcms_results->GetMaxScan() ; 
 			Engine::Results::LCMSPeak<Engine::Results::PeakMinInfo> pk ; 
@@ -118,18 +118,18 @@ namespace DeconToolsV2
 			{
 				mint_percent_done = (pk_num * 100)/num_peaks ; 
 				pk = mobj_lcms_results->GetPeak(pk_num) ; 
-				lcms_peaks[pk_num] = new clsLCMSPeak(pk.mint_scan_num, pk.mobj_peak.mflt_mz, pk.mobj_peak.mflt_intensity) ; 
+				lcms_peaks[pk_num] = gcnew clsLCMSPeak(pk.mint_scan_num, pk.mobj_peak.mflt_mz, pk.mobj_peak.mflt_intensity) ; 
 			}
 			mint_percent_done = 100 ; 
 		}
 		
 		
-		void clsTransformResults::GetSIC(int min_scan, int max_scan, float mz, float mz_tolerance, float (&peak_intensities) __gc [])
+        void clsTransformResults::GetSIC(int min_scan, int max_scan, float mz, float mz_tolerance, array<float> ^ (&peak_intensities))
 		{
 			std::vector<float> vect_intensities ; 
 			mobj_lcms_results->GetSIC(min_scan, max_scan, mz-mz_tolerance, mz+mz_tolerance, vect_intensities) ; 
 			int num_scans = max_scan - min_scan + 1 ; 
-			peak_intensities = new float __gc [num_scans] ; 
+            peak_intensities = gcnew array<float>(num_scans);
 
 			for (int scan_num = min_scan ; scan_num <= max_scan ; scan_num++)
 			{
@@ -137,7 +137,7 @@ namespace DeconToolsV2
 			}
 		}
 
-		void clsTransformResults::GetScanPeaks(int scan_num, float (&peak_mzs) __gc [], float (&peak_intensities) __gc [])
+        void clsTransformResults::GetScanPeaks(int scan_num, array<float> ^ (&peak_mzs), array<float> ^ (&peak_intensities))
 		{
 			std::vector<float> vect_mzs ; 
 			std::vector<float> vect_intensities ; 
@@ -145,8 +145,8 @@ namespace DeconToolsV2
 			mobj_lcms_results->GetScanPeaks(scan_num, vect_mzs, vect_intensities) ; 
 
 			int num_pts = vect_intensities.size() ; 
-			peak_mzs = new float __gc [num_pts] ; 
-			peak_intensities = new float __gc [num_pts] ; 
+            peak_mzs = gcnew array<float>(num_pts);
+            peak_intensities = gcnew array<float>(num_pts);
 
 			for (int pt_num = 0 ; pt_num < num_pts ; pt_num++)
 			{
@@ -160,7 +160,7 @@ namespace DeconToolsV2
 			return mobj_lcms_results->GetNumPeaks() ; 
 		}
 
-		void clsTransformResults::ReadResults(System::String *fileName)
+		void clsTransformResults::ReadResults(System::String ^fileName)
 		{
 			if (mobj_lcms_results == NULL)
 			{
@@ -172,7 +172,7 @@ namespace DeconToolsV2
 			mobj_lcms_results->LoadResults(fileNameCh) ; 
 		}
 
-		void clsTransformResults::WriteResults(System::String *fileName, bool save_signal_range)
+		void clsTransformResults::WriteResults(System::String ^fileName, bool save_signal_range)
 		{
 			char fileNameCh[512] ; 
 			try
@@ -182,12 +182,12 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}
 		}
 
-		void clsTransformResults::WriteScanResults(System::String *fileName)
+		void clsTransformResults::WriteScanResults(System::String ^fileName)
 		{
 			char fileNameCh[512] ; 
 			try
@@ -200,8 +200,8 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}
 		}
 

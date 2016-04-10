@@ -18,28 +18,28 @@
 
 namespace DeconEngine
 {
-	public __gc class Utils
+	public ref class Utils
 	{
 	public:
-		static void SetData(std::vector<double> &vectData, float (&data) __gc []) ; 
-		static void SetData(std::vector<float> &vectData, float (&data) __gc []) ; 
-		static void GetData(std::vector<double> &vectData, float (&data) __gc []) ; 
-		static void GetData(std::vector<float> &vectData, float (&data) __gc []) ; 
-		static void GetStr(System::String *src, char *dest) ;
-		static void GetStr(const char *src, System::String **dest) ; 
-		static double GetAverage(float (&intensities) __gc [], float maxIntensity) ; 
+        static void SetData(std::vector<double> &vectData, array<float> ^ (&data));
+        static void SetData(std::vector<float> &vectData, array<float> ^ (&data));
+        static void GetData(std::vector<double> &vectData, array<float> ^ (&data));
+        static void GetData(std::vector<float> &vectData, array<float> ^ (&data));
+		static void GetStr(System::String ^src, char *dest) ;
+		static void GetStr(const char *src, System::String ^*dest) ; 
+        static double GetAverage(array<float> ^ (&intensities), float maxIntensity);
 		static double GetAverage(std::vector<double> &intensities, float maxIntensity) ; 
 		static double Utils::GetTIC(double min_mz, double max_mz, std::vector<double> &mzs, std::vector<double> &intensities, float minIntensity, 
 			double &bpi, double &bp_mz) ; 
 		static void ConvertElementTableToFormula(Engine::TheoreticalProfile::AtomicInformation &elemental_isotope_composition, 
-			System::Collections::Hashtable* elementCounts, Engine::TheoreticalProfile::MolecularFormula &formula) ; 
-		static void SetPeaks(Engine::PeakProcessing::PeakData &pk_data, DeconToolsV2::Peaks::clsPeak* (&peaks) __gc []) ; 
-		static void SavitzkyGolaySmooth(short num_left, short num_right, short order, float (&mzs) __gc [], float (&intensities) __gc []);
-		static int ZeroFillUnevenData(float (&mzs) __gc [], float (&intensities) __gc [], int maxPtsToAdd);
-		static void Apodize(double minX, double maxX, double sampleRate, int apexPositionPercent, float (&intensities) __gc [], 
+			System::Collections::Hashtable^ elementCounts, Engine::TheoreticalProfile::MolecularFormula &formula) ; 
+		static void SetPeaks(Engine::PeakProcessing::PeakData &pk_data, array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks)) ; 
+        static void SavitzkyGolaySmooth(short num_left, short num_right, short order, array<float> ^ (&mzs), array<float> ^ (&intensities));
+        static int ZeroFillUnevenData(array<float> ^ (&mzs), array<float> ^ (&intensities), int maxPtsToAdd);
+        static void Apodize(double minX, double maxX, double sampleRate, int apexPositionPercent, array<float> ^ (&intensities),
 			DeconToolsV2::Readers::ApodizationType type) ; 
-		static void UnApodize(float (&intensities) __gc[], DeconToolsV2::Readers::ApodizationType type) ; 
-		static void FourierTransform(float (&intensities) __gc []) ; 
-		static void InverseFourierTransform(float (&intensities) __gc []) ; 
+        static void UnApodize(array<float> ^ (&intensities), DeconToolsV2::Readers::ApodizationType type);
+        static void FourierTransform(array<float> ^ (&intensities));
+        static void InverseFourierTransform(array<float> ^ (&intensities));
 	} ; 
 }

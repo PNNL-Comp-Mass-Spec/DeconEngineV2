@@ -129,7 +129,7 @@ namespace Engine
 						GetSummedSpectra(mzs, intensities, scan_num, scan_range, minMZ, maxMZ,mzBin) ; 
 					}
 				}
-				catch (System::NullReferenceException *err)
+				catch (System::NullReferenceException ^err)
 				{
 					mzs->clear() ; 
 					intensities->clear() ; 	
@@ -173,7 +173,7 @@ namespace Engine
 						GetSummedSpectra(mzs, intensities, scan, scan_range, min_mz, max_mz, mzBin) ; 
 					}
 				}
-				catch (System::NullReferenceException *err)
+				catch (System::NullReferenceException ^err)
 				{
 					mzs->clear() ; 
 					intensities->clear() ; 	
@@ -208,7 +208,7 @@ namespace Engine
 					mz+=mz_bin ; 
 				}
 			}
-			catch (System::NullReferenceException *err)
+			catch (System::NullReferenceException ^err)
 			{	
 				mzs->clear() ; 
 				intensities->clear() ; 
@@ -318,7 +318,7 @@ namespace Engine
 				scan_intensities.clear() ; 
 				interpolatedIntensities.clear() ; 	
 			}
-			catch (System::NullReferenceException *err)
+			catch (System::NullReferenceException ^err)
 			{					
 				mzs->clear() ; 
 				intensities->clear() ; 

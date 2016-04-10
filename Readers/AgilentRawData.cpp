@@ -174,12 +174,12 @@ namespace Engine
 				if (mobj_chrom_data != NULL)
 					mobj_chrom_data->Release() ; 
 			}
-			catch (System::Runtime::InteropServices::SEHException *err)
+			catch (System::Runtime::InteropServices::SEHException ^err)
 			{
-				if (err != NULL)
+				if (err != nullptr)
 					std::cerr<<"Close error with Agilent"<<std::endl ; 
 			}
-			catch (System::NullReferenceException *err)
+			catch (System::NullReferenceException ^err)
 			{
 				std::cerr<<"Here"<<std::endl ; 
 			}

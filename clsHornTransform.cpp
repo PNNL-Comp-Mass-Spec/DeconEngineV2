@@ -25,8 +25,8 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}
 		}
 
@@ -47,7 +47,7 @@ namespace DeconToolsV2
 
 		}
 
-		void clsHornTransform::SetIsotopeFitOptions(System::String *str_averagine, System::String *str_tag, bool thrash_or_not, 
+		void clsHornTransform::SetIsotopeFitOptions(System::String ^str_averagine, System::String ^str_tag, bool thrash_or_not, 
 			bool complete_fit)
 		{
 			char averagine_formula[512] ;
@@ -56,7 +56,7 @@ namespace DeconToolsV2
 			tag_formula[0] = '\0' ; 
 
 			DeconEngine::Utils::GetStr(str_averagine, averagine_formula) ; 
-			if (str_tag != NULL)
+			if (str_tag != nullptr)
 			{
 				DeconEngine::Utils::GetStr(str_tag, tag_formula) ; 
 			}
@@ -64,8 +64,8 @@ namespace DeconToolsV2
 			mobj_transform->SetIsotopeFitOptions(averagine_formula, tag_formula, thrash_or_not, complete_fit) ; 
 		}
 
-		void clsHornTransform::PerformTransform(float background_intensity, float min_peptide_intensity, float (&mzs) __gc [], float (&intensities) __gc [], 
-			DeconToolsV2::Peaks::clsPeak* (&peaks) __gc [], DeconToolsV2::HornTransform::clsHornTransformResults* (&transformResults) __gc [])
+        void clsHornTransform::PerformTransform(float background_intensity, float min_peptide_intensity, array<float> ^ (&mzs), array<float> ^ (&intensities),
+			array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks), array<DeconToolsV2::HornTransform::clsHornTransformResults^>^ (&transformResults))
 		{
 			mint_percent_done = 0 ;
 			std::vector<double> vectMzs ;
@@ -88,10 +88,10 @@ namespace DeconToolsV2
 			peakData.mptr_vect_mzs = &vectMzs ; 
 			peakData.mptr_vect_intensities = &vectIntensities ; 
 
-			if (mobj_transform_parameters->get_UseMZRange())
+			if (mobj_transform_parameters->UseMZRange)
 			{
-				minMZ = mobj_transform_parameters->get_MinMZ() ; 
-				maxMZ = mobj_transform_parameters->get_MaxMZ() ; 
+				minMZ = mobj_transform_parameters->MinMZ ; 
+				maxMZ = mobj_transform_parameters->MaxMZ ; 
 			}
 
 			//loads 'currentPeak' with the most intense peak within minMZ and maxMZ
@@ -102,7 +102,7 @@ namespace DeconToolsV2
 			std::vector<Engine::HornTransform::IsotopeFitRecord> vectTransformRecord ; 
 
 			int numTotalPeaks = peakData.GetNumPeaks() ; 
-			mstr_status_mesg = S"Performing Horn Transform on peaks" ; 
+			mstr_status_mesg = "Performing Horn Transform on peaks" ; 
 			//mobj_transform->mbln_debug = true ;
 			while(found)
 			{
@@ -110,7 +110,7 @@ namespace DeconToolsV2
 				mint_percent_done = (100* (numTotalPeaks-numPeaksLeft))/ numTotalPeaks ; 
 				if (mint_percent_done % 5 == 0)
 				{
-					mstr_status_mesg = System::String::Concat(S"Done with ", System::Convert::ToString(numTotalPeaks-numPeaksLeft), S" of ", System::Convert::ToString(numTotalPeaks), S" peaks.") ; 
+					mstr_status_mesg = System::String::Concat("Done with ", System::Convert::ToString(numTotalPeaks-numPeaksLeft), " of ", System::Convert::ToString(numTotalPeaks), " peaks.") ; 
 				}
 				if (currentPeak.mdbl_intensity < min_peptide_intensity)
 					break ; 
@@ -119,10 +119,10 @@ namespace DeconToolsV2
 				
 				//--------------------- Transform performed ------------------------------
 				found_transform = mobj_transform->FindTransform(peakData, currentPeak, transformRecord, background_intensity) ; 
-				if (found_transform && transformRecord.mshort_cs <= mobj_transform_parameters->get_MaxCharge())
+				if (found_transform && transformRecord.mshort_cs <= mobj_transform_parameters->MaxCharge)
 				{
 
-					if (mobj_transform_parameters->get_IsActualMonoMZUsed())
+					if (mobj_transform_parameters->IsActualMonoMZUsed)
 					{
 						//retrieve experimental monoisotopic peak
 						int monoPeakIndex = transformRecord.marr_isotope_peak_indices[0];
@@ -153,13 +153,13 @@ namespace DeconToolsV2
 
 			// Done with the transform. Lets copy them all to the given memory structure.
 			int numTransformed = (int) vectTransformRecord.size() ; 
-			//mstr_status_mesg = System::String::Concat(S"Done with Mass Transform. Found ", System::Convert::ToString(numTransformed), S" features") ; 
+			//mstr_status_mesg = System::String::Concat("Done with Mass Transform. Found ", System::Convert::ToString(numTransformed), S" features") ; 
 			//Console::WriteLine(mstr_status_mesg) ; 
 
-			transformResults = new clsHornTransformResults* __gc [numTransformed] ; 
+			transformResults = gcnew array<clsHornTransformResults^>(numTransformed) ; 
 			for (int transformNum = 0 ; transformNum < numTransformed ; transformNum++)
 			{
-				transformResults[transformNum] = new clsHornTransformResults() ; 
+				transformResults[transformNum] = gcnew clsHornTransformResults() ; 
 				transformResults[transformNum]->Set(vectTransformRecord[transformNum]) ; 
 			}
 			mint_percent_done = 100 ; 

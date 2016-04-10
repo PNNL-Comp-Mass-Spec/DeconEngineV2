@@ -20,35 +20,35 @@ namespace DeconToolsV2
 	namespace HornTransform
 	{
 
-		public __gc class clsAveragine: public System::ICloneable
+		public ref class clsAveragine: public System::ICloneable
 		{
 			Engine::TheoreticalProfile::Averagine *mobjAveragine ; 
-			clsElementIsotopes *mobjElementIsotopes ; 
+			clsElementIsotopes ^mobjElementIsotopes ; 
 		public:
 			clsAveragine(void);
 			~clsAveragine(void);
 
-			virtual Object* Clone()
+			virtual Object^ Clone()
 			{
 				return NULL ; 
 			}
 
-			__property double get_MonoMass()
+			double MonoMass()
 			{
 				return 0 ; 
 			}
 
-			__property double get_AverageMass()
+			double AverageMass()
 			{
 				return 0 ; 
 			}
 	
-			__property clsElementIsotopes* get_ElementIsotopeComposition()
+			clsElementIsotopes^ ElementIsotopeComposition()
 			{
 				return mobjElementIsotopes ; 
 			}
 
-			__property void set_ElementIsotopeComposition(clsElementIsotopes *atomic_info)
+			void ElementIsotopeComposition(clsElementIsotopes ^atomic_info)
 			{
 				if (atomic_info != mobjElementIsotopes)
 				{
@@ -57,8 +57,8 @@ namespace DeconToolsV2
 				mobjAveragine->SetElementalIsotopeComposition(*mobjElementIsotopes->GetElementalIsotopeComposition()) ; 
 			}
 
-			System::String*  GenerateAveragineFormula(double averageMass, System::String *averagineFormula, 
-				System::String *tagFormula) ; 
+			System::String^  GenerateAveragineFormula(double averageMass, System::String ^averagineFormula, 
+				System::String ^tagFormula) ; 
 		};
 	}
 }

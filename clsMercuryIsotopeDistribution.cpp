@@ -17,11 +17,11 @@ namespace DeconToolsV2
 	clsMercuryIsotopeDistribution::clsMercuryIsotopeDistribution()
 	{
 		mMercuryIsotopeDistribution = new Engine::TheoreticalProfile::MercuryIsotopeDistribution();
-		set_MercurySize(8192);
-		set_ChargeCarrierMass(1.007824659); 
-		set_ApodizationType(ApodizationType::Gaussian);
-		set_Resolution(100000);
-		set_ChargeState(1);
+		MercurySize(8192);
+		ChargeCarrierMass(1.007824659); 
+		ApodizationType(ApodizationType::Gaussian);
+		Resolution(100000);
+		ChargeState(1);
 	}
 
 	clsMercuryIsotopeDistribution::~clsMercuryIsotopeDistribution()
@@ -34,7 +34,7 @@ namespace DeconToolsV2
 	}
 
 
-	System::Drawing::PointF clsMercuryIsotopeDistribution::CalculateDistribution(System::Collections::Hashtable* elementCounts)[]
+	array<System::Drawing::PointF^>^ clsMercuryIsotopeDistribution::CalculateDistribution(System::Collections::Hashtable^ elementCounts)
 	{
 		std::vector<double> vect_x;
 		std::vector<double> vect_y;
@@ -42,7 +42,7 @@ namespace DeconToolsV2
 		std::vector<double> vect_isotope_x;
 		std::vector<double> vect_isotope_y;
 
-		System::Drawing::PointF points __gc [];
+		array<System::Drawing::PointF^>^ points;
 
 		Engine::TheoreticalProfile::MolecularFormula formula ; 
 		DeconEngine::Utils::ConvertElementTableToFormula(mMercuryIsotopeDistribution->mobj_elemental_isotope_composition, elementCounts, formula);
@@ -50,7 +50,7 @@ namespace DeconToolsV2
 		mMercuryIsotopeDistribution->CalculateDistribution(mChargeState, mResolution, formula, vect_x, vect_y, 0, vect_isotope_x, vect_isotope_y, false);
 
 		int num_pts = (int) vect_x.size();
-		points = new System::Drawing::PointF __gc [num_pts] ;
+		points = gcnew array<System::Drawing::PointF^>(num_pts);
 
 		for (int i = 0 ; i < num_pts ; i++)
 		{
@@ -60,7 +60,7 @@ namespace DeconToolsV2
 		return points;
 	};
 
-	void clsMercuryIsotopeDistribution::CalculateMasses(System::Collections::Hashtable* elementCounts) 
+	void clsMercuryIsotopeDistribution::CalculateMasses(System::Collections::Hashtable^ elementCounts) 
 	{		
 		Engine::TheoreticalProfile::MolecularFormula formula ; 
 		DeconEngine::Utils::ConvertElementTableToFormula(mMercuryIsotopeDistribution->mobj_elemental_isotope_composition, elementCounts, formula);

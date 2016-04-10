@@ -20,8 +20,8 @@ namespace DeconToolsV2
 		clsPeakProcessor::clsPeakProcessor(void)
 		{
 			mobj_peak_processor = new Engine::PeakProcessing::PeakProcessor () ; 
-			mobj_parameters = new clsPeakProcessorParameters() ; 
-			mobj_peak_processor->SetOptions(mobj_parameters->get_SignalToNoiseThreshold(), 0, false, (Engine::PeakProcessing::PEAK_FIT_TYPE) mobj_parameters->get_PeakFitType()) ; 
+			mobj_parameters = gcnew clsPeakProcessorParameters() ; 
+			mobj_peak_processor->SetOptions(mobj_parameters->SignalToNoiseThreshold, 0, false, (Engine::PeakProcessing::PEAK_FIT_TYPE) mobj_parameters->PeakFitType) ; 
 			menmProfileType = PROFILE ; 
 		}
 
@@ -34,15 +34,15 @@ namespace DeconToolsV2
 			}
 		}
 
-		double clsPeakProcessor::GetBackgroundIntensity(float (&intensities) __gc [])
+        double clsPeakProcessor::GetBackgroundIntensity(array<float> ^ (&intensities))
 		{
 			double thres = DeconEngine::Utils::GetAverage(intensities, FLT_MAX) ; 
 			thres = DeconEngine::Utils::GetAverage(intensities, (float)(5*thres)) ;
 			return thres ; 
 		}
 
-		void clsPeakProcessor::DiscoverPeaks(float (&mzs) __gc [], float (&intensities) __gc [], 
-			DeconToolsV2::Peaks::clsPeak* (&peaks) __gc [], float start_mz, float stop_mz) 
+        void clsPeakProcessor::DiscoverPeaks(array<float> ^ (&mzs), array<float> ^ (&intensities),
+			array<DeconToolsV2::Peaks::clsPeak^>^ (&peaks), float start_mz, float stop_mz) 
 		{
 			std::vector<double> vectMzs ;
 			std::vector<double> vectIntensities ;
@@ -54,14 +54,14 @@ namespace DeconToolsV2
 			}
 
 			double backgroundIntensity = GetBackgroundIntensity(intensities) ; 
-			mobj_peak_processor->SetPeakIntensityThreshold(backgroundIntensity*mobj_parameters->get_PeakBackgroundRatio()) ; 
+			mobj_peak_processor->SetPeakIntensityThreshold(backgroundIntensity*mobj_parameters->PeakBackgroundRatio) ; 
 
 			int numPeaks = this->mobj_peak_processor->DiscoverPeaks(&vectMzs, &vectIntensities, start_mz, stop_mz) ; 
 
-			peaks = new clsPeak* __gc [numPeaks] ; 
+			peaks = gcnew array<clsPeak^>(numPeaks); 
 			for (int pkNum = 0 ; pkNum < numPeaks ; pkNum++)
 			{
-				peaks[pkNum] = new clsPeak() ; 
+				peaks[pkNum] = gcnew clsPeak() ; 
 				Engine::PeakProcessing::Peak pk ; 
 				this->mobj_peak_processor->mobj_peak_data->GetPeak(pkNum, pk) ; 
 				peaks[pkNum]->Set(pk) ; 
@@ -72,11 +72,11 @@ namespace DeconToolsV2
 
 		}
 
-		void clsPeakProcessor::SetOptions(clsPeakProcessorParameters *parameters)
+		void clsPeakProcessor::SetOptions(clsPeakProcessorParameters ^parameters)
 		{
 			mobj_parameters = parameters ; 
 			// the minimum intensity is not set till the actual data is available in DiscoverPeaks
-			mobj_peak_processor->SetOptions(mobj_parameters->get_SignalToNoiseThreshold(), 0, mobj_parameters->get_ThresholdedData(), (Engine::PeakProcessing::PEAK_FIT_TYPE)mobj_parameters->get_PeakFitType()) ; 
+			mobj_peak_processor->SetOptions(mobj_parameters->SignalToNoiseThreshold, 0, mobj_parameters->ThresholdedData, (Engine::PeakProcessing::PEAK_FIT_TYPE)mobj_parameters->PeakFitType) ; 
 		}
 	}
 }

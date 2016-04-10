@@ -24,7 +24,7 @@ namespace DeconToolsV2
 		clsRawData::clsRawData(void)
 		{
 			mobj_raw_data = NULL ; 
-			mobj_preprocess_options = new clsRawDataPreprocessOptions() ; 
+			mobj_preprocess_options = gcnew clsRawDataPreprocessOptions() ; 
 		}
 
 		clsRawData::~clsRawData(void)
@@ -33,7 +33,7 @@ namespace DeconToolsV2
 				delete mobj_raw_data ; 
 		}
 
-		clsRawData::clsRawData(System::String *file_name, DeconToolsV2::Readers::FileType file_type)
+		clsRawData::clsRawData(System::String ^file_name, DeconToolsV2::Readers::FileType file_type)
 		{
 			LoadFile(file_name, file_type) ; 
 		}
@@ -45,9 +45,9 @@ namespace DeconToolsV2
 			return mobj_raw_data->GetFirstScanNum() ; 
 		}
 
-		void clsRawData::SetFFTCalibrationValues(CalibrationSettings *calSettings)
+		void clsRawData::SetFFTCalibrationValues(CalibrationSettings ^calSettings)
 		{
-			Engine::Calibrations::CCalibrator *calib = new Engine::Calibrations::CCalibrator(A_OVER_F_PLUS_B);
+			Engine::Calibrations::CCalibrator *calib = new Engine::Calibrations::CCalibrator(Engine::Calibrations::CalibrationType::A_OVER_F_PLUS_B);
 			calib->SetSize(calSettings->TD);
 			calib->SetLowMassFrequency(calSettings->FRLow);
 			calib->SetSampleRate(calSettings->SW_h);
@@ -69,33 +69,33 @@ namespace DeconToolsV2
 			try
 			{
 				mobj_raw_data = Engine::Readers::ReaderFactory::GetRawData((Engine::Readers::FileType)file_type) ; 
-				if (file_type == ICR2LSRAWDATA && mobj_preprocess_options != NULL && 
-					mobj_preprocess_options->get_ApodizationType() != NOAPODIZATION)
+				if (file_type == ICR2LSRAWDATA && mobj_preprocess_options != nullptr && 
+					mobj_preprocess_options->ApodizationType != ApodizationType::NOAPODIZATION)
 				{
 					Engine::Readers::Icr2lsRawData *icr_raw_data = (Engine::Readers::Icr2lsRawData *)mobj_raw_data ; 
-					icr_raw_data->SetApodizationZeroFillOptions((Engine::Utilities::ApodizationType)mobj_preprocess_options->get_ApodizationType(),
-						mobj_preprocess_options->get_ApodizationMinX(), mobj_preprocess_options->get_ApodizationMaxX(), 
-						mobj_preprocess_options->get_ApodizationPercent(), mobj_preprocess_options->get_NumZeroFills()) ; 
+					icr_raw_data->SetApodizationZeroFillOptions((Engine::Utilities::ApodizationType)mobj_preprocess_options->ApodizationType,
+						mobj_preprocess_options->ApodizationMinX, mobj_preprocess_options->ApodizationMaxX, 
+						mobj_preprocess_options->ApodizationPercent, mobj_preprocess_options->NumZeroFills) ; 
 				}
 				mobj_raw_data->Load(file_name) ; 
-				if (file_type == ICR2LSRAWDATA && mobj_preprocess_options != NULL && 
-					mobj_preprocess_options->get_ApplyCalibration())
+				if (file_type == ICR2LSRAWDATA && mobj_preprocess_options != nullptr && 
+					mobj_preprocess_options->ApplyCalibration())
 				{
 					Engine::Readers::Icr2lsRawData *icr_raw_data = (Engine::Readers::Icr2lsRawData *)mobj_raw_data ; 
-					icr_raw_data->OverrideDefaultCalibrator((Engine::Readers::CalibrationType)mobj_preprocess_options->get_CalibrationType(), 
-						mobj_preprocess_options->get_A(), mobj_preprocess_options->get_B(), mobj_preprocess_options->get_C()) ; 
+					icr_raw_data->OverrideDefaultCalibrator((Engine::Readers::CalibrationType)mobj_preprocess_options->CalibrationType, 
+						mobj_preprocess_options->A, mobj_preprocess_options->B, mobj_preprocess_options->C) ; 
 				}
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}
 
 			return ; 
 		}
 
-		void clsRawData::LoadFile(char file_name __gc [], DeconToolsV2::Readers::FileType file_type) 
+		void clsRawData::LoadFile(array<char>^ file_name, DeconToolsV2::Readers::FileType file_type) 
 		{
 			char *file_name_ch = new char[file_name->Length+1] ; 
 			for (int i = 0 ; i < file_name->Length ; i++)
@@ -104,7 +104,7 @@ namespace DeconToolsV2
 			LoadFile(file_name_ch, file_type) ; 
 		}
 
-		void clsRawData::LoadFile(System::String *file_name, DeconToolsV2::Readers::FileType file_type)
+		void clsRawData::LoadFile(System::String ^file_name, DeconToolsV2::Readers::FileType file_type)
 		{
 			char file_name_ch[256] ; 
 			DeconEngine::Utils::GetStr(file_name, file_name_ch) ; 
@@ -115,7 +115,7 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"Cannot close file because no file has been opened.") ; 
+				throw gcnew System::ApplicationException("Cannot close file because no file has been opened.") ; 
 			}
 			mobj_raw_data->Close() ; 
 		}
@@ -124,7 +124,7 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"Cannot get number of scans because no file has been opened") ; 
+				throw gcnew System::ApplicationException("Cannot get number of scans because no file has been opened") ; 
 			}
 			return mobj_raw_data->GetNumScans() ; 
 		}
@@ -133,7 +133,7 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL)
 			{
-				throw new System::ApplicationException(S"Cannot get MS level because no file has been opened") ; 
+				throw gcnew System::ApplicationException("Cannot get MS level because no file has been opened") ; 
 			}
 			return mobj_raw_data->GetMSLevel(scan_num) ; 
 		}
@@ -142,7 +142,7 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"Cannot get scan time because no file has been opened") ; 
+				throw gcnew System::ApplicationException("Cannot get scan time because no file has been opened") ; 
 			}
 			return mobj_raw_data->GetScanTime(scan_num) ; 
 		}
@@ -150,7 +150,7 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 			return mobj_raw_data->GetScanSize() ; 
 		}
@@ -159,16 +159,16 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 			return mobj_raw_data->GetSpectrumType(scan_num) ; 
 		}
 
-		void clsRawData::GetTicFromFile(float  (&intensities) __gc [], float (&scan_times) __gc [], bool base_peak_tic)
+        void clsRawData::GetTicFromFile(array<float> ^ (&intensities), array<float> ^ (&scan_times), bool base_peak_tic)
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 
 			std::vector<double> vect_intensities ; 
@@ -177,8 +177,8 @@ namespace DeconToolsV2
 			mobj_raw_data->GetTicFromFile(&vect_intensities, &vect_scan_times, base_peak_tic) ; 
 
 			int num_pts = (int) vect_intensities.size() ; 
-			intensities = new float __gc [num_pts] ;
-			scan_times = new float __gc [num_pts] ;
+            intensities = gcnew array<float>(num_pts);
+            scan_times = gcnew array<float>(num_pts);
 
 			for (int i = 0 ; i < num_pts ; i++)
 			{
@@ -192,17 +192,17 @@ namespace DeconToolsV2
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 			return (mobj_raw_data->GetTICForScan(scan_num));
 		}
 
 
-		void clsRawData::GetSummedSpectra(int start_scan, int stop_scan, double min_mz, double max_mz, double (&mzs) __gc[], double (&intensities) __gc[])
+        void clsRawData::GetSummedSpectra(int start_scan, int stop_scan, double min_mz, double max_mz, array<double> ^ (&mzs), array<double> ^ (&intensities))
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 
 			std::vector<double> vect_mzs ;
@@ -211,8 +211,8 @@ namespace DeconToolsV2
 			{
 				mobj_raw_data->GetSummedSpectra(&vect_mzs, &vect_intensities, start_scan, stop_scan, min_mz, max_mz) ; 
 				int num_pts = (int) vect_intensities.size() ; 
-				intensities = new double __gc [num_pts] ;
-				mzs = new double __gc [num_pts] ;
+                intensities = gcnew array<double>(num_pts);
+                mzs = gcnew array<double>(num_pts);
 
 				for (int i = 0 ; i < num_pts ; i++)
 				{
@@ -224,16 +224,16 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}			
 		}
 
-		void clsRawData::GetSummedSpectra(int current_scan , int scan_range, double (&mzs) __gc[], double (&intensities) __gc[])
+        void clsRawData::GetSummedSpectra(int current_scan, int scan_range, array<double> ^ (&mzs), array<double> ^ (&intensities))
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 			
 			std::vector<double> vect_mzs ;
@@ -242,8 +242,8 @@ namespace DeconToolsV2
 			{
 				mobj_raw_data->GetSummedSpectra(&vect_mzs, &vect_intensities, current_scan, scan_range) ; 
 				int num_pts = (int) vect_intensities.size() ; 
-				intensities = new double __gc [num_pts] ;
-				mzs = new double __gc [num_pts] ;
+                intensities = gcnew array<double>(num_pts);
+                mzs = gcnew array<double>(num_pts);
 
 				for (int i = 0 ; i < num_pts ; i++)
 				{
@@ -255,16 +255,16 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}			
 		}
 
-		void clsRawData::GetSpectrum(int scan_num, double  (&mzs) __gc [], double (&intensities) __gc [])
+        void clsRawData::GetSpectrum(int scan_num, array<double> ^ (&mzs), array<double> ^ (&intensities))
 		{
 			if (mobj_raw_data == NULL) 
 			{
-				throw new System::ApplicationException(S"No file has been opened") ; 
+				throw gcnew System::ApplicationException("No file has been opened") ; 
 			}
 			std::vector<double> vect_mzs ;
 			std::vector<double> vect_intensities; 
@@ -272,8 +272,8 @@ namespace DeconToolsV2
 			{
 				mobj_raw_data->GetRawData(&vect_mzs, &vect_intensities, scan_num) ; 
 				int num_pts = (int) vect_intensities.size() ; 
-				intensities = new double __gc [num_pts] ;
-				mzs = new double __gc [num_pts] ;
+                intensities = gcnew array<double>(num_pts);
+                mzs = gcnew array<double>(num_pts);
 
 				for (int i = 0 ; i < num_pts ; i++)
 				{
@@ -283,8 +283,8 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}
 		}
 		int clsRawData::GetParentScan(int scan_num)
@@ -295,7 +295,7 @@ namespace DeconToolsV2
 			return mobj_raw_data->GetParentScan(scan_num);
 		}
 		
-		void clsRawData::GetMzsInRange(float (&in_mzs) __gc [], float (&in_intensities) __gc [], float (&out_mzs) __gc [], float (&out_intensities) __gc [], float central_value, float range)
+        void clsRawData::GetMzsInRange(array<float> ^ (&in_mzs), array<float> ^ (&in_intensities), array<float> ^ (&out_mzs), array<float> ^ (&out_intensities), float central_value, float range)
 		{
 			int index = 0;
 			//get count first 
@@ -306,8 +306,8 @@ namespace DeconToolsV2
 					 index++;
 				}
 			}			
-			out_intensities = new float __gc[index];
-			out_mzs  = new float __gc[index];
+			out_intensities = gcnew array<float>(index);
+			out_mzs = gcnew array<float>(index);
 			index = 0;
 			for (int i = 0; i < in_mzs->Length; i++)
 			{
@@ -320,33 +320,33 @@ namespace DeconToolsV2
 			}
 		}
 
-		System::String* clsRawData::GetScanDescription(int scan_num)
+		System::String^ clsRawData::GetScanDescription(int scan_num)
 		{
 			if (mobj_raw_data == NULL)
-				return S"" ;
+				return "" ;
 			char description[512] ; 
 			mobj_raw_data->GetScanDescription(scan_num, description) ; 
-			System::String *descriptionStr = new System::String("") ; 
+			System::String ^descriptionStr = gcnew System::String("") ; 
 			DeconEngine::Utils::GetStr(description, &descriptionStr) ; 
 			return descriptionStr ; 
 		}
 
 		double clsRawData::GetFTICRSamplingRate()
 		{
-			if (get_FileType() != FileType::ICR2LSRAWDATA)
-				throw new System::Exception("FileType is not FTICR or Transient information is not available") ; 
+			if (FileType() != FileType::ICR2LSRAWDATA)
+				throw gcnew System::Exception("FileType is not FTICR or Transient information is not available") ; 
 			if (mobj_raw_data == NULL) 
-				throw new System::Exception("RawData not instantiated") ; 
+				throw gcnew System::Exception("RawData not instantiated") ; 
 
 			Engine::Readers::Icr2lsRawData *icrRawData = (Engine::Readers::Icr2lsRawData *) mobj_raw_data ; 
 			return icrRawData->GetSampleRate() ; 
 		}
-		void clsRawData::GetFTICRTransient(float (&intensities) __gc [])
+        void clsRawData::GetFTICRTransient(array<float> ^ (&intensities))
 		{
-			if (get_FileType() != FileType::ICR2LSRAWDATA)
-				throw new System::Exception("FileType is not FTICR or Transient information is not available") ; 
+			if (FileType() != FileType::ICR2LSRAWDATA)
+				throw gcnew System::Exception("FileType is not FTICR or Transient information is not available") ; 
 			if (mobj_raw_data == NULL) 
-				throw new System::Exception("RawData not instantiated") ; 
+				throw gcnew System::Exception("RawData not instantiated") ; 
 
 			try
 			{
@@ -355,7 +355,7 @@ namespace DeconToolsV2
 				icrRawData->GetFTICRTransient(vect_intensities) ; 
 
 				int num_pts = (int) vect_intensities.size() ; 
-				intensities = new float __gc [num_pts] ;
+				intensities = gcnew array<float>(num_pts) ;
 
 				for (int i = 0 ; i < num_pts ; i++)
 				{
@@ -364,8 +364,8 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = gcnew System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}
 		}
 
@@ -373,10 +373,10 @@ namespace DeconToolsV2
 	/*	double clsRawData::GetDriftTime(int scanNum)
 		{
 
-		if (get_FileType() != FileType::PNNL_UIMF)
-			throw new System::Exception("FileType is not UIMF") ; 
+		if (FileType() != FileType::PNNL_UIMF)
+			throw gcnew System::Exception("FileType is not UIMF") ; 
 		if (mobj_raw_data == NULL) 
-			throw new System::Exception("RawData not instantiated") ; 
+			throw gcnew System::Exception("RawData not instantiated") ; 
 
 		Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 		return uimfRawData->GetDriftTime(scanNum) ;
@@ -385,10 +385,10 @@ namespace DeconToolsV2
 
 	/*	double clsRawData::GetFramePressure(int frameNum)
 		{
-			if (get_FileType() != FileType::PNNL_UIMF)
-				throw new System::Exception("FileType is not UIMF") ; 
+			if (FileType() != FileType::PNNL_UIMF)
+				throw gcnew System::Exception("FileType is not UIMF") ; 
 			if (mobj_raw_data == NULL) 
-				throw new System::Exception("RawData not instantiated") ; 
+				throw gcnew System::Exception("RawData not instantiated") ; 
 
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 			return uimfRawData->GetFramePressure(frameNum) ; 
@@ -397,10 +397,10 @@ namespace DeconToolsV2
 
 		/*int clsRawData::GetNumOfFrames()
 		{
-			if (get_FileType() != FileType::PNNL_UIMF)
-				throw new System::Exception("FileType is not UIMF") ; 
+			if (FileType() != FileType::PNNL_UIMF)
+				throw gcnew System::Exception("FileType is not UIMF") ; 
 			if (mobj_raw_data == NULL) 
-				throw new System::Exception("RawData not instantiated") ; 
+				throw gcnew System::Exception("RawData not instantiated") ; 
 
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 			return uimfRawData->GetNumOfFrames();
@@ -410,10 +410,10 @@ namespace DeconToolsV2
 		/*void clsRawData::GetSummedFrameSpectra(double (&mzs) __gc[], double (&intensities) __gc[], 
 			int startFrame, int endFrame, double min_mz, double max_mz, int imsScanNum)
 		{
-			if (get_FileType() != FileType::PNNL_UIMF)
-				throw new System::Exception("FileType is not UIMF") ; 
+			if (FileType() != FileType::PNNL_UIMF)
+				throw gcnew System::Exception("FileType is not UIMF") ; 
 			if (mobj_raw_data == NULL) 
-				throw new System::Exception("RawData not instantiated") ; 
+				throw gcnew System::Exception("RawData not instantiated") ; 
 
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 			
@@ -439,8 +439,8 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = new System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}			
 
 
@@ -450,12 +450,12 @@ namespace DeconToolsV2
 			double (&intensities) __gc[], int start_frame, int end_frame, int ims_start_scan, 
 			int ims_end_scan, double min_mz, double max_mz, int numBins )
 		{
-			if (get_FileType() != FileType::PNNL_UIMF)
-				throw new System::Exception("FileType is not UIMF") ; 
+			if (FileType() != FileType::PNNL_UIMF)
+				throw gcnew System::Exception("FileType is not UIMF") ; 
 			if (mobj_raw_data == NULL) 
-				throw new System::Exception("RawData not instantiated") ; 
+				throw gcnew System::Exception("RawData not instantiated") ; 
 
-			System::String *data_type;
+			System::String ^data_type;
 
 			Engine::Readers::UIMFRawData *uimfRawData = (Engine::Readers::UIMFRawData *) mobj_raw_data ; 
 			UIMFLibrary::GlobalParameters *gp = uimfDataReader->GetGlobalParameters();
@@ -481,8 +481,8 @@ namespace DeconToolsV2
 			}
 			catch (char *mesg)
 			{
-				System::String *exception_msg = new System::String(mesg) ; 
-				throw new System::Exception(exception_msg) ; 
+				System::String ^exception_msg = new System::String(mesg) ; 
+				throw gcnew System::Exception(exception_msg) ; 
 			}			
 
 

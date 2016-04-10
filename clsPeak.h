@@ -16,7 +16,7 @@ namespace DeconToolsV2
 {
 	namespace Peaks
 	{
-		public __gc class clsPeak
+		public ref class clsPeak
 		{
 			public:
 			//! mz of the peak.

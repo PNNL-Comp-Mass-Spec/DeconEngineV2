@@ -16,7 +16,7 @@ using namespace System;
 
 namespace Engine
 {
-	public __gc class Isotope
+	public ref class Isotope
 	{
 		// TODO: Add your methods for this class here.
 	};
