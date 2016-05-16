@@ -1,10 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Engine.HornTransform;
 
 namespace DeconToolsV2.HornTransform
 {
+    /// <summary>
+    ///     class to store results of isotope fitting/horn transform.
+    /// </summary>
     public class clsHornTransformResults
     {
+        private const int MaxIsotopes = 16;
+
         /// <summary>
         ///     intensity of feature (as a double)
         /// </summary>
@@ -38,12 +45,12 @@ namespace DeconToolsV2.HornTransform
         /// <summary>
         ///     full width at half maximum of the peak.
         /// </summary>
-        public double FwHm;
+        public double FWHM;
 
         /// <summary>
-        ///     array of indices of peak tops
+        ///     list of indices of peak tops
         /// </summary>
-        public int[] IsotopePeakIndices;
+        public List<int> IsotopePeakIndices = new List<int>(MaxIsotopes);
 
         /// <summary>
         ///     intensity of monoisotopic peak observed.
@@ -78,7 +85,10 @@ namespace DeconToolsV2.HornTransform
         /// <summary>
         ///     number of isotope peaks
         /// </summary>
-        public int NumIsotopesObserved;
+        public int NumIsotopesObserved
+        {
+            get { return IsotopePeakIndices.Count; }
+        }
 
         /// <summary>
         ///     peak index of the peak.
@@ -97,8 +107,23 @@ namespace DeconToolsV2.HornTransform
 
         public clsHornTransformResults()
         {
+            Abundance = 0;
+            ChargeState = -1;
+            Mz = 0;
+            Fit = 1;
+            AverageMw = 0;
+            MonoMw = 0;
+            MostIntenseMw = 0;
+            FWHM = 0;
+            SignalToNoise = 0;
+            MonoIntensity = 0;
+            MonoPlus2Intensity = 0;
+            PeakIndex = -1;
+            NeedMultipleIsotopes = false;
         }
 
+#if !Disable_Obsolete
+        [Obsolete("Use clsHornTransformResults instead", false)]
         internal clsHornTransformResults(IsotopeFitRecord fitRecord)
         {
             PeakIndex = fitRecord.PeakIndex;
@@ -112,17 +137,37 @@ namespace DeconToolsV2.HornTransform
             AverageMw = fitRecord.AverageMw;
             MonoMw = fitRecord.MonoMw;
             MostIntenseMw = fitRecord.MostIntenseMw;
-            FwHm = fitRecord.FWHM;
+            FWHM = fitRecord.FWHM;
             SignalToNoise = fitRecord.SignalToNoise;
             MonoIntensity = fitRecord.MonoIntensity;
             MonoPlus2Intensity = fitRecord.MonoPlus2Intensity;
             DeltaMz = fitRecord.DeltaMz;
-            NumIsotopesObserved = fitRecord.NumIsotopesObserved;
-            IsotopePeakIndices = new int[NumIsotopesObserved];
-            for (var i = 0; i < NumIsotopesObserved; i++)
+            for (var i = 0; i < fitRecord.NumIsotopesObserved; i++)
             {
-                IsotopePeakIndices[i] = fitRecord.IsotopePeakIndices[i];
+                IsotopePeakIndices.Add(fitRecord.IsotopePeakIndices[i]);
             }
+        }
+#endif
+
+        public clsHornTransformResults(clsHornTransformResults a)
+        {
+            PeakIndex = a.PeakIndex;
+            ScanNum = a.ScanNum;
+            ChargeState = a.ChargeState;
+            //AbundanceInt = a.AbundanceInt;
+            Abundance = a.Abundance;
+            Mz = a.Mz;
+            Fit = a.Fit;
+            FitCountBasis = a.FitCountBasis;
+            AverageMw = a.AverageMw;
+            MonoMw = a.MonoMw;
+            MostIntenseMw = a.MostIntenseMw;
+            FWHM = a.FWHM;
+            SignalToNoise = a.SignalToNoise;
+            MonoIntensity = a.MonoIntensity;
+            MonoPlus2Intensity = a.MonoPlus2Intensity;
+            DeltaMz = a.DeltaMz;
+            IsotopePeakIndices = new List<int>(a.IsotopePeakIndices);
         }
 
         public virtual object Clone()
@@ -139,17 +184,12 @@ namespace DeconToolsV2.HornTransform
             result.AverageMw = AverageMw;
             result.MonoMw = MonoMw;
             result.MostIntenseMw = MostIntenseMw;
-            result.FwHm = FwHm;
+            result.FWHM = FWHM;
             result.SignalToNoise = SignalToNoise;
             result.MonoIntensity = MonoIntensity;
             result.MonoPlus2Intensity = MonoPlus2Intensity;
             result.DeltaMz = DeltaMz;
-            result.NumIsotopesObserved = NumIsotopesObserved;
-            result.IsotopePeakIndices = new int[NumIsotopesObserved];
-            for (var i = 0; i < NumIsotopesObserved; i++)
-            {
-                result.IsotopePeakIndices[i] = IsotopePeakIndices[i];
-            }
+            result.IsotopePeakIndices = new List<int>(IsotopePeakIndices);
             return result;
         }
 
@@ -285,8 +325,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use FwHm", false)]
         public double mdbl_fwhm
         {
-            get { return FwHm; }
-            set { FwHm = value; }
+            get { return FWHM; }
+            set { FWHM = value; }
         }
 
         /// <summary>
@@ -346,7 +386,7 @@ namespace DeconToolsV2.HornTransform
         public int mint_num_isotopes_observed
         {
             get { return NumIsotopesObserved; }
-            set { NumIsotopesObserved = value; }
+            set { /*NumIsotopesObserved = value;*/ }
         }
 
         /// <summary>
@@ -355,8 +395,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use IsotopePeakIndices", false)]
         public int[] marr_isotope_peak_indices
         {
-            get { return IsotopePeakIndices; }
-            set { IsotopePeakIndices = value; }
+            get { return IsotopePeakIndices.ToArray(); }
+            set { IsotopePeakIndices = value.ToList(); }
         }
 #endif
     }

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DeconToolsV2.HornTransform;
+using DeconToolsV2.Peaks;
 using DeconToolsV2.Readers;
 using Engine.HornTransform;
 using Engine.PeakProcessing;
@@ -177,7 +179,7 @@ namespace DeconToolsV2
             
             try
             {
-                List<Engine.HornTransform.IsotopeFitRecord> vect_transform_records = new List<IsotopeFitRecord>();
+                List<clsHornTransformResults> vect_transform_records = new List<clsHornTransformResults>();
                 // while the thresholded parameter is already set in the clsPeakProcessParameters, we would
                 // like to override that here if the data type is Finnigan because that data is threshold.
                 bool thresholded = false;
@@ -232,7 +234,7 @@ namespace DeconToolsV2
                 if (transform)
                 {
                     mass_transform = new Engine.HornTransform.MassTransform();
-                    mass_transform.ElementalIsotopeComposition = transform_parameters.ElementIsotopeComposition.AtomicInfo;
+                    mass_transform.ElementalIsotopeComposition = transform_parameters.ElementIsotopeComposition;
                     if (transform_parameters != null)
                     {
                         string averagine_formula = "";
@@ -552,9 +554,9 @@ namespace DeconToolsV2
                                 min_peptide_intensity = transform_parameters.AbsolutePeptideIntensity;
                         }
 
-                        Engine.PeakProcessing.Peak currentPeak = new Peak();
-                        Engine.PeakProcessing.Peak originalPeak = new Peak();
-                        Engine.HornTransform.IsotopeFitRecord transformRecord;
+                        clsPeak currentPeak = new clsPeak();
+                        clsPeak originalPeak = new clsPeak();
+                        clsHornTransformResults transformRecord;
 
                         peak_processor.PeakData.InitializeUnprocessedPeakData();
 
@@ -612,7 +614,7 @@ namespace DeconToolsV2
                                     {
                                         //retrieve experimental monoisotopic peak
                                         int monoPeakIndex = transformRecord.IsotopePeakIndices[0];
-                                        Engine.PeakProcessing.Peak monoPeak;
+                                        clsPeak monoPeak;
                                         peak_processor.PeakData.GetPeak(monoPeakIndex, out monoPeak);
 
                                         //set threshold at 20% less than the expected 'distance' to the next peak
@@ -869,7 +871,7 @@ namespace DeconToolsV2
                     mobj_transform_parameters.ThrashOrNot, mobj_transform_parameters.CompleteFit,
                     mobj_transform_parameters.CheckAllPatternsAgainstCharge1,
                     (enmIsotopeFitType) mobj_transform_parameters.IsotopeFitType,
-                    mobj_transform_parameters.ElementIsotopeComposition.AtomicInfo);
+                    mobj_transform_parameters.ElementIsotopeComposition);
 
                 string svm_file = mobj_dta_generation_parameters.SVMParamFile;
                 dta_processor.InitializeSVM(svm_file);

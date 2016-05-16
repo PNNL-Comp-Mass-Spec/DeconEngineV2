@@ -1,9 +1,10 @@
 using System;
+using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
 
 namespace Engine.HornTransform
 {
-    internal class AreaFit : IsotopeFit
+    internal class AreaFitScorer : IsotopicProfileFitScorer
     {
         /// <summary>
         ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
@@ -16,7 +17,7 @@ namespace Engine.HornTransform
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="pointsUsed">number of points used</param>
         /// <param name="debug">debug output flag</param>
-        public override double FitScore(PeakData peakData, short chargeState, Peak peak, double mzDelta,
+        public override double FitScore(PeakData peakData, short chargeState, clsPeak peak, double mzDelta,
             double minIntensityForScore, out int pointsUsed, bool debug = false)
         {
             pointsUsed = 0;

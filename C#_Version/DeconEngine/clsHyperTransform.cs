@@ -28,7 +28,7 @@ namespace DeconToolsV2
                 if (massDiffRound > 3)
                     continue;
                 double toleranceDiff = System.Math.Abs(massDiff - massDiffRound * 1.003);
-                if (toleranceDiff < System.Math.Max(0.2, result.FwHm * 5))
+                if (toleranceDiff < System.Math.Max(0.2, result.FWHM * 5))
                 {
                     // consider this peak for addition.
                     vectIndicesToConsider.Add(transformNum);

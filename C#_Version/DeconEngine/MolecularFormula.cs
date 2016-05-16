@@ -1,40 +1,21 @@
-#if !Disable_Obsolete
-using System;
+﻿using System;
 using System.Collections.Generic;
-using DeconToolsV2;
+using System.Text.RegularExpressions;
 using Engine.Utilities;
 
-namespace Engine.TheoreticalProfile
+namespace DeconToolsV2
 {
-    [Obsolete("Usages removed", true)]
-    internal class MolecularFormulaError : System.Exception
-    {
-        public string mstr_location;
-        public string mstr_message;
-
-        public MolecularFormulaError(string error_message, string location) : base(error_message + " " + location)
-        {
-            mstr_message = error_message;
-            mstr_location = location;
-        }
-    }
-
-    [Obsolete("Replaced with DeconToolsV2.AtomicCount", true)]
     public class AtomicCount
     {
         /// <summary>
         ///     index of this element in list of elements used.
         /// </summary>
-        public int Index;
+        public int Index { get; private set; }
 
         /// <summary>
         ///     Number of copies of the above element in compound. we have set this to be a double to allow for normalized values.
         /// </summary>
-        public double NumCopies;
-
-        public AtomicCount()
-        {
-        }
+        public double NumCopies { get; set; }
 
         public AtomicCount(int index, double numCopies)
         {
@@ -49,7 +30,6 @@ namespace Engine.TheoreticalProfile
         }
     }
 
-    [Obsolete("Replaced with DeconToolsV2.AtomicCount", true)]
     public class MolecularFormula
     {
         public double AverageMass;
@@ -117,13 +97,52 @@ namespace Engine.TheoreticalProfile
             Formula = molFormula;
             var formula = molFormula;
             TotalAtomCount = 0;
+            MonoisotopicMass = 0;
 
             ElementalComposition.Clear();
+
+            Regex validator = new Regex(@"^(\s*[A-Z][a-z]?\s*\d*\.?\d*)*\s*$", RegexOptions.CultureInvariant);
+            if (!validator.IsMatch(molFormula))
+            {
+                throw new Exception("Molecular formula specified was invalid. Format required is one or more " +
+                                    "groups similar to \"[atomic symbol][count]\", where atomic symbol is an " +
+                                    "uppercase letter that may be followed by a lowercase letter, and count " +
+                                    "is a number that consists of numeric digits and maybe one decimal point.");
+            }
+            Regex grouper = new Regex(@"([A-Z][a-z]?)\s*(\d*\.?\d*)", RegexOptions.CultureInvariant);
+            var groups = grouper.Matches(molFormula);
+            foreach (Match group in groups)
+            {
+                var match = group.Groups;
+                // match[0] returns the entire match, match[1] and match[2] will have the individual groups
+                var atomicSymbol = match[1].Value;
+                var countStr = match[2].Value;
+                double count = 1;
+                if (!string.IsNullOrWhiteSpace(countStr))
+                {
+                    count = Convert.ToDouble(countStr.Trim());
+                }
+                // now we should have a symbol and a count. Lets get the atomicity of the atom.
+                var elementIndex = atomicInformation.GetElementIndex(atomicSymbol);
+                if (elementIndex == -1)
+                {
+                    // theres an error. two decimals.
+                    var errorStr =
+                        "Molecular Formula specified was incorrect. Symbol in formula was not recognize from elements provided: ";
+                    errorStr += atomicSymbol;
+                    throw new Exception(errorStr);
+                }
+                ElementalComposition.Add(new AtomicCount(elementIndex, count));
+                TotalAtomCount += count;
+                MonoisotopicMass += atomicInformation.ElementalIsotopesList[elementIndex].Isotopes[0].Mass * count;
+                AverageMass += atomicInformation.ElementalIsotopesList[elementIndex].AverageMass * count;
+            }
+            return;
+#if !Disable_Obsolete
+            // Regular expressions simplify this code soo much.
             var formulaLength = formula.Length;
             var index = 0;
             //var numAtoms = atomicInformation.GetNumElements();
-            MonoisotopicMass = 0;
-
             while (index < formulaLength)
             {
                 while (index < formulaLength && (formula[index] == ' ' || formula[index] == '\t'))
@@ -138,7 +157,7 @@ namespace Engine.TheoreticalProfile
                 {
                     var errorStr = "Molecular Formula specified was incorrect at position: " + (stopIndex + 1) +
                                    ". Should have element symbol there";
-                    throw new System.Exception(errorStr);
+                    throw new Exception(errorStr);
                 }
 
                 while ((symbolChar >= 'A' && symbolChar <= 'Z') || (symbolChar >= 'a' && symbolChar <= 'z'))
@@ -174,7 +193,7 @@ namespace Engine.TheoreticalProfile
                             // theres an error. two decimals.
                             var errorStr = "Molecular Formula specified was incorrect at position: " +
                                            (stopIndex + 1) + ". Two decimal points present";
-                            throw new System.Exception(errorStr);
+                            throw new Exception(errorStr);
                         }
                         decimalFound = true;
                     }
@@ -189,7 +208,8 @@ namespace Engine.TheoreticalProfile
                 }
                 else
                 {
-                    count = Helpers.atof(formula.Substring(index));
+                    count = Convert.ToDouble(formula.Substring(startIndex, stopIndex - startIndex));
+                    //count = Helpers.atof(formula.Substring(index));
                 }
                 // now we should have a symbol and a count. Lets get the atomicity of the atom.
                 var elementIndex = atomicInformation.GetElementIndex(atomicSymbol);
@@ -199,15 +219,15 @@ namespace Engine.TheoreticalProfile
                     var errorStr =
                         "Molecular Formula specified was incorrect. Symbol in formula was not recognize from elements provided: ";
                     errorStr += atomicSymbol;
-                    throw new System.Exception(errorStr);
+                    throw new Exception(errorStr);
                 }
-                var currentAtom = new AtomicCount(elementIndex, count);
-                ElementalComposition.Add(currentAtom);
+                ElementalComposition.Add(new AtomicCount(elementIndex, count));
                 index = stopIndex;
                 TotalAtomCount += count;
                 MonoisotopicMass += atomicInformation.ElementalIsotopesList[elementIndex].Isotopes[0].Mass * count;
                 AverageMass += atomicInformation.ElementalIsotopesList[elementIndex].AverageMass * count;
             }
+#endif
         }
 
         public void AddAtomicCount(AtomicCount cnt, double monoMass, double avgMass)
@@ -231,4 +251,3 @@ namespace Engine.TheoreticalProfile
         }
     }
 }
-#endif

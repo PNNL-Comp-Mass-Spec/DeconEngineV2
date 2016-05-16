@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
 using Engine.TheoreticalProfile;
 
@@ -11,7 +12,7 @@ namespace DeconToolsV2
     public class clsIsotopeFit
     {
         private enmIsotopeFitType menmFitType;
-        private Engine.HornTransform.IsotopeFit mobj_fit;
+        private Engine.HornTransform.IsotopicProfileFitScorer mobj_fit;
 
         public void SetOptions(string averagine_mf, string tag_mf,
             double cc_mass, bool thrash_or_not, bool complete_fit)
@@ -36,17 +37,17 @@ namespace DeconToolsV2
             set
             {
                 menmFitType = value;
-                Engine.HornTransform.IsotopeFit new_fit;
+                Engine.HornTransform.IsotopicProfileFitScorer new_fit;
                 switch (menmFitType)
                 {
                     case enmIsotopeFitType.PEAK:
-                        new_fit = new Engine.HornTransform.PeakFit();
+                        new_fit = new Engine.HornTransform.PeakFitScorer();
                         break;
                     case enmIsotopeFitType.AREA:
-                        new_fit = new Engine.HornTransform.AreaFit();
+                        new_fit = new Engine.HornTransform.AreaFitScorer();
                         break;
                     case enmIsotopeFitType.CHISQ:
-                        new_fit = new Engine.HornTransform.ChiSqFit();
+                        new_fit = new Engine.HornTransform.ChiSqFitScorer();
                         break;
                     default:
                         return;
@@ -86,14 +87,14 @@ namespace DeconToolsV2
             vectIntensities = new List<double>(intensities.Select(x => (double) x));
 
             Engine.PeakProcessing.PeakData peakData = new PeakData();
-            Engine.PeakProcessing.Peak currentPeak;
+            clsPeak currentPeak;
 
-            DeconEngine.Utils.SetPeaks(ref peakData, ref peaks);
+            peakData.SetPeaks(peaks);
             peakData.MzList = vectMzs;
             peakData.IntensityList = vectIntensities;
             peakData.GetPeak(peak_index, out currentPeak);
 
-            Engine.TheoreticalProfile.MolecularFormula formula = new MolecularFormula();
+            MolecularFormula formula = new MolecularFormula();
             DeconEngine.Utils.ConvertElementTableToFormula(
                 ref mobj_fit.IsotopeDistribution.ElementalIsotopeComposition, elementCounts, out formula);
 

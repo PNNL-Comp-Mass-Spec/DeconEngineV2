@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="TestLoadIsotopesXml.cs" />
     <Compile Include="TestLoadSVMXml.cs" />
+    <Compile Include="TestMolecularFormula.cs" />
     <Compile Include="TestThermoFinnigan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

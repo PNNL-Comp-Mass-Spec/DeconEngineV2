@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
 using Engine.Utilities;
 
@@ -51,7 +52,7 @@ namespace Engine.ChargeDetermination
         /// <param name="pk">is the peak whose charge we want to detect.</param>
         /// <param name="peakData">is the PeakData object containing raw data, peaks, etc which are used in the process.</param>
         /// <returns>Returns the charge of the feature.</returns>
-        public static short GetChargeState(Peak pk, PeakData peakData, bool debug)
+        public static short GetChargeState(clsPeak pk, PeakData peakData, bool debug)
         {
             var minus = 0.1;
             var plus = 1.1; // right direction to look
@@ -175,7 +176,7 @@ namespace Engine.ChargeDetermination
                 {
                     var peakA = pk.Mz + 1.0 / tmp;
                     var found = true;
-                    Peak isoPeak;
+                    clsPeak isoPeak;
                     found = peakData.GetPeakFromAllOriginalIntensity(peakA - fwhm, peakA + fwhm, out isoPeak);
                     if (found)
                     {

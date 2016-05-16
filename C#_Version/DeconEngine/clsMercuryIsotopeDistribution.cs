@@ -117,7 +117,7 @@ namespace DeconToolsV2
             set
             {
                 mMercuryIsotopeDistribution.SetElementalIsotopeComposition(
-                    value.ElementalIsotopeComposition);
+                    value);
             }
         }
 

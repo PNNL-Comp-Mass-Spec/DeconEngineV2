@@ -1,7 +1,10 @@
+#if !Disable_Obsolete
 using System;
+using DeconToolsV2;
 
 namespace Engine.TheoreticalProfile
 {
+    [Obsolete("Use clsAveragine. The functionality of this class has been merged into it.", true)]
     internal class Averagine
     {
         private const string DefaultProteinAveragineFormula = "C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
@@ -10,7 +13,7 @@ namespace Engine.TheoreticalProfile
         private readonly MolecularFormula _averagineFormula = new MolecularFormula();
         private readonly MolecularFormula _tagFormula = new MolecularFormula();
 
-        private AtomicInformation _elementIsotopeAbundance = new AtomicInformation();
+        private clsElementIsotopes _elementIsotopeAbundance = new clsElementIsotopes();
         private int _hydrogenElementIndex;
         private double _tagMass;
 
@@ -92,7 +95,7 @@ namespace Engine.TheoreticalProfile
                 {
                     var elementAvgMass = _elementIsotopeAbundance.ElementalIsotopesList[elementCount.Index].AverageMass;
                     var elementMonoMass =
-                        _elementIsotopeAbundance.ElementalIsotopesList[elementCount.Index].IsotopeMasses[0];
+                        _elementIsotopeAbundance.ElementalIsotopesList[elementCount.Index].Isotopes[0].Mass;
                     averageMass += elementAvgMass * numAtoms;
                     monoMass += elementMonoMass * numAtoms;
                 }
@@ -112,7 +115,7 @@ namespace Engine.TheoreticalProfile
                     var numAtoms = (int) elementCount.NumCopies;
                     var elementAvgMass = _elementIsotopeAbundance.ElementalIsotopesList[elementCount.Index].AverageMass;
                     var elementMonoMass =
-                        _elementIsotopeAbundance.ElementalIsotopesList[elementCount.Index].IsotopeMasses[0];
+                        _elementIsotopeAbundance.ElementalIsotopesList[elementCount.Index].Isotopes[0].Mass;
                     averageMass += elementAvgMass * numAtoms;
                     monoMass += elementMonoMass * numAtoms;
                     totalAtomCount += numAtoms;
@@ -151,7 +154,7 @@ namespace Engine.TheoreticalProfile
             averageMass += numHydrogens *
                            _elementIsotopeAbundance.ElementalIsotopesList[_hydrogenElementIndex].AverageMass;
             monoMass += numHydrogens *
-                        _elementIsotopeAbundance.ElementalIsotopesList[_hydrogenElementIndex].IsotopeMasses[0];
+                        _elementIsotopeAbundance.ElementalIsotopesList[_hydrogenElementIndex].Isotopes[0].Mass;
             totalAtomCount += numHydrogens;
 
             if (numHydrogens > 0)
@@ -162,9 +165,7 @@ namespace Engine.TheoreticalProfile
                 }
                 else
                 {
-                    var hydrogenCount = new AtomicCount();
-                    hydrogenCount.Index = _hydrogenElementIndex;
-                    hydrogenCount.NumCopies = numHydrogens;
+                    var hydrogenCount = new AtomicCount(_hydrogenElementIndex, numHydrogens);
                     empiricalFormula.ElementalComposition.Add(hydrogenCount);
                 }
             }
@@ -174,9 +175,9 @@ namespace Engine.TheoreticalProfile
             return empiricalFormula;
         }
 
-        public void SetElementalIsotopeComposition(AtomicInformation elementIsotopes)
+        public void SetElementalIsotopeComposition(clsElementIsotopes elementIsotopes)
         {
-            _elementIsotopeAbundance = new AtomicInformation(elementIsotopes);
+            _elementIsotopeAbundance = elementIsotopes;
             _hydrogenElementIndex = _elementIsotopeAbundance.GetElementIndex("H");
             if (!_averagineFormula.IsAssigned())
             {
@@ -185,3 +186,4 @@ namespace Engine.TheoreticalProfile
         }
     }
 }
+#endif

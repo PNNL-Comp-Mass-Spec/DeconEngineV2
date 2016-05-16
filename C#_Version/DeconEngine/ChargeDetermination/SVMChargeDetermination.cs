@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using DeconToolsV2.Peaks;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace Engine.ChargeDetermination
@@ -149,7 +150,7 @@ namespace Engine.ChargeDetermination
             /**/
         }
 
-        public bool IdentifyIfChargeOne(List<double> mzs, List<double> intensities, PeakProcessing.Peak parentPeak,
+        public bool IdentifyIfChargeOne(List<double> mzs, List<double> intensities, clsPeak parentPeak,
             int parentScan)
         {
             int numPeaks = mzs.Count;
@@ -261,7 +262,7 @@ namespace Engine.ChargeDetermination
             /**/
         }
 
-        public void GetFeaturesForSpectra(List<double> mzs, List<double> intensities, PeakProcessing.Peak parentPeak,
+        public void GetFeaturesForSpectra(List<double> mzs, List<double> intensities, clsPeak parentPeak,
             int msNscan)
         {
             double xscore2;

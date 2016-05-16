@@ -1,19 +1,20 @@
+#if !Disable_Obsolete
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DeconToolsV2.Peaks;
-using DeconToolsV2.Readers;
+using DeconToolsV2;
 using Engine;
-using Engine.PeakProcessing;
 using Engine.TheoreticalProfile;
 using Engine.Utilities;
+using DeconToolsV2.Peaks;
+using Engine.PeakProcessing;
+using ApodizationType = DeconToolsV2.Readers.ApodizationType;
 
 namespace DeconEngine
 {
     public class Utils
     {
-#if !Disable_Obsolete
         [Obsolete("Not accessed within DeconTools solution except through tests", false)]
         public static double GetAverage(float[] intensities, float maxIntensity)
         {
@@ -35,9 +36,7 @@ namespace DeconEngine
             }
             return backgroundIntensity / numPtsUsed;
         }
-#endif
 
-#if !Disable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public static double GetAverage(List<double> intensities, float maxIntensity)
         {
@@ -59,9 +58,7 @@ namespace DeconEngine
             }
             return backgroundIntensity / numPtsUsed;
         }
-#endif
 
-#if !Disable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static double GetTIC(double min_mz, double max_mz, ref List<double> mzs, ref List<double> intensities,
             float minIntensity, ref double bpi, ref double bp_mz)
@@ -86,22 +83,18 @@ namespace DeconEngine
             }
             return sum;
         }
-#endif
 
-#if !Disable_Obsolete
         [Obsolete("Usage unknown, besides Decon2LS.UI - no path to usage exists within the DeconTools solution")]
         internal static void ConvertElementTableToFormula(
-            ref AtomicInformation elemental_isotope_composition,
-            Hashtable elementCounts, out MolecularFormula formula)
+            ref clsElementIsotopes elemental_isotope_composition,
+            Hashtable elementCounts, out DeconToolsV2.MolecularFormula formula)
         {
             var elements = elementCounts.Keys.GetEnumerator();
 
-            formula = new MolecularFormula();
-            AtomicCount atomic_count;
+            formula = new DeconToolsV2.MolecularFormula();
 
             while (elements.MoveNext())
             {
-                atomic_count = new AtomicCount();
                 // Get the next element symbol in the table
                 var element = (string) elements.Current;
                 // Put it in a character array
@@ -113,27 +106,25 @@ namespace DeconEngine
                 {
                     throw new ApplicationException(string.Concat("Unknown element ", element));
                 }
-                atomic_count.Index = index;
-                atomic_count.NumCopies = count;
+                var atomic_count = new DeconToolsV2.AtomicCount(index, count);
                 var mono_mass =
-                    elemental_isotope_composition.ElementalIsotopesList[index].IsotopeMasses[0] * count;
+                    elemental_isotope_composition.ElementalIsotopesList[index].Isotopes[0].Mass * count;
                 var avg_mass = elemental_isotope_composition.ElementalIsotopesList[index].AverageMass *
                                count;
                 formula.AddAtomicCount(atomic_count, mono_mass, avg_mass);
             }
         }
-#endif
-
+        
+        [Obsolete("Use PeakData.SetPeaks instead", true)]
         internal static void SetPeaks(ref PeakData peakData, ref clsPeak[] peaks)
         {
             foreach (var pk in peaks)
             {
-                peakData.AddPeak(new Peak(pk));
+                peakData.AddPeak(new clsPeak(pk));
             }
             peakData.InitializeUnprocessedPeakData();
         }
 
-#if !Disable_Obsolete
         [Obsolete("Use Linq expressions instead", true)]
         public static void SetData(out List<double> vectData, float[] data)
         {
@@ -216,9 +207,7 @@ namespace DeconEngine
 
             dest = new string(src);
         }
-#endif
 
-#if !Disable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static void SavitzkyGolaySmooth(short num_left, short num_right, short order, ref float[] mzs,
             ref float[] intensities)
@@ -311,6 +300,6 @@ namespace DeconEngine
             for (var i = 0; i < intensities.Length; i++)
                 intensities[i] = arrIntensities[i];
         }
-#endif
     }
 }
+#endif

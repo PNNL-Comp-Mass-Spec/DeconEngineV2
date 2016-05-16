@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DeconToolsV2.Peaks;
 
 namespace Engine.PeakProcessing
 {
@@ -11,7 +12,7 @@ namespace Engine.PeakProcessing
         /// <summary>
         ///     This variable helps find the m/z value of a peak using the specified fit function.
         /// </summary>
-        private readonly PeakFit _peakFit = new PeakFit();
+        private readonly PeakFitter _peakFit = new PeakFitter();
 
         /// <summary>
         ///     background intensity. When user sets min signal to noise, and min intensity, this value is set as min intensity /
@@ -28,8 +29,11 @@ namespace Engine.PeakProcessing
         ///     minimum intensity for a point to be considered a peak.
         /// </summary>
         private double _peakIntensityThreshold;
-
-        private PeakProfileType _profileType;
+        
+        /// <summary>
+        /// True if peaks are centroided
+        /// </summary>
+        private bool _arePeaksCentroided;
 
         /// <summary>
         ///     signal to noise threshold for a peak to be considered as a peak.
@@ -54,7 +58,7 @@ namespace Engine.PeakProcessing
         {
             SetPeakFitType(PeakFitType.Quadratic);
             PeakData = new PeakData();
-            _profileType = PeakProfileType.Profile;
+            _arePeaksCentroided = false;
         }
 
         /// <summary>
@@ -115,17 +119,17 @@ namespace Engine.PeakProcessing
             _peakFit.SetOptions(type);
         }
 
+#if !Disable_Obsolete
         /// <summary>
         ///     sets the type of profile
         /// </summary>
         /// <param name="profile">is a boolean, true if profile data, false if centroided</param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetPeaksProfileType(bool profile)
         {
-            if (profile)
-                _profileType = PeakProfileType.Profile;
-            else
-                _profileType = PeakProfileType.Centroided;
+            _arePeaksCentroided = !profile;
         }
+#endif
 
         /// <summary>
         ///     sets the options for this instance.
@@ -182,18 +186,18 @@ namespace Engine.PeakProcessing
                 var nextIntensity = intensityList[index + 1];
                 var currentMz = mzList[index];
 
-                if (_profileType == PeakProfileType.Centroided)
+                if (_arePeaksCentroided)
                 {
                     if (currentIntensity >= _peakIntensityThreshold)
                     {
                         var mz = mzList[index];
                         var signalToNoise = currentIntensity / _peakIntensityThreshold;
                         fwhm = 0.6;
-                        PeakData.AddPeak(new Peak(mz, currentIntensity, signalToNoise, PeakData.GetNumPeaks(), index,
+                        PeakData.AddPeak(new clsPeak(mz, currentIntensity, signalToNoise, PeakData.GetNumPeaks(), index,
                             fwhm));
                     }
                 }
-                else if (_profileType == PeakProfileType.Profile)
+                else
                 {
                     //three point peak picking. Check if peak is greater than both the previous and next points
                     if (currentIntensity >= lastIntensity && currentIntensity >= nextIntensity &&
@@ -228,7 +232,7 @@ namespace Engine.PeakProcessing
                                     signalToNoise = 10;
                             }
                         }
-                        // Found a peak, make sure it is in the attention list, if there is one.
+                        // Found a peak
                         if (signalToNoise >= _signalToNoiseThreshold)
                         {
                             // Find a more accurate m/z location of the peak.
@@ -240,7 +244,7 @@ namespace Engine.PeakProcessing
 
                             if (fwhm > 0)
                             {
-                                PeakData.AddPeak(new Peak(fittedPeak, currentIntensity, signalToNoise, PeakData.GetNumPeaks(),
+                                PeakData.AddPeak(new clsPeak(fittedPeak, currentIntensity, signalToNoise, PeakData.GetNumPeaks(),
                                     index, fwhm));
                             }
                             // move beyond peaks have the same intensity.
@@ -269,11 +273,11 @@ namespace Engine.PeakProcessing
         /// <param name="peakMz"></param>
         /// <param name="peak"></param>
         /// <returns></returns>
-        public double GetClosestPeakMz(double peakMz, out Peak peak)
+        public double GetClosestPeakMz(double peakMz, out clsPeak peak)
         {
             //looks through the peak list and finds the closest peak to peakMz
             var minScore = 1.00727638; //enough for one charge away
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Mz = 0.0;
 
             try
@@ -286,7 +290,7 @@ namespace Engine.PeakProcessing
                     if (score < minScore)
                     {
                         minScore = score;
-                        peak = new Peak(PeakData.PeakTops[peakCount]);
+                        peak = new clsPeak(thisPeak);
                     }
                 }
             }
@@ -325,6 +329,7 @@ namespace Engine.PeakProcessing
             return DiscoverPeaks(mzList, intensityList, minMz, maxMz);
         }
 
+#if !Disable_Obsolete
         /// <summary>
         ///     Function discovers the most intense peak in the m/z and intensity vectors supplied within the supplied m/z window.
         /// </summary>
@@ -347,10 +352,11 @@ namespace Engine.PeakProcessing
         ///     but once generated only those which are above mdbl_peak_intensity_threshold are tested for peptidicity by
         ///     Deconvolution.HornMassTransform
         /// </remarks>
+        [Obsolete("No uses found within DeconEngine")]
         public bool DiscoverPeak(List<double> mzList, List<double> intensityList, double startMz, double stopMz,
-            out Peak peak, bool findFwhm = false, bool findSignalToNoise = false, bool fitPeak = false)
+            out clsPeak peak, bool findFwhm = false, bool findSignalToNoise = false, bool fitPeak = false)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             var startIndex = PeakIndex.GetNearest(mzList, startMz, 0);
             var stopIndex = PeakIndex.GetNearest(mzList, stopMz, startIndex);
 
@@ -386,6 +392,7 @@ namespace Engine.PeakProcessing
             }
             return found;
         }
+#endif
 
         /// <summary>
         ///     clears the PeakData member variable <see cref="PeakProcessor.PeakData" />

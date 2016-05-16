@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DeconToolsV2.HornTransform;
+using DeconToolsV2.Peaks;
 using Engine.HornTransform;
 using Engine.PeakProcessing;
 
@@ -65,7 +67,7 @@ namespace Engine.Results
         // If memory allocation is unsuccessful when new isotope patterns are added, all peaks stored
         // are cleared and flag is set.
         //private Engine.Utilities.BlockDeque<Engine.HornTransform.IsotopeFitRecord > mdeque_transforms;
-        private readonly List<IsotopeFitRecord> _transforms = new List<IsotopeFitRecord>();
+        private readonly List<clsHornTransformResults> _transforms = new List<clsHornTransformResults>();
 
         public SortedDictionary<int, ScanData> ScanDataDict;
 
@@ -297,7 +299,7 @@ namespace Engine.Results
         }
 
         // Peaks for scan are written out to file AND stored in the memory blocks of size
-        public void AddPeaksForScan(int scanNum, List<Peak> peaks)
+        public void AddPeaksForScan(int scanNum, List<clsPeak> peaks)
         {
             try
             {
@@ -322,7 +324,11 @@ namespace Engine.Results
                 // Create LCMSPeaks.
                 var lcPeaks = new List<LcmsPeak>();
                 lcPeaks.Capacity = peaks.Count;
-                lcPeaks.AddRange(peaks.Select(x => new LcmsPeak(x)));
+                lcPeaks.AddRange(peaks.Select(x => new LcmsPeak
+                {
+                    Mz = x.Mz,
+                    Intensity = x.Intensity
+                }));
 
                 if (numPeaks != 0)
                 {
@@ -358,7 +364,7 @@ namespace Engine.Results
             }
         }
 
-        public void AddTransforms(List<IsotopeFitRecord> fitResults)
+        public void AddTransforms(List<clsHornTransformResults> fitResults)
         {
             try
             {
@@ -373,7 +379,7 @@ namespace Engine.Results
                     {
                         foreach (var record in fitResults)
                         {
-                            record.WriteToBinaryStream(bWriter);
+                            new IsotopeFitRecord(record).WriteToBinaryStream(bWriter);
                         }
                     }
                 }
@@ -581,7 +587,7 @@ namespace Engine.Results
 
                     while (_transforms.Count < _numIsoStored)
                     {
-                        var record = IsotopeFitRecord.ReadFromBinaryStream(fin);
+                        var record = new clsHornTransformResults(IsotopeFitRecord.ReadFromBinaryStream(fin));
                         if (_transforms.Count + 1 > _transforms.Capacity &&
                             _transforms.Capacity > int.MaxValue / 2)
                         {

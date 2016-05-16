@@ -24,16 +24,10 @@ namespace Engine.PeakProcessing
         Lorentzian
     }
 
-    internal enum PeakProfileType
-    {
-        Profile = 0,
-        Centroided
-    }
-
     /// <summary>
     ///     Used for detecting peaks in the data.
     /// </summary>
-    internal class PeakFit
+    internal class PeakFitter
     {
         // member variable to find out information about peaks such as signal to noise and full width at half maximum.
         private readonly PeakStatistician _peakStatistician = new PeakStatistician();
@@ -44,7 +38,7 @@ namespace Engine.PeakProcessing
         ///     Default constructor.
         /// </summary>
         /// <remarks>By default uses Quadratic fit.</remarks>
-        public PeakFit()
+        public PeakFitter()
         {
             _peakFitType = PeakFitType.Quadratic;
         }

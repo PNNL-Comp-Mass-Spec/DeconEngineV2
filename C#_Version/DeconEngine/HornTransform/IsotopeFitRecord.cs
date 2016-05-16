@@ -1,11 +1,14 @@
+#if !Disable_Obsolete
 using System;
 using System.IO;
+using DeconToolsV2.HornTransform;
 
 namespace Engine.HornTransform
 {
     /// <summary>
     ///     class to store results of isotope fitting.
     /// </summary>
+    [Obsolete("Use clsHornTransformResults instead", false)]
     internal class IsotopeFitRecord
     {
         public const int MaxIsotopes = 16;
@@ -149,10 +152,37 @@ namespace Engine.HornTransform
             Array.Copy(a.IsotopePeakIndices, IsotopePeakIndices, MaxIsotopes);
         }
 
+        public IsotopeFitRecord(clsHornTransformResults a)
+        {
+            PeakIndex = a.PeakIndex;
+            ScanNum = a.ScanNum;
+            ChargeState = a.ChargeState;
+            AbundanceInt = a.AbundanceInt;
+            Abundance = a.Abundance;
+            Mz = a.Mz;
+            Fit = a.Fit;
+            FitCountBasis = a.FitCountBasis;
+            AverageMw = a.AverageMw;
+            MonoMw = a.MonoMw;
+            MostIntenseMw = a.MostIntenseMw;
+            FWHM = a.FWHM;
+            SignalToNoise = a.SignalToNoise;
+            MonoIntensity = a.MonoIntensity;
+            MonoPlus2Intensity = a.MonoPlus2Intensity;
+            DeltaMz = a.DeltaMz;
+            NumIsotopesObserved = a.NumIsotopesObserved;
+            IsotopePeakIndices = new int[MaxIsotopes];
+            for (int i = 0; i < NumIsotopesObserved; i++)
+            {
+                IsotopePeakIndices[i] = a.IsotopePeakIndices[i];
+            }
+        }
+
         /// <summary>
         ///     Write the values of this record to a binary writer
         /// </summary>
         /// <param name="stream"></param>
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void WriteToBinaryStream(BinaryWriter stream)
         {
             // int: 4 bytes, 23 total = 92
@@ -187,6 +217,7 @@ namespace Engine.HornTransform
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public static IsotopeFitRecord ReadFromBinaryStream(BinaryReader stream)
         {
             var record = new IsotopeFitRecord();
@@ -216,3 +247,4 @@ namespace Engine.HornTransform
         }
     }
 }
+#endif

@@ -1,9 +1,10 @@
 using System;
+using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
 
 namespace Engine.HornTransform
 {
-    internal class PeakFit : IsotopeFit
+    internal class PeakFitScorer : IsotopicProfileFitScorer
     {
         /// <summary>
         ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
@@ -16,7 +17,7 @@ namespace Engine.HornTransform
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="pointsUsed">number of points used</param>
         /// <param name="debug">debug output flag</param>
-        public override double FitScore(PeakData peakData, short chargeState, Peak peak, double mzDelta,
+        public override double FitScore(PeakData peakData, short chargeState, clsPeak peak, double mzDelta,
             double minIntensityForScore, out int pointsUsed, bool debug = false)
         {
             pointsUsed = 0;
@@ -38,7 +39,7 @@ namespace Engine.HornTransform
                 if (theoreticalIntensity >= minIntensityForScore && diff >= 0 && theoreticalIntensity < lastYVal)
                 {
                     var found = false;
-                    Peak foundPeak;
+                    clsPeak foundPeak;
                     // remember you might be searching for the current peak (which has already been
                     // taken out of the list of peaks. So first check it.
                     if (Math.Abs(peak.Mz - mz) < 2 * peak.FWHM)
@@ -113,7 +114,7 @@ namespace Engine.HornTransform
                 // observed intensities have to be normalized so that the maximum intensity is 100,
                 if (theoreticalIntensity >= minIntensityForScore && diff >= 0 && theoreticalIntensity < lastYVal)
                 {
-                    Peak foundPeak;
+                    clsPeak foundPeak;
                     var found = peakData.GetPeak(mz - 0.1, mz + 0.1, out foundPeak);
                     if (found)
                     {

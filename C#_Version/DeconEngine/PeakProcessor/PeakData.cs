@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeconToolsV2.Peaks;
 
 namespace Engine.PeakProcessing
 {
@@ -23,7 +24,7 @@ namespace Engine.PeakProcessing
     ///     of intensity of peaks for all the peaks in the List
     ///     <see cref="PeakTops" />.
     /// </remarks>
-    internal class PeakData
+    public class PeakData
     {
         /// <summary>
         ///     multimap of indices of all peaks in <see cref="PeakTops" /> sorted in ascending m/z. This helps fast retrieval when
@@ -60,7 +61,7 @@ namespace Engine.PeakProcessing
         /// <summary>
         ///     List of peaks found in the data. It is recommended that this object not be touched by calling functions.
         /// </summary>
-        public List<Peak> PeakTops = new List<Peak>();
+        public List<clsPeak> PeakTops = new List<clsPeak>();
 
         // Default constructor
         public PeakData()
@@ -74,8 +75,8 @@ namespace Engine.PeakProcessing
             MzList = new List<double>(a.MzList);
             //PeakTops = new List<Peak>(a.PeakTops);
             //force copy by value....
-            PeakTops = new List<Peak>(a.PeakTops.Capacity);
-            PeakTops.AddRange(a.PeakTops.Select(x => new Peak(x)));
+            PeakTops = new List<clsPeak>(a.PeakTops.Capacity);
+            PeakTops.AddRange(a.PeakTops.Select(x => new clsPeak(x)));
         }
 
         /// <summary>
@@ -83,18 +84,27 @@ namespace Engine.PeakProcessing
         /// </summary>
         /// <param name="index">is the index of the peak in <see cref="PeakTops" />.</param>
         /// <returns>the peak which is at the index^th position in <see cref="PeakTops" />.</returns>
-        public Peak GetPeak(int index)
+        public clsPeak GetPeak(int index)
         {
-            return new Peak(PeakTops[index]);
+            return new clsPeak(PeakTops[index]);
         }
 
         /// <summary>
         ///     Adds a peak to <see cref="PeakTops" />
         /// </summary>
         /// <param name="peak">is the peak that we want to add to <see cref="PeakTops" />.</param>
-        public void AddPeak(Peak peak)
+        public void AddPeak(clsPeak peak)
         {
-            PeakTops.Add(new Peak(peak));
+            PeakTops.Add(new clsPeak(peak));
+        }
+
+        public void SetPeaks(clsPeak[] peaks)
+        {
+            foreach (var peak in peaks)
+            {
+                AddPeak(peak);
+            }
+            InitializeUnprocessedPeakData();
         }
 
         /// <summary>
@@ -106,7 +116,7 @@ namespace Engine.PeakProcessing
         ///     peaks that are unprocessed and the way these are tracked, are by puttting these indices in the processing maps
         ///     <see cref="_peakIntensityToIndexDict" /> and <see cref="_peakMzToIndexDict" />
         /// </remarks>
-        public void AddPeakToProcessingList(Peak pk)
+        public void AddPeakToProcessingList(clsPeak pk)
         {
             // The assumption is that this peak already exists in the List.
             // The peak was removed from the processing list, so we're going to add it in.
@@ -116,7 +126,7 @@ namespace Engine.PeakProcessing
             var peakIndex = pk.PeakIndex;
             var mz = pk.Mz;
             var intensity = (int) pk.Intensity;
-            PeakTops[peakIndex] = new Peak(pk);
+            PeakTops[peakIndex] = new clsPeak(pk);
             _peakMzToIndexDict.Add(mz, peakIndex);
             //mmap_pk_intensity_index.insert(std.pair<int,int> (intensity, peak_index));
             if (_peakIntensityToIndexDict.ContainsKey(intensity))
@@ -198,9 +208,9 @@ namespace Engine.PeakProcessing
         ///     function that is called repeatedly in the deconvolution process which deisotopes peaks in order of decreasing
         ///     intensity.
         /// </remarks>
-        public bool GetNextPeak(double startMz, double stopMz, out Peak peak)
+        public bool GetNextPeak(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Mz = -1;
             peak.Intensity = -1;
 
@@ -212,7 +222,7 @@ namespace Engine.PeakProcessing
                     var mz = PeakTops[peakIndex].Mz;
                     if (mz > startMz && mz <= stopMz)
                     {
-                        peak = new Peak(PeakTops[peakIndex]);
+                        peak = new clsPeak(PeakTops[peakIndex]);
                         found = true;
                         break;
                     }
@@ -237,7 +247,7 @@ namespace Engine.PeakProcessing
         ///     In order to remove the peak from the processing "list", we clear the indices of the peak from the unprocessed
         ///     maps <see cref="_peakMzToIndexDict" /> and <see cref="_peakIntensityToIndexDict" />
         /// </remarks>
-        public void RemovePeak(Peak peak)
+        public void RemovePeak(clsPeak peak)
         {
             if (peak == null)
             {
@@ -343,13 +353,13 @@ namespace Engine.PeakProcessing
         /// <param name="mz">m/z of the peak we are looking for.</param>
         /// <param name="peak">the peak whose m/z equals input parameter.</param>
         /// <returns>true is the peak was found; false otherwise</returns>
-        public bool GetPeak(double mz, out Peak peak)
+        public bool GetPeak(double mz, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             if (_peakMzToIndexDict.ContainsKey(mz))
             {
                 var peakIndex = _peakMzToIndexDict[mz];
-                peak = new Peak(PeakTops[peakIndex]);
+                peak = new clsPeak(PeakTops[peakIndex]);
                 return true;
             }
             return false;
@@ -362,9 +372,9 @@ namespace Engine.PeakProcessing
         /// <param name="stopMz">maximum m/z of the peak.</param>
         /// <param name="peak">is assigned the most intense Peak with m/z between the startMz and stopMz.</param>
         /// <returns>returns true if a peak was found and false if none was found.</returns>
-        public bool GetPeak(double startMz, double stopMz, out Peak peak)
+        public bool GetPeak(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Intensity = -10;
             var found = false;
 
@@ -376,7 +386,7 @@ namespace Engine.PeakProcessing
                     return found;
                 if (PeakTops[peakIndex].Intensity > peak.Intensity && mzVal >= startMz)
                 {
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -391,9 +401,9 @@ namespace Engine.PeakProcessing
         /// <param name="peak">is set to the peak that was found.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak can have an intensity of 0 because it was already processed and removed.</remarks>
-        public bool GetPeakFromAll(double startMz, double stopMz, out Peak peak)
+        public bool GetPeakFromAll(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Intensity = -10;
             var found = false;
 
@@ -406,7 +416,7 @@ namespace Engine.PeakProcessing
                 if (PeakTops[peakIndex].Intensity >= peak.Intensity && mzVal >= startMz)
                 {
                     //double thisMz = PeakTops[peakIndex].Mz;
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -422,9 +432,9 @@ namespace Engine.PeakProcessing
         /// <param name="excludeMass">is the mass we need to exclude in this search.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak can have an intensity of 0 because it was already processed and removed.</remarks>
-        public bool GetPeakFromAll(double startMz, double stopMz, out Peak peak, double excludeMass)
+        public bool GetPeakFromAll(double startMz, double stopMz, out clsPeak peak, double excludeMass)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Intensity = -10;
             var found = false;
 
@@ -439,7 +449,7 @@ namespace Engine.PeakProcessing
                 if (PeakTops[peakIndex].Intensity >= peak.Intensity && mzVal >= startMz)
                 {
                     //double thisMz = PeakTops[peakIndex].Mz;
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -456,9 +466,9 @@ namespace Engine.PeakProcessing
         /// <param name="excludeMass">is the mass we need to exclude in this search.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak has the intensity in the original raw data in <see cref="IntensityList" /></remarks>
-        public bool GetPeakFromAllOriginalIntensity(double startMz, double stopMz, out Peak peak, double excludeMass)
+        public bool GetPeakFromAllOriginalIntensity(double startMz, double stopMz, out clsPeak peak, double excludeMass)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Intensity = -10;
             var found = false;
 
@@ -474,7 +484,7 @@ namespace Engine.PeakProcessing
                 if (IntensityList[dataIndex] >= peak.Intensity && mzVal >= startMz)
                 {
                     //double thisMz = PeakTops[peakIndex].Mz;
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -490,9 +500,9 @@ namespace Engine.PeakProcessing
         /// <param name="peak">is set to the peak that was found.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak has the intensity in the original raw data in <see cref="IntensityList" />.</remarks>
-        public bool GetPeakFromAllOriginalIntensity(double startMz, double stopMz, out Peak peak)
+        public bool GetPeakFromAllOriginalIntensity(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Intensity = -10;
             var found = false;
 
@@ -506,7 +516,7 @@ namespace Engine.PeakProcessing
                     mzVal <= stopMz)
                 {
                     //double thisMz = PeakTops[peakIndex].Mz;
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -520,9 +530,9 @@ namespace Engine.PeakProcessing
         /// <param name="width">the width of the m\z window in which we want to look for the peak.</param>
         /// <param name="peak">is the peak closest to m/z.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
-        public bool GetClosestPeak(double mz, double width, out Peak peak)
+        public bool GetClosestPeak(double mz, double width, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             var found = false;
 
             var startMz = mz - width;
@@ -536,7 +546,7 @@ namespace Engine.PeakProcessing
                     return found;
                 if (mzVal >= startMz && Math.Abs(mzVal - mz) < Math.Abs(peak.Mz - mz))
                 {
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -552,9 +562,9 @@ namespace Engine.PeakProcessing
         /// <param name="peak">is the peak closest to m/z.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak can have an intensity of 0 because it was already processed and removed.</remarks>
-        public bool GetClosestPeakFromAll(double mz, double width, out Peak peak)
+        public bool GetClosestPeakFromAll(double mz, double width, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             var found = false;
 
             var startMz = mz - width;
@@ -568,7 +578,7 @@ namespace Engine.PeakProcessing
                     return found;
                 if (mzVal >= startMz && Math.Abs(mzVal - mz) < Math.Abs(peak.Mz - mz))
                 {
-                    peak = new Peak(PeakTops[peakIndex]);
+                    peak = new clsPeak(PeakTops[peakIndex]);
                     found = true;
                 }
             }
@@ -619,12 +629,12 @@ namespace Engine.PeakProcessing
             // we'll just use the maps for this here.
 
             // list of temporary peaks that are used during the processing.
-            var tempPeakTops = new List<Peak>();
+            var tempPeakTops = new List<clsPeak>();
             InitializeUnprocessedPeakData();
 
             foreach (var peakTop in PeakTops)
             {
-                Peak nextPeak;
+                clsPeak nextPeak;
                 // look for a peak behind.
                 var mz = peakTop.Mz;
                 var inback = GetPeak(mz - tolerance, mz - 0.00001, out nextPeak);
@@ -713,11 +723,11 @@ namespace Engine.PeakProcessing
         /// <param name="stopMz">maximum m\z at which to look for the peak.</param>
         /// <param name="peak"> instance whose mz and intensity are set to the peak that is found.</param>
         /// <remarks>The function only sets the mz, intensity of the peak, not the other members (SN, FWHM etc).</remarks>
-        public void FindPeakAbsolute(double startMz, double stopMz, out Peak peak)
+        public void FindPeakAbsolute(double startMz, double stopMz, out clsPeak peak)
         {
             // Anoop : modified from original FindPEak so as to return peaks only
             // and not shoulders, eliminates all the +ve Da DelM regions
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Mz = -1;
             peak.Intensity = 0;
             var width = (stopMz - startMz) / 2;
@@ -773,9 +783,9 @@ namespace Engine.PeakProcessing
         /// <param name="stopMz">maximum m\z at which to look for the peak.</param>
         /// <param name="peak"> instance whose mz and intensity are set to the peak that is found.</param>
         /// <remarks>The function only sets the mz, intensity of the peak, not the other members (SN, FWHM etc).</remarks>
-        public void FindPeak(double startMz, double stopMz, out Peak peak)
+        public void FindPeak(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new Peak();
+            peak = new clsPeak();
             peak.Mz = -1;
             var width = (stopMz - startMz) / 2;
             var foundExistingPeak = GetClosestPeak(startMz + width, width, out peak);

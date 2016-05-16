@@ -1,16 +1,19 @@
+#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2;
 using DeconToolsV2.HornTransform;
+using DeconToolsV2.Peaks;
 using Engine.ChargeDetermination;
 using Engine.PeakProcessing;
 using Engine.TheoreticalProfile;
 
 namespace Engine.HornTransform
 {
+    [Obsolete("All functionality has been merged into clsHornTransform, Only used for Decon2LS.UI", false)]
     internal class MassTransform
     {
-        public const int MaxIsotopes = 16;
+        private const int MaxIsotopes = 16;
 
         /// <summary>
         ///     mass of charge carrier
@@ -32,12 +35,12 @@ namespace Engine.HornTransform
         ///     intensity of a peak to delete. Note that ths intensity is in the theoretical profile which is scaled to
         ///     where the maximum peak has an intensity of 100.
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetZeroingMassRange" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetZeroingMassRange" />
         private double _deleteIntensityThreshold;
 
         //gord added
         private bool _isActualMonoMZUsed;
-        private IsotopeFit _isotopeFitter;
+        private IsotopicProfileFitScorer _isotopeFitter;
         private enmIsotopeFitType _isotopeFitType;
         private double _leftFitStringencyFactor;
 
@@ -64,7 +67,7 @@ namespace Engine.HornTransform
         /// <summary>
         ///     minimum intensity of a point in the theoretical profile of a peptide for it to be considered in scoring.
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetIsotopeDistribution" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetIsotopeDistribution" />
         private double _minTheoreticalIntensityForScore;
 
         /// <summary>
@@ -100,7 +103,7 @@ namespace Engine.HornTransform
         public MassTransform()
         {
             _isotopeFitType = enmIsotopeFitType.AREA;
-            _isotopeFitter = new AreaFit();
+            _isotopeFitter = new AreaFitScorer();
 
             _maxCharge = 10;
             _maxMw = 10000;
@@ -133,13 +136,13 @@ namespace Engine.HornTransform
                     switch (_isotopeFitType)
                     {
                         case enmIsotopeFitType.PEAK:
-                            _isotopeFitter = new PeakFit();
+                            _isotopeFitter = new PeakFitScorer();
                             break;
                         case enmIsotopeFitType.AREA:
-                            _isotopeFitter = new AreaFit();
+                            _isotopeFitter = new AreaFitScorer();
                             break;
                         case enmIsotopeFitType.CHISQ:
-                            _isotopeFitter = new ChiSqFit();
+                            _isotopeFitter = new ChiSqFitScorer();
                             break;
                     }
                     // copy options
@@ -148,7 +151,7 @@ namespace Engine.HornTransform
             }
         }
 
-        public AtomicInformation ElementalIsotopeComposition
+        public clsElementIsotopes ElementalIsotopeComposition
         {
             get { return _isotopeFitter.ElementalIsotopeComposition; }
             set { _isotopeFitter.ElementalIsotopeComposition = value; }
@@ -179,7 +182,7 @@ namespace Engine.HornTransform
                 _isotopeFitter.SetOptions(_transformParameters.AveragineFormula, _transformParameters.TagFormula,
                     _transformParameters.CCMass, _transformParameters.ThrashOrNot, _transformParameters.CompleteFit);
 
-                ElementalIsotopeComposition = _transformParameters.ElementIsotopeComposition.ElementalIsotopeComposition;
+                ElementalIsotopeComposition = _transformParameters.ElementIsotopeComposition;
             }
         }
 
@@ -253,10 +256,10 @@ namespace Engine.HornTransform
         }
 #endif
 
-        public virtual bool FindTransform(PeakData peakData, ref Peak peak, out IsotopeFitRecord record,
+        public virtual bool FindTransform(PeakData peakData, ref clsPeak peak, out clsHornTransformResults record,
             double backgroundIntensity = 0)
         {
-            record = new IsotopeFitRecord();
+            record = new clsHornTransformResults();
             if (peak.SignalToNoise < _minSignalToNoise || peak.FWHM.Equals(0))
             {
                 return false;
@@ -293,7 +296,7 @@ namespace Engine.HornTransform
                     // move back by 4 Da and see if there is a peak.
                     var minMz = peak.Mz - 4.0 / chargeState - peak.FWHM;
                     var maxMz = peak.Mz - 4.0 / chargeState + peak.FWHM;
-                    Peak o16Peak;
+                    clsPeak o16Peak;
                     var found = peakData.GetPeak(minMz, maxMz, out o16Peak);
                     if (found && !o16Peak.Mz.Equals(peak.Mz))
                     {
@@ -308,7 +311,7 @@ namespace Engine.HornTransform
                 }
             }
 
-            var peakCharge1 = new Peak(peak);
+            var peakCharge1 = new clsPeak(peak);
 
             // Until now, we have been using constant theoretical delete intensity threshold..
             // instead, from now, we should use one that is proportional to intensity, for more intense peaks.
@@ -334,7 +337,7 @@ namespace Engine.HornTransform
 
             if (_checkAgainstCharge1 && chargeState != 1)
             {
-                IsotopeFitRecord recordCharge1;
+                clsHornTransformResults recordCharge1;
                 int fitCountBasisCharge1;
                 var bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, ref peakCharge1, out recordCharge1,
                     deleteThreshold, _minTheoreticalIntensityForScore, _leftFitStringencyFactor,
@@ -350,7 +353,7 @@ namespace Engine.HornTransform
                     bestFit = bestFitCharge1;
                     fitCountBasis = fitCountBasisCharge1;
                     peak = peakCharge1;
-                    record = new IsotopeFitRecord(recordCharge1);
+                    record = new clsHornTransformResults(recordCharge1);
                     zeroingStartMz = startMz1;
                     zeroingStopMz = stopMz1;
                     chargeState = 1;
@@ -363,6 +366,7 @@ namespace Engine.HornTransform
             if (DebugFlag)
                 Console.Error.WriteLine("\tBack with fit = " + record.Fit);
 
+#if !Disable_Obsolete
             // Abundance has always been reported as a 32-bit integer
             // Added field Abundance in 2015 to allow tracking it as a double
             // For backwards compatibility, if the peak intensity is too large for a 32-bit integer, AbundanceInt will be 2147483648
@@ -370,16 +374,17 @@ namespace Engine.HornTransform
                 record.AbundanceInt = (int) peak.Intensity;
             else
                 record.AbundanceInt = int.MaxValue;
+#endif
 
             // Applications using this DLL should use Abundance instead of AbundanceInt
             record.Abundance = peak.Intensity;
             record.ChargeState = chargeState;
 
-            Peak monoPeak;
+            clsPeak monoPeak;
             var monoMz = record.MonoMw / record.ChargeState + _chargeCarrierMass;
 
             // used when _reportO18Plus2Da is true.
-            Peak m3Peak;
+            clsPeak m3Peak;
             var monoPlus2Mz = record.MonoMw / record.ChargeState + 2.0 / record.ChargeState + _chargeCarrierMass;
 
             peakData.FindPeak(monoMz - peak.FWHM, monoMz + peak.FWHM, out monoPeak);
@@ -400,8 +405,8 @@ namespace Engine.HornTransform
             return true;
         }
 
-        private void SetIsotopeDistributionToZero(PeakData peakData, Peak peak, double zeroingStartMz,
-            double zeroingStopMz, double monoMw, short chargeState, bool clearSpectrum, IsotopeFitRecord record,
+        private void SetIsotopeDistributionToZero(PeakData peakData, clsPeak peak, double zeroingStartMz,
+            double zeroingStopMz, double monoMw, short chargeState, bool clearSpectrum, clsHornTransformResults record,
             bool debug = false)
         {
             var peakIndices = new List<int>();
@@ -421,8 +426,7 @@ namespace Engine.HornTransform
             var numUnprocessedPeaks = peakData.GetNumUnprocessedPeaks();
             if (numUnprocessedPeaks == 0)
             {
-                record.NumIsotopesObserved = 1;
-                record.IsotopePeakIndices[0] = peak.PeakIndex;
+                record.IsotopePeakIndices.Add(peak.PeakIndex);
                 return;
             }
 
@@ -437,8 +441,7 @@ namespace Engine.HornTransform
 
             if (1 / (peak.FWHM * chargeState) < 3) // gord:  ??
             {
-                record.NumIsotopesObserved = 1;
-                record.IsotopePeakIndices[0] = peak.PeakIndex;
+                record.IsotopePeakIndices.Add(peak.PeakIndex);
                 peakData.RemovePeaks(zeroingStartMz, zeroingStopMz, debug);
                 return;
             }
@@ -453,7 +456,7 @@ namespace Engine.HornTransform
                     Console.Error.WriteLine("\tFinding next peak top from " + (peakMz - 2 * peak.FWHM) + " to " +
                                             (peakMz + 2 * peak.FWHM) + " pk = " + peakMz + " FWHM = " + peak.FWHM);
                 }
-                Peak nextPeak;
+                clsPeak nextPeak;
                 peakData.GetPeakFromAll(peakMz - 2 * peak.FWHM, peakMz + 2 * peak.FWHM, out nextPeak);
 
                 if (nextPeak.Mz.Equals(0))
@@ -487,7 +490,7 @@ namespace Engine.HornTransform
                     Console.Error.WriteLine("\tFinding previous peak top from " + (peakMz - 2 * peak.FWHM) + " to " +
                                             (peakMz + 2 * peak.FWHM) + " pk = " + peakMz + " FWHM = " + peak.FWHM);
                 }
-                Peak nextPeak;
+                clsPeak nextPeak;
                 peakData.GetPeakFromAll(peakMz - 2 * peak.FWHM, peakMz + 2 * peak.FWHM, out nextPeak);
                 if (nextPeak.Mz.Equals(0))
                 {
@@ -514,14 +517,12 @@ namespace Engine.HornTransform
             // now insert into array.
             var numPeaksObserved = peakIndices.Count;
             var numIsotopesObserved = 0;
-            var lastIsotopeNumObserved = -1 * int.MaxValue;
-
-            record.NumIsotopesObserved = peakIndices.Count;
+            var lastIsotopeNumObserved = int.MinValue;
 
             for (var i = 0; i < numPeaksObserved; i++)
             {
                 var currentIndex = peakIndices[i];
-                var currentPeak = new Peak(peakData.PeakTops[currentIndex]);
+                var currentPeak = new clsPeak(peakData.PeakTops[currentIndex]);
                 var isotopeNum = (int) (Math.Abs((currentPeak.Mz - peak.Mz) * chargeState / 1.003) + 0.5);
                 if (currentPeak.Mz < peak.Mz)
                     isotopeNum = -1 * isotopeNum;
@@ -531,8 +532,7 @@ namespace Engine.HornTransform
                     numIsotopesObserved++;
                     if (numIsotopesObserved > MaxIsotopes)
                         break;
-                    record.NumIsotopesObserved = numIsotopesObserved;
-                    record.IsotopePeakIndices[numIsotopesObserved - 1] = peakIndices[i];
+                    record.IsotopePeakIndices.Add(peakIndices[i]);
                 }
                 else
                 {
@@ -598,3 +598,4 @@ namespace Engine.HornTransform
         }
     }
 }
+#endif

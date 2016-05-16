@@ -50,7 +50,7 @@ namespace Engine.TheoreticalProfile
 
         public double ChargeCarrierMass;
 
-        public AtomicInformation ElementalIsotopeComposition = new AtomicInformation();
+        public clsElementIsotopes ElementalIsotopeComposition = new clsElementIsotopes();
         public double MaxPeakMz;
         public int MercurySize;
 
@@ -73,7 +73,7 @@ namespace Engine.TheoreticalProfile
         [Obsolete("Not used anywhere", true)]
         public MercuryIsotopeDistribution(string isotopeFileName)
         {
-            ElementalIsotopeComposition.LoadData(isotopeFileName);
+            //ElementalIsotopeComposition.LoadData(isotopeFileName);
             ChargeCarrierMass = 1.00727638;
             ApType = ApodizationType.Gaussian;
             MercurySize = 8192;
@@ -103,7 +103,7 @@ namespace Engine.TheoreticalProfile
         /// <param name="isotopeMzs">peak top mz's for the peaks of the isotopic profile</param>
         /// <param name="isotopeIntensities">peak top intensities's for the peaks of the isotopic profile</param>
         /// <param name="debug"></param>
-        public void CalculateDistribution(short charge, double resolution, MolecularFormula formula, out List<double> x,
+        public void CalculateDistribution(short charge, double resolution, DeconToolsV2.MolecularFormula formula, out List<double> x,
             out List<double> y, double threshold, out List<double> isotopeMzs, out List<double> isotopeIntensities,
             bool debug = false)
         {
@@ -196,7 +196,7 @@ namespace Engine.TheoreticalProfile
             return sum;
         }
 
-        public void CalculateMasses(MolecularFormula formula)
+        public void CalculateMasses(DeconToolsV2.MolecularFormula formula)
         {
             MonoMw = 0;
             AverageMw = 0;
@@ -209,14 +209,14 @@ namespace Engine.TheoreticalProfile
                 if (atomicity == 0)
                     continue;
                 //int numIsotopes = ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].NumberOfIsotopes;
-                var monoMw = ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].IsotopeMasses[0];
+                var monoMw = ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].Isotopes[0].Mass;
                 var avgMw = ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].AverageMass;
                 MonoMw += atomicity * monoMw;
                 AverageMw += atomicity * avgMw;
             }
         }
 
-        public void CalcVariancesAndMassRange(short charge, MolecularFormula formula)
+        public void CalcVariancesAndMassRange(short charge, DeconToolsV2.MolecularFormula formula)
         {
             MassVariance = 0;
             var numElementsFound = formula.NumElements;
@@ -528,7 +528,7 @@ namespace Engine.TheoreticalProfile
             return true;
         }
 
-        public void CalcFrequencies(short charge, int numPoints, MolecularFormula formula)
+        public void CalcFrequencies(short charge, int numPoints, DeconToolsV2.MolecularFormula formula)
         {
             int i;
             int j, k;
@@ -552,11 +552,11 @@ namespace Engine.TheoreticalProfile
                     {
                         double wrapFreq = 0;
                         var isotopeAbundance =
-                            ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].IsotopeProbabilities[k];
+                            ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].Isotopes[k].Probability;
                         if (numIsotopes > 1)
                         {
                             wrapFreq =
-                                ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].IsotopeMasses[k] /
+                                ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].Isotopes[k].Mass /
                                 charge - averageMass / charge;
                             if (wrapFreq < 0)
                                 wrapFreq += _massRange;
@@ -601,12 +601,11 @@ namespace Engine.TheoreticalProfile
                     {
                         double wrapFreq = 0;
                         var isotopeAbundance =
-                            ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].IsotopeProbabilities
-                                [k];
+                            ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].Isotopes[k].Probability;
                         if (numIsotopes > 1)
                         {
                             wrapFreq =
-                                ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].IsotopeMasses[k] /
+                                ElementalIsotopeComposition.ElementalIsotopesList[elementIndex].Isotopes[k].Mass /
                                 charge - averageMass / charge;
                             if (wrapFreq < 0)
                                 wrapFreq += _massRange;
@@ -644,9 +643,9 @@ namespace Engine.TheoreticalProfile
             } /* end of for(i) */
         }
 
-        public void SetElementalIsotopeComposition(AtomicInformation isoComp)
+        public void SetElementalIsotopeComposition(clsElementIsotopes isoComp)
         {
-            ElementalIsotopeComposition = new AtomicInformation(isoComp);
+            ElementalIsotopeComposition = isoComp;
         }
     }
 }

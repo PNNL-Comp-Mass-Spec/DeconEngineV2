@@ -3,11 +3,14 @@ using System.Xml;
 
 namespace DeconToolsV2.HornTransform
 {
+#if !Disable_Obsolete
+    [Obsolete("Only used by OldDeconToolsParameters", false)]
     public enum enmExportFileType
     {
         TEXT = 0,
         SQLITE
     }
+#endif
 
     public class clsHornTransformParameters : ICloneable
     {
@@ -62,7 +65,9 @@ namespace DeconToolsV2.HornTransform
             RightFitStringencyFactor = 1;
             UseRAPIDDeconvolution = false;
             ReplaceRAPIDScoreWithHornFitScore = false;
+#if !Disable_Obsolete
             ExportFileType = enmExportFileType.TEXT;
+#endif
             NumPeaksUsedInAbundance = 1;
             DetectPeaksOnlyWithNoDeconvolution = false;
             ProcessMS = true;
@@ -121,8 +126,7 @@ namespace DeconToolsV2.HornTransform
             }
             set
             {
-                if (value != _elementIsotopes)
-                    _elementIsotopes.Assign(value);
+                _elementIsotopes = value;
             }
         }
 
@@ -131,7 +135,11 @@ namespace DeconToolsV2.HornTransform
         public double AbsolutePeptideIntensity { get; set; }
         public bool UseRAPIDDeconvolution { get; set; }
         public bool ReplaceRAPIDScoreWithHornFitScore { get; set; }
+        
+#if !Disable_Obsolete
+        [Obsolete("Only used by OldDeconToolsParameters", false)]
         public enmExportFileType ExportFileType { get; set; }
+#endif
         /// <summary>
         /// when abundance for an IsosResult is reported... this is how many peaks are summed. Typically the most abundant peak's abundance is reported.
         /// </summary>
@@ -194,7 +202,9 @@ namespace DeconToolsV2.HornTransform
             newParams.RightFitStringencyFactor = RightFitStringencyFactor;
             newParams.UseRAPIDDeconvolution = UseRAPIDDeconvolution;
             newParams.ReplaceRAPIDScoreWithHornFitScore = ReplaceRAPIDScoreWithHornFitScore;
+#if !Disable_Obsolete
             newParams.ExportFileType = ExportFileType;
+#endif
             newParams.NumPeaksUsedInAbundance = NumPeaksUsedInAbundance;
             newParams.NumScansToAdvance = NumScansToAdvance;
             newParams.DetectPeaksOnlyWithNoDeconvolution = DetectPeaksOnlyWithNoDeconvolution;

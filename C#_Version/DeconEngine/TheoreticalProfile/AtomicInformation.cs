@@ -1,3 +1,4 @@
+#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Xml;
 
 namespace Engine.TheoreticalProfile
 {
+    [Obsolete("Replaced by DeconToolsV2.ElementData", false)]
     internal class ElementData
     {
         public const int MaxTagLength = 256;
@@ -49,6 +51,7 @@ namespace Engine.TheoreticalProfile
         }
     }
 
+    [Obsolete("Replaced by DeconToolsV2.clsElementIsotopes", false)]
     internal class AtomicInformation
     {
         private const string XmlElementsTag = "elements";
@@ -61,10 +64,8 @@ namespace Engine.TheoreticalProfile
         private const string XmlIsotopeTag = "isotope";
         private const string XmlMassTag = "mass";
         private const string XmlProbabilityTag = "probability";
-        public List<ElementData> ElementalIsotopesList = new List<ElementData>();
-#if !Disable_Obsolete
         internal const string DefaultFileName = "Isotope.xml";
-#endif
+        public List<ElementData> ElementalIsotopesList = new List<ElementData>();
 
         public AtomicInformation()
         {
@@ -1944,7 +1945,7 @@ namespace Engine.TheoreticalProfile
             ElementalIsotopesList.Add(isotopes);
             isotopes = new ElementData();
 
-            isotopes.Symbol = "Cm";
+            isotopes.Symbol = "Cf";
             isotopes.Name = "Californium";
 
             isotopes.AverageMass = 251.000000;
@@ -2057,7 +2058,6 @@ namespace Engine.TheoreticalProfile
             //}
         }
         
-#if !Disable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void LoadData(string fileName)
         {
@@ -2266,17 +2266,13 @@ namespace Engine.TheoreticalProfile
             }
             return isotopes;
         }
-#endif
 
-#if !Disable_Obsolete
         [Obsolete("Not used anywhere", true)]
         public void LoadData()
         {
             LoadData(DefaultFileName);
         }
-#endif
         
-#if !Disable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void WriteData(string fileName)
         {
@@ -2322,8 +2318,8 @@ namespace Engine.TheoreticalProfile
                 wrtr.WriteEndElement(); // Close elements tag
             }
         }
-#endif
 
+        [Obsolete("Not used anywhere", true)]
         public int GetNumElements()
         {
             return ElementalIsotopesList.Count;
@@ -2346,3 +2342,4 @@ namespace Engine.TheoreticalProfile
         }
     }
 }
+#endif

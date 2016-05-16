@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using DeconToolsV2;
+using DeconToolsV2.HornTransform;
+using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
 using Engine.TheoreticalProfile;
 
@@ -13,12 +15,12 @@ namespace Engine.HornTransform
     ///     This class is the base class for the isotope fitting. There are three types of fits:
     ///     Area Fit, Peak Fit, and Chi Sq. Fit.
     /// </remarks>
-    internal abstract class IsotopeFit
+    internal abstract class IsotopicProfileFitScorer
     {
         private bool _lastValueWasCached;
         private readonly MercuryCache _mercuryCache = new MercuryCache();
 
-        protected Averagine AveragineObj = new Averagine();
+        protected clsAveragine AveragineObj = new clsAveragine();
         // mass of the charge carrier.
         protected double ChargeCarrierMass;
         // flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
@@ -28,14 +30,14 @@ namespace Engine.HornTransform
         ///     this variable helps keep track of the last intensity value at the lower m/z which we looked at with the function
         ///     IsotopeFit.GetPointIntensity
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetPointIntensity" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Intensity1;
 
         /// <summary>
         ///     this variable helps keep track of the last intensity value at the higher m/z which we looked at with the function
         ///     IsotopeFit.GetPointIntensity
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetPointIntensity" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Intensity2;
 
         // variable to do the calculation of isotopic distribution from mass, using averagine and mercury.
@@ -46,21 +48,21 @@ namespace Engine.HornTransform
         /// <summary>
         ///     keeps track of the last index looked at with IsotopeFit.GetPointIntensity
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetPointIntensity" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected int LastPointIndex;
 
         /// <summary>
         ///     this variable helps keep track of the last min m/z value we looked at with the function
         ///     IsotopeFit.GetPointIntensity
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetPointIntensity" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Mz1;
 
         /// <summary>
         ///     this variable helps keep track of the last max m/z value we looked at with the function
         ///     IsotopeFit.GetPointIntensity
         /// </summary>
-        /// <seealso cref="IsotopeFit.GetPointIntensity" />
+        /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Mz2;
 
         // List to store intensities from the theoretical distribution. Corresponding mzs are stored in IsotopeFit.mvect_distribution_intensities
@@ -71,7 +73,7 @@ namespace Engine.HornTransform
         protected bool UseThrash;
 
         // default constructor.
-        public IsotopeFit()
+        public IsotopicProfileFitScorer()
         {
             ChargeCarrierMass = 1.00727638;
             UseThrash = false;
@@ -81,13 +83,13 @@ namespace Engine.HornTransform
             AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
         }
 
-        public IsotopeFit(IsotopeFit fit)
+        public IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
         {
             // only copies settings not variables.
             CompleteFitThrash = fit.CompleteFitThrash;
             UseThrash = fit.UseThrash;
             ChargeCarrierMass = fit.ChargeCarrierMass;
-            AveragineObj = new Averagine(fit.AveragineObj);
+            AveragineObj = new clsAveragine(fit.AveragineObj);
             IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
             Init();
         }
@@ -97,13 +99,13 @@ namespace Engine.HornTransform
         /// <summary>
         ///     Gets or Sets the theoretical isotope composition (AtomicInformation) for all the elements.
         /// </summary>
-        public AtomicInformation ElementalIsotopeComposition
+        public clsElementIsotopes ElementalIsotopeComposition
         {
-            get { return new AtomicInformation(IsotopeDistribution.ElementalIsotopeComposition); }
+            get { return IsotopeDistribution.ElementalIsotopeComposition; }
             set
             {
-                IsotopeDistribution.SetElementalIsotopeComposition(new AtomicInformation(value));
-                AveragineObj.SetElementalIsotopeComposition(new AtomicInformation(value));
+                IsotopeDistribution.SetElementalIsotopeComposition(value);
+                AveragineObj.SetElementalIsotopeComposition(value);
             }
         }
 
@@ -118,7 +120,7 @@ namespace Engine.HornTransform
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="pointsUsed">number of points used</param>
         /// <param name="debug">debug output flag</param>
-        public abstract double FitScore(PeakData peakData, short chargeState, Peak peak, double mzDelta,
+        public abstract double FitScore(PeakData peakData, short chargeState, clsPeak peak, double mzDelta,
             double minIntensityForScore, out int pointsUsed, bool debug = false);
 
         /// <summary>
@@ -220,13 +222,13 @@ namespace Engine.HornTransform
             Reset();
         }
 
-        public IsotopeFit CloneSettings(IsotopeFit fit)
+        public IsotopicProfileFitScorer CloneSettings(IsotopicProfileFitScorer fit)
         {
             // only copies settings not variables.
             CompleteFitThrash = fit.CompleteFitThrash;
             UseThrash = fit.UseThrash;
             ChargeCarrierMass = fit.ChargeCarrierMass;
-            AveragineObj = new Averagine(fit.AveragineObj);
+            AveragineObj = new clsAveragine(fit.AveragineObj);
             IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
             Init();
             return this;
@@ -406,14 +408,14 @@ namespace Engine.HornTransform
         {
             var peakList = new PeakData();
             var processor = new PeakProcessor();
-            processor.SetOptions(0.5, 1, false, 0);
+            processor.SetOptions(0.5, 1, false, PeakFitType.Apex);
             processor.DiscoverPeaks(xvals, yvals, 0, 10000);
 
             var numpeaks = processor.PeakData.GetNumPeaks();
 
             for (var i = 0; i < numpeaks; i++)
             {
-                Peak peak;
+                clsPeak peak;
                 processor.PeakData.GetPeak(i, out peak);
                 peakList.AddPeak(peak);
             }
@@ -440,11 +442,11 @@ namespace Engine.HornTransform
         ///     to the center point and then slides to the right until the fit score does not improve. Returns the
         ///     best fit score and fills the isotopic profile (isotopeFitRecord)
         /// </remarks>
-        public double GetFitScore(PeakData peakData, short chargeState, ref Peak peak, out IsotopeFitRecord isoRecord,
+        public double GetFitScore(PeakData peakData, short chargeState, ref clsPeak peak, out clsHornTransformResults isoRecord,
             double deleteIntensityThreshold, double minTheoreticalIntensityForScore, double leftFitStringencyFactor,
             double rightFitStringencyFactor, out int pointsUsed, bool debug = false)
         {
-            isoRecord = new IsotopeFitRecord();
+            isoRecord = new clsHornTransformResults();
             if (chargeState <= 0)
             {
                 Console.WriteLine("Negative value for charge state. " + chargeState);
@@ -476,7 +478,7 @@ namespace Engine.HornTransform
                 Console.WriteLine("Theoretical peak\t" + "Index\t" + "MZ\t" + "Intensity\t" + "FWHM\t" + "SigNoise");
                 for (var i = 0; i < numpeaks; i++)
                 {
-                    Peak theorpeak;
+                    clsPeak theorpeak;
                     theorPeakData.GetPeak(i, out theorpeak);
                     Console.WriteLine("Theoretical peak\t" + i + "\t" + theorpeak.Mz + "\t" +
                                       theorpeak.Intensity + "\t" + theorpeak.FWHM + "\t" + theorpeak.SignalToNoise);
@@ -516,7 +518,7 @@ namespace Engine.HornTransform
 
             double p1Fit = -1, m1Fit = -1; // [gord]: this seems unused
             var mPeak = IsotopeDistribution.MaxPeakMz;
-            var nextPeak = new Peak();
+            var nextPeak = new clsPeak();
 
             var bestFit = fit;
             var bestFitCountBasis = pointsUsed;
@@ -548,7 +550,7 @@ namespace Engine.HornTransform
                 {
                     delta = peak.Mz - mzLeft;
                     // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
-                    var currentPeakCopy = new Peak(peak); // in c++ this copy is created by value;
+                    var currentPeakCopy = new clsPeak(peak); // in c++ this copy is created by value;
                     currentPeakCopy.Intensity = nextPeak.Intensity;
                     fit = FitScore(peakData, chargeState, currentPeakCopy, delta, minTheoreticalIntensityForScore,
                         out fitCountBasis, debug);
@@ -617,7 +619,7 @@ namespace Engine.HornTransform
                 if (mzRight > 0 && nextPeak.Mz > 0)
                 {
                     delta = peak.Mz - mzRight;
-                    var currentPeakCopy = new Peak(peak);
+                    var currentPeakCopy = new clsPeak(peak);
                     currentPeakCopy.Intensity = nextPeak.Intensity;
                     fit = FitScore(peakData, chargeState, currentPeakCopy, delta, minTheoreticalIntensityForScore,
                         out fitCountBasis, debug);
@@ -704,7 +706,7 @@ namespace Engine.HornTransform
         /// <param name="deleteIntensityThreshold">intensity of least isotope to delete.</param>
         /// <param name="minTheoreticalIntensityForScore">minimum intensity of point to consider for scoring purposes.</param>
         /// <param name="debug">if debugging output is enabled</param>
-        public double GetFitScore(PeakData peakData, short chargeState, Peak peak, MolecularFormula formula,
+        public double GetFitScore(PeakData peakData, short chargeState, clsPeak peak, DeconToolsV2.MolecularFormula formula,
             double deleteIntensityThreshold, double minTheoreticalIntensityForScore, bool debug = false)
         {
             if (chargeState <= 0)
@@ -862,7 +864,7 @@ namespace Engine.HornTransform
             if (needToCalculateIsotopeDistribution)
             {
                 _lastValueWasCached = false;
-                MolecularFormula empiricalFormula = AveragineObj.GetAverageFormulaForMass(mostAbundantMass);
+                DeconToolsV2.MolecularFormula empiricalFormula = AveragineObj.GetAverageFormulaForMass(mostAbundantMass);
                 //long lngCharge = (long) charge;
 
                 IsotopeDistribution.ChargeCarrierMass = ChargeCarrierMass;
@@ -930,7 +932,7 @@ namespace Engine.HornTransform
             var numFilteredTheorPeaks = 0;
             for (var i = 0; i < numTheorPeaks; i++)
             {
-                Peak peak;
+                clsPeak peak;
                 theorPeakData.GetPeak(i, out peak);
 
                 if (peak.Intensity >= theorIntensityCutOff)
@@ -951,13 +953,13 @@ namespace Engine.HornTransform
 
             for (var i = 0; i < numFilteredTheorPeaks; i++)
             {
-                Peak theorPeak;
+                clsPeak theorPeak;
                 filteredTheorPeakData.GetPeak(i, out theorPeak);
 
                 var targetMzLower = theorPeak.Mz + startingDelta - peakWidth;
                 var targetMzUpper = theorPeak.Mz + startingDelta + peakWidth;
 
-                Peak foundPeak;
+                clsPeak foundPeak;
                 obsPeakData.FindPeak(targetMzLower, targetMzUpper, out foundPeak);
 
                 if (foundPeak.Mz > 0)

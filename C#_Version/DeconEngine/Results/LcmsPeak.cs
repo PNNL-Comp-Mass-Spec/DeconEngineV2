@@ -1,3 +1,4 @@
+#if !Disable_Obsolete
 using System;
 using System.IO;
 
@@ -50,3 +51,4 @@ namespace Engine.Results
         }
     }
 }
+#endif

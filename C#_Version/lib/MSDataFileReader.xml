@@ -6,7 +6,13 @@ MSDataFileReader
 </name>
 </assembly>
 <members>
-<member name="M:MSDataFileReader.clsMSDataFileReaderBaseClass.OpenFileInit(System.String)">
+<member name="T:MSDataFileReader.clsSpectrumInfoMzXML.PairOrderTypes">
+	<summary>
+ Tracks pairOrder for mzXML v1.x and v2.x
+ Tracks contentType for mzXML 3.x files
+ </summary>
+	<remarks></remarks>
+</member><member name="M:MSDataFileReader.clsMSDataFileReaderBaseClass.OpenFileInit(System.String)">
 	<summary>
  Validates that strInputFilePath exists
  </summary>
@@ -19,12 +25,6 @@ MSDataFileReader
  </summary>
 	<param name="strTextStream"></param>
 	<returns>Always returns false</returns>
-	<remarks></remarks>
-</member><member name="T:MSDataFileReader.clsSpectrumInfoMzXML.PairOrderTypes">
-	<summary>
- Tracks pairOrder for mzXML v1.x and v2.x
- Tracks contentType for mzXML 3.x files
- </summary>
 	<remarks></remarks>
 </member>
 </members>

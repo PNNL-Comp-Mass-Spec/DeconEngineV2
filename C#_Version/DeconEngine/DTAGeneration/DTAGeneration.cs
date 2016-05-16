@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using DeconToolsV2;
+using DeconToolsV2.HornTransform;
+using DeconToolsV2.Peaks;
 using DeconToolsV2.Readers;
 using Engine.HornTransform;
 using Engine.PeakProcessing;
@@ -43,8 +45,8 @@ namespace Engine.DTAProcessing
         private List<double> mvect_intensities_msN = new List<double>();
         private List<int> mvect_chargeStateList = new List<int>();
 
-        private Engine.PeakProcessing.Peak mobj_parentPeak;
-        private Engine.HornTransform.IsotopeFitRecord mobj_transformRecord;
+        private clsPeak mobj_parentPeak;
+        private clsHornTransformResults mobj_transformRecord;
         private Engine.DTAProcessing.MSnInformationRecord mobj_msn_record;
         private Engine.DTAProcessing.ProfileRecord mobj_profile_record;
         private Engine.PeakProcessing.PeakProcessor mobj_parent_peak_processor;
@@ -52,7 +54,7 @@ namespace Engine.DTAProcessing
         private Engine.PeakProcessing.PeakProcessor mobj_summed_peak_processor;
         private Engine.HornTransform.MassTransform mobj_mass_transform;
         private Engine.ChargeDetermination.SVMChargeDetermine mobj_svm_charge_determination;
-        private List<Engine.HornTransform.IsotopeFitRecord> mvect_transformRecords = new List<IsotopeFitRecord>();
+        private List<clsHornTransformResults> mvect_transformRecords = new List<clsHornTransformResults>();
         private List<Engine.DTAProcessing.MSnInformationRecord> mvect_msn_records = new List<MSnInformationRecord>();
         private List<Engine.DTAProcessing.ProfileRecord> mvect_profile_records = new List<ProfileRecord>();
 
@@ -156,7 +158,7 @@ namespace Engine.DTAProcessing
             double cc_mass, double delete_threshold_intensity, double min_theoretical_intensity_for_score,
             short num_peaks_for_shoulder, bool use_mercury_caching, bool o16_o18_media, string averagine_mf,
             string tag_mf, bool thrash_or_not, bool complete_fit, bool chk_again_ch1, enmIsotopeFitType fit_type,
-            Engine.TheoreticalProfile.AtomicInformation atomic_info)
+            clsElementIsotopes atomic_info)
         {
             mobj_mass_transform.SetOptions(max_charge, max_mw, max_fit, min_s2n, cc_mass, delete_threshold_intensity,
                 min_theoretical_intensity_for_score, num_peaks_for_shoulder, chk_again_ch1, use_mercury_caching,
@@ -190,7 +192,7 @@ namespace Engine.DTAProcessing
                 {
                     //Look back first
                     mz_prev = mdbl_parent_Mz - mdbl_cc_mass / cs;
-                    Engine.PeakProcessing.Peak pk_prev;
+                    clsPeak pk_prev;
                     mobj_parent_peak_processor.PeakData.FindPeakAbsolute(mz_prev - fwhm / cs, mz_prev + fwhm / cs,
                         out pk_prev);
                     if (pk_prev.Mz > 0 && pk_prev.Intensity > max_intensity / 8)
@@ -224,7 +226,7 @@ namespace Engine.DTAProcessing
                     }
                     // Look ahead
                     mz_next = mdbl_parent_Mz + 1.003 / cs;
-                    Engine.PeakProcessing.Peak pk_next;
+                    clsPeak pk_next;
                     mobj_parent_peak_processor.PeakData.FindPeakAbsolute(mz_next - fwhm / cs, mz_next + fwhm / cs,
                         out pk_next);
                     if (pk_next.Mz > 0 && pk_next.Intensity > max_intensity / 8)
@@ -320,9 +322,9 @@ namespace Engine.DTAProcessing
                     numpeaks, newchkcharge1, usemercury, o16018media);
 
                 // now start THRASH all over again
-                Engine.PeakProcessing.Peak currentPeak;
-                Engine.HornTransform.IsotopeFitRecord transformRecord;
-                List<Engine.HornTransform.IsotopeFitRecord> vectTransformRecord = new List<IsotopeFitRecord>();
+                clsPeak currentPeak;
+                clsHornTransformResults transformRecord;
+                List<clsHornTransformResults> vectTransformRecord = new List<clsHornTransformResults>();
 
                 bool found_peak = mobj_summed_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
                 double fwhm_SN = currentPeak.FWHM;
@@ -361,7 +363,7 @@ namespace Engine.DTAProcessing
                 if (found_transform_record)
                 {
                     // set mono intensity to replace the one that summes spectra would return
-                    Engine.PeakProcessing.Peak tempPeak;
+                    clsPeak tempPeak;
                     double mono_match = mobj_parent_peak_processor.GetClosestPeakMz(mobj_transformRecord.Mz,
                         out tempPeak);
                     if (tempPeak.Intensity > mdbl_min_peptide_intensity)
@@ -470,10 +472,10 @@ namespace Engine.DTAProcessing
                 double minMZ = parent_Mz_match - mint_window_size;
                 double maxMZ = parent_Mz_match + mint_window_size;
 
-                Engine.PeakProcessing.Peak currentPeak;
-                Engine.HornTransform.IsotopeFitRecord transformRecord;
-                Engine.HornTransform.IsotopeFitRecord precursorRecord;
-                List<Engine.HornTransform.IsotopeFitRecord> vectTransformRecord = new List<IsotopeFitRecord>();
+                clsPeak currentPeak;
+                clsHornTransformResults transformRecord;
+                clsHornTransformResults precursorRecord;
+                List<clsHornTransformResults> vectTransformRecord = new List<clsHornTransformResults>();
 
                 bool found_peak = mobj_parent_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
                 double fwhm_SN = currentPeak.FWHM;
@@ -497,7 +499,7 @@ namespace Engine.DTAProcessing
                 {
                     // only  one so get it in
                     found_transform_record = false;
-                    transformRecord = new IsotopeFitRecord(vectTransformRecord[0]);
+                    transformRecord = new clsHornTransformResults(vectTransformRecord[0]);
                     int num_isotopes = transformRecord.NumIsotopesObserved;
                     if (transformRecord.Fit < mdbl_min_fit_for_single_spectra)
                         // AM: to give slight edge to summing
@@ -530,7 +532,7 @@ namespace Engine.DTAProcessing
                             transform_num < (int) vectTransformRecord.Count && !found_transform_record;
                             transform_num++)
                         {
-                            transformRecord = new IsotopeFitRecord(vectTransformRecord[transform_num]);
+                            transformRecord = new clsHornTransformResults(vectTransformRecord[transform_num]);
                             int num_isotopes = transformRecord.NumIsotopesObserved;
                             if (transformRecord.Fit < mdbl_min_fit_for_single_spectra)
                                 // AM: to give slight edge to summing
@@ -559,7 +561,7 @@ namespace Engine.DTAProcessing
                                     transform_num < (int) vectTransformRecord.Count && !found_precursor_record;
                                     transform_num++)
                                 {
-                                    transformRecord = new IsotopeFitRecord(vectTransformRecord[transform_num]);
+                                    transformRecord = new clsHornTransformResults(vectTransformRecord[transform_num]);
                                     int num_isotopes = transformRecord.NumIsotopesObserved;
                                     for (int isotope_num = 0; isotope_num < num_isotopes; isotope_num++)
                                     {
@@ -569,7 +571,7 @@ namespace Engine.DTAProcessing
                                             //found it, eject it
                                             found_precursor_record = true;
                                             mvect_transformRecords.Clear();
-                                            mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                                            mvect_transformRecords.Add(new clsHornTransformResults(mobj_transformRecord));
                                             break;
                                         }
                                     }
@@ -577,7 +579,7 @@ namespace Engine.DTAProcessing
                             }
                             else
                             {
-                                mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                                mvect_transformRecords.Add(new clsHornTransformResults(mobj_transformRecord));
                                 return true;
                             }
                         }
@@ -589,7 +591,7 @@ namespace Engine.DTAProcessing
                             transform_num < (int) vectTransformRecord.Count && !found_transform_record;
                             transform_num++)
                         {
-                            transformRecord = new IsotopeFitRecord(vectTransformRecord[transform_num]);
+                            transformRecord = new clsHornTransformResults(vectTransformRecord[transform_num]);
                             if (Math.Abs(transformRecord.Mz - parent_Mz_match) < mint_isolation_window_size)
                             {
                                 mvect_transformRecords.Add(transformRecord);
@@ -605,7 +607,7 @@ namespace Engine.DTAProcessing
             else
             {
                 // to set parent intensity
-                Engine.PeakProcessing.Peak tempPeak;
+                clsPeak tempPeak;
                 mobj_parent_peak_processor.PeakData.FindPeak(parent_mz - 0.02, parent_mz + 0.02, out tempPeak);
                 if (tempPeak.Intensity > 0)
                 {
@@ -641,7 +643,7 @@ namespace Engine.DTAProcessing
                 mobj_transformRecord.Fit = 1;
                 mobj_transformRecord.FitCountBasis = 0;
                 mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
-                mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                mvect_transformRecords.Add(new clsHornTransformResults(mobj_transformRecord));
                 mobj_transformRecord.Mz = mdbl_parent_Mz;
                 mobj_transformRecord.ChargeState = 3;
                 mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
@@ -649,7 +651,7 @@ namespace Engine.DTAProcessing
                 mobj_transformRecord.Fit = 1;
                 mobj_transformRecord.FitCountBasis = 0;
                 mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
-                mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                mvect_transformRecords.Add(new clsHornTransformResults(mobj_transformRecord));
                 return true;
             }
 
@@ -672,12 +674,12 @@ namespace Engine.DTAProcessing
             double parent_Mz = mobj_raw_data_dta.GetParentMz(msN_scan_number);
 
             // Now start
-            Engine.PeakProcessing.Peak parentPeak = new Peak();
+            clsPeak parentPeak = new clsPeak();
             double parent_Mz_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_Mz, out mobj_parentPeak);
             if (mobj_parentPeak.Intensity < mdbl_min_peptide_intensity)
             {
                 mdbl_parent_Mz = parent_Mz;
-                Engine.PeakProcessing.Peak tempPeak;
+                clsPeak tempPeak;
                 mobj_parent_peak_processor.PeakData.FindPeak(parent_Mz - 0.1, parent_Mz + 0.1, out tempPeak);
                 if (tempPeak.Intensity > 0)
                     mdbl_parent_Intensity = tempPeak.Intensity;
@@ -1124,7 +1126,7 @@ namespace Engine.DTAProcessing
                 GetMsNSpectra(msN_scan, mdbl_pkBkgRatio, mdbl_peptideMinBkgRatio);
                 parent_mz = mobj_raw_data_dta.GetParentMz(msN_scan);
                 GetParentScanSpectra(parent_scan, mdbl_pkBkgRatio, mdbl_peptideMinBkgRatio);
-                Engine.PeakProcessing.Peak parentPeak;
+                clsPeak parentPeak;
                 parent_Mz_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_mz, out parentPeak);
 
                 class_val = mobj_svm_charge_determination.GetClassAtScanIndex(msN_scan_index);
@@ -1201,7 +1203,7 @@ namespace Engine.DTAProcessing
                 if (mobj_parentPeak.Intensity < mdbl_min_peptide_intensity)
                 {
                     mdbl_parent_Mz = parent_mz;
-                    Engine.PeakProcessing.Peak tempPeak;
+                    clsPeak tempPeak;
                     mobj_parent_peak_processor.PeakData.FindPeak(parent_mz - 0.1, parent_mz + 0.1, out tempPeak);
                     if (tempPeak.Intensity > 0)
                         mdbl_parent_Intensity = tempPeak.Intensity;
