@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7A6AE75-E41E-46F3-AB0C-09D2AC23176F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DeconEngine</RootNamespace>
+    <AssemblyName>DeconEngineV2</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XCALIBUR_INSTALLED</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XCALIBUR_INSTALLED</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;XCALIBUR_INSTALLED</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NoDeconEngine|AnyCPU'">
+    <OutputPath>bin\NoDeconEngine\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NoDeconEngine|x64'">
+    <OutputPath>bin\x64\NoDeconEngine\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'NoDeconEngine|x86'">
+    <OutputPath>bin\x86\NoDeconEngine\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED Disable_Obsolete</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=3.11.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.3.11.1\lib\net40\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MSDataFileReader">
+      <HintPath>..\lib\MSDataFileReader.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApodizationType.cs" />
+    <Compile Include="CalibrationSettings.cs" />
+    <Compile Include="Calibrations\Calibrator.cs" />
+    <Compile Include="ChargeDetermination\AutoCorrelationChargeDetermination.cs" />
+    <Compile Include="ChargeDetermination\FeatureList.cs" />
+    <Compile Include="ChargeDetermination\SVMChargeDetermination.cs" />
+    <Compile Include="clsAveragine.cs" />
+    <Compile Include="clsDTAGenerationParameters.cs" />
+    <Compile Include="clsElementIsotopes.cs" />
+    <Compile Include="clsHornTransform.cs" />
+    <Compile Include="clsHornTransformParameters.cs" />
+    <Compile Include="clsHornTransformResults.cs" />
+    <Compile Include="clsHyperTransform.cs" />
+    <Compile Include="clsIsotopeFit.cs" />
+    <Compile Include="clsLCMSPeak.cs" />
+    <Compile Include="clsMercuryIsotopeDistribution.cs" />
+    <Compile Include="clsPeak.cs" />
+    <Compile Include="clsPeakProcessor.cs" />
+    <Compile Include="clsPeakProcessorParameters.cs" />
+    <Compile Include="clsProcRunner.cs" />
+    <Compile Include="clsRawData.cs" />
+    <Compile Include="clsRawDataPreprocessOptions.cs" />
+    <Compile Include="clsTransformFile.cs" />
+    <Compile Include="clsTransformResults.cs" />
+    <Compile Include="DeconEngine.cs" />
+    <Compile Include="DeconEngineUtils.cs" />
+    <Compile Include="DTAGeneration\DTAGeneration.cs" />
+    <Compile Include="DTAGeneration\MSnInformationRecord.cs" />
+    <Compile Include="DTAGeneration\ProfileRecord.cs" />
+    <Compile Include="enmIsotopeFitType.cs" />
+    <Compile Include="HornTransform\AreaFit.cs" />
+    <Compile Include="HornTransform\ChiSqFit.cs" />
+    <Compile Include="HornTransform\IsotopeFit.cs" />
+    <Compile Include="HornTransform\IsotopeFitRecord.cs" />
+    <Compile Include="HornTransform\MassTransform.cs" />
+    <Compile Include="HornTransform\MercuryCache.cs" />
+    <Compile Include="HornTransform\PeakFit.cs" />
+    <Compile Include="PeakProcessor\Peak.cs" />
+    <Compile Include="PeakProcessor\PeakData.cs" />
+    <Compile Include="PeakProcessor\PeakFit.cs" />
+    <Compile Include="PeakProcessor\PeakIndex.cs" />
+    <Compile Include="PeakProcessor\PeakProcessor.cs" />
+    <Compile Include="PeakProcessor\PeakStatistician.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Readers\AgilentRawData.cs" />
+    <Compile Include="Readers\AsciiRawData.cs" />
+    <Compile Include="Readers\BrukerAsciiRawData.cs" />
+    <Compile Include="Readers\BrukerRawData.cs" />
+    <Compile Include="Readers\FinniganRawData.cs" />
+    <Compile Include="Readers\Icr2lsRawData.cs" />
+    <Compile Include="Readers\IMSRawData.cs" />
+    <Compile Include="Readers\MicromassRawData.cs" />
+    <Compile Include="Readers\MZXmlRawData.cs" />
+    <Compile Include="Readers\RawData.cs" />
+    <Compile Include="Readers\ReaderFactory.cs" />
+    <Compile Include="Readers\SunExtrelRawData.cs" />
+    <Compile Include="Results\LcmsPeak.cs" />
+    <Compile Include="Results\LCMSPeakIndex.cs" />
+    <Compile Include="Results\LCMSTransformResults.cs" />
+    <Compile Include="TheoreticalProfile\AtomicInformation.cs" />
+    <Compile Include="TheoreticalProfile\Averagine.cs" />
+    <Compile Include="TheoreticalProfile\MercuryIsotopeDistribution.cs" />
+    <Compile Include="TheoreticalProfile\MolecularFormula.cs" />
+    <Compile Include="Utilities\Apodization.cs" />
+    <Compile Include="Utilities\BlockDeque.cs" />
+    <Compile Include="Utilities\DeconException.cs" />
+    <Compile Include="Utilities\FFT32.cs" />
+    <Compile Include="Utilities\Helpers.cs" />
+    <Compile Include="Utilities\Interpolation.cs" />
+    <Compile Include="Utilities\Matrix.cs" />
+    <Compile Include="Utilities\SavGolSmoother.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MSFileReaderLib">
+      <Guid>{F0C5F3E3-4F2A-443E-A74D-0AABE3237494}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

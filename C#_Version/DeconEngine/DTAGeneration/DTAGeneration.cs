@@ -1,0 +1,1274 @@
+﻿#if !Disable_Obsolete
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using DeconToolsV2;
+using DeconToolsV2.Readers;
+using Engine.HornTransform;
+using Engine.PeakProcessing;
+
+namespace Engine.DTAProcessing
+{
+    [Obsolete("Only used by Decon2LS.UI", false)]
+    internal class DTAProcessor
+    {
+        private int mint_minIonCount;
+        private int mint_minScan;
+        private int mint_maxScan;
+        private int mint_window_size;
+        private int mint_consider_charge;
+        private int mint_isolation_window_size;
+
+        private double mdbl_minMass;
+        private double mdbl_maxMass;
+        private double mdbl_pkBkgRatio;
+        private double mdbl_peptideMinBkgRatio;
+        private double mdbl_min_peptide_intensity;
+        private double mdbl_parent_Intensity;
+        private double mdbl_parent_Mz;
+        private double mdbl_cc_mass;
+        private double mdbl_min_fit_for_single_spectra;
+
+        private double mdbl_mono_mz_from_header;
+
+        private bool mbln_create_log_file_only;
+        private bool mbln_create_composite_dta;
+        private bool mbln_consider_multiple_precursors;
+        private bool mbln_is_profile_data_for_mzXML;
+
+        private List<double> mvect_mzs_parent = new List<double>();
+        private List<double> mvect_intensities_parent = new List<double>();
+        private List<double> mvect_mzs_msN = new List<double>();
+        private List<double> mvect_intensities_msN = new List<double>();
+        private List<int> mvect_chargeStateList = new List<int>();
+
+        private Engine.PeakProcessing.Peak mobj_parentPeak;
+        private Engine.HornTransform.IsotopeFitRecord mobj_transformRecord;
+        private Engine.DTAProcessing.MSnInformationRecord mobj_msn_record;
+        private Engine.DTAProcessing.ProfileRecord mobj_profile_record;
+        private Engine.PeakProcessing.PeakProcessor mobj_parent_peak_processor;
+        private Engine.PeakProcessing.PeakProcessor mobj_msN_peak_processor;
+        private Engine.PeakProcessing.PeakProcessor mobj_summed_peak_processor;
+        private Engine.HornTransform.MassTransform mobj_mass_transform;
+        private Engine.ChargeDetermination.SVMChargeDetermine mobj_svm_charge_determination;
+        private List<Engine.HornTransform.IsotopeFitRecord> mvect_transformRecords = new List<IsotopeFitRecord>();
+        private List<Engine.DTAProcessing.MSnInformationRecord> mvect_msn_records = new List<MSnInformationRecord>();
+        private List<Engine.DTAProcessing.ProfileRecord> mvect_profile_records = new List<ProfileRecord>();
+
+        public int mint_msNscanIndex;
+        public int mint_NumMSnScansProcessed;
+        public int mint_NumDTARecords;
+
+        public Engine.Readers.RawData mobj_raw_data_dta;
+        public FileType menm_dataset_type;
+
+        public SortedDictionary<int, int> mmap_msN_parentIndex;
+
+        public string mch_log_filename;
+        public string mch_comb_dta_filename;
+        public string mch_profile_filename;
+        public string mch_mgf_filename;
+        public string mch_output_file;
+        public string mch_dataset_name;
+
+        public StreamWriter mfile_log;
+        public StreamWriter mfile_comb_dta;
+        public StreamWriter mfile_mgf;
+
+        // default constructor.
+        public DTAProcessor()
+        {
+            mobj_parent_peak_processor = new Engine.PeakProcessing.PeakProcessor();
+            mobj_msN_peak_processor = new Engine.PeakProcessing.PeakProcessor();
+            mobj_summed_peak_processor = new Engine.PeakProcessing.PeakProcessor();
+            mobj_mass_transform = new Engine.HornTransform.MassTransform();
+            mobj_svm_charge_determination = new Engine.ChargeDetermination.SVMChargeDetermine();
+            mobj_raw_data_dta = null;
+            mdbl_maxMass = 0.0;
+            mint_maxScan = 0;
+            mint_minIonCount = 0;
+            mdbl_minMass = 0.0;
+            mdbl_parent_Mz = 0.0;
+            mdbl_parent_Intensity = 0.0;
+            mint_minScan = 0;
+            mint_window_size = 5;
+            mint_msNscanIndex = 0;
+            mdbl_cc_mass = 1.00727638;
+            mint_consider_charge = 0;
+            mdbl_min_fit_for_single_spectra = 0.1;
+            mint_NumDTARecords = 0;
+            mint_NumMSnScansProcessed = 0;
+            mint_isolation_window_size = 3;
+            mbln_consider_multiple_precursors = false;
+            menm_dataset_type = FileType.FINNIGAN;
+            mbln_is_profile_data_for_mzXML = false;
+
+        }
+
+        // destructor.
+        ~DTAProcessor()
+        {
+            if (mobj_raw_data_dta != null)
+            {
+                mobj_raw_data_dta.Close();
+            }
+        }
+
+        /// <summary>
+        /// Sets the Peak Processor Options for peak data
+        /// </summary>
+        /// <param name="s2n">Signal-To-Noise Ratio</param>
+        /// <param name="thresh">Peak-Intensity Threshold</param>
+        /// <param name="fit_type">Peak-Fit Type</param>
+        public void SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass,
+            bool createLogFileOnly, bool createCompositeDTA, int considerCharge, bool considerMultiplePrecursors,
+            int isolationWindowSize, bool isProfileDataForMzXML)
+        {
+            mint_minIonCount = minIonCount;
+            mdbl_maxMass = maxMass;
+            mdbl_minMass = minMass;
+            mint_maxScan = maxScan;
+            mint_minScan = minScan;
+            mbln_create_composite_dta = createCompositeDTA;
+            mbln_create_log_file_only = createLogFileOnly;
+            mint_consider_charge = considerCharge;
+            mint_isolation_window_size = isolationWindowSize;
+            mbln_consider_multiple_precursors = considerMultiplePrecursors;
+            mbln_is_profile_data_for_mzXML = isProfileDataForMzXML;
+        }
+
+        public void SetPeakParametersLowResolution(double pkBkgRatio, double peptideMinBkgRatio)
+        {
+            mdbl_pkBkgRatio = pkBkgRatio;
+            mdbl_peptideMinBkgRatio = peptideMinBkgRatio;
+        }
+
+        public void SetPeakProcessorOptions(double s2n, double thresh, bool thresholded,
+            Engine.PeakProcessing.PeakFitType fit_type)
+        {
+            mobj_parent_peak_processor.SetOptions(s2n, thresh, thresholded, fit_type);
+            mobj_msN_peak_processor.SetOptions(s2n, thresh, thresholded, fit_type);
+            mobj_summed_peak_processor.SetOptions(s2n, thresh, thresholded, fit_type);
+        }
+
+        public void SetMassTransformOptions(short max_charge, double max_mw, double max_fit, double min_s2n,
+            double cc_mass, double delete_threshold_intensity, double min_theoretical_intensity_for_score,
+            short num_peaks_for_shoulder, bool use_mercury_caching, bool o16_o18_media, string averagine_mf,
+            string tag_mf, bool thrash_or_not, bool complete_fit, bool chk_again_ch1, enmIsotopeFitType fit_type,
+            Engine.TheoreticalProfile.AtomicInformation atomic_info)
+        {
+            mobj_mass_transform.SetOptions(max_charge, max_mw, max_fit, min_s2n, cc_mass, delete_threshold_intensity,
+                min_theoretical_intensity_for_score, num_peaks_for_shoulder, chk_again_ch1, use_mercury_caching,
+                o16_o18_media);
+
+            mobj_mass_transform.SetIsotopeFitOptions(averagine_mf, tag_mf, thrash_or_not, complete_fit);
+            mobj_mass_transform.ElementalIsotopeComposition = atomic_info;
+            mobj_mass_transform.IsotopeFitType = fit_type;
+        }
+
+        public bool FindPrecursorForChargeStates()
+        {
+            //simple check for charge state
+            double mono_mz = 0;
+            double max_intensity = mdbl_parent_Intensity;
+            double mz_prev = 0;
+            double mz_next = 0;
+            int pk_index = 0;
+            double fwhm = 0;
+
+            fwhm = mobj_parentPeak.FWHM;
+
+            // This has known to happen
+            if (fwhm > 1)
+                return false;
+
+            //preference given to higher charge states
+            try
+            {
+                for (int cs = 4; cs > 0; cs --)
+                {
+                    //Look back first
+                    mz_prev = mdbl_parent_Mz - mdbl_cc_mass / cs;
+                    Engine.PeakProcessing.Peak pk_prev;
+                    mobj_parent_peak_processor.PeakData.FindPeakAbsolute(mz_prev - fwhm / cs, mz_prev + fwhm / cs,
+                        out pk_prev);
+                    if (pk_prev.Mz > 0 && pk_prev.Intensity > max_intensity / 8)
+                    {
+                        while (pk_prev.Mz > 0 && pk_prev.Intensity > max_intensity / 8)
+                        {
+                            mono_mz = pk_prev.Mz;
+                            mz_prev = pk_prev.Mz - 1.003 / cs;
+                            pk_index = pk_prev.PeakIndex;
+                            if (pk_prev.Intensity > max_intensity)
+                                max_intensity = pk_prev.Intensity;
+                            mobj_parent_peak_processor.PeakData.FindPeakAbsolute(mz_prev - fwhm / cs,
+                                mz_prev + fwhm / cs, out pk_prev);
+                        }
+
+                        double parent_mono = (mdbl_parent_Mz - mdbl_cc_mass) * cs;
+                        double mono_mw = (mono_mz - mdbl_cc_mass) * cs;
+                        if (Math.Abs(parent_mono - mono_mw) < 4) // to route out co-eluting peptides
+                        {
+                            mobj_transformRecord.Mz = mono_mz;
+                            mobj_transformRecord.ChargeState = (short) cs;
+                            mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                                mobj_transformRecord.ChargeState;
+                            mobj_transformRecord.Fit = 1;
+                            mobj_transformRecord.FitCountBasis = 0;
+                            mobj_transformRecord.PeakIndex = pk_index;
+                            mobj_transformRecord.MonoIntensity = (int) pk_prev.Intensity;
+                            mvect_transformRecords.Add(mobj_transformRecord);
+                            return true;
+                        }
+                    }
+                    // Look ahead
+                    mz_next = mdbl_parent_Mz + 1.003 / cs;
+                    Engine.PeakProcessing.Peak pk_next;
+                    mobj_parent_peak_processor.PeakData.FindPeakAbsolute(mz_next - fwhm / cs, mz_next + fwhm / cs,
+                        out pk_next);
+                    if (pk_next.Mz > 0 && pk_next.Intensity > max_intensity / 8)
+                    {
+                        //this is the first isotope
+                        mobj_transformRecord.Mz = mdbl_parent_Mz;
+                        mobj_transformRecord.ChargeState = (short) cs;
+                        mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                            mobj_transformRecord.ChargeState;
+                        mobj_transformRecord.Fit = 1;
+                        mobj_transformRecord.FitCountBasis = 0;
+                        mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                        mobj_transformRecord.PeakIndex = mobj_parentPeak.PeakIndex;
+                        mvect_transformRecords.Add(mobj_transformRecord);
+                        return true;
+                    }
+                }
+            }
+            catch (System.Exception e)
+            {
+#if DEBUG
+                throw e;
+#endif
+                return false;
+            }
+
+            //Not found any peaks
+            return false;
+        }
+
+        public bool DeisotopeSummedSpectra(int parent_scan_number, double parent_mz)
+        {
+            bool found_transform = false;
+            double minMZ = parent_mz - mint_window_size;
+            double maxMZ = parent_mz + mint_window_size;
+            int mono_orig_intensity = 0;
+
+            List<double> vect_mzs;
+            List<double> vect_intensities;
+
+            //Settting to see if found_precursor worked
+            bool found_precursor = false;
+            if (mvect_transformRecords.Count > 0)
+                found_precursor = true;
+
+            //check to see if it is a MS scan i.e. to say perform summing only on MS scans
+            if (!mobj_raw_data_dta.IsMSScan(parent_scan_number))
+                return false;
+
+            //get raw data first
+            mobj_raw_data_dta.GetSummedSpectra(out vect_mzs, out vect_intensities, parent_scan_number, 2, minMZ, maxMZ);
+            if (vect_intensities.Count <= 1)
+                return false;
+
+            //discover peaks
+            double thres = DeconEngine.Utils.GetAverage(vect_intensities, float.MaxValue);
+            double background_intensity = DeconEngine.Utils.GetAverage(vect_intensities, (float) (5 * thres));
+            mobj_summed_peak_processor.SetPeakIntensityThreshold(background_intensity * 5);
+            //hard-coded now, need to change it later
+            mobj_summed_peak_processor.SetPeaksProfileType(mobj_raw_data_dta.IsProfileScan(parent_scan_number));
+
+            int numPeaks = mobj_summed_peak_processor.DiscoverPeaks(vect_mzs, vect_intensities);
+            mobj_summed_peak_processor.PeakData.InitializeUnprocessedPeakData();
+
+            //Get ParentPeak and index in this peak processor
+            double parent_Mz_match = mobj_summed_peak_processor.GetClosestPeakMz(parent_mz, out mobj_parentPeak);
+            if (mobj_parentPeak.Intensity < mdbl_min_peptide_intensity)
+            {
+                return false;
+            }
+
+            int parent_index = mobj_parentPeak.PeakIndex;
+
+            try
+            {
+                // Make sure that checking against charge 1 is false
+                short maxcs;
+                double maxmw;
+                double maxfit;
+                double mins2n;
+                double ccmass;
+                double delthintensity;
+                double minthscore;
+                short numpeaks;
+                bool chkcharge1;
+                bool newchkcharge1 = false;
+                bool usemercury;
+                bool o16018media;
+
+                mobj_mass_transform.GetOptions(out maxcs, out maxmw, out maxfit, out mins2n, out ccmass,
+                    out delthintensity, out minthscore, out numpeaks, out chkcharge1, out usemercury, out o16018media);
+                mobj_mass_transform.SetOptions(maxcs, maxmw, maxfit, mins2n, ccmass, delthintensity, minthscore,
+                    numpeaks, newchkcharge1, usemercury, o16018media);
+
+                // now start THRASH all over again
+                Engine.PeakProcessing.Peak currentPeak;
+                Engine.HornTransform.IsotopeFitRecord transformRecord;
+                List<Engine.HornTransform.IsotopeFitRecord> vectTransformRecord = new List<IsotopeFitRecord>();
+
+                bool found_peak = mobj_summed_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                double fwhm_SN = currentPeak.FWHM;
+                int numDeisotoped = 0;
+
+                while (found_peak)
+                {
+                    found_transform = mobj_mass_transform.FindTransform(mobj_summed_peak_processor.PeakData,
+                        ref currentPeak, out transformRecord);
+                    if (found_transform)
+                    {
+                        numDeisotoped++;
+                        vectTransformRecord.Add(transformRecord);
+                    }
+                    found_peak = mobj_summed_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                }
+
+                // not ejecting precusor record here as the indices are going to be off
+                // also algo is changed to use only THRASH if both cs are equal
+                bool found_transform_record = false;
+                for (int recordNum = 0; recordNum < numDeisotoped; recordNum++)
+                {
+                    transformRecord = vectTransformRecord[recordNum];
+                    int num_isotopes = transformRecord.NumIsotopesObserved;
+                    for (int isotope_num = 0; isotope_num < num_isotopes && !found_transform_record; isotope_num++)
+                    {
+                        int isotopeIndex = transformRecord.IsotopePeakIndices[isotope_num];
+                        if (isotopeIndex == parent_index)
+                        {
+                            found_transform_record = true;
+                            mobj_transformRecord = transformRecord;
+                            break;
+                        }
+                    }
+                }
+                if (found_transform_record)
+                {
+                    // set mono intensity to replace the one that summes spectra would return
+                    Engine.PeakProcessing.Peak tempPeak;
+                    double mono_match = mobj_parent_peak_processor.GetClosestPeakMz(mobj_transformRecord.Mz,
+                        out tempPeak);
+                    if (tempPeak.Intensity > mdbl_min_peptide_intensity)
+                    {
+                        mono_orig_intensity = (int) tempPeak.Intensity;
+                    }
+                    else
+                    {
+                        mono_orig_intensity = (int) mdbl_min_peptide_intensity;
+                    }
+
+                    mobj_transformRecord.MonoIntensity = mono_orig_intensity;
+
+                    // store in vector and clear
+                    mvect_transformRecords.Add(mobj_transformRecord);
+                    mobj_mass_transform.SetOptions(maxcs, maxmw, maxfit, mins2n, ccmass, delthintensity, minthscore,
+                        numpeaks, chkcharge1, usemercury, o16018media); //reset chk_charge1
+                    return true;
+                }
+
+                mobj_mass_transform.SetOptions(maxcs, maxmw, maxfit, mins2n, ccmass, delthintensity, minthscore,
+                    numpeaks, chkcharge1, usemercury, o16018media); //reset chk_charge1
+                return false;
+            }
+            catch (System.Exception e)
+            {
+#if DEBUG
+                throw e;
+#endif
+                return false;
+            }
+        }
+
+        public bool GenerateDTA(int msN_scan_number, int parent_scan_number)
+        {
+            bool found_transform = false;
+            bool found_transform_record = false;
+            bool found_precursor = false;
+            bool found_transform_thru_summing = false;
+            bool found_other_precursors = false;
+
+            // Clear previous and reset objects
+            mvect_transformRecords.Clear();
+            mdbl_parent_Intensity = 0;
+            mdbl_parent_Mz = 0;
+            mobj_transformRecord.Mz = 0;
+            mobj_transformRecord.ChargeState = 0;
+            mobj_transformRecord.MonoMw = 0.0;
+            mobj_transformRecord.Fit = -1;
+            mobj_transformRecord.FitCountBasis = 0;
+            mobj_transformRecord.MonoIntensity = 0;
+            mobj_msn_record.mdbl_mono_mw = 0.0;
+            mobj_msn_record.mint_mono_intensity = 0;
+            mobj_msn_record.mdbl_mono_mz = 0;
+            mobj_msn_record.mshort_cs = 0;
+            mobj_msn_record.mdbl_fit = -1;
+
+            //check if we have enough values in the ms2
+            int numPeaks = mvect_mzs_msN.Count;
+            if (numPeaks < mint_minIonCount)
+                return found_transform;
+
+            mint_NumMSnScansProcessed++;
+
+            //get parent
+            double parent_mz = mobj_raw_data_dta.GetParentMz(msN_scan_number);
+
+            // if -C option
+            if (mint_consider_charge > 0)
+            {
+                // see if we can detect the parent first to get intensity right
+                double parent_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_mz, out mobj_parentPeak);
+                if (mobj_parentPeak.Intensity > mdbl_min_peptide_intensity)
+                {
+                    mdbl_parent_Mz = mobj_parentPeak.Mz;
+                    mdbl_parent_Intensity = mobj_parentPeak.Intensity;
+                }
+                else
+                {
+                    mdbl_parent_Mz = parent_mz;
+                    mdbl_parent_Intensity = mdbl_min_peptide_intensity;
+                }
+
+                mobj_transformRecord.Mz = mdbl_parent_Mz;
+                mobj_transformRecord.ChargeState = (short) mint_consider_charge;
+                mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                    mobj_transformRecord.ChargeState;
+                mobj_transformRecord.Fit = 1;
+                mobj_transformRecord.FitCountBasis = 0;
+                mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                mvect_transformRecords.Add(mobj_transformRecord);
+                return true;
+            }
+
+            //start
+            double parent_Mz_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_mz, out mobj_parentPeak);
+            if (mobj_parentPeak.Intensity > mdbl_min_peptide_intensity)
+            {
+                mdbl_parent_Mz = mobj_parentPeak.Mz;
+                mdbl_parent_Intensity = mobj_parentPeak.Intensity;
+                int parent_index = mobj_parentPeak.PeakIndex;
+
+                // Check for CS based detection first
+                found_precursor = FindPrecursorForChargeStates();
+
+                double minMZ = parent_Mz_match - mint_window_size;
+                double maxMZ = parent_Mz_match + mint_window_size;
+
+                Engine.PeakProcessing.Peak currentPeak;
+                Engine.HornTransform.IsotopeFitRecord transformRecord;
+                Engine.HornTransform.IsotopeFitRecord precursorRecord;
+                List<Engine.HornTransform.IsotopeFitRecord> vectTransformRecord = new List<IsotopeFitRecord>();
+
+                bool found_peak = mobj_parent_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                double fwhm_SN = currentPeak.FWHM;
+                int numDeisotoped = 0;
+
+                while (found_peak)
+                {
+                    if (currentPeak.Intensity < mdbl_min_peptide_intensity)
+                        break;
+                    found_transform = mobj_mass_transform.FindTransform(mobj_parent_peak_processor.PeakData,
+                        ref currentPeak, out transformRecord);
+                    if (found_transform)
+                    {
+                        numDeisotoped++;
+                        vectTransformRecord.Add(transformRecord);
+                    }
+                    found_peak = mobj_parent_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                }
+
+                if (numDeisotoped == 1)
+                {
+                    // only  one so get it in
+                    found_transform_record = false;
+                    transformRecord = new IsotopeFitRecord(vectTransformRecord[0]);
+                    int num_isotopes = transformRecord.NumIsotopesObserved;
+                    if (transformRecord.Fit < mdbl_min_fit_for_single_spectra)
+                        // AM: to give slight edge to summing
+                    {
+                        for (int isotope_num = 0; isotope_num < num_isotopes && !found_transform_record; isotope_num++)
+                        {
+                            int isotopeIndex = transformRecord.IsotopePeakIndices[isotope_num];
+                            if (isotopeIndex == parent_index)
+                            {
+                                found_transform_record = true;
+                                mobj_transformRecord = transformRecord;
+                                break;
+                            }
+                        }
+                    }
+                    if (found_transform_record)
+                    {
+                        mvect_transformRecords.Add(mobj_transformRecord);
+                        return true;
+                    }
+                }
+                else if (numDeisotoped > 1)
+                {
+                    if (!mbln_consider_multiple_precursors)
+                    {
+                        // more than one and consider only one precursor, so might be co-eluting peptides
+                        // see if we mave a match first
+                        found_transform_record = false;
+                        for (int transform_num = 0;
+                            transform_num < (int) vectTransformRecord.Count && !found_transform_record;
+                            transform_num++)
+                        {
+                            transformRecord = new IsotopeFitRecord(vectTransformRecord[transform_num]);
+                            int num_isotopes = transformRecord.NumIsotopesObserved;
+                            if (transformRecord.Fit < mdbl_min_fit_for_single_spectra)
+                                // AM: to give slight edge to summing
+                            {
+                                for (int isotope_num = 0; isotope_num < num_isotopes; isotope_num++)
+                                {
+                                    int isotopeIndex = transformRecord.IsotopePeakIndices[isotope_num];
+                                    if (isotopeIndex == parent_index)
+                                    {
+                                        found_transform_record = true;
+                                        mobj_transformRecord = transformRecord;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (found_transform_record)
+                        {
+                            if (found_precursor)
+                            {
+                                // found both THRASH and precursor, so if precursor is present in any of the
+                                // transform records eliminate it
+                                bool found_precursor_record = false;
+                                precursorRecord = mvect_transformRecords[0];
+                                for (int transform_num = 0;
+                                    transform_num < (int) vectTransformRecord.Count && !found_precursor_record;
+                                    transform_num++)
+                                {
+                                    transformRecord = new IsotopeFitRecord(vectTransformRecord[transform_num]);
+                                    int num_isotopes = transformRecord.NumIsotopesObserved;
+                                    for (int isotope_num = 0; isotope_num < num_isotopes; isotope_num++)
+                                    {
+                                        int isotopeIndex = transformRecord.IsotopePeakIndices[isotope_num];
+                                        if (isotopeIndex == precursorRecord.PeakIndex)
+                                        {
+                                            //found it, eject it
+                                            found_precursor_record = true;
+                                            mvect_transformRecords.Clear();
+                                            mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //consider multiple precursors in on, so spit dtas for all precursors with isolation_window_szie from parent peak
+                        for (int transform_num = 0;
+                            transform_num < (int) vectTransformRecord.Count && !found_transform_record;
+                            transform_num++)
+                        {
+                            transformRecord = new IsotopeFitRecord(vectTransformRecord[transform_num]);
+                            if (Math.Abs(transformRecord.Mz - parent_Mz_match) < mint_isolation_window_size)
+                            {
+                                mvect_transformRecords.Add(transformRecord);
+                                found_other_precursors = true;
+                            }
+                        }
+
+                        if (found_other_precursors)
+                            return true;
+                    }
+                }
+            }
+            else
+            {
+                // to set parent intensity
+                Engine.PeakProcessing.Peak tempPeak;
+                mobj_parent_peak_processor.PeakData.FindPeak(parent_mz - 0.02, parent_mz + 0.02, out tempPeak);
+                if (tempPeak.Intensity > 0)
+                {
+                    mdbl_parent_Mz = tempPeak.Mz;
+                    mdbl_parent_Intensity = tempPeak.Intensity;
+                }
+                else
+                {
+                    mdbl_parent_Mz = parent_mz;
+                    mdbl_parent_Intensity = mdbl_min_peptide_intensity;
+                }
+            }
+
+            if (!found_transform_record)
+            {
+                // Either THRASH failed or Peak was below noise floor for that scan so sum spectra
+                found_transform_thru_summing = DeisotopeSummedSpectra(parent_scan_number, parent_mz);
+            }
+
+            if (found_transform_thru_summing)
+            {
+                return true;
+            }
+
+            // passed conditions, couldn't THRASH nor FindPeak
+            if (!found_precursor)
+            {
+                // assign default charge states 2 and 3
+                mobj_transformRecord.Mz = mdbl_parent_Mz;
+                mobj_transformRecord.ChargeState = 2;
+                mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                    mobj_transformRecord.ChargeState;
+                mobj_transformRecord.Fit = 1;
+                mobj_transformRecord.FitCountBasis = 0;
+                mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                mobj_transformRecord.Mz = mdbl_parent_Mz;
+                mobj_transformRecord.ChargeState = 3;
+                mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                    mobj_transformRecord.ChargeState;
+                mobj_transformRecord.Fit = 1;
+                mobj_transformRecord.FitCountBasis = 0;
+                mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                mvect_transformRecords.Add(new IsotopeFitRecord(mobj_transformRecord));
+                return true;
+            }
+
+            return true;
+        }
+
+        public bool GenerateDTALowRes(int msN_scan_number, int parent_scan_number, int msN_scan_index)
+        {
+            mvect_transformRecords.Clear();
+            mdbl_parent_Intensity = 0;
+            mdbl_parent_Mz = 0;
+            bool chargeOne = false;
+
+            //check if we have enough values in the ms2
+            int numPeaks = mvect_mzs_msN.Count;
+            if (numPeaks < mint_minIonCount)
+                return false;
+
+            // Get the parent m/z for that msn scan
+            double parent_Mz = mobj_raw_data_dta.GetParentMz(msN_scan_number);
+
+            // Now start
+            Engine.PeakProcessing.Peak parentPeak = new Peak();
+            double parent_Mz_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_Mz, out mobj_parentPeak);
+            if (mobj_parentPeak.Intensity < mdbl_min_peptide_intensity)
+            {
+                mdbl_parent_Mz = parent_Mz;
+                Engine.PeakProcessing.Peak tempPeak;
+                mobj_parent_peak_processor.PeakData.FindPeak(parent_Mz - 0.1, parent_Mz + 0.1, out tempPeak);
+                if (tempPeak.Intensity > 0)
+                    mdbl_parent_Intensity = tempPeak.Intensity;
+                else
+                    mdbl_parent_Intensity = mdbl_min_peptide_intensity;
+                parentPeak.Mz = parent_Mz;
+                parentPeak.Intensity = mdbl_parent_Intensity;
+            }
+            else
+            {
+                mdbl_parent_Mz = parent_Mz_match;
+                mdbl_parent_Intensity = mobj_parentPeak.Intensity;
+                parentPeak.Mz = parent_Mz_match;
+                parentPeak.Intensity = mobj_parentPeak.Intensity;
+            }
+
+            mint_NumMSnScansProcessed++;
+
+            // if -C option
+            if (mint_consider_charge > 0)
+            {
+                mobj_transformRecord.Mz = mdbl_parent_Mz;
+                mobj_transformRecord.ChargeState = (short) mint_consider_charge;
+                mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                    mobj_transformRecord.ChargeState;
+                mobj_transformRecord.Fit = 1;
+                mobj_transformRecord.FitCountBasis = 0;
+                mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                mvect_transformRecords.Add(mobj_transformRecord);
+                return true;
+            }
+
+            //bypassed all test, proceed
+            //check if +1
+            chargeOne = mobj_svm_charge_determination.IdentifyIfChargeOne(mvect_mzs_msN, mvect_intensities_msN,
+                parentPeak, parent_scan_number);
+            if (chargeOne)
+            {
+                mobj_transformRecord.Mz = mdbl_parent_Mz;
+                mobj_transformRecord.ChargeState = 1;
+                mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                    mobj_transformRecord.ChargeState;
+                mobj_transformRecord.Fit = 1;
+                mobj_transformRecord.FitCountBasis = 0;
+                mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                mvect_transformRecords.Add(mobj_transformRecord);
+                return true;
+            }
+            else
+            {
+                //get features and add to feature space
+                mobj_svm_charge_determination.GetFeaturesForSpectra(mvect_mzs_msN, mvect_intensities_msN, parentPeak,
+                    msN_scan_number);
+                mmap_msN_parentIndex.Add(msN_scan_number, mint_msNscanIndex);
+                mint_msNscanIndex++;
+                return false;
+            }
+        }
+
+        public void DetermineChargeForEachScan()
+        {
+            mobj_svm_charge_determination.NormalizeDataSet();
+            mobj_svm_charge_determination.DetermineClassForDataSet();
+        }
+
+        public void InitializeSVM(string file_name)
+        {
+            mobj_svm_charge_determination.SetSVMParamFile(file_name);
+            mobj_svm_charge_determination.LoadSVMFromXml();
+            mobj_svm_charge_determination.InitializeLDA();
+        }
+
+        public bool ContainsProfileData(int parent_scan)
+        {
+            return mobj_raw_data_dta.IsProfileScan(parent_scan);
+        }
+
+        public bool IsFTData(int parent_scan)
+        {
+            if (menm_dataset_type == FileType.FINNIGAN)
+                return mobj_raw_data_dta.IsFTScan(parent_scan);
+            else if (menm_dataset_type == FileType.MZXMLRAWDATA)
+            {
+                bool set_FT = false;
+                set_FT = mobj_raw_data_dta.IsFTScan(parent_scan);
+                if (set_FT)
+                    return set_FT;
+                else
+                {
+                    // return user preference
+                    return mbln_is_profile_data_for_mzXML;
+                }
+            }
+
+            return false;
+        }
+
+        public void GetMsNSpectra(int msN_scan_number, double peakBkgRatio, double peptideMinBkgRatio)
+        {
+            mvect_intensities_msN.Clear();
+            mvect_mzs_msN.Clear();
+
+            mobj_raw_data_dta.GetRawData(out mvect_mzs_msN, out mvect_intensities_msN, msN_scan_number);
+
+            double thres = DeconEngine.Utils.GetAverage(mvect_intensities_msN, float.MaxValue);
+            double background_intensity = DeconEngine.Utils.GetAverage(mvect_intensities_msN, (float) (5 * thres));
+            mobj_msN_peak_processor.SetPeakIntensityThreshold(background_intensity * peakBkgRatio);
+            mobj_msN_peak_processor.SetPeaksProfileType(mobj_raw_data_dta.IsProfileScan(msN_scan_number));
+
+            int numPeaks = mobj_msN_peak_processor.DiscoverPeaks(mvect_mzs_msN, mvect_intensities_msN);
+            mobj_msN_peak_processor.PeakData.InitializeUnprocessedPeakData();
+        }
+
+        public void GetParentScanSpectra(int parent_scan_number, double peakBkgRatio, double peptideMinBkgRatio)
+        {
+            mvect_intensities_parent.Clear();
+            mvect_mzs_parent.Clear();
+
+            mobj_raw_data_dta.GetRawData(out mvect_mzs_parent, out mvect_intensities_parent, parent_scan_number);
+
+            double thres = DeconEngine.Utils.GetAverage(mvect_intensities_parent, float.MaxValue);
+            double background_intensity = DeconEngine.Utils.GetAverage(mvect_intensities_parent, (float) (5 * thres));
+            mobj_parent_peak_processor.SetPeakIntensityThreshold(background_intensity * peakBkgRatio);
+            mobj_parent_peak_processor.SetPeaksProfileType(mobj_raw_data_dta.IsProfileScan(parent_scan_number));
+
+            int numPeaks = mobj_parent_peak_processor.DiscoverPeaks(mvect_mzs_parent, mvect_intensities_parent);
+            mdbl_min_peptide_intensity = background_intensity * peptideMinBkgRatio;
+            mobj_parent_peak_processor.PeakData.InitializeUnprocessedPeakData();
+        }
+
+        public void WriteToMGF(int msN_scan_num, int parent_scan_num)
+        {
+            //second line
+            double massplusH = 0;
+            int numTransforms = mvect_transformRecords.Count;
+
+            //check size, else has failed params
+            if (numTransforms == 0)
+                return;
+
+            try
+            {
+                // now there can only be two Entries - one through findPeak @[0] and other through THRASH @[1]
+                for (int transformNum = 0; transformNum < numTransforms; transformNum++)
+                {
+                    mobj_transformRecord = mvect_transformRecords[transformNum];
+                    if (numTransforms > 1 && !mbln_consider_multiple_precursors)
+                    {
+                        // if different charges
+                        if (mvect_transformRecords[0].ChargeState == mvect_transformRecords[1].ChargeState)
+                        {
+                            //changed so that THRASH is preferred by default 6/12/07
+                            mobj_transformRecord = mvect_transformRecords[1];
+                            numTransforms--;
+                        }
+                    }
+                    //stick to range
+                    if (mobj_transformRecord.MonoMw < mdbl_minMass ||
+                        mobj_transformRecord.MonoMw > mdbl_maxMass)
+                    {
+                        //return;
+                        continue;
+                    }
+
+                    mint_NumDTARecords++;
+
+                    System.Console.WriteLine(msN_scan_num + "." + msN_scan_num + "." + mobj_transformRecord.ChargeState);
+
+                    int msN_scan_level = mobj_raw_data_dta.GetMSLevel(msN_scan_num);
+                    int parent_scan_level = mobj_raw_data_dta.GetMSLevel(parent_scan_num);
+                    CreateMSnRecord(msN_scan_num, msN_scan_level, parent_scan_num, parent_scan_level);
+                    CreateProfileRecord(msN_scan_num, parent_scan_num);
+
+                    if (mbln_create_log_file_only)
+                        return;
+
+                    //first line
+                    mfile_mgf.WriteLine("BEGIN IONS");
+
+                    //second line
+                    mfile_mgf.WriteLine("TITLE={0}.{1}.{2}.{3}.dta", mch_dataset_name, msN_scan_num, msN_scan_num,
+                        mobj_transformRecord.ChargeState);
+
+                    //third line
+                    double monoHmz = (mobj_transformRecord.MonoMw + mdbl_cc_mass) / mobj_transformRecord.ChargeState;
+                    mfile_mgf.WriteLine("PEPMASS={0:F12}", monoHmz);
+
+                    //fourth line
+                    if (numTransforms > 1)
+                        mfile_mgf.WriteLine("CHARGE={0}+ and {1}+", mvect_transformRecords[0].ChargeState,
+                            mvect_transformRecords[1].ChargeState);
+                    else
+                        mfile_mgf.WriteLine("CHARGE={0}+", mobj_transformRecord.ChargeState);
+
+                    //start spectra
+                    for (int i = 0; i < (int) mvect_mzs_msN.Count; i++)
+                    {
+                        double mz = mvect_mzs_msN[i];
+                        double intensity = mvect_intensities_msN[i];
+                        mfile_mgf.WriteLine("{0:F5} {1:F2}", mz, intensity);
+                    }
+                    mfile_mgf.WriteLine("END IONS");
+                    mfile_mgf.WriteLine();
+                }
+            }
+            catch (System.Exception e)
+            {
+#if DEBUG
+                throw e;
+#endif
+                System.Console.Error.WriteLine("Error in creating .MGF");
+            }
+        }
+
+        public void CreateProfileRecord(int msn_scan_num, int parent_scan_num)
+        {
+            double agc_acc_time = mobj_raw_data_dta.GetAGCAccumulationTime(parent_scan_num);
+            double tic_val = mobj_raw_data_dta.GetTICForScan(parent_scan_num);
+
+            mobj_profile_record.mint_msn_scan_num = msn_scan_num;
+            mobj_profile_record.mint_parent_scan_num = parent_scan_num;
+            mobj_profile_record.mdbl_agc_time = agc_acc_time;
+            mobj_profile_record.mdbl_tic_val = tic_val;
+
+            mvect_profile_records.Add(mobj_profile_record);
+        }
+
+        public void CreateMSnRecord(int msn_scan_num, int msn_scan_level, int parent_scan, int parent_scan_level)
+        {
+            mobj_msn_record.mint_msn_scan_num = msn_scan_num;
+            mobj_msn_record.mint_msn_scan_level = msn_scan_level;
+
+            mobj_msn_record.mint_parent_scan_num = parent_scan;
+            mobj_msn_record.mint_parent_scan_level = parent_scan_level;
+
+            mobj_msn_record.mdbl_parent_mz = mdbl_parent_Mz;
+            mobj_msn_record.mdbl_mono_mz = mobj_transformRecord.Mz;
+            mobj_msn_record.mshort_cs = mobj_transformRecord.ChargeState;
+            mobj_msn_record.mdbl_mono_mw = mobj_transformRecord.MonoMw;
+            mobj_msn_record.mdbl_fit = mobj_transformRecord.Fit;
+
+            mobj_msn_record.mint_parent_intensity = (int) mdbl_parent_Intensity;
+            mobj_msn_record.mint_mono_intensity = mobj_transformRecord.MonoIntensity;
+
+            mvect_msn_records.Add(mobj_msn_record);
+        }
+
+        public void WriteProfileFile()
+        {
+            using (
+                StreamWriter fout =
+                    new StreamWriter(new FileStream(mch_profile_filename, FileMode.Create, FileAccess.ReadWrite,
+                        FileShare.None)))
+            {
+                fout.WriteLine("{0}\t{1}\t{2}\t{3}", "MSn_Scan", "Parent_Scan", "AGC_accumulation_time", "TIC");
+
+                // sort all records wrt scan
+                mvect_profile_records.Sort((x, y) => x.mint_msn_scan_num.CompareTo(y.mint_msn_scan_num));
+
+                // now sorted output all
+                for (int i = 0; i < mvect_profile_records.Count; i++)
+                {
+                    mobj_profile_record = mvect_profile_records[i];
+                    fout.WriteLine("{0:F4}\t{1:F4}\t{2:F4}\t{3:F4}", mobj_profile_record.mint_msn_scan_num,
+                        mobj_profile_record.mint_parent_scan_num, mobj_profile_record.mdbl_agc_time,
+                        mobj_profile_record.mdbl_tic_val);
+                }
+            }
+        }
+
+        public void WriteLogFile()
+        {
+            using (
+                StreamWriter fout =
+                    new StreamWriter(new FileStream(mch_log_filename, FileMode.Create, FileAccess.ReadWrite,
+                        FileShare.None)))
+            {
+                fout.WriteLine("DeconMSn Version:" + "2.1.3.1");
+                fout.WriteLine("Dataset:" + mch_dataset_name);
+                fout.WriteLine("Number of MSn scans processed:" + mint_NumMSnScansProcessed);
+                fout.WriteLine("Number of DTAs generated:" + mint_NumDTARecords);
+                fout.WriteLine("Date/Time:\t" + DateTime.Now.ToString("g", CultureInfo.InvariantCulture));
+                fout.WriteLine("-----------------------------------------------------------\n\n");
+
+                fout.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}", "MSn_Scan", "MSn_Level",
+                    "Parent_Scan", "Parent_Scan_Level", "Parent_Mz", "Mono_Mz", "Charge_State", "Monoisotopic_Mass",
+                    "Isotopic_Fit", "Parent_Intensity", "Mono_Intensity");
+
+                // sort all records wrt scan
+                mvect_msn_records.Sort((x, y) =>
+                {
+                    int result = x.mint_msn_scan_num.CompareTo(y.mint_msn_scan_num);
+                    if (result == 0)
+                    {
+                        return x.mshort_cs.CompareTo(y.mshort_cs);
+                    }
+                    return result;
+                });
+
+                // now sorted output all
+                for (int i = 0; i < mvect_msn_records.Count; i++)
+                {
+                    mobj_msn_record = mvect_msn_records[i];
+                    fout.WriteLine("{0}\t{1}\t{2}\t{3}\t{4:F4}\t{5:F4}\t{6}\t{7:F4}\t{8:F4}\t{9}\t{10}",
+                        mobj_msn_record.mint_msn_scan_num, mobj_msn_record.mint_msn_scan_level,
+                        mobj_msn_record.mint_parent_scan_num, mobj_msn_record.mint_parent_scan_level,
+                        mobj_msn_record.mdbl_parent_mz, mobj_msn_record.mdbl_mono_mz, mobj_msn_record.mshort_cs,
+                        mobj_msn_record.mdbl_mono_mw, mobj_msn_record.mdbl_fit, mobj_msn_record.mint_parent_intensity,
+                        mobj_msn_record.mint_mono_intensity);
+                }
+            }
+        }
+
+        public void WriteDTAFile(int msN_scan_num, int parent_scan_num)
+        {
+            //create file_name
+            double massplusH = 0;
+            int numTransforms = mvect_transformRecords.Count;
+
+            if (mbln_consider_multiple_precursors)
+                throw new System.Exception(
+                    "Can only consider multiple precursors for MGF creation. Change param value. ");
+
+            //check size, else has failed params
+            if (numTransforms == 0)
+                return;
+
+            // now there can only be two Entries - one through findPeak @[0] and other through THRASH @[1]
+            for (int transformNum = 0; transformNum < numTransforms; transformNum++)
+            {
+                mobj_transformRecord = mvect_transformRecords[transformNum];
+                if (numTransforms > 1)
+                {
+                    // if same charges
+                    if (mvect_transformRecords[0].ChargeState == mvect_transformRecords[1].ChargeState)
+                    {
+                        //changed so that THRASH is preferred by default 6/12/07
+                        mobj_transformRecord = mvect_transformRecords[1];
+                        numTransforms--;
+                    }
+                }
+
+                //stick to range
+                if (mobj_transformRecord.MonoMw < mdbl_minMass || mobj_transformRecord.MonoMw > mdbl_maxMass)
+                {
+                    //return;
+                    continue;
+                }
+
+                mint_NumDTARecords++;
+
+                // to get mono_mass  + H
+                massplusH = mobj_transformRecord.MonoMw + mdbl_cc_mass;
+
+                System.Console.WriteLine(msN_scan_num + "." + msN_scan_num + "." + mobj_transformRecord.ChargeState);
+
+                int msN_scan_level = mobj_raw_data_dta.GetMSLevel(msN_scan_num);
+                int parent_scan_level = mobj_raw_data_dta.GetMSLevel(parent_scan_num);
+                CreateMSnRecord(msN_scan_num, msN_scan_level, parent_scan_num, parent_scan_level);
+                CreateProfileRecord(msN_scan_num, parent_scan_num);
+
+                if (mbln_create_log_file_only)
+                    continue;
+
+                string fileName = string.Format("{0}.{1}.{2}.{3}.dta", mch_output_file, msN_scan_num, msN_scan_num,
+                    mobj_transformRecord.ChargeState);
+                /*// Purely for TomMetz's data
+                string metz_mod = "";
+                if (mobj_raw_data_dta.IsProfileScan(msN_scan_num))
+                    metz_mod = "_FTMS";
+                else
+                    metz_mod = "_ITMS";
+                string fileName = string.Format("{0}.{1}.{2}.{3}.dta", mch_output_file + metz_mod, msN_scan_num, msN_scan_num, mobj_transformRecord.mshort_cs);
+                 */
+
+                // for composite dta
+                if (mbln_create_composite_dta)
+                {
+                    //fancy headers
+                    mfile_comb_dta.WriteLine(
+                        "=================================== \"{0}.{1}.{2}.{3}.dta\" ==================================",
+                        mch_dataset_name, msN_scan_num, msN_scan_num, mobj_transformRecord.ChargeState);
+
+                    // massH and cs
+                    mfile_comb_dta.WriteLine("{0:F12} {1}   scan={2} cs={3}", massplusH, mobj_transformRecord.ChargeState,
+                        msN_scan_num, mobj_transformRecord.ChargeState);
+
+                    for (int i = 0; i < (int) mvect_mzs_msN.Count; i++)
+                    {
+                        double mz = mvect_mzs_msN[i];
+                        double intensity = mvect_intensities_msN[i];
+
+                        try
+                        {
+                            mfile_comb_dta.WriteLine("{0:F5} {1:F2}", mz, intensity);
+                        }
+                        catch (System.Exception e)
+                        {
+#if DEBUG
+                            throw e;
+#endif
+                            throw new System.Exception("Trouble with writing out Peaks in CDTA");
+                        }
+                    }
+
+                    continue;
+                }
+
+                using (
+                    StreamWriter fout =
+                        new StreamWriter(new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+                    )
+                {
+                    fout.WriteLine("{0:F12} {1}", massplusH, mobj_transformRecord.ChargeState);
+
+                    for (int i = 0; i < (int) mvect_mzs_msN.Count; i++)
+                    {
+                        double mz = mvect_mzs_msN[i];
+                        double intensity = mvect_intensities_msN[i];
+                        fout.WriteLine("{0:F5} {1:F2}", mz, intensity);
+                    }
+                }
+            }
+        }
+
+        public void WriteLowResolutionMGFFile()
+        {
+            int msN_scan;
+            int parent_scan;
+            int msN_scan_index;
+            int class_val;
+            double parent_Mz_match = 0;
+            double parent_mz;
+
+            int numCharges = 0;
+            int size = mmap_msN_parentIndex.Count;
+
+            foreach (KeyValuePair<int, int> item in mmap_msN_parentIndex)
+            {
+                msN_scan = item.Key;
+                msN_scan_index = item.Value;
+                parent_scan = mobj_raw_data_dta.GetParentScan(msN_scan);
+
+                GetMsNSpectra(msN_scan, mdbl_pkBkgRatio, mdbl_peptideMinBkgRatio);
+                parent_mz = mobj_raw_data_dta.GetParentMz(msN_scan);
+                GetParentScanSpectra(parent_scan, mdbl_pkBkgRatio, mdbl_peptideMinBkgRatio);
+                Engine.PeakProcessing.Peak parentPeak;
+                parent_Mz_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_mz, out parentPeak);
+
+                class_val = mobj_svm_charge_determination.GetClassAtScanIndex(msN_scan_index);
+
+                mvect_chargeStateList.Clear();
+                mvect_transformRecords.Clear();
+                switch (class_val)
+                {
+                    case 0:
+                        mvect_chargeStateList.Add(2);
+                        mvect_chargeStateList.Add(3);
+                        break;
+                    case 1:
+                        mvect_chargeStateList.Add(1);
+                        break;
+                    case 2:
+                        mvect_chargeStateList.Add(2);
+                        break;
+                    case 3:
+                        mvect_chargeStateList.Add(3);
+                        break;
+                    case 4:
+                        mvect_chargeStateList.Add(4);
+                        break;
+                    default:
+                        break;
+                }
+
+                numCharges = (int) mvect_chargeStateList.Count;
+
+                //deconvolute with all charges states in chargeList
+                for (int chargeNum = 0; chargeNum < numCharges; chargeNum++)
+                {
+                    int cs = mvect_chargeStateList[chargeNum];
+                    mobj_transformRecord.Mz = parent_Mz_match;
+                    mobj_transformRecord.ChargeState = (short) cs;
+                    mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                        mobj_transformRecord.ChargeState;
+                    mobj_transformRecord.Fit = 1;
+                    mobj_transformRecord.FitCountBasis = 1;
+                    mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                    mvect_transformRecords.Add(mobj_transformRecord);
+                }
+
+                WriteToMGF(msN_scan, parent_scan);
+            }
+
+            mobj_svm_charge_determination.ClearMemory();
+        }
+
+        public void WriteLowResolutionDTAFile()
+        {
+            int msN_scan;
+            int parent_scan;
+            int msN_scan_index;
+            int class_val;
+            double parent_mz;
+            double parent_Mz_match = 0;
+
+            int numCharges = 0;
+            int size = mmap_msN_parentIndex.Count;
+            foreach (KeyValuePair<int, int> item in mmap_msN_parentIndex)
+            {
+                msN_scan = item.Key;
+                msN_scan_index = item.Value;
+
+                GetMsNSpectra(msN_scan, mdbl_pkBkgRatio, mdbl_peptideMinBkgRatio);
+
+                parent_scan = mobj_raw_data_dta.GetParentScan(msN_scan);
+                GetParentScanSpectra(parent_scan, mdbl_pkBkgRatio, mdbl_peptideMinBkgRatio);
+
+                parent_mz = mobj_raw_data_dta.GetParentMz(msN_scan);
+                parent_Mz_match = mobj_parent_peak_processor.GetClosestPeakMz(parent_mz, out mobj_parentPeak);
+                if (mobj_parentPeak.Intensity < mdbl_min_peptide_intensity)
+                {
+                    mdbl_parent_Mz = parent_mz;
+                    Engine.PeakProcessing.Peak tempPeak;
+                    mobj_parent_peak_processor.PeakData.FindPeak(parent_mz - 0.1, parent_mz + 0.1, out tempPeak);
+                    if (tempPeak.Intensity > 0)
+                        mdbl_parent_Intensity = tempPeak.Intensity;
+                    else
+                        mdbl_parent_Intensity = mdbl_min_peptide_intensity;
+                }
+                else
+                {
+                    mdbl_parent_Mz = parent_Mz_match;
+                    mdbl_parent_Intensity = mobj_parentPeak.Intensity;
+                }
+
+                class_val = mobj_svm_charge_determination.GetClassAtScanIndex(msN_scan_index);
+                double score = mobj_svm_charge_determination.GetScoreAtScanIndex(msN_scan_index);
+
+                mvect_chargeStateList.Clear();
+                mvect_transformRecords.Clear();
+                switch (class_val)
+                {
+                    case 0:
+                        mvect_chargeStateList.Add(2);
+                        mvect_chargeStateList.Add(3);
+                        break;
+                    case 1:
+                        mvect_chargeStateList.Add(1);
+                        break;
+                    case 2:
+                        mvect_chargeStateList.Add(2);
+                        break;
+                    case 3:
+                        mvect_chargeStateList.Add(3);
+                        break;
+                    case 4:
+                        mvect_chargeStateList.Add(4);
+                        break;
+                    default:
+                        break;
+                }
+
+                numCharges = (int) mvect_chargeStateList.Count;
+
+                //deconvolute with all charges states in chargeList
+                for (int chargeNum = 0; chargeNum < numCharges; chargeNum++)
+                {
+                    int cs = mvect_chargeStateList[chargeNum];
+                    mobj_transformRecord.Mz = mdbl_parent_Mz;
+
+                    if (mdbl_parent_Mz == 0)
+                    {
+                        bool debug = true;
+                        debug = false;
+                    }
+
+                    mobj_transformRecord.ChargeState = (short) cs;
+                    mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *
+                                                        mobj_transformRecord.ChargeState;
+                    mobj_transformRecord.Fit = 1;
+                    mobj_transformRecord.FitCountBasis = 1;
+                    mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
+                    mvect_transformRecords.Add(mobj_transformRecord);
+                }
+                WriteDTAFile(msN_scan, parent_scan);
+            }
+
+            //clear up
+            mobj_svm_charge_determination.ClearMemory();
+        }
+    }
+}
+#endif
