@@ -406,7 +406,7 @@ namespace Engine.HornTransform
         }
 
         private void SetIsotopeDistributionToZero(PeakData peakData, clsPeak peak, double zeroingStartMz,
-            double zeroingStopMz, double monoMw, short chargeState, bool clearSpectrum, clsHornTransformResults record,
+            double zeroingStopMz, double monoMw, int chargeState, bool clearSpectrum, clsHornTransformResults record,
             bool debug = false)
         {
             var peakIndices = new List<int>();

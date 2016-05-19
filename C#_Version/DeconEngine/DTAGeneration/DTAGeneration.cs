@@ -917,7 +917,7 @@ namespace Engine.DTAProcessing
 
             mobj_msn_record.mdbl_parent_mz = mdbl_parent_Mz;
             mobj_msn_record.mdbl_mono_mz = mobj_transformRecord.Mz;
-            mobj_msn_record.mshort_cs = mobj_transformRecord.ChargeState;
+            mobj_msn_record.mshort_cs = (short)mobj_transformRecord.ChargeState;
             mobj_msn_record.mdbl_mono_mw = mobj_transformRecord.MonoMw;
             mobj_msn_record.mdbl_fit = mobj_transformRecord.Fit;
 

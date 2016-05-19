@@ -13,7 +13,7 @@ namespace Engine.ChargeDetermination
     internal static class AutoCorrelationChargeDetermination
     {
         // might be too high a value.
-        private const short MaxCharge = 25;
+        private const int MaxCharge = 25;
 
         /// <summary>
         ///     Calculate the autocorrelation values for the an input.
@@ -57,7 +57,7 @@ namespace Engine.ChargeDetermination
         /// <param name="peak">is the peak whose charge we want to detect.</param>
         /// <param name="peakData">is the PeakData object containing raw data, peaks, etc which are used in the process.</param>
         /// <returns>Returns the charge of the feature.</returns>
-        public static short GetChargeState(clsPeak peak, PeakData peakData, bool debug)
+        public static int GetChargeState(clsPeak peak, PeakData peakData, bool debug)
         {
             var minus = 0.1;
             var plus = 1.1; // right direction to look
@@ -137,7 +137,7 @@ namespace Engine.ChargeDetermination
 
             // Determine the highest CS peak
             double bestAcScore;
-            short bestChargeState;
+            int bestChargeState;
             var success = HighestChargeStatePeak(minMz, maxMz, minN, autocorrelationScores, MaxCharge, out bestAcScore,
                 out bestChargeState);
 
@@ -149,7 +149,7 @@ namespace Engine.ChargeDetermination
             var charges = GenerateChargeStates(minMz, maxMz, minN, autocorrelationScores, MaxCharge, bestAcScore);
 
             // Get the final CS value to be returned
-            short returnChargeStateVal = -1;
+            int returnChargeStateVal = -1;
             var fwhm = peak.FWHM; // Store a copy of the FWHM to avoid modifying the actual value
             if (fwhm > 0.1)
                 fwhm = 0.1;
@@ -220,10 +220,10 @@ namespace Engine.ChargeDetermination
         ///     Keep in mind that the autocorrelation score is not going to be perfectly at 0.5, or 0.33 etc, but approximately at
         ///     those points.
         /// </remarks>
-        private static List<short> GenerateChargeStates(double minMz, double maxMz, int minN, List<double> autocorrelationScores,
+        private static List<int> GenerateChargeStates(double minMz, double maxMz, int minN, List<double> autocorrelationScores,
             double maxChargeState, double bestAcScore)
         {
-            var chargeStates = new List<short>();
+            var chargeStates = new List<int>();
             // Preparation...
             var wasGoingUp = false;
 
@@ -244,7 +244,7 @@ namespace Engine.ChargeDetermination
                         // Forcing round of midpoint values away from zero (at least for positive values)...
                         // The default for Math.Round is MidpointRounding.ToEven, which will round 2.5 exactly to 2
                         // We should instead use MidpointRounding.AwayFromZero, which will round 2.5 to 3.
-                        chargeStates.Add((short) (0.5 + chargeState));
+                        chargeStates.Add((int) (0.5 + chargeState));
                     }
                 }
                 wasGoingUp = goingUp;
@@ -264,7 +264,7 @@ namespace Engine.ChargeDetermination
         /// <param name="bestChargeState">returns the charge state at the best autocorrelation score distance, or -1 if none found.</param>
         /// <returns>true is successful, false otherwise</returns>
         private static bool HighestChargeStatePeak(double minMz, double maxMz, int minN, List<double> autocorrelationScores,
-            short maxChargeState, out double bestAutoCorrelationScore, out short bestChargeState)
+            int maxChargeState, out double bestAutoCorrelationScore, out int bestChargeState)
         {
             bestAutoCorrelationScore = -1;
             bestChargeState = -1;
@@ -281,7 +281,7 @@ namespace Engine.ChargeDetermination
                 var goingUp = autocorrelationScores[i] - autocorrelationScores[i - 1] > 0;
                 if (wasGoingUp && !goingUp)
                 {
-                    var chargeState = (short) (0.5 + numPts / ((maxMz - minMz) * (i - 1)));
+                    var chargeState = (int) (0.5 + numPts / ((maxMz - minMz) * (i - 1)));
                     var currentAutoCorScore = autocorrelationScores[i - 1];
                     if ((Math.Abs(currentAutoCorScore / autocorrelationScores[0]) > 0.05) && chargeState <= maxChargeState)
                     {

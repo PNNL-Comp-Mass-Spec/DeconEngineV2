@@ -25,7 +25,7 @@ namespace DeconToolsV2.HornTransform
         /// <summary>
         ///     charge state
         /// </summary>
-        public short ChargeState;
+        public int ChargeState;
 
         /// <summary>
         ///     difference between observed m/z and m/z from theoretical distribution of composition from Averagine
@@ -235,7 +235,7 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use ChargeState", false)]
         public short mshort_cs
         {
-            get { return ChargeState; }
+            get { return (short) ChargeState; }
             set { ChargeState = value; }
         }
 

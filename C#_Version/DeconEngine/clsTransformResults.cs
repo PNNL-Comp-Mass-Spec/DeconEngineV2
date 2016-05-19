@@ -48,7 +48,7 @@ namespace DeconToolsV2.Results
                 for (int index = 0; index < numDeisotoped; index++)
                 {
                     Engine.HornTransform.IsotopeFitRecord fitRecord = mobj_lcms_results.GetIsoPattern(index);
-                    charges[index] = fitRecord.ChargeState;
+                    charges[index] = (short)fitRecord.ChargeState;
                 }
                 return charges;
             }

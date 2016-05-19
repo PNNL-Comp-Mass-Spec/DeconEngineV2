@@ -33,7 +33,7 @@ namespace DeconToolsV2
                     // consider this peak for addition.
                     vectIndicesToConsider.Add(transformNum);
                     if (result.ChargeState > maxCharge)
-                        maxCharge = result.ChargeState;
+                        maxCharge = (short)result.ChargeState;
                     if (result.MostIntenseMw - result.MonoMw > 2 * massRange)
                     {
                         massRange = 2 * (result.MostIntenseMw - result.MonoMw);

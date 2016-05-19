@@ -158,7 +158,7 @@ namespace Engine.HornTransform
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="pointsUsed">number of points used</param>
         /// <param name="debug">debug output flag</param>
-        public abstract double FitScore(PeakData peakData, short chargeState, clsPeak peak, double mzDelta,
+        public abstract double FitScore(PeakData peakData, int chargeState, clsPeak peak, double mzDelta,
             double minIntensityForScore, out int pointsUsed, bool debug = false);
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Engine.HornTransform
         /// </param>
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="debug">prints debugging information if this is set to true.</param>
-        public abstract double FitScore(PeakData peakData, short chargeState, double normalizer, double mzDelta,
+        public abstract double FitScore(PeakData peakData, int chargeState, double normalizer, double mzDelta,
             double minIntensityForScore, bool debug = false);
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace Engine.HornTransform
 
         /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that 
           the user could favor certain fitting parameters (i.e. space between isotopomers) over others
-        public double FindIsotopicDist(PeakProcessing.PeakData peakData, short cs, PeakProcessing.Peak peak,
+        public double FindIsotopicDist(PeakProcessing.PeakData peakData, int cs, PeakProcessing.Peak peak,
             IsotopeFitRecord isoRecord, double deleteIntensityThreshold, double spacingWeight, double spacingVar,
             double signalToNoiseWeight, double signalToNoiseThresh, double ratioWeight, double ratioThreshold,
             double fitWeight, double fitThreshold, bool debug = false)
@@ -480,7 +480,7 @@ namespace Engine.HornTransform
         ///     to the center point and then slides to the right until the fit score does not improve. Returns the
         ///     best fit score and fills the isotopic profile (isotopeFitRecord)
         /// </remarks>
-        public double GetFitScore(PeakData peakData, short chargeState, ref clsPeak peak, out clsHornTransformResults isoRecord,
+        public double GetFitScore(PeakData peakData, int chargeState, ref clsPeak peak, out clsHornTransformResults isoRecord,
             double deleteIntensityThreshold, double minTheoreticalIntensityForScore, double leftFitStringencyFactor,
             double rightFitStringencyFactor, out int pointsUsed, bool debug = false)
         {
@@ -744,7 +744,7 @@ namespace Engine.HornTransform
         /// <param name="deleteIntensityThreshold">intensity of least isotope to delete.</param>
         /// <param name="minTheoreticalIntensityForScore">minimum intensity of point to consider for scoring purposes.</param>
         /// <param name="debug">if debugging output is enabled</param>
-        public double GetFitScore(PeakData peakData, short chargeState, clsPeak peak, DeconToolsV2.MolecularFormula formula,
+        public double GetFitScore(PeakData peakData, int chargeState, clsPeak peak, DeconToolsV2.MolecularFormula formula,
             double deleteIntensityThreshold, double minTheoreticalIntensityForScore, bool debug = false)
         {
             if (chargeState <= 0)
@@ -884,7 +884,7 @@ namespace Engine.HornTransform
         /// <param name="intensities">vector for output of intensity values .</param>
         /// <param name="minTheoreticalIntensity">intensity of the minimum point to be provided in the vectors as output.</param>
         /// <param name="debug">if debugging info should output</param>
-        protected void GetIsotopeDistribution(double mostAbundantMass, short charge, double resolution,
+        protected void GetIsotopeDistribution(double mostAbundantMass, int charge, double resolution,
             out List<double> mzs, out List<double> intensities, double minTheoreticalIntensity, bool debug)
         {
             mzs = new List<double>();
