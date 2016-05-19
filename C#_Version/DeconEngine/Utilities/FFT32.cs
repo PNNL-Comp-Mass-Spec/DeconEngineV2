@@ -168,7 +168,7 @@ namespace Engine
             /* Normalize if FT */
             if (isign == 1)
             {
-                for (var i = 1; i <= (int) nn; i++)
+                for (var i = 1; i <= nn; i++)
                 {
                     Data[2 * i - 1] /= nn;
                     Data[2 * i] /= nn;

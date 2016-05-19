@@ -15,6 +15,11 @@ namespace Engine.PeakProcessing
         private readonly PeakFitter _peakFit = new PeakFitter();
 
         /// <summary>
+        ///     True if peaks are centroided
+        /// </summary>
+        private bool _arePeaksCentroided;
+
+        /// <summary>
         ///     background intensity. When user sets min signal to noise, and min intensity, this value is set as min intensity /
         ///     min signal to noise.
         /// </summary>
@@ -29,11 +34,6 @@ namespace Engine.PeakProcessing
         ///     minimum intensity for a point to be considered a peak.
         /// </summary>
         private double _peakIntensityThreshold;
-        
-        /// <summary>
-        /// True if peaks are centroided
-        /// </summary>
-        private bool _arePeaksCentroided;
 
         /// <summary>
         ///     signal to noise threshold for a peak to be considered as a peak.

@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Engine.Utilities;
 
 namespace DeconToolsV2
 {
     public class AtomicCount
     {
-        /// <summary>
-        ///     index of this element in list of elements used.
-        /// </summary>
-        public int Index { get; private set; }
-
-        /// <summary>
-        ///     Number of copies of the above element in compound. we have set this to be a double to allow for normalized values.
-        /// </summary>
-        public double NumCopies { get; set; }
-
         public AtomicCount(int index, double numCopies)
         {
             Index = index;
@@ -28,6 +17,16 @@ namespace DeconToolsV2
             Index = ac.Index;
             NumCopies = ac.NumCopies;
         }
+
+        /// <summary>
+        ///     index of this element in list of elements used.
+        /// </summary>
+        public int Index { get; private set; }
+
+        /// <summary>
+        ///     Number of copies of the above element in compound. we have set this to be a double to allow for normalized values.
+        /// </summary>
+        public double NumCopies { get; set; }
     }
 
     public class MolecularFormula
@@ -101,7 +100,7 @@ namespace DeconToolsV2
 
             ElementalComposition.Clear();
 
-            Regex validator = new Regex(@"^(\s*[A-Z][a-z]?\s*\d*\.?\d*)*\s*$", RegexOptions.CultureInvariant);
+            var validator = new Regex(@"^(\s*[A-Z][a-z]?\s*\d*\.?\d*)*\s*$", RegexOptions.CultureInvariant);
             if (!validator.IsMatch(molFormula))
             {
                 throw new Exception("Molecular formula specified was invalid. Format required is one or more " +
@@ -109,7 +108,7 @@ namespace DeconToolsV2
                                     "uppercase letter that may be followed by a lowercase letter, and count " +
                                     "is a number that consists of numeric digits and maybe one decimal point.");
             }
-            Regex grouper = new Regex(@"([A-Z][a-z]?)\s*(\d*\.?\d*)", RegexOptions.CultureInvariant);
+            var grouper = new Regex(@"([A-Z][a-z]?)\s*(\d*\.?\d*)", RegexOptions.CultureInvariant);
             var groups = grouper.Matches(molFormula);
             foreach (Match group in groups)
             {
@@ -137,9 +136,8 @@ namespace DeconToolsV2
                 MonoisotopicMass += atomicInformation.ElementalIsotopesList[elementIndex].Isotopes[0].Mass * count;
                 AverageMass += atomicInformation.ElementalIsotopesList[elementIndex].AverageMass * count;
             }
-            return;
-#if !Disable_Obsolete
-            // Regular expressions simplify this code soo much.
+            /*
+            // Regular expressions simplify this code so much. See above.
             var formulaLength = formula.Length;
             var index = 0;
             //var numAtoms = atomicInformation.GetNumElements();
@@ -227,7 +225,7 @@ namespace DeconToolsV2
                 MonoisotopicMass += atomicInformation.ElementalIsotopesList[elementIndex].Isotopes[0].Mass * count;
                 AverageMass += atomicInformation.ElementalIsotopesList[elementIndex].AverageMass * count;
             }
-#endif
+            */
         }
 
         public void AddAtomicCount(AtomicCount cnt, double monoMass, double avgMass)

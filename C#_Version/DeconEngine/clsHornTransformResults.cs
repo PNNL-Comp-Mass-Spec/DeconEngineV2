@@ -83,14 +83,6 @@ namespace DeconToolsV2.HornTransform
         public bool NeedMultipleIsotopes;
 
         /// <summary>
-        ///     number of isotope peaks
-        /// </summary>
-        public int NumIsotopesObserved
-        {
-            get { return IsotopePeakIndices.Count; }
-        }
-
-        /// <summary>
         ///     peak index of the peak.
         /// </summary>
         public int PeakIndex;
@@ -168,6 +160,14 @@ namespace DeconToolsV2.HornTransform
             MonoPlus2Intensity = a.MonoPlus2Intensity;
             DeltaMz = a.DeltaMz;
             IsotopePeakIndices = new List<int>(a.IsotopePeakIndices);
+        }
+
+        /// <summary>
+        ///     number of isotope peaks
+        /// </summary>
+        public int NumIsotopesObserved
+        {
+            get { return IsotopePeakIndices.Count; }
         }
 
         public virtual object Clone()

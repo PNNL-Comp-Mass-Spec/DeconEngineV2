@@ -270,15 +270,13 @@ namespace Engine.TheoreticalProfile
                     for (i = 1; i <= numPoints; i++)
                     {
                         var expDenom = numPoints / sub * (numPoints / sub);
-                        if (i <= numPoints / 2) apVal = Math.Exp(-(i - 1) * (i - 1) / expDenom);
-                        else apVal = Math.Exp(-(numPoints - i - 1) * (numPoints - i - 1) / expDenom);
-
-                        var freq = _frequencyData[2 * i - 1];
-                        var val = freq * apVal;
-                        _frequencyData[2 * i - 1] = val;
-                        freq = _frequencyData[2 * i];
-                        val = freq * apVal;
-                        _frequencyData[2 * i] = val;
+                        if (i <= numPoints / 2)
+                            apVal = Math.Exp(-(i - 1) * (i - 1) / expDenom);
+                        else
+                            apVal = Math.Exp(-(numPoints - i - 1) * (numPoints - i - 1) / expDenom);
+                        
+                        _frequencyData[2 * i - 1] *= apVal;
+                        _frequencyData[2 * i] *= apVal;
                     }
                     break;
                 case ApodizationType.Lorentzian: /* Lorentzian */
@@ -297,8 +295,10 @@ namespace Engine.TheoreticalProfile
                     for (i = 1; i <= numPoints; i++)
                     {
                         expdenom = (numPoints / sub) * (numPoints / sub);
-                        if (i <= numPoints / 2) apVal = Math.Exp(-(i - 1) * (i - 1) / expdenom);
-                        else apVal = Math.Exp(-(numPoints - i - 1) * (numPoints - i - 1) / expdenom);
+                        if (i <= numPoints / 2)
+                            apVal = Math.Exp(-(i - 1) * (i - 1) / expdenom);
+                        else
+                            apVal = Math.Exp(-(numPoints - i - 1) * (numPoints - i - 1) / expdenom);
                         _frequencyData[2 * i - 1] /= apVal;
                         _frequencyData[2 * i] /= apVal;
                     }

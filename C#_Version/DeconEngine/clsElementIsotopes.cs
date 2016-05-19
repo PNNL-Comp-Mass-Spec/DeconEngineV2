@@ -10,6 +10,8 @@ namespace DeconToolsV2
 {
     public class clsElementIsotopes : ICloneable
     {
+        private readonly Dictionary<string, int> _elementIndexDict = new Dictionary<string, int>();
+
 #if !Disable_Obsolete
         //[Obsolete("Not needed after combining AtomicInformation into clsElementIsotopes", true)]
         //internal AtomicInformation AtomicInfo;
@@ -109,16 +111,16 @@ namespace DeconToolsV2
             numIsotopes = elementData.NumberOfIsotopes;
             elementName = elementData.Name;
             elementSymbol = elementData.Symbol;
-            averageMass = (float)elementData.AverageMass;
-            massVariance = (float)elementData.MassVariance;
+            averageMass = (float) elementData.AverageMass;
+            massVariance = (float) elementData.MassVariance;
 
             isotopeMass = new float[numIsotopes];
             isotopeProb = new float[numIsotopes];
             for (var isotopeNum = 0; isotopeNum < numIsotopes; isotopeNum++)
             {
                 var isotopeData = elementData.Isotopes[isotopeNum];
-                isotopeMass[isotopeNum] = (float)isotopeData.Mass;
-                isotopeProb[isotopeNum] = (float)isotopeData.Probability;
+                isotopeMass[isotopeNum] = (float) isotopeData.Mass;
+                isotopeProb[isotopeNum] = (float) isotopeData.Probability;
             }
             return;
 #if !Disable_Obsolete
@@ -386,8 +388,6 @@ namespace DeconToolsV2
             }
             return -1;
         }
-
-        private readonly Dictionary<string, int> _elementIndexDict = new Dictionary<string, int>();
 
         private void SetDefaultIsotopeDistribution()
         {

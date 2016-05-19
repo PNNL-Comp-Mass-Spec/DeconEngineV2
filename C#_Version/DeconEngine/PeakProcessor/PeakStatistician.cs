@@ -12,7 +12,7 @@ namespace Engine.PeakProcessing
         /// <summary>
         ///     Find signal to noise value at position specified.
         /// </summary>
-        /// <param name="yValue">is intenstiy at specified index.</param>
+        /// <param name="yValue">is intensity at specified index.</param>
         /// <param name="intensities">is List of intensities.</param>
         /// <param name="index">is position of point at which we want to calculate signal to noise.</param>
         /// <returns>returns computed signal to nosie value.</returns>

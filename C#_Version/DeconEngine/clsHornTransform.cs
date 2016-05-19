@@ -37,7 +37,7 @@ namespace DeconToolsV2.HornTransform
 
         //gord added
         private bool _isActualMonoMZUsed;
-        private IsotopicProfileFitScorer _isotopeFitter;
+        private IsotopicProfileFitScorer _isotopeFitScorer;
         private enmIsotopeFitType _isotopeFitType;
         private double _leftFitStringencyFactor;
 
@@ -99,7 +99,7 @@ namespace DeconToolsV2.HornTransform
         public clsHornTransform()
         {
             _isotopeFitType = enmIsotopeFitType.AREA;
-            _isotopeFitter = new AreaFitScorer();
+            _isotopeFitScorer = new AreaFitScorer();
 
             _maxCharge = 10;
             _maxMw = 10000;
@@ -142,14 +142,14 @@ namespace DeconToolsV2.HornTransform
                 _deleteIntensityThreshold = _transformParameters.DeleteIntensityThreshold;
                 _minTheoreticalIntensityForScore = _transformParameters.MinIntensityForScore;
                 _numPeaksForShoulder = _transformParameters.NumPeaksForShoulder;
-                _isotopeFitter.UseIsotopeDistributionCaching = _transformParameters.UseMercuryCaching;
+                _isotopeFitScorer.UseIsotopeDistributionCaching = _transformParameters.UseMercuryCaching;
                 _checkO18Pairs = _transformParameters.O16O18Media;
                 _checkAgainstCharge1 = _transformParameters.CheckAllPatternsAgainstCharge1;
                 _leftFitStringencyFactor = _transformParameters.LeftFitStringencyFactor;
                 _rightFitStringencyFactor = _transformParameters.RightFitStringencyFactor;
                 _isActualMonoMZUsed = _transformParameters.IsActualMonoMZUsed;
 
-                _isotopeFitter.SetOptions(_transformParameters.AveragineFormula, _transformParameters.TagFormula,
+                _isotopeFitScorer.SetOptions(_transformParameters.AveragineFormula, _transformParameters.TagFormula,
                     _transformParameters.CCMass, _transformParameters.ThrashOrNot, _transformParameters.CompleteFit);
 
                 ElementalIsotopeComposition = _transformParameters.ElementIsotopeComposition;
@@ -167,30 +167,16 @@ namespace DeconToolsV2.HornTransform
                 if (value != _isotopeFitType)
                 {
                     _isotopeFitType = value;
-                    // Until new options are provided save the current one.
-                    var oldFit = _isotopeFitter;
-                    switch (_isotopeFitType)
-                    {
-                        case enmIsotopeFitType.PEAK:
-                            _isotopeFitter = new PeakFitScorer();
-                            break;
-                        case enmIsotopeFitType.AREA:
-                            _isotopeFitter = new AreaFitScorer();
-                            break;
-                        case enmIsotopeFitType.CHISQ:
-                            _isotopeFitter = new ChiSqFitScorer();
-                            break;
-                    }
-                    // copy options
-                    _isotopeFitter.CloneSettings(oldFit);
+                    _isotopeFitScorer = IsotopicProfileFitScorer.ScorerFactory(_isotopeFitType,
+                        _isotopeFitScorer);
                 }
             }
         }
 
         public clsElementIsotopes ElementalIsotopeComposition
         {
-            get { return _isotopeFitter.ElementalIsotopeComposition; }
-            set { _isotopeFitter.ElementalIsotopeComposition = value; }
+            get { return _isotopeFitScorer.ElementalIsotopeComposition; }
+            set { _isotopeFitScorer.ElementalIsotopeComposition = value; }
         }
 
         public void PerformTransform(float backgroundIntensity, float minPeptideIntensity, ref float[] mzs,
@@ -347,7 +333,7 @@ namespace DeconToolsV2.HornTransform
             //  deleteThreshold = _deleteIntensityThreshold;
             var deleteThreshold = _deleteIntensityThreshold;
             int fitCountBasis;
-            var bestFit = _isotopeFitter.GetFitScore(peakData, chargeState, ref peak, out record, deleteThreshold,
+            var bestFit = _isotopeFitScorer.GetFitScore(peakData, chargeState, ref peak, out record, deleteThreshold,
                 _minTheoreticalIntensityForScore, _leftFitStringencyFactor, _rightFitStringencyFactor, out fitCountBasis,
                 DebugFlag);
 
@@ -355,7 +341,7 @@ namespace DeconToolsV2.HornTransform
             double zeroingStartMz;
             // When deleting an isotopic profile, this value is set to the last m/z to perform deletion at.
             double zeroingStopMz;
-            _isotopeFitter.GetZeroingMassRange(out zeroingStartMz, out zeroingStopMz, record.DeltaMz, deleteThreshold,
+            _isotopeFitScorer.GetZeroingMassRange(out zeroingStartMz, out zeroingStopMz, record.DeltaMz, deleteThreshold,
                 DebugFlag);
             //bestFit = _isotopeFitter.GetFitScore(peakData, chargeState, peak, record, _deleteIntensityThreshold, _minTheoreticalIntensityForScore, DebugFlag);
             //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
@@ -364,7 +350,7 @@ namespace DeconToolsV2.HornTransform
             {
                 clsHornTransformResults recordCharge1;
                 int fitCountBasisCharge1;
-                var bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, ref peakCharge1, out recordCharge1,
+                var bestFitCharge1 = _isotopeFitScorer.GetFitScore(peakData, 1, ref peakCharge1, out recordCharge1,
                     deleteThreshold, _minTheoreticalIntensityForScore, _leftFitStringencyFactor,
                     _rightFitStringencyFactor, out fitCountBasisCharge1, DebugFlag);
 
@@ -372,7 +358,7 @@ namespace DeconToolsV2.HornTransform
                 //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
                 double startMz1 = 0;
                 double stopMz1 = 0;
-                _isotopeFitter.GetZeroingMassRange(out startMz1, out stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
+                _isotopeFitScorer.GetZeroingMassRange(out startMz1, out stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
                 if (bestFit > _maxFit && bestFitCharge1 < _maxFit)
                 {
                     bestFit = bestFitCharge1;
@@ -606,9 +592,9 @@ namespace DeconToolsV2.HornTransform
 
         public void Reset()
         {
-            if (_isotopeFitter != null)
+            if (_isotopeFitScorer != null)
             {
-                _isotopeFitter.Reset();
+                _isotopeFitScorer.Reset();
             }
         }
 

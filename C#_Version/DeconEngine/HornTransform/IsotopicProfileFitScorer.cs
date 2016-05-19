@@ -17,8 +17,9 @@ namespace Engine.HornTransform
     /// </remarks>
     internal abstract class IsotopicProfileFitScorer
     {
-        private bool _lastValueWasCached;
         private readonly MercuryCache _mercuryCache = new MercuryCache();
+
+        private bool _lastValueWasCached;
 
         protected clsAveragine AveragineObj = new clsAveragine();
         // mass of the charge carrier.
@@ -110,6 +111,43 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
+        /// Create a new scorer based on the specified fit type, copying scorer settings from another scorer
+        /// </summary>
+        /// <param name="fitType"></param>
+        /// <param name="oldFit"></param>
+        /// <returns></returns>
+        public static IsotopicProfileFitScorer ScorerFactory(enmIsotopeFitType fitType,
+            IsotopicProfileFitScorer oldFit)
+        {
+            var scorer = ScorerFactory(fitType);
+            scorer.CloneSettings(oldFit);
+            return scorer;
+        }
+
+        /// <summary>
+        /// Create a new scorer based on the specified fit type
+        /// </summary>
+        /// <param name="fitType"></param>
+        /// <returns></returns>
+        public static IsotopicProfileFitScorer ScorerFactory(enmIsotopeFitType fitType)
+        {
+            IsotopicProfileFitScorer scorer = new AreaFitScorer();
+            switch (fitType)
+            {
+                case enmIsotopeFitType.AREA:
+                    scorer = new AreaFitScorer();
+                    break;
+                case enmIsotopeFitType.CHISQ:
+                    scorer = new ChiSqFitScorer();
+                    break;
+                case enmIsotopeFitType.PEAK:
+                    scorer = new PeakFitScorer();
+                    break;
+            }
+            return scorer;
+        }
+
+        /// <summary>
         ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
         ///     intensity by specified intensity.
         /// </summary>
@@ -146,8 +184,8 @@ namespace Engine.HornTransform
         ///     gets the intensity for a given mz.
         /// </summary>
         /// <remarks>
-        ///     We look for the intensity at a given m/z value in the raw data List ptr_vect_mzs
-        ///     (the intensities are stored in the corresponding raw data intensity List ptr_vect_inensities).
+        ///     We look for the intensity at a given m/z value in the raw data List mzs
+        ///     (the intensities are stored in the corresponding raw data intensity List intensities).
         ///     If the value does not exist, we interpolate the intensities of points before and after this m/z value.
         /// </remarks>
         /// <param name="mz">the m/z value for which we want to find the intensity.</param>
@@ -784,7 +822,7 @@ namespace Engine.HornTransform
             UseThrash = useThrash;
             CompleteFitThrash = completeFitThrash;
             ChargeCarrierMass = chargeCarrierMass;
-            _mercuryCache.SetOptions(chargeCarrierMass, IsotopeDistribution.MercurySize);
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
 
         /// <summary>
@@ -864,7 +902,7 @@ namespace Engine.HornTransform
             if (needToCalculateIsotopeDistribution)
             {
                 _lastValueWasCached = false;
-                DeconToolsV2.MolecularFormula empiricalFormula = AveragineObj.GetAverageFormulaForMass(mostAbundantMass);
+                var empiricalFormula = AveragineObj.GetAverageFormulaForMass(mostAbundantMass);
                 //long lngCharge = (long) charge;
 
                 IsotopeDistribution.ChargeCarrierMass = ChargeCarrierMass;
@@ -904,7 +942,7 @@ namespace Engine.HornTransform
         public void SetChargeCarrierMass(double mass)
         {
             ChargeCarrierMass = mass;
-            _mercuryCache.SetOptions(mass, IsotopeDistribution.MercurySize);
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
 #endif
 
