@@ -1,3 +1,4 @@
+#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +16,6 @@ namespace Engine
             b = a;
         }
 
-#if !Disable_Obsolete
         /*
         * Replaces data by its discrete Fourier transfor, if isign is input as 1;
         * or replaces data by nn times its inverse discrete Fourier transform, if
@@ -83,9 +83,7 @@ namespace Engine
                 mmax = istep;
             }
         }
-#endif
 
-#if !Disable_Obsolete
         /*
         * Replaces data by its discrete Fourier transfor, if isign is input as 1;
         * or replaces data by nn times its inverse discrete Fourier transform, if
@@ -109,8 +107,8 @@ namespace Engine
             four(nn, ref data, isign);
             return 0;
         }
-#endif
 
+        [Obsolete("Was only used by MercuryIsotopeDistribution, which now uses MathNet.Numerics", false)]
         public static void Four1(int nn, ref List<double> Data, int isign)
         {
             /* Perform bit reversal of Data[] */
@@ -176,7 +174,6 @@ namespace Engine
             }
         } /* End of Four1() */
 
-#if !Disable_Obsolete
         /*
         * Calculate the Fourier Transform of a set of n real valued data points.
         * Replaces this data which is stored in array data[1..n]) by the positive
@@ -244,6 +241,6 @@ namespace Engine
             }
             return 0;
         }
-#endif
     }
 }
+#endif
