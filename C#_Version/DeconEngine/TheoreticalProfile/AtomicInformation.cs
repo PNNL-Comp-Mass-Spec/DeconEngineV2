@@ -2111,63 +2111,54 @@ namespace Engine.TheoreticalProfile
             var rdrSettings = new XmlReaderSettings {IgnoreWhitespace = true};
             using (var rdr = XmlReader.Create(new FileStream(fileName, FileMode.Open), rdrSettings))
             {
-                try
+                rdr.MoveToContent();
+                //create DOM tree
+                //start walking down the tree
+                if (rdr.NodeType == XmlNodeType.Element && rdr.Name == XmlElementsTag) //elements
                 {
-                    rdr.MoveToContent();
-                    //create DOM tree
-                    //start walking down the tree
-                    if (rdr.NodeType == XmlNodeType.Element && rdr.Name == XmlElementsTag) //elements
+                    rdr.ReadStartElement(); // Read the elements tag, to get to the contents
+                    while (rdr.NodeType != XmlNodeType.EndElement)
                     {
-                        rdr.ReadStartElement(); // Read the elements tag, to get to the contents
-                        while (rdr.NodeType != XmlNodeType.EndElement)
+                        switch (rdr.Name)
                         {
-                            switch (rdr.Name)
-                            {
-                                case XmlElementTag:
-                                    //if (isotopes != null)
-                                    //{
-                                    //    mvect_elemental_isotopes.Add(isotopes);
-                                    //}
-                                    //isotopes = new ElementalIsotopes();
-                                    ElementalIsotopesList.Add(ReadElementFromXml(rdr.ReadSubtree()));
-                                    rdr.ReadEndElement();
-                                    break;
-                                case XmlNameTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlSymbolTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlAtomicityTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlNumIsotopesTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlIsotopesTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlIsotopeTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlMassTag:
-                                    rdr.Skip();
-                                    break;
-                                case XmlProbabilityTag:
-                                    rdr.Skip();
-                                    break;
-                                default:
-                                    rdr.Skip();
-                                    break;
-                            }
+                            case XmlElementTag:
+                                //if (isotopes != null)
+                                //{
+                                //    mvect_elemental_isotopes.Add(isotopes);
+                                //}
+                                //isotopes = new ElementalIsotopes();
+                                ElementalIsotopesList.Add(ReadElementFromXml(rdr.ReadSubtree()));
+                                rdr.ReadEndElement();
+                                break;
+                            case XmlNameTag:
+                                rdr.Skip();
+                                break;
+                            case XmlSymbolTag:
+                                rdr.Skip();
+                                break;
+                            case XmlAtomicityTag:
+                                rdr.Skip();
+                                break;
+                            case XmlNumIsotopesTag:
+                                rdr.Skip();
+                                break;
+                            case XmlIsotopesTag:
+                                rdr.Skip();
+                                break;
+                            case XmlIsotopeTag:
+                                rdr.Skip();
+                                break;
+                            case XmlMassTag:
+                                rdr.Skip();
+                                break;
+                            case XmlProbabilityTag:
+                                rdr.Skip();
+                                break;
+                            default:
+                                rdr.Skip();
+                                break;
                         }
                     }
-                }
-                catch (System.Exception e)
-                {
-#if DEBUG
-                    throw e;
-#endif
                 }
             }
         }

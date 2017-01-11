@@ -31,17 +31,10 @@ namespace DeconToolsV2
         public clsElementIsotopes(string fileName)
         {
             //AtomicInfo = new AtomicInformation();
-            try
-            {
-                Load(fileName);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            Load(fileName);
         }
 #endif
-        
+
 #if !Disable_Obsolete
         //[Obsolete("Not needed after combining AtomicInformation into clsElementIsotopes", true)]
         //internal AtomicInformation ElementalIsotopeComposition

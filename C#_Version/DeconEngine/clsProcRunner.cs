@@ -202,7 +202,7 @@ namespace DeconToolsV2
                 {
                     Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) raw_data;
                     icr_raw_data.SetApodizationZeroFillOptions(
-                        (DeconToolsV2.Readers.ApodizationType)fticr_preprocess_parameters.ApodizationType,
+                        (DeconToolsV2.Readers.ApodizationType) fticr_preprocess_parameters.ApodizationType,
                         fticr_preprocess_parameters.ApodizationMinX, fticr_preprocess_parameters.ApodizationMaxX,
                         fticr_preprocess_parameters.ApodizationPercent, fticr_preprocess_parameters.NumZeroFills);
                     if (fticr_preprocess_parameters.ApplyCalibration)
@@ -630,7 +630,7 @@ namespace DeconToolsV2
                                         if (Math.Abs(calc_monoMZ - monoPeak.Mz) < errorThreshold)
                                         {
                                             transformRecord.MonoMw = monoPeak.Mz * transformRecord.ChargeState -
-                                                                           1.00727638 * transformRecord.ChargeState;
+                                                                     1.00727638 * transformRecord.ChargeState;
                                         }
                                     }
                                     vect_transform_records.Add(transformRecord);
@@ -684,7 +684,7 @@ namespace DeconToolsV2
                                 Convert.ToString(transform_time - cs_time - get_fit_score_time),
                                 " All= ", Convert.ToString(all)
 //                          " all-transform-preprocess-read= ", Convert.ToString(all-transform_time-preprocessing_time-raw_data_read_time)
-                                ));
+                            ));
                         }
                     }
                     if (save_peaks)
@@ -743,255 +743,187 @@ namespace DeconToolsV2
             Engine.DTAProcessing.DTAProcessor dta_processor = null;
             Engine.DTAProcessing.DTAScanTypeGeneration dta_scanType = null;
 
-#if !DEBUG
-            try
+            mint_percent_done = 0;
+            menm_state = enmProcessState.RUNNING;
+
+            dta_processor = new Engine.DTAProcessing.DTAProcessor();
+            dta_scanType = new Engine.DTAProcessing.DTAScanTypeGeneration();
+
+            //Read the rawfile in
+            using (FileStream fin = new FileStream(mstr_file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-#endif
-                mint_percent_done = 0;
-                menm_state = enmProcessState.RUNNING;
-
-                dta_processor = new Engine.DTAProcessing.DTAProcessor();
-                dta_scanType = new Engine.DTAProcessing.DTAScanTypeGeneration();
-
-                //Read the rawfile in
-                using (FileStream fin = new FileStream(mstr_file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                if (!fin.CanRead)
                 {
-                    if (!fin.CanRead)
+                    System.Console.WriteLine("Unable to open input file");
+                    return;
+                }
+            }
+
+            // Check input format
+            int dotIndex = mstr_file_name.IndexOf(".");
+            string input_file_format = mstr_file_name.Remove(0, dotIndex + 1);
+            if ((input_file_format == "RAW") || (input_file_format == "raw"))
+                menm_file_type = DeconToolsV2.Readers.FileType.FINNIGAN;
+            else if (input_file_format == "mzXML")
+                menm_file_type = DeconToolsV2.Readers.FileType.MZXMLRAWDATA;
+            else
+            {
+                throw new System.Exception("Invalid input file format.");
+            }
+
+            // Set output path and filename
+            string output_file;
+            if (mstr_output_path_for_dta_creation != null)
+            {
+                int slashIndex = mstr_file_name.LastIndexOf("\\");
+                string raw_name_plus_extension = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
+                string raw_name = raw_name_plus_extension.Remove(0, slashIndex);
+                output_file = Path.Combine(mstr_output_path_for_dta_creation, Path.GetFileName(raw_name));
+            }
+            else
+            {
+                output_file = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
+            }
+
+            bool thresholded;
+            if (menm_file_type == DeconToolsV2.Readers.FileType.FINNIGAN ||
+                menm_file_type == DeconToolsV2.Readers.FileType.MZXMLRAWDATA)
+                thresholded = true;
+            else
+                thresholded = mobj_peak_parameters.ThresholdedData;
+
+            //Raw Object
+            dta_processor.mobj_raw_data_dta =
+                Engine.Readers.ReaderFactory.GetRawData((FileType) menm_file_type, mstr_file_name);
+            dta_processor.menm_dataset_type = (FileType) menm_file_type;
+
+            //File name base for all dtas
+            dta_processor.mch_output_file = output_file;
+
+            //Datasetname
+            int lastSlashIndex = mstr_file_name.LastIndexOf("\\");
+            string data_name_plus_extension = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
+            string data_name = data_name_plus_extension.Remove(0, lastSlashIndex + 1);
+            dta_processor.mch_dataset_name = data_name;
+
+            // File name for log file
+            bool create_log_file_only = false;
+            dta_processor.mch_log_filename = output_file + "_DeconMSn_log.txt";
+
+            //File name for profile data
+            dta_processor.mch_profile_filename = output_file + "_profile.txt";
+
+            if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG)
+            {
+                create_log_file_only = true;
+            }
+
+            dta_processor.mbln_write_progress_file = false;
+            dta_processor.mch_progress_filename = output_file + "_DeconMSn_progress.txt";
+
+            if (mobj_dta_generation_parameters.WriteProgressFile)
+            {
+                dta_processor.mbln_write_progress_file = true;
+            }
+
+            //file name for composite dta file
+            bool create_composite_dta = false;
+            if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
+            {
+                dta_processor.mch_comb_dta_filename = output_file + "_dta.txt";
+                dta_processor.mfile_comb_dta =
+                    new StreamWriter(new FileStream(dta_processor.mch_comb_dta_filename, FileMode.Create,
+                        FileAccess.ReadWrite, FileShare.Read));
+                create_composite_dta = true;
+                dta_scanType.DTAScanTypeFilename = output_file + "_ScanType.txt";
+                dta_scanType.DTAScanTypeFileWriter = new StreamWriter(new FileStream(dta_scanType.DTAScanTypeFilename, FileMode.Create,
+                    FileAccess.ReadWrite, FileShare.Read));
+                dta_scanType.RawDataReader = dta_processor.mobj_raw_data_dta;
+            }
+            //file name for .mgf file
+            if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+            {
+                dta_processor.mch_mgf_filename = output_file = ".mgf";
+                dta_processor.mfile_mgf =
+                    new StreamWriter(new FileStream(dta_processor.mch_mgf_filename, FileMode.Create,
+                        FileAccess.ReadWrite, FileShare.Read));
+            }
+
+            //Settings
+            string averagine_formula;
+            string tag_formula = "";
+            averagine_formula = mobj_transform_parameters.AveragineFormula;
+            if (mobj_transform_parameters.TagFormula != null)
+                tag_formula = mobj_transform_parameters.TagFormula;
+
+            //Check if any dtas have to be ignored
+            List<int> vect_msn_ignore = new List<int>();
+            if (mobj_dta_generation_parameters.IgnoreMSnScans)
+            {
+                int numLevels = mobj_dta_generation_parameters.NumMSnLevelsToIgnore;
+                for (int levelNum = 0; levelNum < numLevels; levelNum++)
+                {
+                    int level = mobj_dta_generation_parameters.get_MSnLevelToIgnore(levelNum);
+                    vect_msn_ignore.Add(level);
+                }
+                vect_msn_ignore.Sort();
+            }
+
+            dta_processor.SetDTAOptions(mobj_dta_generation_parameters.MinIonCount,
+                mobj_dta_generation_parameters.MinScan, mobj_dta_generation_parameters.MaxScan,
+                mobj_dta_generation_parameters.MinMass, mobj_dta_generation_parameters.MaxMass,
+                create_log_file_only, create_composite_dta, mobj_dta_generation_parameters.ConsiderChargeValue,
+                mobj_dta_generation_parameters.ConsiderMultiplePrecursors, mobj_dta_generation_parameters.CentroidMSn,
+                mobj_dta_generation_parameters.IsolationWindowSize,
+                mobj_dta_generation_parameters.IsProfileDataForMzXML);
+            dta_processor.SetPeakProcessorOptions(mobj_peak_parameters.SignalToNoiseThreshold, 0, thresholded,
+                (Engine.PeakProcessing.PeakFitType) mobj_peak_parameters.PeakFitType);
+            dta_processor.SetMassTransformOptions(mobj_transform_parameters.MaxCharge,
+                mobj_transform_parameters.MaxMW,
+                mobj_transform_parameters.MaxFit, mobj_transform_parameters.MinS2N, mobj_transform_parameters.CCMass,
+                mobj_transform_parameters.DeleteIntensityThreshold, mobj_transform_parameters.MinIntensityForScore,
+                mobj_transform_parameters.NumPeaksForShoulder, mobj_transform_parameters.UseMercuryCaching,
+                mobj_transform_parameters.O16O18Media, averagine_formula, tag_formula,
+                mobj_transform_parameters.ThrashOrNot, mobj_transform_parameters.CompleteFit,
+                mobj_transform_parameters.CheckAllPatternsAgainstCharge1,
+                (enmIsotopeFitType) mobj_transform_parameters.IsotopeFitType,
+                mobj_transform_parameters.ElementIsotopeComposition);
+
+            string svm_file = mobj_dta_generation_parameters.SVMParamFile;
+            dta_processor.InitializeSVM(svm_file);
+            dta_processor.SetPeakParametersLowResolution(mobj_peak_parameters.PeakBackgroundRatio,
+                mobj_transform_parameters.PeptideMinBackgroundRatio);
+
+            //begin process
+            //stick in range
+            int scan_num = mobj_dta_generation_parameters.MinScan;
+            int msNScanIndex = 0;
+            int num_scans;
+            int parent_scan;
+            double parent_mz = 0;
+            bool low_resolution = false;
+            int scan_start = scan_num;
+            int nextProgressScan = scan_start + 50;
+
+            if (mobj_dta_generation_parameters.MaxScan <= dta_processor.mobj_raw_data_dta.GetNumScans())
+                num_scans = mobj_dta_generation_parameters.MaxScan;
+            else
+                num_scans = dta_processor.mobj_raw_data_dta.GetNumScans();
+
+            while (scan_num <= num_scans)
+            {
+                mint_percent_done = (scan_num * 100) / num_scans;
+                if (dta_processor.mobj_raw_data_dta.IsMSScan(scan_num))
+                {
+                    //Get MS spectra
+                    dta_processor.GetParentScanSpectra(scan_num, mobj_peak_parameters.PeakBackgroundRatio,
+                        mobj_transform_parameters.PeptideMinBackgroundRatio);
+
+                    int msN_scan = scan_num + 1;
+                    for (msN_scan = scan_num + 1;
+                        msN_scan < num_scans && !dta_processor.mobj_raw_data_dta.IsMSScan(msN_scan);
+                        msN_scan++)
                     {
-                        System.Console.WriteLine("Unable to open input file");
-                        return;
-                    }
-                }
-
-                // Check input format
-                int dotIndex = mstr_file_name.IndexOf(".");
-                string input_file_format = mstr_file_name.Remove(0, dotIndex + 1);
-                if ((input_file_format == "RAW") || (input_file_format == "raw"))
-                    menm_file_type = DeconToolsV2.Readers.FileType.FINNIGAN;
-                else if (input_file_format == "mzXML")
-                    menm_file_type = DeconToolsV2.Readers.FileType.MZXMLRAWDATA;
-                else
-                {
-                    throw new System.Exception("Invalid input file format.");
-                }
-
-                // Set output path and filename
-                string output_file;
-                if (mstr_output_path_for_dta_creation != null)
-                {
-                    int slashIndex = mstr_file_name.LastIndexOf("\\");
-                    string raw_name_plus_extension = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
-                    string raw_name = raw_name_plus_extension.Remove(0, slashIndex);
-                    output_file = Path.Combine(mstr_output_path_for_dta_creation, Path.GetFileName(raw_name));
-                }
-                else
-                {
-                    output_file = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
-                }
-
-                bool thresholded;
-                if (menm_file_type == DeconToolsV2.Readers.FileType.FINNIGAN ||
-                    menm_file_type == DeconToolsV2.Readers.FileType.MZXMLRAWDATA)
-                    thresholded = true;
-                else
-                    thresholded = mobj_peak_parameters.ThresholdedData;
-
-                //Raw Object
-                dta_processor.mobj_raw_data_dta =
-                    Engine.Readers.ReaderFactory.GetRawData((FileType) menm_file_type, mstr_file_name);
-                dta_processor.menm_dataset_type = (FileType) menm_file_type;
-
-                //File name base for all dtas
-                dta_processor.mch_output_file = output_file;
-
-                //Datasetname
-                int lastSlashIndex = mstr_file_name.LastIndexOf("\\");
-                string data_name_plus_extension = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
-                string data_name = data_name_plus_extension.Remove(0, lastSlashIndex + 1);
-                dta_processor.mch_dataset_name = data_name;
-
-                // File name for log file
-                bool create_log_file_only = false;
-                dta_processor.mch_log_filename = output_file + "_DeconMSn_log.txt";
-
-                //File name for profile data
-                dta_processor.mch_profile_filename = output_file + "_profile.txt";
-
-                if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG)
-                {
-                    create_log_file_only = true;
-                }
-
-                dta_processor.mbln_write_progress_file = false;
-                dta_processor.mch_progress_filename = output_file + "_DeconMSn_progress.txt";
-
-                if (mobj_dta_generation_parameters.WriteProgressFile)
-                {
-                    dta_processor.mbln_write_progress_file = true;
-                }
-
-                //file name for composite dta file
-                bool create_composite_dta = false;
-                if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
-                {
-                    dta_processor.mch_comb_dta_filename = output_file + "_dta.txt";
-                    dta_processor.mfile_comb_dta =
-                        new StreamWriter(new FileStream(dta_processor.mch_comb_dta_filename, FileMode.Create,
-                            FileAccess.ReadWrite, FileShare.Read));
-                    create_composite_dta = true;
-                    dta_scanType.DTAScanTypeFilename = output_file + "_ScanType.txt";
-                    dta_scanType.DTAScanTypeFileWriter = new StreamWriter(new FileStream(dta_scanType.DTAScanTypeFilename, FileMode.Create,
-                            FileAccess.ReadWrite, FileShare.Read));
-                    dta_scanType.RawDataReader = dta_processor.mobj_raw_data_dta;
-                }
-                //file name for .mgf file
-                if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                {
-                    dta_processor.mch_mgf_filename = output_file = ".mgf";
-                    dta_processor.mfile_mgf =
-                        new StreamWriter(new FileStream(dta_processor.mch_mgf_filename, FileMode.Create,
-                            FileAccess.ReadWrite, FileShare.Read));
-                }
-
-                //Settings
-                string averagine_formula;
-                string tag_formula = "";
-                averagine_formula = mobj_transform_parameters.AveragineFormula;
-                if (mobj_transform_parameters.TagFormula != null)
-                    tag_formula = mobj_transform_parameters.TagFormula;
-
-                //Check if any dtas have to be ignored
-                List<int> vect_msn_ignore = new List<int>();
-                if (mobj_dta_generation_parameters.IgnoreMSnScans)
-                {
-                    int numLevels = mobj_dta_generation_parameters.NumMSnLevelsToIgnore;
-                    for (int levelNum = 0; levelNum < numLevels; levelNum++)
-                    {
-                        int level = mobj_dta_generation_parameters.get_MSnLevelToIgnore(levelNum);
-                        vect_msn_ignore.Add(level);
-                    }
-                    vect_msn_ignore.Sort();
-                }
-
-                dta_processor.SetDTAOptions(mobj_dta_generation_parameters.MinIonCount,
-                    mobj_dta_generation_parameters.MinScan, mobj_dta_generation_parameters.MaxScan,
-                    mobj_dta_generation_parameters.MinMass, mobj_dta_generation_parameters.MaxMass,
-                    create_log_file_only, create_composite_dta, mobj_dta_generation_parameters.ConsiderChargeValue,
-                    mobj_dta_generation_parameters.ConsiderMultiplePrecursors, mobj_dta_generation_parameters.CentroidMSn,
-                    mobj_dta_generation_parameters.IsolationWindowSize,
-                    mobj_dta_generation_parameters.IsProfileDataForMzXML);
-                dta_processor.SetPeakProcessorOptions(mobj_peak_parameters.SignalToNoiseThreshold, 0, thresholded,
-                    (Engine.PeakProcessing.PeakFitType) mobj_peak_parameters.PeakFitType);
-                dta_processor.SetMassTransformOptions(mobj_transform_parameters.MaxCharge,
-                    mobj_transform_parameters.MaxMW,
-                    mobj_transform_parameters.MaxFit, mobj_transform_parameters.MinS2N, mobj_transform_parameters.CCMass,
-                    mobj_transform_parameters.DeleteIntensityThreshold, mobj_transform_parameters.MinIntensityForScore,
-                    mobj_transform_parameters.NumPeaksForShoulder, mobj_transform_parameters.UseMercuryCaching,
-                    mobj_transform_parameters.O16O18Media, averagine_formula, tag_formula,
-                    mobj_transform_parameters.ThrashOrNot, mobj_transform_parameters.CompleteFit,
-                    mobj_transform_parameters.CheckAllPatternsAgainstCharge1,
-                    (enmIsotopeFitType) mobj_transform_parameters.IsotopeFitType,
-                    mobj_transform_parameters.ElementIsotopeComposition);
-
-                string svm_file = mobj_dta_generation_parameters.SVMParamFile;
-                dta_processor.InitializeSVM(svm_file);
-                dta_processor.SetPeakParametersLowResolution(mobj_peak_parameters.PeakBackgroundRatio,
-                    mobj_transform_parameters.PeptideMinBackgroundRatio);
-
-                //begin process
-                //stick in range
-                int scan_num = mobj_dta_generation_parameters.MinScan;
-                int msNScanIndex = 0;
-                int num_scans;
-                int parent_scan;
-                double parent_mz = 0;
-                bool low_resolution = false;
-                int scan_start = scan_num;
-                int nextProgressScan = scan_start + 50;
-
-                if (mobj_dta_generation_parameters.MaxScan <= dta_processor.mobj_raw_data_dta.GetNumScans())
-                    num_scans = mobj_dta_generation_parameters.MaxScan;
-                else
-                    num_scans = dta_processor.mobj_raw_data_dta.GetNumScans();
-
-                while (scan_num <= num_scans)
-                {
-                    mint_percent_done = (scan_num * 100) / num_scans;
-                    if (dta_processor.mobj_raw_data_dta.IsMSScan(scan_num))
-                    {
-                        //Get MS spectra
-                        dta_processor.GetParentScanSpectra(scan_num, mobj_peak_parameters.PeakBackgroundRatio,
-                            mobj_transform_parameters.PeptideMinBackgroundRatio);
-
-                        int msN_scan = scan_num + 1;
-                        for (msN_scan = scan_num + 1;
-                            msN_scan < num_scans && !dta_processor.mobj_raw_data_dta.IsMSScan(msN_scan);
-                            msN_scan++)
-                        {
-                            //GetMS level and see if it is to be ignored
-                            if (mobj_dta_generation_parameters.IgnoreMSnScans)
-                            {
-                                int msN_level = dta_processor.mobj_raw_data_dta.GetMSLevel(msN_scan);
-                                bool found_msN_level = false;
-                                for (int index = 0; index < vect_msn_ignore.Count; index++)
-                                {
-                                    if (msN_level == vect_msn_ignore[index])
-                                    {
-                                        found_msN_level = true;
-                                        break;
-                                    }
-                                }
-
-                                if (found_msN_level)
-                                    continue;
-                            }
-                            //Get msN spectra
-                            dta_processor.GetMsNSpectra(msN_scan, mobj_peak_parameters.PeakBackgroundRatio,
-                                mobj_transform_parameters.PeptideMinBackgroundRatio);
-                            //Identify which is parent_scan
-                            parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
-                            // AM Modified to recieve new spectra everytime if (parent_scan != scan_num) //MSN data
-                            dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
-                                mobj_transform_parameters.PeptideMinBackgroundRatio);
-
-                            bool dta_success = false;
-                            if (mobj_dta_generation_parameters.SpectraType == 0 ||
-                                dta_processor.GetSpectraType(msN_scan) == (int) mobj_dta_generation_parameters.SpectraType)
-                            {
-                                if (dta_processor.IsFTData(parent_scan))
-                                {
-                                    //Get charge and mono
-                                    dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
-                                }
-                                else if (dta_processor.IsZoomScan(parent_scan))
-                                {
-                                    dta_success = dta_processor.GenerateDTAZoomScans(msN_scan, parent_scan, msNScanIndex);
-                                }
-                                else
-                                {
-                                    //Low res data
-                                    low_resolution = true;
-                                    dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
-                                }
-                                if (dta_success)
-                                {
-                                    //write out dta
-                                    if (mobj_dta_generation_parameters.OutputType ==
-                                        DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                                        dta_processor.WriteToMGF(msN_scan, parent_scan);
-                                    else
-                                        dta_processor.WriteDTAFile(msN_scan, parent_scan);
-                                }
-                            }
-                        }
-                        // reinitialize scan_count appropriately
-                        scan_num = msN_scan - 1;
-                    }
-                    else
-                    {
-                        //Get msN spectra
-                        int msN_scan = scan_num;
-
                         //GetMS level and see if it is to be ignored
                         if (mobj_dta_generation_parameters.IgnoreMSnScans)
                         {
@@ -1007,129 +939,186 @@ namespace DeconToolsV2
                             }
 
                             if (found_msN_level)
-                            {
-                                scan_num++; // make sure an increment happens
                                 continue;
-                            }
                         }
-
+                        //Get msN spectra
                         dta_processor.GetMsNSpectra(msN_scan, mobj_peak_parameters.PeakBackgroundRatio,
                             mobj_transform_parameters.PeptideMinBackgroundRatio);
+                        //Identify which is parent_scan
+                        parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
+                        // AM Modified to recieve new spectra everytime if (parent_scan != scan_num) //MSN data
+                        dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
+                            mobj_transform_parameters.PeptideMinBackgroundRatio);
 
+                        bool dta_success = false;
                         if (mobj_dta_generation_parameters.SpectraType == 0 ||
                             dta_processor.GetSpectraType(msN_scan) == (int) mobj_dta_generation_parameters.SpectraType)
                         {
-                            //Identify which is parent_scan
-                            parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
-                            // check to see if valid parent which wont be in MRM cases where MSn begins at 1.
-                            if (parent_scan < 1)
-                            {
-                                scan_num++;
-                                continue; //no dta is generated
-                            }
-
-                            // get parent data
-                            dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
-                                mobj_transform_parameters.PeptideMinBackgroundRatio);
-
                             if (dta_processor.IsFTData(parent_scan))
                             {
                                 //Get charge and mono
-                                bool dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
-                                if (dta_success)
-                                {
-                                    //write out dta
-                                    if (mobj_dta_generation_parameters.OutputType ==
-                                        DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                                        dta_processor.WriteToMGF(msN_scan, parent_scan);
-                                    else
-                                        dta_processor.WriteDTAFile(msN_scan, parent_scan);
-                                }
+                                dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
+                            }
+                            else if (dta_processor.IsZoomScan(parent_scan))
+                            {
+                                dta_success = dta_processor.GenerateDTAZoomScans(msN_scan, parent_scan, msNScanIndex);
                             }
                             else
                             {
                                 //Low res data
                                 low_resolution = true;
-                                bool dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
-                                if (dta_success)
-                                {
-                                    if (mobj_dta_generation_parameters.OutputType ==
-                                        DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                                        dta_processor.WriteToMGF(msN_scan, parent_scan);
-                                    else
-                                        dta_processor.WriteDTAFile(msN_scan, parent_scan);
-                                }
+                                dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
+                            }
+                            if (dta_success)
+                            {
+                                //write out dta
+                                if (mobj_dta_generation_parameters.OutputType ==
+                                    DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                                    dta_processor.WriteToMGF(msN_scan, parent_scan);
+                                else
+                                    dta_processor.WriteDTAFile(msN_scan, parent_scan);
                             }
                         }
                     }
-                    scan_num++;
+                    // reinitialize scan_count appropriately
+                    scan_num = msN_scan - 1;
+                }
+                else
+                {
+                    //Get msN spectra
+                    int msN_scan = scan_num;
 
-                    if (dta_processor.mbln_write_progress_file)
+                    //GetMS level and see if it is to be ignored
+                    if (mobj_dta_generation_parameters.IgnoreMSnScans)
                     {
-                        if (scan_num - scan_start >= nextProgressScan)
+                        int msN_level = dta_processor.mobj_raw_data_dta.GetMSLevel(msN_scan);
+                        bool found_msN_level = false;
+                        for (int index = 0; index < vect_msn_ignore.Count; index++)
                         {
-                            dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
+                            if (msN_level == vect_msn_ignore[index])
+                            {
+                                found_msN_level = true;
+                                break;
+                            }
+                        }
 
-                            nextProgressScan += 50;
-                            while (nextProgressScan <= scan_num - scan_start)
-                                nextProgressScan += 50;
+                        if (found_msN_level)
+                        {
+                            scan_num++; // make sure an increment happens
+                            continue;
+                        }
+                    }
+
+                    dta_processor.GetMsNSpectra(msN_scan, mobj_peak_parameters.PeakBackgroundRatio,
+                        mobj_transform_parameters.PeptideMinBackgroundRatio);
+
+                    if (mobj_dta_generation_parameters.SpectraType == 0 ||
+                        dta_processor.GetSpectraType(msN_scan) == (int) mobj_dta_generation_parameters.SpectraType)
+                    {
+                        //Identify which is parent_scan
+                        parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
+                        // check to see if valid parent which wont be in MRM cases where MSn begins at 1.
+                        if (parent_scan < 1)
+                        {
+                            scan_num++;
+                            continue; //no dta is generated
+                        }
+
+                        // get parent data
+                        dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
+                            mobj_transform_parameters.PeptideMinBackgroundRatio);
+
+                        if (dta_processor.IsFTData(parent_scan))
+                        {
+                            //Get charge and mono
+                            bool dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
+                            if (dta_success)
+                            {
+                                //write out dta
+                                if (mobj_dta_generation_parameters.OutputType ==
+                                    DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                                    dta_processor.WriteToMGF(msN_scan, parent_scan);
+                                else
+                                    dta_processor.WriteDTAFile(msN_scan, parent_scan);
+                            }
+                        }
+                        else
+                        {
+                            //Low res data
+                            low_resolution = true;
+                            bool dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
+                            if (dta_success)
+                            {
+                                if (mobj_dta_generation_parameters.OutputType ==
+                                    DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                                    dta_processor.WriteToMGF(msN_scan, parent_scan);
+                                else
+                                    dta_processor.WriteDTAFile(msN_scan, parent_scan);
+                            }
                         }
                     }
                 }
+                scan_num++;
 
-                if (low_resolution && mobj_dta_generation_parameters.ConsiderChargeValue == 0)
+                if (dta_processor.mbln_write_progress_file)
                 {
-                    System.Console.WriteLine("Determining charge");
-                    dta_processor.DetermineChargeForEachScan();
-                    System.Console.WriteLine("Generating DTAs for low-resolution data");
-                    if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                        dta_processor.WriteLowResolutionMGFFile();
-                    else
-                        dta_processor.WriteLowResolutionDTAFile();
-                }
+                    if (scan_num - scan_start >= nextProgressScan)
+                    {
+                        dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
 
-                if (create_composite_dta)
-                {
-                    try
-                    {
-                        dta_scanType.GenerateScanTypeFile();
-                    }
-                    catch (Exception e)
-                    {
-                        System.Console.WriteLine("Error writing _ScanType.txt file: " + e.Message);
-                    }
-                    finally
-                    {
-                        dta_scanType.DTAScanTypeFileWriter.Close();
+                        nextProgressScan += 50;
+                        while (nextProgressScan <= scan_num - scan_start)
+                            nextProgressScan += 50;
                     }
                 }
-
-                mint_percent_done = 100;
-                dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
-
-                // Write out log file
-                dta_processor.WriteLogFile();
-
-                // Write out profile
-                dta_processor.WriteProfileFile();
-                //Shutdown
-                //dta_processor.mfile_log.close();
-                if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
-                {
-                    dta_processor.mfile_comb_dta.Close();
-                }
-                if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                    dta_processor.mfile_mgf.Close();
-
-                //Done
-                menm_state = enmProcessState.COMPLETE;
-#if !DEBUG
             }
-            catch (Exception e)
+
+            if (low_resolution && mobj_dta_generation_parameters.ConsiderChargeValue == 0)
             {
-                throw e;
+                System.Console.WriteLine("Determining charge");
+                dta_processor.DetermineChargeForEachScan();
+                System.Console.WriteLine("Generating DTAs for low-resolution data");
+                if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                    dta_processor.WriteLowResolutionMGFFile();
+                else
+                    dta_processor.WriteLowResolutionDTAFile();
             }
-#endif
+
+            if (create_composite_dta)
+            {
+                try
+                {
+                    dta_scanType.GenerateScanTypeFile();
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine("Error writing _ScanType.txt file: " + e.Message);
+                }
+                finally
+                {
+                    dta_scanType.DTAScanTypeFileWriter.Close();
+                }
+            }
+
+            mint_percent_done = 100;
+            dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
+
+            // Write out log file
+            dta_processor.WriteLogFile();
+
+            // Write out profile
+            dta_processor.WriteProfileFile();
+            //Shutdown
+            //dta_processor.mfile_log.close();
+            if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
+            {
+                dta_processor.mfile_comb_dta.Close();
+            }
+            if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                dta_processor.mfile_mgf.Close();
+
+            //Done
+            menm_state = enmProcessState.COMPLETE;
         }
 
         public void CreateTransformResultWithPeaksOnly()

@@ -149,60 +149,51 @@ namespace Engine.Utilities
             if (_derivativesY2.Count > 0)
                 _derivativesY2.Clear();
 
-            try
+            // Temporary variable used in computation of spline coefficients.
+            var splineCoefficients = new List<double>();
+            _derivativesY2.Capacity = n;
+            _derivativesY2.AddRange(Enumerable.Repeat(0d, n));
+            if (yp1 > 0.99e30)
             {
-                // Temporary variable used in computation of spline coefficients.
-                var splineCoefficients = new List<double>();
-                _derivativesY2.Capacity = n;
-                _derivativesY2.AddRange(Enumerable.Repeat(0d, n));
-                if (yp1 > 0.99e30)
-                {
-                    _derivativesY2[0] = 0.0;
-                    splineCoefficients.Add(0);
-                }
-                else
-                {
-                    _derivativesY2[0] = -0.5;
-                    splineCoefficients.Add(3.0f / (x[1] - x[0]) * ((y[1] - y[0]) / (x[1] - x[0]) - yp1));
-                }
-                // generate second derivatives at internal points using recursive spline equations.
-                for (var i = 1; i <= n - 2; i++)
-                {
-                    var sig = (x[i] - x[i - 1]) / (x[i + 1] - x[i - 1]);
-                    var p = sig * _derivativesY2[i - 1] + 2.0;
-                    _derivativesY2[i] = (sig - 1.0) / p;
-                    var lastSplineVal = splineCoefficients[i - 1];
-                    var splineVal = (y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i - 1]) / (x[i] - x[i - 1]);
-                    splineVal = (6.0 * splineVal / (x[i + 1] - x[i - 1]) - sig * lastSplineVal) / p;
-                    splineCoefficients.Add(splineVal);
-                }
-                double qn;
-                double un;
-                if (ypn > 0.99e30)
-                    qn = un = 0.0;
-                else
-                {
-                    qn = 0.5;
-                    un = 3.0 / (x[n - 1] - x[n - 2]) * (ypn - (y[n - 1] - y[n - 2]) / (x[n - 1] - x[n - 2]));
-                }
-
-                var y2LastLast = _derivativesY2[n - 2];
-                var tempLastLast = splineCoefficients[n - 2];
-                var y2Last = (un - qn * tempLastLast) / (qn * y2LastLast + 1.0);
-                _derivativesY2[n - 1] = y2Last;
-                for (var k = n - 2; k >= 0; k--) //[gord] this loop takes forever when summing spectra
-                {
-                    var temp = splineCoefficients[k];
-                    var y2NextVal = _derivativesY2[k + 1];
-                    var y2Val = _derivativesY2[k];
-                    _derivativesY2[k] = y2Val * y2NextVal + temp;
-                }
+                _derivativesY2[0] = 0.0;
+                splineCoefficients.Add(0);
             }
-            catch (NullReferenceException e)
+            else
             {
-#if DEBUG
-                throw e;
-#endif
+                _derivativesY2[0] = -0.5;
+                splineCoefficients.Add(3.0f / (x[1] - x[0]) * ((y[1] - y[0]) / (x[1] - x[0]) - yp1));
+            }
+            // generate second derivatives at internal points using recursive spline equations.
+            for (var i = 1; i <= n - 2; i++)
+            {
+                var sig = (x[i] - x[i - 1]) / (x[i + 1] - x[i - 1]);
+                var p = sig * _derivativesY2[i - 1] + 2.0;
+                _derivativesY2[i] = (sig - 1.0) / p;
+                var lastSplineVal = splineCoefficients[i - 1];
+                var splineVal = (y[i + 1] - y[i]) / (x[i + 1] - x[i]) - (y[i] - y[i - 1]) / (x[i] - x[i - 1]);
+                splineVal = (6.0 * splineVal / (x[i + 1] - x[i - 1]) - sig * lastSplineVal) / p;
+                splineCoefficients.Add(splineVal);
+            }
+            double qn;
+            double un;
+            if (ypn > 0.99e30)
+                qn = un = 0.0;
+            else
+            {
+                qn = 0.5;
+                un = 3.0 / (x[n - 1] - x[n - 2]) * (ypn - (y[n - 1] - y[n - 2]) / (x[n - 1] - x[n - 2]));
+            }
+
+            var y2LastLast = _derivativesY2[n - 2];
+            var tempLastLast = splineCoefficients[n - 2];
+            var y2Last = (un - qn * tempLastLast) / (qn * y2LastLast + 1.0);
+            _derivativesY2[n - 1] = y2Last;
+            for (var k = n - 2; k >= 0; k--) //[gord] this loop takes forever when summing spectra
+            {
+                var temp = splineCoefficients[k];
+                var y2NextVal = _derivativesY2[k + 1];
+                var y2Val = _derivativesY2[k];
+                _derivativesY2[k] = y2Val * y2NextVal + temp;
             }
         }
 

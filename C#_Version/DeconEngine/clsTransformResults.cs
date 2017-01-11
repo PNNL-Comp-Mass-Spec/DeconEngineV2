@@ -17,7 +17,7 @@ namespace DeconToolsV2.Results
         {
             get { return mobj_lcms_results.GetFileName(); }
         }
-        
+
         public DeconToolsV2.Readers.FileType FileType
         {
             get { return menmFileType; }
@@ -169,7 +169,7 @@ namespace DeconToolsV2.Results
             }
             mint_percent_done = 100;
         }
-        
+
         public void GetSIC(int min_scan, int max_scan, float mz, float mz_tolerance, ref float[] peak_intensities)
         {
             List<double> vect_intensities = new List<double>();
@@ -182,7 +182,7 @@ namespace DeconToolsV2.Results
                 peak_intensities[scan_num - min_scan] = (float)vect_intensities[scan_num - min_scan];
             }
         }
-        
+
         public void GetScanPeaks(int scan_num, ref float[] peak_mzs, ref float[] peak_intensities)
         {
             List<double> vect_mzs = new List<double>();
@@ -218,29 +218,15 @@ namespace DeconToolsV2.Results
 
         public void WriteResults(string fileName, bool save_signal_range)
         {
-            try
-            {
-                mobj_lcms_results.SaveResults(fileName, save_signal_range);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            mobj_lcms_results.SaveResults(fileName, save_signal_range);
         }
 
         public void WriteScanResults(string fileName)
         {
-            try
-            {
-                if (menmFileType != DeconToolsV2.Readers.FileType.ICR2LSRAWDATA)
-                    mobj_lcms_results.SaveScanResults(fileName, false);
-                else
-                    mobj_lcms_results.SaveScanResults(fileName, true);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            if (menmFileType != DeconToolsV2.Readers.FileType.ICR2LSRAWDATA)
+                mobj_lcms_results.SaveScanResults(fileName, false);
+            else
+                mobj_lcms_results.SaveScanResults(fileName, true);
         }
     }
 }

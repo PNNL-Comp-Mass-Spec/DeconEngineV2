@@ -147,31 +147,23 @@ namespace DeconToolsV2.Readers
         {
             // enumerations of file type are the same in Readers namespace and
             // DeconWrapperManaged namespace.
-            try
+            mobj_raw_data = Engine.Readers.ReaderFactory.GetRawData(file_type);
+            if (file_type == FileType.ICR2LSRAWDATA && mobj_preprocess_options != null &&
+                mobj_preprocess_options.ApodizationType != ApodizationType.NOAPODIZATION)
             {
-                mobj_raw_data = Engine.Readers.ReaderFactory.GetRawData(file_type);
-                if (file_type == FileType.ICR2LSRAWDATA && mobj_preprocess_options != null &&
-                    mobj_preprocess_options.ApodizationType != ApodizationType.NOAPODIZATION)
-                {
-                    Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
-                    icr_raw_data.SetApodizationZeroFillOptions(mobj_preprocess_options.ApodizationType,
-                        mobj_preprocess_options.ApodizationMinX, mobj_preprocess_options.ApodizationMaxX,
-                        mobj_preprocess_options.ApodizationPercent, mobj_preprocess_options.NumZeroFills);
-                }
-                mobj_raw_data.Load(file_name);
-                if (file_type == FileType.ICR2LSRAWDATA && mobj_preprocess_options != null &&
-                    mobj_preprocess_options.ApplyCalibration)
-                {
-                    Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
-                    icr_raw_data.OverrideDefaultCalibrator(mobj_preprocess_options.CalibrationType,
-                        mobj_preprocess_options.A, mobj_preprocess_options.B, mobj_preprocess_options.C);
-                }
+                Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+                icr_raw_data.SetApodizationZeroFillOptions(mobj_preprocess_options.ApodizationType,
+                    mobj_preprocess_options.ApodizationMinX, mobj_preprocess_options.ApodizationMaxX,
+                    mobj_preprocess_options.ApodizationPercent, mobj_preprocess_options.NumZeroFills);
             }
-            catch (Exception e)
+            mobj_raw_data.Load(file_name);
+            if (file_type == FileType.ICR2LSRAWDATA && mobj_preprocess_options != null &&
+                mobj_preprocess_options.ApplyCalibration)
             {
-                throw e;
+                Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+                icr_raw_data.OverrideDefaultCalibrator(mobj_preprocess_options.CalibrationType,
+                    mobj_preprocess_options.A, mobj_preprocess_options.B, mobj_preprocess_options.C);
             }
-            return;
         }
 
         /*public void LoadFile(char[] file_name, DeconToolsV2.Readers.FileType file_type)
@@ -273,24 +265,17 @@ namespace DeconToolsV2.Readers
                 throw new System.ApplicationException("No file has been opened");
             }
 
-            try
-            {
-                List<double> vect_mzs;
-                List<double> vect_intensities;
-                mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, start_scan, stop_scan, min_mz, max_mz);
-                int num_pts = (int) vect_intensities.Count;
-                intensities = new double[num_pts];
-                mzs = new double[num_pts];
+            List<double> vect_mzs;
+            List<double> vect_intensities;
+            mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, start_scan, stop_scan, min_mz, max_mz);
+            int num_pts = (int) vect_intensities.Count;
+            intensities = new double[num_pts];
+            mzs = new double[num_pts];
 
-                for (int i = 0; i < num_pts; i++)
-                {
-                    mzs[i] = vect_mzs[i];
-                    intensities[i] = vect_intensities[i];
-                }
-            }
-            catch (Exception e)
+            for (int i = 0; i < num_pts; i++)
             {
-                throw e;
+                mzs[i] = vect_mzs[i];
+                intensities[i] = vect_intensities[i];
             }
         }
 
@@ -303,22 +288,15 @@ namespace DeconToolsV2.Readers
 
             List<double> vect_mzs = new List<double>();
             List<double> vect_intensities = new List<double>();
-            try
-            {
-                mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, current_scan, scan_range);
-                int num_pts = (int) vect_intensities.Count;
-                intensities = new double[num_pts];
-                mzs = new double[num_pts];
+            mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, current_scan, scan_range);
+            int num_pts = (int) vect_intensities.Count;
+            intensities = new double[num_pts];
+            mzs = new double[num_pts];
 
-                for (int i = 0; i < num_pts; i++)
-                {
-                    mzs[i] = vect_mzs[i];
-                    intensities[i] = vect_intensities[i];
-                }
-            }
-            catch (Exception e)
+            for (int i = 0; i < num_pts; i++)
             {
-                throw e;
+                mzs[i] = vect_mzs[i];
+                intensities[i] = vect_intensities[i];
             }
         }
 
@@ -330,22 +308,15 @@ namespace DeconToolsV2.Readers
             }
             List<double> vect_mzs = new List<double>();
             List<double> vect_intensities = new List<double>();
-            try
-            {
-                mobj_raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num, centroid);
-                int num_pts = (int) vect_intensities.Count;
-                intensities = new double[num_pts];
-                mzs = new double[num_pts];
+            mobj_raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num, centroid);
+            int num_pts = (int) vect_intensities.Count;
+            intensities = new double[num_pts];
+            mzs = new double[num_pts];
 
-                for (int i = 0; i < num_pts; i++)
-                {
-                    mzs[i] = vect_mzs[i];
-                    intensities[i] = vect_intensities[i];
-                }
-            }
-            catch (Exception e)
+            for (int i = 0; i < num_pts; i++)
             {
-                throw e;
+                mzs[i] = vect_mzs[i];
+                intensities[i] = vect_intensities[i];
             }
         }
 
@@ -410,23 +381,16 @@ namespace DeconToolsV2.Readers
             if (mobj_raw_data == null)
                 throw new System.Exception("RawData not instantiated");
 
-            try
-            {
-                Engine.Readers.Icr2lsRawData icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
-                List<float> vect_intensities = new List<float>();
-                icrRawData.GetFTICRTransient(ref vect_intensities);
+            Engine.Readers.Icr2lsRawData icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+            List<float> vect_intensities = new List<float>();
+            icrRawData.GetFTICRTransient(ref vect_intensities);
 
-                int num_pts = (int) vect_intensities.Count;
-                intensities = new float[num_pts];
+            int num_pts = (int) vect_intensities.Count;
+            intensities = new float[num_pts];
 
-                for (int i = 0; i < num_pts; i++)
-                {
-                    intensities[i] = (float) vect_intensities[i];
-                }
-            }
-            catch (Exception e)
+            for (int i = 0; i < num_pts; i++)
             {
-                throw e;
+                intensities[i] = (float) vect_intensities[i];
             }
         }
 
