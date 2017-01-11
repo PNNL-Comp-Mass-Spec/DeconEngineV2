@@ -318,21 +318,29 @@ namespace Engine.Readers
             return false;
         }
 
-        private bool GetRawDataV3(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool IsZoomScan(int scan_num)
         {
-            mzs = new List<double>();
-            intensities = new List<double>();
             return false;
         }
 
-        private bool GetRawDataV3(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        private bool GetRawDataV3(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
             mzs = new List<double>();
             intensities = new List<double>();
+            // Not implemented
             return false;
         }
 
-        private bool GetRawDataV4(out List<double> mzs, out List<double> intensities, int scan_num)
+        private bool GetRawDataV3(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
+        {
+            mzs = new List<double>();
+            intensities = new List<double>();
+            // Not implemented
+            return false;
+        }
+
+        // Note that Centroid is ignored by this class
+        private bool GetRawDataV4(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
             mzs = new List<double>();
             intensities = new List<double>();
@@ -378,7 +386,8 @@ namespace Engine.Readers
             return false;
         }
 
-        private bool GetRawDataV4(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        // Note that Centroid is ignored by this class
+        private bool GetRawDataV4(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             mzs = new List<double>();
             intensities = new List<double>();
@@ -424,17 +433,17 @@ namespace Engine.Readers
             return false;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
             mzs = null;
             intensities = null;
             switch (menm_masslynx_version)
             {
                 case enmMassLynxVersion.V_3:
-                    return GetRawDataV3(out mzs, out intensities, scan_num);
+                    return GetRawDataV3(out mzs, out intensities, scan_num, centroid);
                     break;
                 case enmMassLynxVersion.V_4:
-                    return GetRawDataV4(out mzs, out intensities, scan_num);
+                    return GetRawDataV4(out mzs, out intensities, scan_num, centroid);
                     break;
                 default:
                     break;
@@ -442,17 +451,17 @@ namespace Engine.Readers
             return false;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             mzs = null;
             intensities = null;
             switch (menm_masslynx_version)
             {
                 case enmMassLynxVersion.V_3:
-                    return GetRawDataV3(out mzs, out intensities, scan_num, num_pts);
+                    return GetRawDataV3(out mzs, out intensities, scan_num, centroid, num_pts);
                     break;
                 case enmMassLynxVersion.V_4:
-                    return GetRawDataV4(out mzs, out intensities, scan_num, num_pts);
+                    return GetRawDataV4(out mzs, out intensities, scan_num, centroid, num_pts);
                     break;
                 default:
                     break;
@@ -505,7 +514,7 @@ namespace Engine.Readers
             return (int) mvectScanInfo.Count;
         }
 
-        public override double GetSignalRange(int scan_num)
+        public override double GetSignalRange(int scan_num, bool centroid)
         {
             return 0;
         }

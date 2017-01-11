@@ -7,6 +7,21 @@ namespace Engine.Readers
     [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     internal class ReaderFactory
     {
+        public static RawData GetMSDataReader(FileType file_type)
+        {
+            return GetRawData(file_type);
+        }
+
+        public static RawData GetMSDataReader(FileType file_type, string file_name)
+        {
+            return GetRawData(file_type, file_name);
+        }
+
+        public static void GetMSDataReader(out RawData raw_data, FileType file_type)
+        {
+            GetRawData(out raw_data, file_type);
+        }
+
         public static RawData GetRawData(FileType file_type, string file_name)
         {
             switch (file_type)
@@ -58,10 +73,12 @@ namespace Engine.Readers
 #endif
                     break;
                 case FileType.MICROMASSRAWDATA:
+#if MASSLYNX_4_INSTALLED
                     MicromassRawData micro_raw_data;
                     micro_raw_data = new MicromassRawData();
                     micro_raw_data.Load(file_name);
                     return micro_raw_data;
+#endif
                     break;
                 case FileType.MZXMLRAWDATA:
                     MZXmlRawData mzxml_raw_data;
@@ -123,7 +140,9 @@ namespace Engine.Readers
                     return;
                     break;
                 case FileType.MICROMASSRAWDATA:
+#if MASSLYNX_4_INSTALLED
                     raw_data = new MicromassRawData();
+#endif
                     return;
                     break;
                 case FileType.MZXMLRAWDATA:
@@ -190,9 +209,11 @@ namespace Engine.Readers
                     return icr2ls_raw_data;
                     break;
                 case FileType.MICROMASSRAWDATA:
+#if MASSLYNX_4_INSTALLED
                     MicromassRawData micro_raw_data;
                     micro_raw_data = new MicromassRawData();
                     return micro_raw_data;
+#endif
                     break;
                 case FileType.MZXMLRAWDATA:
                     MZXmlRawData mzxml_raw_data;

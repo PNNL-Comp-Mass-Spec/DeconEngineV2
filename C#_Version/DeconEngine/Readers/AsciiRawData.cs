@@ -25,7 +25,7 @@ namespace Engine.Readers
         private double mdbl_signal_range;
         private char mchar_delimiter;
         private int mint_percent_done;
-    
+
        public int GetPercentDone()
        {
            return mint_percent_done;
@@ -76,13 +76,13 @@ namespace Engine.Readers
         {
             Clear();
         }
-    
+
         public AsciiRawData()
         {
             mint_file_handle = null;
             Clear();
         }
-    
+
         private void Clear()
         {
             mint_percent_done = 0;
@@ -95,7 +95,7 @@ namespace Engine.Readers
                 mint_file_handle = null;
             }
         }
-    
+
         public override void Close()
         {
             if (mint_file_handle != null)
@@ -104,12 +104,12 @@ namespace Engine.Readers
                 mint_file_handle = null;
             }
         }
-    
+
        public override string GetFileName()
         {
             return marr_file_name;
         }
-    
+
         public override double GetScanTime(int scan_num)
         {
             if ((int) mvect_scan_time.Count <= scan_num)
@@ -298,19 +298,27 @@ namespace Engine.Readers
             }
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool IsZoomScan(int scan_num)
         {
-            int num_pts = mint_num_points_in_scan;
-            return GetRawData(out mzs, out intensities, scan_num, num_pts);
+            return false;
         }
 
-        public override double GetSignalRange(int scan_num)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
+        {
+            int num_pts = mint_num_points_in_scan;
+            return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
+        }
+
+        // Note that Centroid is ignored by this class
+        public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
             return 0;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             mzs = new List<double>();
             intensities = new List<double>();

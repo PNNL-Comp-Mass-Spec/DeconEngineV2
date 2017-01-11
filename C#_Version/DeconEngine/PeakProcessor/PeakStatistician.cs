@@ -71,6 +71,38 @@ namespace Engine.PeakProcessing
             return 1.0 * yValue / minIntensityLeft;
         }
 
+        public void MovingAverageFilter(ref List<double> vect_mzs, ref List<double> vect_intensities, int num_points)
+        {
+            List<double> intensities = new List<double>();
+
+            if (num_points % 2 == 0)
+            {
+                num_points += 1;
+            }
+
+            int range = num_points / 2;
+            double sum = 0;
+
+            intensities.Add(vect_intensities[0]);
+            intensities.Add((vect_intensities[0] + vect_intensities[1]) / 2);
+
+            for (int i = num_points - 1; i < vect_mzs.Count - num_points + 1; i++)
+            {
+                for (int j = -range; j < range + 1; j++)
+                {
+                    sum += vect_intensities[i + j];
+                }
+
+                intensities.Add(sum / num_points);
+                sum = 0;
+            }
+
+            for (int i = 0; i < intensities.Count; i++)
+            {
+                vect_intensities[i] = intensities[i];
+            }
+        }
+
         /// <summary>
         ///     Find full width at half maximum value at position specified.
         /// </summary>
@@ -235,7 +267,7 @@ namespace Engine.PeakProcessing
             var aT = Matrix<double>.Build.Dense(nTerms + 1, n, 0);
             for (var i = 0; i < n; i++)
             {
-                aT[0, 1] = w[i];
+                aT[0, i] = w[i];
                 for (var j = 1; j < nTerms + 1; j++)
                 {
                     aT[j, i] = aT[j - 1, i] * x[i];

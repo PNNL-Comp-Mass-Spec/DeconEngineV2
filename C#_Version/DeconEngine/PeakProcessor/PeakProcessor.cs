@@ -41,6 +41,11 @@ namespace Engine.PeakProcessing
         private double _signalToNoiseThreshold;
 
         /// <summary>
+        /// peaks in profile spectra within this tolerance will be merged into a single peak
+        /// </summary>
+        private double mdbl_PeakMergeTolerancePPM;
+
+        /// <summary>
         ///     PeakData instance that stores the peaks found by an instance of this PeakProcessor.
         /// </summary>
         public PeakData PeakData;
@@ -59,6 +64,12 @@ namespace Engine.PeakProcessing
             SetPeakFitType(PeakFitType.Quadratic);
             PeakData = new PeakData();
             _arePeaksCentroided = false;
+            mdbl_PeakMergeTolerancePPM = 2;
+        }
+
+        public void ApplyMovingAverageFilter(List<double> vect_mz, List<double> vect_intensity, int num_points)
+        {
+            PeakStatistician.MovingAverageFilter(ref vect_mz, ref vect_intensity, num_points);
         }
 
         /// <summary>
@@ -171,6 +182,9 @@ namespace Engine.PeakProcessing
             PeakData.Clear();
             var numDataPts = intensityList.Count;
 
+            double previousPeakMz = 0;
+            double previousPeakIntensity = 0;
+            int previousPeakIndex = -1;
             var startIndex = PeakIndex.GetNearestBinary(mzList, startMz, 0, numDataPts - 1);
             var stopIndex = PeakIndex.GetNearestBinary(mzList, stopMz, startIndex, numDataPts - 1);
             if (startIndex <= 0)
@@ -242,20 +256,57 @@ namespace Engine.PeakProcessing
                                 fwhm = PeakStatistician.FindFwhm(mzList, intensityList, index, signalToNoise);
                             }
 
+                            var incremented = false;
+
                             if (fwhm > 0)
                             {
-                                PeakData.AddPeak(new clsPeak(fittedPeak, currentIntensity, signalToNoise, PeakData.GetNumPeaks(),
-                                    index, fwhm));
+                                // Compare this peak to the previous peak
+                                // If within PeakMergeTolerancePPM then only keep one of the peaks
+                                //System.Console.WriteLine("{0}\t{1}\t{2}", fittedPeak, currentIntensity, signalToNoise);
+
+                                double deltaPPM = mdbl_PeakMergeTolerancePPM * 2;
+                                var addPeak = true;
+
+                                if (previousPeakIndex > -1)
+                                {
+                                    deltaPPM = (fittedPeak - previousPeakMz) / (previousPeakMz / 1E6);
+
+                                    if (deltaPPM <= mdbl_PeakMergeTolerancePPM)
+                                    {
+
+
+                                        // Compare this peak's intensity to the previous peak
+                                        if (currentIntensity > previousPeakIntensity)
+                                        {
+                                            // Remove the most recently added peak
+                                            PeakData.RemoveLastPeak();
+                                        }
+                                        else
+                                        {
+                                            addPeak = false;
+                                        }
+
+                                    }
+                                }
+
+                                if (addPeak)
+                                {
+                                    previousPeakMz = fittedPeak;
+                                    previousPeakIntensity = currentIntensity;
+                                    previousPeakIndex = PeakData.GetNumPeaks();
+                                    PeakData.AddPeak(new clsPeak(fittedPeak, currentIntensity, signalToNoise, PeakData.GetNumPeaks(),
+                                        index, fwhm));
+                                }
+
+                                // move beyond peaks have the same intensity.
+                                while (index < numDataPts && intensityList[index].Equals(currentIntensity))
+                                {
+                                    incremented = true;
+                                    index++;
+                                }
                             }
-                            // move beyond peaks have the same intensity.
-                            var incremented = false;
-                            while (index < numDataPts && intensityList[index].Equals(currentIntensity))
-                            {
-                                incremented = true;
-                                index++;
-                            }
-                            if (index > 0 && index < numDataPts
-                                && incremented)
+
+                            if (index > 0 && index < numDataPts && incremented)
                                 index--;
                         }
                     }
@@ -267,6 +318,69 @@ namespace Engine.PeakProcessing
             return PeakData.GetNumPeaks();
         }
 
+        public double GetClosestPeakMzFast(double peakMz, ref clsPeak selectedPeak)
+        {
+            double min_score = 1.00727638;
+            clsPeak thisPeak;
+            double score;
+
+            selectedPeak.mdbl_mz = 0.0;
+
+            try
+            {
+                int high = PeakData.PeakTops.Count;
+                int low = 0;
+                int mid = (low + high) / 2;
+                bool peakFound = false;
+
+                while (low <= high && !peakFound)
+                {
+                    mid = (low + high) / 2;
+                    thisPeak =  new clsPeak(PeakData.PeakTops[mid]);
+                    score = (peakMz - thisPeak.mdbl_mz) * (peakMz - thisPeak.mdbl_mz);
+                    if (score <= min_score)
+                    {
+
+                        //we've found a peak that gives a score lower than what we expect.
+                        //Instead of redividing, maybe we proceed sequentially from here on
+                        //and stop when we get a score that's higher than our current score
+                        selectedPeak = thisPeak;
+                        min_score = score;
+                        peakFound = true;
+                        //keep going lower till the score improves, there is no point in going
+                        //to the right
+
+                        while (score <= min_score && (mid - 1) >= 0)
+                        {
+                            thisPeak = new clsPeak(PeakData.PeakTops[mid - 1]);
+                            score = (peakMz - thisPeak.mdbl_mz) * (peakMz - thisPeak.mdbl_mz);
+                            if (score < min_score)
+                            {
+                                selectedPeak = thisPeak;
+                                min_score = score;
+                                mid -= 1;
+                                peakFound = true;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else if (score > min_score)
+                    {
+                        high = mid - 1;
+                    }
+                }
+
+            }
+            catch (System.Exception)
+            {
+            }
+
+            return selectedPeak.mdbl_mz;
+        }
+
         /// <summary>
         ///     Gets the closest to peakMz among the peak list mzList
         /// </summary>
@@ -275,6 +389,9 @@ namespace Engine.PeakProcessing
         /// <returns></returns>
         public double GetClosestPeakMz(double peakMz, out clsPeak peak)
         {
+            //This should be changed to be a binary search, especially for DeconToolsV2 if it's using the same code
+            //I am assuming that the peak list is sorted by mz?
+
             //looks through the peak list and finds the closest peak to peakMz
             var minScore = 1.00727638; //enough for one charge away
             peak = new clsPeak();
@@ -327,6 +444,23 @@ namespace Engine.PeakProcessing
             var minMz = mzList[0];
             var maxMz = mzList[mzList.Count - 1];
             return DiscoverPeaks(mzList, intensityList, minMz, maxMz);
+        }
+
+        public bool ConvertPeakListToSpectra(List<double> vect_mz, List<double> vect_intensity)
+        {
+            vect_intensity.Clear();
+            vect_mz.Clear();
+
+            int numPeaks = PeakData.GetNumPeaks();
+            for (int i = 0; i < numPeaks; i++)
+            {
+                clsPeak peak;
+                PeakData.GetPeak(i, out peak);
+                vect_intensity.Add(peak.mdbl_intensity);
+                vect_mz.Add(peak.mdbl_mz);
+            }
+
+            return false;
         }
 
 #if !Disable_Obsolete

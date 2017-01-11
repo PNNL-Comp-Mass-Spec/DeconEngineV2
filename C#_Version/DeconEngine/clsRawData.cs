@@ -322,7 +322,7 @@ namespace DeconToolsV2.Readers
             }
         }
 
-        public void GetSpectrum(int scan_num, ref double[] mzs, ref double[] intensities)
+        public void GetSpectrum(int scan_num, ref double[] mzs, ref double[] intensities, bool centroid)
         {
             if (mobj_raw_data == null)
             {
@@ -332,7 +332,7 @@ namespace DeconToolsV2.Readers
             List<double> vect_intensities = new List<double>();
             try
             {
-                mobj_raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num);
+                mobj_raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num, centroid);
                 int num_pts = (int) vect_intensities.Count;
                 intensities = new double[num_pts];
                 mzs = new double[num_pts];

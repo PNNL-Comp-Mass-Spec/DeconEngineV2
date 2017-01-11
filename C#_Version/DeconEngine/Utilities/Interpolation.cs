@@ -134,7 +134,7 @@ namespace Engine.Utilities
         public void Spline(List<double> x, List<double> y, double yp1, double ypn)
         {
             // Unescaped version of above remark...
-            // Given the arrays x[0..n-1] and y[0..n-1] containing the tabulated function, i.e., yi = f(xi), 
+            // Given the arrays x[0..n-1] and y[0..n-1] containing the tabulated function, i.e., yi = f(xi),
             // with x0<x1<...<xn-1, and given values yp1 and ypn for the first derivative of the interpolating
             // function at points 0 and n-1, respectively, this routine returns an array y2[1..n] that contains
             // the second derivatives of the interpolating function at the tabulated points xi. If yp1 and/or
@@ -357,6 +357,10 @@ namespace Engine.Utilities
                         minDistance = currentDiff;
                     }
                 }
+
+                // Do not allow min_distance to be too small
+                if (minDistance < 0.00001)
+                    minDistance = 0.00001;
 
                 tempX.Add(x[0]);
                 tempY.Add(y[0]);

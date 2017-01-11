@@ -416,10 +416,16 @@ namespace Engine.Readers
             }
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool IsZoomScan(int scan_num)
+        {
+            return false;
+        }
+
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
             int num_pts = mint_num_points_in_scan;
-            return GetRawData(out mzs, out intensities, scan_num, num_pts);
+            return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
         }
 
         public override double GetScanTime(int scan_num)
@@ -427,7 +433,7 @@ namespace Engine.Readers
             return scan_num;
         }
 
-        public override double GetSignalRange(int scan_num)
+        public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
             if (mint_last_scan_num == scan_num)
@@ -435,7 +441,8 @@ namespace Engine.Readers
             return 0;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             string file_name;
             const int flt_size = sizeof (float);

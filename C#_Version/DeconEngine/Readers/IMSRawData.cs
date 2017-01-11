@@ -414,16 +414,23 @@ namespace Engine.Readers
             mvect_mxed_data.Clear();
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool IsZoomScan(int scan_num)
         {
-            bool found_data = GetRawData(out mzs, out intensities, scan_num, -1);
+            return false;
+        }
+
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
+        {
+            bool found_data = GetRawData(out mzs, out intensities, scan_num, centroid, -1);
             if (!found_data)
                 return found_data;
             //mobj_savgol.Smooth(mzs, intensities);
             return true;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             SortedDictionary<int, double> bin_intensity_map = new SortedDictionary<int, double>();
             mzs = new List<double>();
@@ -536,7 +543,7 @@ namespace Engine.Readers
             return mint_num_scans;
         }
 
-        public override double GetSignalRange(int scan_num)
+        public override double GetSignalRange(int scan_num, bool centroid)
         {
             return 0;
         }

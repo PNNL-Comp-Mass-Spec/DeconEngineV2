@@ -176,7 +176,7 @@ namespace DeconToolsV2
             Engine.Utilities.Interpolation interpolator = null;
 //      Engine.ResultChecker.LCMSCheckResults *lcms_checker = null;
             DeconToolsV2.Results.clsTransformResults transform_results = new DeconToolsV2.Results.clsTransformResults();
-            
+
             try
             {
                 List<clsHornTransformResults> vect_transform_records = new List<clsHornTransformResults>();
@@ -303,6 +303,7 @@ namespace DeconToolsV2
                 int tic_time = 0;
                 int peak_discover_time = 0;
                 int peak_save_time = 0;
+                bool centroid = false;
 
                 //2009-04-03 [gord] will no longer use the SlidingWindow. It has litte speed benefit and there might be a bug
                 /*if (transform_parameters.SumSpectraAcrossScanRange())
@@ -336,10 +337,12 @@ namespace DeconToolsV2
                     if (raw_data.IsMSScan(scan_num))
                     {
                         scan_ms_level = 1;
+                        centroid = false;
                     }
                     else
                     {
                         scan_ms_level = 2;
+                        centroid = DTAGenerationParameters.CentroidMSn;
                     }
                     if (scan_ms_level != 1 && !transform_parameters.ProcessMSMS)
                         continue;
@@ -349,8 +352,8 @@ namespace DeconToolsV2
                         continue;
 
                     //Get this scan first
-                    raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num);
-                    raw_data.GetRawData(out temp_vect_mzs, out temp_vect_intensities, scan_num);
+                    raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num, centroid);
+                    raw_data.GetRawData(out temp_vect_mzs, out temp_vect_intensities, scan_num, centroid);
 
                     // ------------------------------ Spectra summing ----------------------------------
                     if (transform_parameters.SumSpectra) // sum all spectra
@@ -686,7 +689,7 @@ namespace DeconToolsV2
                     }
                     if (save_peaks)
                     {
-                        double signal_range = raw_data.GetSignalRange(scan_num);
+                        double signal_range = raw_data.GetSignalRange(scan_num, centroid);
                         lcms_results.AddInfoForScan(scan_num, bp_mz, bpi, tic_intensity, signal_range, numPeaks,
                             numDeisotoped, scan_time, scan_ms_level);
                         /*if (file_type == DeconToolsV2.Readers.PNNL_UIMF)
@@ -739,15 +742,17 @@ namespace DeconToolsV2
 
             Engine.DTAProcessing.DTAProcessor dta_processor = null;
 
+#if !DEBUG
             try
             {
+#endif
                 mint_percent_done = 0;
                 menm_state = enmProcessState.RUNNING;
 
                 dta_processor = new Engine.DTAProcessing.DTAProcessor();
 
                 //Read the rawfile in
-                using (FileStream fin = new FileStream(mstr_file_name, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (FileStream fin = new FileStream(mstr_file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     if (!fin.CanRead)
                     {
@@ -775,7 +780,7 @@ namespace DeconToolsV2
                     int slashIndex = mstr_file_name.LastIndexOf("\\");
                     string raw_name_plus_extension = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
                     string raw_name = raw_name_plus_extension.Remove(0, slashIndex);
-                    output_file = mstr_output_path_for_dta_creation + raw_name;
+                    output_file = Path.Combine(mstr_output_path_for_dta_creation, Path.GetFileName(raw_name));
                 }
                 else
                 {
@@ -814,6 +819,15 @@ namespace DeconToolsV2
                 {
                     create_log_file_only = true;
                 }
+
+                dta_processor.mbln_write_progress_file = false;
+                dta_processor.mch_progress_filename = output_file + "_DeconMSn_progress.txt";
+
+                if (mobj_dta_generation_parameters.WriteProgressFile)
+                {
+                    dta_processor.mbln_write_progress_file = true;
+                }
+
                 //file name for composite dta file
                 bool create_composite_dta = false;
                 if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
@@ -821,7 +835,7 @@ namespace DeconToolsV2
                     dta_processor.mch_comb_dta_filename = output_file + "_dta.txt";
                     dta_processor.mfile_comb_dta =
                         new StreamWriter(new FileStream(dta_processor.mch_comb_dta_filename, FileMode.Create,
-                            FileAccess.ReadWrite, FileShare.None));
+                            FileAccess.ReadWrite, FileShare.Read));
                     create_composite_dta = true;
                 }
                 //file name for .mgf file
@@ -830,7 +844,7 @@ namespace DeconToolsV2
                     dta_processor.mch_mgf_filename = output_file = ".mgf";
                     dta_processor.mfile_mgf =
                         new StreamWriter(new FileStream(dta_processor.mch_mgf_filename, FileMode.Create,
-                            FileAccess.ReadWrite, FileShare.None));
+                            FileAccess.ReadWrite, FileShare.Read));
                 }
 
                 //Settings
@@ -857,7 +871,7 @@ namespace DeconToolsV2
                     mobj_dta_generation_parameters.MinScan, mobj_dta_generation_parameters.MaxScan,
                     mobj_dta_generation_parameters.MinMass, mobj_dta_generation_parameters.MaxMass,
                     create_log_file_only, create_composite_dta, mobj_dta_generation_parameters.ConsiderChargeValue,
-                    mobj_dta_generation_parameters.ConsiderMultiplePrecursors,
+                    mobj_dta_generation_parameters.ConsiderMultiplePrecursors, mobj_dta_generation_parameters.CentroidMSn,
                     mobj_dta_generation_parameters.IsolationWindowSize,
                     mobj_dta_generation_parameters.IsProfileDataForMzXML);
                 dta_processor.SetPeakProcessorOptions(mobj_peak_parameters.SignalToNoiseThreshold, 0, thresholded,
@@ -886,6 +900,8 @@ namespace DeconToolsV2
                 int parent_scan;
                 double parent_mz = 0;
                 bool low_resolution = false;
+                int scan_start = scan_num;
+                int nextProgressScan = scan_start + 50;
 
                 if (mobj_dta_generation_parameters.MaxScan <= dta_processor.mobj_raw_data_dta.GetNumScans())
                     num_scans = mobj_dta_generation_parameters.MaxScan;
@@ -932,28 +948,28 @@ namespace DeconToolsV2
                             dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
                                 mobj_transform_parameters.PeptideMinBackgroundRatio);
 
-                            if (dta_processor.IsFTData(parent_scan))
+                            bool dta_success = false;
+                            if (mobj_dta_generation_parameters.SpectraType == 0 ||
+                                dta_processor.GetSpectraType(msN_scan) == (int) mobj_dta_generation_parameters.SpectraType)
                             {
-                                //Get charge and mono
-                                bool dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
+                                if (dta_processor.IsFTData(parent_scan))
+                                {
+                                    //Get charge and mono
+                                    dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
+                                }
+                                else if (dta_processor.IsZoomScan(parent_scan))
+                                {
+                                    dta_success = dta_processor.GenerateDTAZoomScans(msN_scan, parent_scan, msNScanIndex);
+                                }
+                                else
+                                {
+                                    //Low res data
+                                    low_resolution = true;
+                                    dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
+                                }
                                 if (dta_success)
                                 {
                                     //write out dta
-                                    if (mobj_dta_generation_parameters.OutputType ==
-                                        DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                                        dta_processor.WriteToMGF(msN_scan, parent_scan);
-                                    else
-                                        dta_processor.WriteDTAFile(msN_scan, parent_scan);
-
-                                }
-                            }
-                            else
-                            {
-                                //Low res data
-                                low_resolution = true;
-                                bool dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
-                                if (dta_success)
-                                {
                                     if (mobj_dta_generation_parameters.OutputType ==
                                         DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
                                         dta_processor.WriteToMGF(msN_scan, parent_scan);
@@ -994,49 +1010,65 @@ namespace DeconToolsV2
                         dta_processor.GetMsNSpectra(msN_scan, mobj_peak_parameters.PeakBackgroundRatio,
                             mobj_transform_parameters.PeptideMinBackgroundRatio);
 
-                        //Identify which is parent_scan
-                        parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
-                        // check to see if valid parent which wont be in MRM cases where MSn begins at 1.
-                        if (parent_scan < 1)
+                        if (mobj_dta_generation_parameters.SpectraType == 0 ||
+                            dta_processor.GetSpectraType(msN_scan) == (int) mobj_dta_generation_parameters.SpectraType)
                         {
-                            scan_num++;
-                            continue; //no dta is generated
-                        }
-
-                        // get parent data
-                        dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
-                            mobj_transform_parameters.PeptideMinBackgroundRatio);
-
-                        if (dta_processor.IsFTData(parent_scan))
-                        {
-                            //Get charge and mono
-                            bool dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
-                            if (dta_success)
+                            //Identify which is parent_scan
+                            parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
+                            // check to see if valid parent which wont be in MRM cases where MSn begins at 1.
+                            if (parent_scan < 1)
                             {
-                                //write out dta
-                                if (mobj_dta_generation_parameters.OutputType ==
-                                    DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                                    dta_processor.WriteToMGF(msN_scan, parent_scan);
-                                else
-                                    dta_processor.WriteDTAFile(msN_scan, parent_scan);
+                                scan_num++;
+                                continue; //no dta is generated
                             }
-                        }
-                        else
-                        {
-                            //Low res data
-                            low_resolution = true;
-                            bool dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
-                            if (dta_success)
+
+                            // get parent data
+                            dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
+                                mobj_transform_parameters.PeptideMinBackgroundRatio);
+
+                            if (dta_processor.IsFTData(parent_scan))
                             {
-                                if (mobj_dta_generation_parameters.OutputType ==
-                                    DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                                    dta_processor.WriteToMGF(msN_scan, parent_scan);
-                                else
-                                    dta_processor.WriteDTAFile(msN_scan, parent_scan);
+                                //Get charge and mono
+                                bool dta_success = dta_processor.GenerateDTA(msN_scan, parent_scan);
+                                if (dta_success)
+                                {
+                                    //write out dta
+                                    if (mobj_dta_generation_parameters.OutputType ==
+                                        DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                                        dta_processor.WriteToMGF(msN_scan, parent_scan);
+                                    else
+                                        dta_processor.WriteDTAFile(msN_scan, parent_scan);
+                                }
+                            }
+                            else
+                            {
+                                //Low res data
+                                low_resolution = true;
+                                bool dta_success = dta_processor.GenerateDTALowRes(msN_scan, parent_scan, msNScanIndex);
+                                if (dta_success)
+                                {
+                                    if (mobj_dta_generation_parameters.OutputType ==
+                                        DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
+                                        dta_processor.WriteToMGF(msN_scan, parent_scan);
+                                    else
+                                        dta_processor.WriteDTAFile(msN_scan, parent_scan);
+                                }
                             }
                         }
                     }
                     scan_num++;
+
+                    if (dta_processor.mbln_write_progress_file)
+                    {
+                        if (scan_num - scan_start >= nextProgressScan)
+                        {
+                            dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
+
+                            nextProgressScan += 50;
+                            while (nextProgressScan <= scan_num - scan_start)
+                                nextProgressScan += 50;
+                        }
+                    }
                 }
 
                 if (low_resolution && mobj_dta_generation_parameters.ConsiderChargeValue == 0)
@@ -1049,6 +1081,9 @@ namespace DeconToolsV2
                     else
                         dta_processor.WriteLowResolutionDTAFile();
                 }
+
+                mint_percent_done = 100;
+                dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
 
                 // Write out log file
                 dta_processor.WriteLogFile();
@@ -1064,11 +1099,13 @@ namespace DeconToolsV2
 
                 //Done
                 menm_state = enmProcessState.COMPLETE;
+#if !DEBUG
             }
             catch (Exception e)
             {
                 throw e;
             }
+#endif
         }
 
         public void CreateTransformResultWithPeaksOnly()

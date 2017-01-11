@@ -16,6 +16,15 @@ namespace DeconToolsV2.DTAGeneration
     };
 
     [Obsolete("Only used by Decon2LS.UI", false)]
+    public enum SPECTRA_TYPE
+    {
+        ALL = 0,
+        CID,
+        ETD,
+        HCD
+    };
+
+    [Obsolete("Only used by Decon2LS.UI", false)]
     public class clsDTAGenerationParameters : System.ICloneable
     {
         private int mint_min_ion_count;
@@ -30,7 +39,9 @@ namespace DeconToolsV2.DTAGeneration
 
         private bool mbln_is_profile_data_for_mzXML;
         private bool mbln_consider_multiple_precursors;
+        private bool mbln_centroid_msn;
 
+        private bool mbln_write_progress_file;
         private bool mbln_ignore_msn_scans;
         private int mint_num_msn_levels_to_ignore;
 
@@ -39,6 +50,7 @@ namespace DeconToolsV2.DTAGeneration
         private int mint_isolation_window_size;
 
         private OUTPUT_TYPE menm_output_type;
+        private SPECTRA_TYPE menm_spectra_type;
 
         public virtual Object Clone()
         {
@@ -53,10 +65,13 @@ namespace DeconToolsV2.DTAGeneration
             new_params.WindowSizetoCheck = this.WindowSizetoCheck;
             new_params.MinIonCount = this.MinIonCount;
             new_params.OutputType = this.OutputType;
+            new_params.SpectraType = this.SpectraType;
             new_params.SVMParamFile = this.mstr_svm_file_name;
             new_params.ConsiderMultiplePrecursors = this.ConsiderMultiplePrecursors;
+            new_params.CentroidMSn = this.CentroidMSn;
             new_params.IsolationWindowSize = this.IsolationWindowSize;
             new_params.IsProfileDataForMzXML = this.IsProfileDataForMzXML;
+            new_params.WriteProgressFile = this.WriteProgressFile;
             new_params.IgnoreMSnScans = this.IgnoreMSnScans;
             new_params.NumMSnLevelsToIgnore = this.NumMSnLevelsToIgnore;
 
@@ -133,6 +148,14 @@ namespace DeconToolsV2.DTAGeneration
             set { mbln_consider_multiple_precursors = value; }
         }
 
+        // Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
+        // See the definition of mbln_centroid_msn for an example
+        public bool CentroidMSn
+        {
+            get { return mbln_centroid_msn; }
+            set { mbln_centroid_msn = value; }
+        }
+
         public int IsolationWindowSize
         {
             get { return mint_isolation_window_size; }
@@ -157,10 +180,50 @@ namespace DeconToolsV2.DTAGeneration
             set { mint_window_size_to_check = value; }
         }
 
+        public bool WriteProgressFile
+        {
+            get { return mbln_write_progress_file; }
+            set { mbln_write_progress_file = value; }
+        }
+
+        public string OutputTypeName
+        {
+            get
+            {
+                switch (menm_output_type)
+                {
+                    case OUTPUT_TYPE.DTA:
+                        return "DTA files";
+                        break;
+                    case OUTPUT_TYPE.MGF:
+                        return "MGF file";
+                        break;
+                    case OUTPUT_TYPE.LOG:
+                        return "Log file only";
+                        break;
+                    case OUTPUT_TYPE.CDTA:
+                        return "CDTA (_dta.txt)";
+                        break;
+                    case OUTPUT_TYPE.MZXML:
+                        return "MzXML";
+                        break;
+                    default:
+                        return "Unknown";
+                        break;
+                }
+            }
+        }
+
         public OUTPUT_TYPE OutputType
         {
             get { return menm_output_type; }
             set { menm_output_type = value; }
+        }
+
+        public SPECTRA_TYPE SpectraType
+        {
+            get { return menm_spectra_type; }
+            set { menm_spectra_type = value; }
         }
 
         public clsDTAGenerationParameters()
@@ -173,11 +236,14 @@ namespace DeconToolsV2.DTAGeneration
             mdbl_min_mass = 200;
             mdbl_max_mass = 5000;
             mdbl_cc_mass = 1.00727638;
+            menm_output_type = OUTPUT_TYPE.CDTA;
             menm_output_type = OUTPUT_TYPE.DTA;
             mstr_svm_file_name = "svm_params.xml";
             mbln_consider_multiple_precursors = false;
+            mbln_centroid_msn = true;
             mint_isolation_window_size = 3;
             mbln_is_profile_data_for_mzXML = false;
+            mbln_write_progress_file = false;
             mbln_ignore_msn_scans = false;
             mint_num_msn_levels_to_ignore = 0;
             mvect_msn_levels_to_ignore = new List<int>();
@@ -242,6 +308,9 @@ namespace DeconToolsV2.DTAGeneration
             xwriter.WriteWhitespace("\n\t\t");
 
             xwriter.WriteElementString("IsProfileDataForMzXML", System.Convert.ToString(this.IsProfileDataForMzXML));
+            xwriter.WriteWhitespace("\n\t\t");
+
+            xwriter.WriteElementString("WriteProgressFile", System.Convert.ToString(this.WriteProgressFile));
             xwriter.WriteWhitespace("\n\t\t");
 
             xwriter.WriteElementString("IgnoreMSnScans", System.Convert.ToString(this.IgnoreMSnScans));
@@ -394,6 +463,20 @@ namespace DeconToolsV2.DTAGeneration
                                 rdr.Read();
                             }
                             this.IsProfileDataForMzXML = bool.Parse(rdr.Value);
+                        }
+                        else if (rdr.Name.Equals("WriteProgressFile"))
+                        {
+                            if (rdr.IsEmptyElement)
+                            {
+                                throw new System.Exception("No information about writing progress file");
+                            }
+                            rdr.Read();
+                            while (rdr.NodeType == XmlNodeType.Whitespace ||
+                                   rdr.NodeType == XmlNodeType.SignificantWhitespace)
+                            {
+                                rdr.Read();
+                            }
+                            this.WriteProgressFile = bool.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("IgnoreMSnScans"))
                         {

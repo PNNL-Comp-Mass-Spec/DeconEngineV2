@@ -15,6 +15,135 @@ namespace DeconEngine
 {
     public class Utils
     {
+        //calculates the background noise level on the intensities using the following algorithm:
+        //Step 1: Calculate average of all intensities and number of points used
+        //Step 2: Calculate standard deviation of all intensities and the number of points used
+        //Step 3: Calculate average of all points within +/- 5 standard deviations
+        //Step 4: Report background intensity level
+        public static double GetBackgroundLevel(List<double> intensities, float maxIntensity)
+        {
+            int numPts = intensities.Count;
+            double average = 0;
+
+            if (numPts != 0)
+            {
+                //step 1
+                average = GetAverage(intensities, maxIntensity);
+
+                //step 2
+                double stdDev = GetStandardDev(intensities, maxIntensity);
+
+                //step 3:
+                double lowLevel = average - (stdDev * 5);
+                double highLevel = average + (stdDev * 5);
+
+                int numPtsUsed = 0;
+                average = 0.0;
+                for (int i = 0; i < numPts; i++)
+                {
+                    if (lowLevel <= intensities[i] && intensities[i] <= highLevel)
+                    {
+                        average += intensities[i];
+                        numPtsUsed++;
+                    }
+                }
+
+                average /= numPtsUsed;
+            }
+
+            return average;
+        }
+
+        public static double GetBackgroundLevel(float[] intensities, float maxIntensity)
+        {
+            int numPts = intensities.Length;
+            double average = 0;
+
+            if (numPts != 0)
+            {
+                //step 1
+                average = GetAverage(intensities, maxIntensity);
+
+                //step 2
+                double stdDev = GetStandardDev(intensities, maxIntensity);
+
+                //step 3:
+                double lowLevel = average - (stdDev * 5);
+                double highLevel = average + (stdDev * 5);
+
+                int numPtsUsed = 0;
+                average = 0.0;
+                for (int i = 0; i < numPts; i++)
+                {
+                    if (lowLevel <= intensities[i] && intensities[i] <= highLevel)
+                    {
+                        average += intensities[i];
+                        numPtsUsed++;
+                    }
+                }
+
+                average /= numPtsUsed;
+            }
+
+            return average;
+        }
+
+
+
+        // function calculating standard deviation
+        public static double GetStandardDev(List<double> intensities, float maxIntensity)
+        {
+            int numPts = intensities.Count;
+            double stdDev = 0;
+            int numPtsUsed = 0;
+
+            if (numPts != 0)
+            {
+                double sum = 0;
+                double STD_DEV = 0; // returning zero's
+
+                for (int i = 0; i < numPts; i++)
+                {
+                    if (intensities[i] <= maxIntensity && intensities[i] != 0)
+                    {
+                        sum += intensities[i];
+                        stdDev += Math.Pow(intensities[i], 2);
+                        numPtsUsed++;
+                    }
+                }
+                stdDev = Math.Sqrt((stdDev / numPtsUsed) - (Math.Pow(sum / numPtsUsed, 2)));
+            }
+
+            return stdDev;
+        }
+
+        // function calculating standard deviation
+        public static double GetStandardDev(float[] intensities, float maxIntensity)
+        {
+            int numPts = intensities.Length;
+            double stdDev = 0;
+            int numPtsUsed = 0;
+
+            if (numPts != 0)
+            {
+                double sum = 0;
+                double STD_DEV = 0; // returning zero's
+
+                for (int i = 0; i < numPts; i++)
+                {
+                    if (intensities[i] <= maxIntensity && intensities[i] != 0)
+                    {
+                        sum += intensities[i];
+                        stdDev += Math.Pow(intensities[i], 2);
+                        numPtsUsed++;
+                    }
+                }
+                stdDev = Math.Sqrt((stdDev / numPtsUsed) - (Math.Pow(sum / numPtsUsed, 2)));
+            }
+
+            return stdDev;
+        }
+
         [Obsolete("Not accessed within DeconTools solution except through tests", false)]
         public static double GetAverage(float[] intensities, float maxIntensity)
         {
@@ -114,7 +243,7 @@ namespace DeconEngine
                 formula.AddAtomicCount(atomic_count, mono_mass, avg_mass);
             }
         }
-        
+
         [Obsolete("Use PeakData.SetPeaks instead", true)]
         internal static void SetPeaks(ref PeakData peakData, ref clsPeak[] peaks)
         {

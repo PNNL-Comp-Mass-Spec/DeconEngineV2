@@ -242,9 +242,9 @@ namespace Engine.Readers
             }
         }
 
-        bool AgilentRawData.GetRawData(List <double>    *mzs, List<double> *intensities, int scan_num)
+        bool AgilentRawData.GetRawData(List <double>    *mzs, List<double> *intensities, int scan_num, bool centroid)
         {
-            return GetRawData(mzs, intensities, scan_num, -1);
+            return GetRawData(mzs, intensities, scan_num, centroid, -1);
         }
 
         void AgilentRawData.GetScanDescription(int scan, char *description)
@@ -254,7 +254,7 @@ namespace Engine.Readers
             strcpy(description,(char*)bstr_filter);
         }
 
-        bool AgilentRawData.GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        bool AgilentRawData.GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             float start_time = mobj_wiff_file.GetActualTimeFromPeriodAndCycle(mlng_sample_num,  mlng_period_num, mlng_experiment_num, (long) scan_num);
             //start_time = start_time/60;
@@ -306,7 +306,8 @@ namespace Engine.Readers
             return (mlng_stop_cycle - mlng_start_cycle + 1);
         }
 
-        double AgilentRawData.GetSignalRange(int scan_num)
+        // Note: the centroid parameter is ignored here
+        double AgilentRawData.GetSignalRange(int scan_num, bool centroid)
         {
             if (scan_num == mint_last_scan_num)
                 return mdbl_signal_level;

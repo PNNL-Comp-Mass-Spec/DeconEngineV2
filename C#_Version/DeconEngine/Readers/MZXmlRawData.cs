@@ -193,12 +193,19 @@ namespace Engine.Readers
                 return false;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool IsZoomScan(int scan_num)
         {
-            return GetRawData(out mzs, out intensities, scan_num, -1);
+            return false;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
+        {
+            return GetRawData(out mzs, out intensities, scan_num, centroid, -1);
+        }
+
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             if (scan_num > mint_num_scans)
             {
@@ -244,7 +251,7 @@ namespace Engine.Readers
             return true;
         }
 
-        public override double GetSignalRange(int scan_num)
+        public override double GetSignalRange(int scan_num, bool centroid)
         {
             return 0;
         }

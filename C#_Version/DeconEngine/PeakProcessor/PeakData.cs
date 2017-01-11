@@ -348,6 +348,14 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
+        /// Removes the most recently added peak
+        /// </summary>
+        public void RemoveLastPeak()
+        {
+            PeakTops.RemoveAt(PeakTops.Count - 1);
+        }
+
+        /// <summary>
         ///     Gets the peak in <see cref="PeakTops" /> whose m/z is exactly equal to mz.
         /// </summary>
         /// <param name="mz">m/z of the peak we are looking for.</param>

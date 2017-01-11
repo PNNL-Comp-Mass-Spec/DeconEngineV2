@@ -128,13 +128,19 @@ namespace Engine.Readers
             mint_last_scan_num = 0;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num)
+        public override bool IsZoomScan(int scan_num)
         {
-            int num_pts = mint_num_points_in_scan;
-            return GetRawData(out mzs, out intensities, scan_num, num_pts);
+            return false;
         }
 
-        public override double GetSignalRange(int scan_num)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
+        {
+            int num_pts = mint_num_points_in_scan;
+            return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
+        }
+
+        public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
             if (mint_last_scan_num == scan_num)
@@ -142,7 +148,8 @@ namespace Engine.Readers
             return 0;
         }
 
-        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, int num_pts)
+        // Note that Centroid is ignored by this class
+        public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             // scan_nums are supposed to be 0 indexed for retrieval, but the function is expected to pass in 1 indexed.
             // hence substract 1 from scan_num.
@@ -340,13 +347,15 @@ namespace Engine.Readers
             List<double> scan_mzs;
             List<double> scan_intensities;
 
+            bool centroid = false;
+
             // remember that we are not going to know the number of spectra to begin with at it will update itself each time.
             bool got_data = true;
             int scan_num = 1;
             while (got_data)
             {
                 // its time to read in that scan.
-                got_data = GetRawData(out scan_mzs, out scan_intensities, scan_num);
+                got_data = GetRawData(out scan_mzs, out scan_intensities, scan_num, centroid);
                 if (!got_data)
                     break;
 

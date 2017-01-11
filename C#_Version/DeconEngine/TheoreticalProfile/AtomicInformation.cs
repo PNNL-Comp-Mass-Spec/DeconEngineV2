@@ -2057,7 +2057,7 @@ namespace Engine.TheoreticalProfile
             //  System.Console.WriteLine("\nmvect_elemental_isotopes.Add(isotopes); \n\n";
             //}
         }
-        
+
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void LoadData(string fileName)
         {
@@ -2084,7 +2084,7 @@ namespace Engine.TheoreticalProfile
             *       ...
             *     </isotopes>
             *   </element>
-            * 
+            *
             *   <element>
             *     <name>Helium</name>
             *     <symbol>He</symbol>
@@ -2221,7 +2221,7 @@ namespace Engine.TheoreticalProfile
                                                 isotopes.IsotopeProbabilities[pos] = irdr2.ReadElementContentAsDouble();
                                                 break;
                                             default:
-                                                rdr.Skip();
+                                                irdr2.Skip();
                                                 break;
                                         }
                                     }
@@ -2232,13 +2232,13 @@ namespace Engine.TheoreticalProfile
                                     irdr.ReadEndElement();
                                     break;
                                 case XmlMassTag:
-                                    rdr.Skip();
+                                    irdr.Skip();
                                     break;
                                 case XmlProbabilityTag:
-                                    rdr.Skip();
+                                    irdr.Skip();
                                     break;
                                 default:
-                                    rdr.Skip();
+                                    irdr.Skip();
                                     break;
                             }
                         }
@@ -2272,7 +2272,7 @@ namespace Engine.TheoreticalProfile
         {
             LoadData(DefaultFileName);
         }
-        
+
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void WriteData(string fileName)
         {

@@ -260,6 +260,12 @@ namespace Engine.Results
 #endif
         }
 
+        public void AddInfoForIMSScan(int scan, double bpMz, double bpIntensity, double tic, double signalRange,
+            int numPeaks, int numDeisotoped, double time, short msLevel, double driftTime)
+        {
+            AddInfoForUIMFScan(scan, bpMz, bpIntensity, tic, signalRange, numPeaks, numDeisotoped, time, msLevel, driftTime);
+        }
+
         public void AddInfoForUIMFScan(int scan, double bpMz, double bpIntensity, double tic, double signalRange,
             int numPeaks, int numDeisotoped, double time, short msLevel, double driftTime)
         {
@@ -486,11 +492,20 @@ namespace Engine.Results
                 {
                     saveSignalHead = ",time_domain_signal";
                 }
+
+                //if (mbln_save_ims)
+                //    fout << "scan_num,scan_time,drift_time,type,bpi,bpi_mz,tic,num_peaks,num_deisotoped\n";
+                //else
+                //    fout << "scan_num,scan_time,type,bpi,bpi_mz,tic,num_peaks,num_deisotoped";
                 fout.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7}{8}", "scan_num", "scan_time", "type", "bpi", "bpi_mz",
                     "tic", "num_peaks", "num_deisotoped", saveSignalHead);
 
                 foreach (var item in ScanDataDict)
                 {
+                    //if (mbln_save_ims)
+                    //    fout << scan_num << "," << mmap_scan_time[scan_num] << "," << mmap_scan_num_drift_time[scan_num] << "," << mmap_scan_num_mslevel[scan_num] << "," << mmap_scan_bp_intensity[scan_num] << "," << mmap_scan_bp_mz[scan_num] << ",";
+                    //else
+                    //    fout << scan_num << "," << mmap_scan_time[scan_num] << "," << mmap_scan_num_mslevel[scan_num] << "," << mmap_scan_bp_intensity[scan_num] << "," << mmap_scan_bp_mz[scan_num] << ",";
                     var data = item.Value;
                     if (saveSignalRange)
                     {
