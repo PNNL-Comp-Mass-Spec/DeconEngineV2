@@ -741,6 +741,7 @@ namespace DeconToolsV2
             }
 
             Engine.DTAProcessing.DTAProcessor dta_processor = null;
+            Engine.DTAProcessing.DTAScanTypeGeneration dta_scanType = null;
 
 #if !DEBUG
             try
@@ -750,6 +751,7 @@ namespace DeconToolsV2
                 menm_state = enmProcessState.RUNNING;
 
                 dta_processor = new Engine.DTAProcessing.DTAProcessor();
+                dta_scanType = new Engine.DTAProcessing.DTAScanTypeGeneration();
 
                 //Read the rawfile in
                 using (FileStream fin = new FileStream(mstr_file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -837,6 +839,10 @@ namespace DeconToolsV2
                         new StreamWriter(new FileStream(dta_processor.mch_comb_dta_filename, FileMode.Create,
                             FileAccess.ReadWrite, FileShare.Read));
                     create_composite_dta = true;
+                    dta_scanType.DTAScanTypeFilename = output_file + "_ScanType.txt";
+                    dta_scanType.DTAScanTypeFileWriter = new StreamWriter(new FileStream(dta_scanType.DTAScanTypeFilename, FileMode.Create,
+                            FileAccess.ReadWrite, FileShare.Read));
+                    dta_scanType.RawDataReader = dta_processor.mobj_raw_data_dta;
                 }
                 //file name for .mgf file
                 if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
@@ -1082,6 +1088,22 @@ namespace DeconToolsV2
                         dta_processor.WriteLowResolutionDTAFile();
                 }
 
+                if (create_composite_dta)
+                {
+                    try
+                    {
+                        dta_scanType.GenerateScanTypeFile();
+                    }
+                    catch (Exception e)
+                    {
+                        System.Console.WriteLine("Error writing _ScanType.txt file: " + e.Message);
+                    }
+                    finally
+                    {
+                        dta_scanType.DTAScanTypeFileWriter.Close();
+                    }
+                }
+
                 mint_percent_done = 100;
                 dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
 
@@ -1093,7 +1115,9 @@ namespace DeconToolsV2
                 //Shutdown
                 //dta_processor.mfile_log.close();
                 if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
+                {
                     dta_processor.mfile_comb_dta.Close();
+                }
                 if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
                     dta_processor.mfile_mgf.Close();
 

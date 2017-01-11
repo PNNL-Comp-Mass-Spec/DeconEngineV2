@@ -139,6 +139,7 @@
     <Compile Include="DeconEngine.cs" />
     <Compile Include="DeconEngineUtils.cs" />
     <Compile Include="DTAGeneration\DTAGeneration.cs" />
+    <Compile Include="DTAGeneration\DTAScanTypeGeneration.cs" />
     <Compile Include="DTAGeneration\MSnInformationRecord.cs" />
     <Compile Include="DTAGeneration\ProfileRecord.cs" />
     <Compile Include="ElementData.cs" />
