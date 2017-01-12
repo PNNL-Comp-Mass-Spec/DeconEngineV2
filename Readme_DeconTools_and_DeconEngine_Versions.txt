@@ -30,3 +30,14 @@ C# DeconTools (with ThrashV1)
 
 	As of July 2016, the 2016 Port of ThrashV1 is used by DeconConsole if the parameter file has:
 		<DeconvolutionType>ThrashV1</DeconvolutionType>
+
+DeconMSn code, C#:
+	Original C++ repo: https://stash.pnnl.gov/projects/OMCS/repos/deconmsn/browse
+	Also contains merged code from DeconMSn, with 2 branches in the Git repository:
+	DeconMSn_Match:
+		Contains code that will produce files identical to the C++ DeconMSn, with the exception of precursor mass precision (this version has more digits of precision)
+		Also contains code to output a _ScanType.txt file, and for outputting accurate centroided masses.
+
+	Master branch:
+		Differs from the DeconMSn_Match by using the MathNet.Numerics implementations of Fast Fourier Transform and Cubic Spline Interpolation instead of ported Numerical Recipes in C code
+			This affects 1%-5% of the output, with approximately 2/3 of the output changes being better results on the charge state, and sometimes changes the precursor mass without changing the charge.
