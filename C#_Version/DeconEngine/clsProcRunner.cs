@@ -749,6 +749,12 @@ namespace DeconToolsV2
             dta_processor = new Engine.DTAProcessing.DTAProcessor();
             dta_scanType = new Engine.DTAProcessing.DTAScanTypeGeneration();
 
+            if (!File.Exists(mstr_file_name))
+            {
+                Console.WriteLine("Error: File \"{0}\" does not exist. Please check the command line arguments.", mstr_file_name);
+                return;
+            }
+
             //Read the rawfile in
             using (FileStream fin = new FileStream(mstr_file_name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -762,9 +768,9 @@ namespace DeconToolsV2
             // Check input format
             int dotIndex = mstr_file_name.IndexOf(".");
             string input_file_format = mstr_file_name.Remove(0, dotIndex + 1);
-            if ((input_file_format == "RAW") || (input_file_format == "raw"))
+            if ((input_file_format.ToLower() == "raw"))
                 menm_file_type = DeconToolsV2.Readers.FileType.FINNIGAN;
-            else if (input_file_format == "mzXML")
+            else if (input_file_format.ToLower() == "mzxml")
                 menm_file_type = DeconToolsV2.Readers.FileType.MZXMLRAWDATA;
             else
             {
@@ -1064,7 +1070,7 @@ namespace DeconToolsV2
                 {
                     if (scan_num - scan_start >= nextProgressScan)
                     {
-                        dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
+                        dta_processor.WriteProgressFile(scan_num - scan_start, num_scans - scan_start + 1, mint_percent_done);
 
                         nextProgressScan += 50;
                         while (nextProgressScan <= scan_num - scan_start)
@@ -1101,7 +1107,7 @@ namespace DeconToolsV2
             }
 
             mint_percent_done = 100;
-            dta_processor.WriteProgressFile(scan_num - scan_start, num_scans, mint_percent_done);
+            dta_processor.WriteProgressFile(scan_num - scan_start, num_scans - scan_start + 1, mint_percent_done);
 
             // Write out log file
             dta_processor.WriteLogFile();

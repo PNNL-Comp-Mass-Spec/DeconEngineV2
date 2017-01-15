@@ -902,7 +902,7 @@ namespace Engine.ChargeDetermination
                 }
             }
 
-            x = Matrix<double>.Build.Dense(num_test, num_features, 0);
+            x = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_features, 0); // num_test == 0 causes an exception...
             for (int i = 0; i < num_test; i++)
             {
                 this_test_vector = vect_xtest[i];
@@ -1061,14 +1061,14 @@ namespace Engine.ChargeDetermination
             length_nbsv = mvect_nbsv.Count;
             num_class = 4; //(int)(1 + (int)(Math.Sqrt(1+4*2*length_nbsv)))/2;
             num_test = (int)mvect_xtest.Count;
-            mmat_vote = Matrix<double>.Build.Dense(num_test, num_class, 0);
-            mmat_discriminant_scores = Matrix<double>.Build.Dense(num_test, num_iterations, 0);
+            mmat_vote = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_class, 0); // num_test == 0 causes an exception...
+            mmat_discriminant_scores = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_iterations, 0); // num_test == 0 causes an exception...
             CalculateCumSum();
 
             for (int row = 0; row < (int)mvect_xtest.Count; row++)
                 mvect_ypredict.Add(0);
 
-            for (int row = 0; row < mmat_vote.RowCount; row++)
+            for (int row = 0; row < mmat_vote.RowCount && mvect_xtest.Count > 0; row++)
             {
                 for (int col = 0; col < mmat_vote.ColumnCount; col++)
                 {
@@ -1087,7 +1087,8 @@ namespace Engine.ChargeDetermination
                     int startIndexToConsider = (int)mvect_aux[k];
                     int stopIndexToConsider = (int)(mvect_aux[k] + mvect_nbsv[k + 1]) - 1;
                     SVMClassification(startIndexToConsider, stopIndexToConsider, k);
-                    for (int row = 0; row < mmat_vote.RowCount; row++)
+                    //for (int row = 0; row < mmat_vote.RowCount; row++)
+                    for (int row = 0; row < num_test; row++)
                     {
                         double val = mvect_ypredict[row];
 
@@ -1282,6 +1283,8 @@ namespace Engine.ChargeDetermination
 
         public void LoadSVMFromXml()
         {
+            LoadDefaultSVM();
+
             int weight_count = 0;
             int feature_count = 0;
             int support_count = 0;
@@ -1320,7 +1323,7 @@ namespace Engine.ChargeDetermination
              */
 
             XmlReaderSettings rdrSettings = new XmlReaderSettings {IgnoreWhitespace = true,};
-            using (XmlReader rdr = XmlReader.Create(new FileStream(mchar_svm_param_xml_file, FileMode.Open), rdrSettings))
+            using (XmlReader rdr = XmlReader.Create(new FileStream(mchar_svm_param_xml_file, FileMode.Open, FileAccess.Read, FileShare.Read), rdrSettings))
             {
                 rdr.MoveToContent();
                 //start walking down the tree
@@ -1526,6 +1529,21 @@ namespace Engine.ChargeDetermination
             }
             rdr.Close();
             return feature_count;
+        }
+
+        public void LoadDefaultSVM()
+        {
+            if (File.Exists(mchar_svm_param_xml_file))
+            {
+                return;
+            }
+
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            using (var fileReader = new StreamReader(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml")))
+            using (var writer = new StreamWriter(new FileStream(mchar_svm_param_xml_file, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite)))
+            {
+                writer.Write(fileReader.ReadToEnd());
+            }
         }
     }
 }

@@ -59,8 +59,8 @@ namespace Engine.DTAProcessing
         private List<int> mvect_chargeStateList = new List<int>();
 
         private clsPeak mobj_parentPeak;
-        private clsHornTransformResults mobj_transformRecord;
-        private Engine.DTAProcessing.MSnInformationRecord mobj_msn_record;
+        private clsHornTransformResults mobj_transformRecord = new clsHornTransformResults();
+        private Engine.DTAProcessing.MSnInformationRecord mobj_msn_record = new MSnInformationRecord();
         private Engine.DTAProcessing.ProfileRecord mobj_profile_record;
         private Engine.PeakProcessing.PeakProcessor mobj_parent_peak_processor;
         private Engine.PeakProcessing.PeakProcessor mobj_msN_peak_processor;
@@ -80,7 +80,7 @@ namespace Engine.DTAProcessing
         public Engine.Readers.RawData mobj_raw_data_dta;
         public FileType menm_dataset_type;
 
-        public SortedDictionary<int, int> mmap_msN_parentIndex;
+        public SortedDictionary<int, int> mmap_msN_parentIndex = new SortedDictionary<int, int>();
 
         public string mch_log_filename;
         public string mch_progress_filename;
@@ -852,16 +852,17 @@ namespace Engine.DTAProcessing
 
         public bool GenerateDTALowRes(int msN_scan_number, int parent_scan_number, int msN_scan_index)
         {
+            mobj_transformRecord = new clsHornTransformResults();
             //Apply a heavy smoothing using savitsky golay filter
-			var smoother = new SavGolSmoother();
-			smoother.SetOptions(16, 16, 4);
-			smoother.Smooth(ref mvect_mzs_parent, ref mvect_intensities_parent);
+            var smoother = new SavGolSmoother();
+            smoother.SetOptions(16, 16, 4);
+            smoother.Smooth(ref mvect_mzs_parent, ref mvect_intensities_parent);
 
-			int numPeaks = mobj_parent_peak_processor.DiscoverPeaks(mvect_mzs_parent, mvect_intensities_parent) ;
+            int numPeaks = mobj_parent_peak_processor.DiscoverPeaks(mvect_mzs_parent, mvect_intensities_parent) ;
 
-			if ( numPeaks <= 0 ){
-				return false;
-			}
+            if ( numPeaks <= 0 ){
+                return false;
+            }
 
             mvect_transformRecords.Clear();
             mdbl_parent_Intensity = 0;
@@ -1149,6 +1150,7 @@ namespace Engine.DTAProcessing
 
         public void CreateMSnRecord(int msn_scan_num, int msn_scan_level, int parent_scan, int parent_scan_level)
         {
+            mobj_msn_record = new MSnInformationRecord();
             mobj_msn_record.mint_msn_scan_num = msn_scan_num;
             mobj_msn_record.mint_msn_scan_level = msn_scan_level;
 
@@ -1201,7 +1203,7 @@ namespace Engine.DTAProcessing
                         FileShare.None)))
             {
                 //TODO: Version number is hardcoded and needs to be read off assembly file
-                fout.WriteLine("DeconMSn Version:" + "2.1.3.1");
+                fout.WriteLine("DeconMSn Version:" + "2.3.1.3");
                 fout.WriteLine("Dataset:" + mch_dataset_name);
                 fout.WriteLine("Number of MSn scans processed:" + mint_NumMSnScansProcessed);
                 fout.WriteLine("Number of DTAs generated:" + mint_NumDTARecords);
@@ -1457,7 +1459,7 @@ namespace Engine.DTAProcessing
                     mobj_transformRecord.Fit = 1;
                     mobj_transformRecord.FitCountBasis = 1;
                     mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
-                    mvect_transformRecords.Add(mobj_transformRecord);
+                    mvect_transformRecords.Add(new clsHornTransformResults(mobj_transformRecord));
                 }
 
                 WriteToMGF(msN_scan, parent_scan);
@@ -1552,7 +1554,7 @@ namespace Engine.DTAProcessing
                     mobj_transformRecord.Fit = 1;
                     mobj_transformRecord.FitCountBasis = 1;
                     mobj_transformRecord.MonoIntensity = (int) mdbl_parent_Intensity;
-                    mvect_transformRecords.Add(mobj_transformRecord);
+                    mvect_transformRecords.Add(new clsHornTransformResults(mobj_transformRecord));
                 }
                 WriteDTAFile(msN_scan, parent_scan);
             }
