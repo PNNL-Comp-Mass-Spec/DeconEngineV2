@@ -107,6 +107,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeconMSnTests.cs" />
     <Compile Include="TestLoadIsotopesXml.cs" />
     <Compile Include="TestLoadSVMXml.cs" />
     <Compile Include="TestMolecularFormula.cs" />
@@ -120,6 +121,10 @@
     <ProjectReference Include="..\DeconEngine\DeconEngine.csproj">
       <Project>{d7a6ae75-e41e-46f3-ab0c-09d2ac23176f}</Project>
       <Name>DeconEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DeconMSn\DeconMSn.csproj">
+      <Project>{36beba9c-9ac6-4f05-94e7-ebf996c5a3db}</Project>
+      <Name>DeconMSn</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
