@@ -1188,7 +1188,7 @@ namespace Engine.DTAProcessing
                 for (int i = 0; i < mvect_profile_records.Count; i++)
                 {
                     mobj_profile_record = mvect_profile_records[i];
-                    fout.WriteLine("{0:F4}\t{1:F4}\t{2:F4}\t{3:F4}", mobj_profile_record.mint_msn_scan_num,
+                    fout.WriteLine("{0}\t{1}\t{2:F4}\t{3:F4}", mobj_profile_record.mint_msn_scan_num,
                         mobj_profile_record.mint_parent_scan_num, mobj_profile_record.mdbl_agc_time,
                         mobj_profile_record.mdbl_tic_val);
                 }
@@ -1343,7 +1343,7 @@ namespace Engine.DTAProcessing
                         mch_dataset_name, msN_scan_num, msN_scan_num, mobj_transformRecord.ChargeState);
 
                     // massH and cs
-                    mfile_comb_dta.WriteLine("{0:F12} {1}   scan={2} cs={3}", massplusH, mobj_transformRecord.ChargeState,
+                    mfile_comb_dta.WriteLine("{0:F7} {1}   scan={2} cs={3}", massplusH, mobj_transformRecord.ChargeState,
                         msN_scan_num, mobj_transformRecord.ChargeState);
 
                     for (int i = 0; i < (int) mvect_mzs_msN.Count; i++)
