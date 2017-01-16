@@ -1283,7 +1283,19 @@ namespace Engine.ChargeDetermination
 
         public void LoadSVMFromXml()
         {
-            LoadDefaultSVM();
+            if (File.Exists(mchar_svm_param_xml_file))
+            {
+                ReadXmlFromStream(new FileStream(mchar_svm_param_xml_file, FileMode.Open, FileAccess.Read, FileShare.Read));
+            }
+            else
+            {
+                LoadDefaultSVM();
+            }
+
+        }
+
+        private void ReadXmlFromStream(Stream stream)
+        {
 
             int weight_count = 0;
             int feature_count = 0;
@@ -1323,7 +1335,7 @@ namespace Engine.ChargeDetermination
              */
 
             XmlReaderSettings rdrSettings = new XmlReaderSettings {IgnoreWhitespace = true,};
-            using (XmlReader rdr = XmlReader.Create(new FileStream(mchar_svm_param_xml_file, FileMode.Open, FileAccess.Read, FileShare.Read), rdrSettings))
+            using (XmlReader rdr = XmlReader.Create(stream, rdrSettings))
             {
                 rdr.MoveToContent();
                 //start walking down the tree
@@ -1533,16 +1545,21 @@ namespace Engine.ChargeDetermination
 
         public void LoadDefaultSVM()
         {
-            if (File.Exists(mchar_svm_param_xml_file))
-            {
-                return;
-            }
-
+            System.Console.WriteLine("Could not find svm param file \"{0}\"; Loading embedded defaults.", mchar_svm_param_xml_file);
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            ReadXmlFromStream(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml"));
             using (var fileReader = new StreamReader(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml")))
-            using (var writer = new StreamWriter(new FileStream(mchar_svm_param_xml_file, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite)))
+            using (var writer = new StreamWriter(new FileStream(mchar_svm_param_xml_file, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+            )
             {
-                writer.Write(fileReader.ReadToEnd());
+                try
+                {
+                    writer.Write(fileReader.ReadToEnd());
+                }
+                catch (System.Exception)
+                {
+                    // Swallow it, it doesn't matter
+                }
             }
         }
     }
