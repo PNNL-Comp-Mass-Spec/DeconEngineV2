@@ -144,48 +144,41 @@ namespace DeconEngine
             return stdDev;
         }
 
-        [Obsolete("Not accessed within DeconTools solution except through tests", false)]
+       
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public static double GetAverage(float[] intensities, float maxIntensity)
         {
             var numPts = intensities.Length;
             if (numPts == 0)
                 return 0;
 
-            return intensities.Where(x => !x.Equals(0) && x <= maxIntensity).Average();
+            var filteredData = intensities.Where(x => x > 0 && x <= maxIntensity).ToList();
+            if (filteredData.Count == 0)
+                return 0;
 
-            double backgroundIntensity = 0;
-            var numPtsUsed = 0;
-            for (var i = 0; i < numPts; i++)
-            {
-                if (intensities[i] <= maxIntensity && intensities[i] != 0)
-                {
-                    backgroundIntensity += intensities[i];
-                    numPtsUsed++;
-                }
-            }
-            return backgroundIntensity / numPtsUsed;
+            return filteredData.Average();
+
         }
 
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <summary>
+        /// Compute the average of the non-zero data in intensities
+        /// </summary>
+        /// <param name="intensities"></param>
+        /// <param name="maxIntensity"></param>
+        /// <returns>Average value, or 0 if intensities is empty or if it only contains zerooes or values out of range</returns>
+        /// <remarks>Used by DeisotopeSummedSpectra in DTAGeneration</remarks>
         public static double GetAverage(List<double> intensities, float maxIntensity)
         {
             var numPts = intensities.Count;
             if (numPts == 0)
                 return 0;
 
-            return intensities.Where(x => !x.Equals(0) && x <= maxIntensity).Average();
+            var filteredData = intensities.Where(x => x > 0 && x <= maxIntensity).ToList();
+            if (filteredData.Count == 0)
+                return 0;
 
-            double backgroundIntensity = 0;
-            var numPtsUsed = 0;
-            for (var i = 0; i < numPts; i++)
-            {
-                if (intensities[i] <= maxIntensity && intensities[i] != 0)
-                {
-                    backgroundIntensity += intensities[i];
-                    numPtsUsed++;
-                }
-            }
-            return backgroundIntensity / numPtsUsed;
+            return filteredData.Average();
+
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
@@ -225,9 +218,9 @@ namespace DeconEngine
             while (elements.MoveNext())
             {
                 // Get the next element symbol in the table
-                var element = (string) elements.Current;
+                var element = (string)elements.Current;
                 // Put it in a character array
-                var count = (int) elementCounts[element];
+                var count = (int)elementCounts[element];
 
                 // find the index of the element in the AtomicInformation
                 var index = elemental_isotope_composition.GetElementIndex(element);
@@ -299,7 +292,7 @@ namespace DeconEngine
 
             for (var ptNum = 0; ptNum < numPoints; ptNum++)
             {
-                data[ptNum] = (float) vectData[ptNum];
+                data[ptNum] = (float)vectData[ptNum];
             }
         }
 
@@ -354,8 +347,8 @@ namespace DeconEngine
             sgSmoother.Smooth(ref vectX, ref vectY);
             for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
-                mzs[pt_num] = (float) vectX[pt_num];
-                intensities[pt_num] = (float) vectY[pt_num];
+                mzs[pt_num] = (float)vectX[pt_num];
+                intensities[pt_num] = (float)vectY[pt_num];
             }
         }
 
