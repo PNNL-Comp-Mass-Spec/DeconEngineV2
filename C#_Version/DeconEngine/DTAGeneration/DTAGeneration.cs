@@ -13,8 +13,9 @@ using Engine.Utilities;
 
 namespace Engine.DTAProcessing
 {
-    // Used for DeconMSn
-    [Obsolete("Only used by Decon2LS.UI", false)]
+    /// <summary>
+    /// This class is used by DeconMSn
+    /// </summary>
     internal class DTAProcessor
     {
         private int mint_minIonCount;
