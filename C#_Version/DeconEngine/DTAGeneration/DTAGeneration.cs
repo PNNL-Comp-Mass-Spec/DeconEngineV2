@@ -976,9 +976,9 @@ namespace Engine.DTAProcessing
             mobj_svm_charge_determination.DetermineClassForDataSet();
         }
 
-        public void InitializeSVM(string file_name)
+        public void InitializeSVM(string fileName)
         {
-            mobj_svm_charge_determination.SetSVMParamFile(file_name);
+            mobj_svm_charge_determination.SVMParamXmlPath = fileName;
             mobj_svm_charge_determination.LoadSVMFromXml();
             mobj_svm_charge_determination.InitializeLDA();
         }
