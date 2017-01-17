@@ -130,17 +130,14 @@ namespace Engine.PeakProcessing
             _peakFit.SetOptions(type);
         }
 
-#if Enable_Obsolete
         /// <summary>
         ///     sets the type of profile
         /// </summary>
         /// <param name="profile">is a boolean, true if profile data, false if centroided</param>
-        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetPeaksProfileType(bool profile)
         {
             _arePeaksCentroided = !profile;
         }
-#endif
 
         /// <summary>
         ///     sets the options for this instance.

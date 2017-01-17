@@ -1,5 +1,4 @@
-﻿#if Enable_Obsolete
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -66,7 +65,7 @@ namespace Engine.DTAProcessing
         private Engine.PeakProcessing.PeakProcessor mobj_parent_peak_processor;
         private Engine.PeakProcessing.PeakProcessor mobj_msN_peak_processor;
         private Engine.PeakProcessing.PeakProcessor mobj_summed_peak_processor;
-        private Engine.HornTransform.MassTransform mobj_mass_transform;
+        private clsHornTransform mobj_mass_transform;
         private Engine.ChargeDetermination.SVMChargeDetermine mobj_svm_charge_determination;
         private List<clsHornTransformResults> mvect_transformRecords = new List<clsHornTransformResults>();
         private List<Engine.DTAProcessing.MSnInformationRecord> mvect_msn_records = new List<MSnInformationRecord>();
@@ -91,6 +90,7 @@ namespace Engine.DTAProcessing
         public string mch_output_file;
         public string mch_dataset_name;
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public StreamWriter mfile_log;
         public StreamWriter mfile_comb_dta;
         public StreamWriter mfile_mgf;
@@ -101,7 +101,7 @@ namespace Engine.DTAProcessing
             mobj_parent_peak_processor = new Engine.PeakProcessing.PeakProcessor();
             mobj_msN_peak_processor = new Engine.PeakProcessing.PeakProcessor();
             mobj_summed_peak_processor = new Engine.PeakProcessing.PeakProcessor();
-            mobj_mass_transform = new Engine.HornTransform.MassTransform();
+            mobj_mass_transform = new clsHornTransform();
             mobj_svm_charge_determination = new Engine.ChargeDetermination.SVMChargeDetermine();
             mobj_raw_data_dta = null;
             mdbl_maxMass = 0.0;
@@ -128,6 +128,7 @@ namespace Engine.DTAProcessing
         }
 
         // destructor.
+        [Obsolete("Only used by Decon2LS.UI", false)]
         ~DTAProcessor()
         {
             if (mobj_raw_data_dta != null)
@@ -142,6 +143,7 @@ namespace Engine.DTAProcessing
         /// <param name="s2n">Signal-To-Noise Ratio</param>
         /// <param name="thresh">Peak-Intensity Threshold</param>
         /// <param name="fit_type">Peak-Fit Type</param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass,
             bool createLogFileOnly, bool createCompositeDTA, int considerCharge, bool considerMultiplePrecursors,
             int isolationWindowSize, bool isProfileDataForMzXML)
@@ -184,6 +186,7 @@ namespace Engine.DTAProcessing
             mbln_first_scan_written = false;
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetPeakParameters(double pkBkgRatio, double peptideMinBkgRatio)
         {
             SetPeakParametersLowResolution(pkBkgRatio, peptideMinBkgRatio);
@@ -209,11 +212,26 @@ namespace Engine.DTAProcessing
             string tag_mf, bool thrash_or_not, bool complete_fit, bool chk_again_ch1, enmIsotopeFitType fit_type,
             clsElementIsotopes atomic_info)
         {
-            mobj_mass_transform.SetOptions(max_charge, max_mw, max_fit, min_s2n, cc_mass, delete_threshold_intensity,
-                min_theoretical_intensity_for_score, num_peaks_for_shoulder, chk_again_ch1, use_mercury_caching,
-                o16_o18_media);
+            var mtParams = mobj_mass_transform.TransformParameters;
 
-            mobj_mass_transform.SetIsotopeFitOptions(averagine_mf, tag_mf, thrash_or_not, complete_fit);
+            mtParams.MaxCharge = max_charge;
+            mtParams.MaxMW = max_mw;
+            mtParams.MaxFit = max_fit;
+            mtParams.MinS2N = min_s2n;
+            mtParams.CCMass = cc_mass;
+            mtParams.DeleteIntensityThreshold = delete_threshold_intensity;
+            mtParams.MinIntensityForScore = min_theoretical_intensity_for_score;
+            mtParams.NumPeaksForShoulder = num_peaks_for_shoulder;
+            mtParams.CheckAllPatternsAgainstCharge1 = chk_again_ch1;
+            mtParams.UseMercuryCaching = use_mercury_caching;
+            mtParams.O16O18Media = o16_o18_media;
+
+            mtParams.AveragineFormula = averagine_mf;
+            mtParams.TagFormula = tag_mf;
+            mtParams.ThrashOrNot = thrash_or_not;
+            mtParams.CompleteFit = complete_fit;
+            mobj_mass_transform.TransformParameters = mtParams;
+
             mobj_mass_transform.ElementalIsotopeComposition = atomic_info;
             mobj_mass_transform.IsotopeFitType = fit_type;
         }
@@ -458,23 +476,10 @@ namespace Engine.DTAProcessing
             try
             {
                 // Make sure that checking against charge 1 is false
-                short maxcs;
-                double maxmw;
-                double maxfit;
-                double mins2n;
-                double ccmass;
-                double delthintensity;
-                double minthscore;
-                short numpeaks;
-                bool chkcharge1;
-                bool newchkcharge1 = false;
-                bool usemercury;
-                bool o16018media;
-
-                mobj_mass_transform.GetOptions(out maxcs, out maxmw, out maxfit, out mins2n, out ccmass,
-                    out delthintensity, out minthscore, out numpeaks, out chkcharge1, out usemercury, out o16018media);
-                mobj_mass_transform.SetOptions(maxcs, maxmw, maxfit, mins2n, ccmass, delthintensity, minthscore,
-                    numpeaks, newchkcharge1, usemercury, o16018media);
+                var mtParams = mobj_mass_transform.TransformParameters;
+                bool chkcharge1 = mtParams.CheckAllPatternsAgainstCharge1;
+                mtParams.CheckAllPatternsAgainstCharge1 = false;
+                mobj_mass_transform.TransformParameters = mtParams;
 
                 // now start THRASH all over again
                 clsPeak currentPeak;
@@ -496,6 +501,10 @@ namespace Engine.DTAProcessing
                     }
                     found_peak = mobj_summed_peak_processor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
                 }
+
+                //reset chk_charge1
+                mtParams.CheckAllPatternsAgainstCharge1 = chkcharge1;
+                mobj_mass_transform.TransformParameters = mtParams;
 
                 // not ejecting precusor record here as the indices are going to be off
                 // also algo is changed to use only THRASH if both cs are equal
@@ -539,13 +548,9 @@ namespace Engine.DTAProcessing
 
                     // store in vector and clear
                     mvect_transformRecords.Add(mobj_transformRecord);
-                    mobj_mass_transform.SetOptions(maxcs, maxmw, maxfit, mins2n, ccmass, delthintensity, minthscore,
-                        numpeaks, chkcharge1, usemercury, o16018media); //reset chk_charge1
                     return true;
                 }
 
-                mobj_mass_transform.SetOptions(maxcs, maxmw, maxfit, mins2n, ccmass, delthintensity, minthscore,
-                    numpeaks, chkcharge1, usemercury, o16018media); //reset chk_charge1
                 return false;
             }
             catch (System.Exception e)
@@ -978,6 +983,7 @@ namespace Engine.DTAProcessing
             mobj_svm_charge_determination.InitializeLDA();
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public bool ContainsProfileData(int parent_scan)
         {
             return mobj_raw_data_dta.IsProfileScan(parent_scan);
@@ -1568,4 +1574,3 @@ namespace Engine.DTAProcessing
         }
     }
 }
-#endif

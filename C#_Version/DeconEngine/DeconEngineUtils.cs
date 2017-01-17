@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,17 +8,21 @@ using Engine.TheoreticalProfile;
 using Engine.Utilities;
 using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
+#if Enable_Obsolete
 using ApodizationType = DeconToolsV2.Readers.ApodizationType;
+#endif
 
 namespace DeconEngine
 {
     public class Utils
     {
+#if Enable_Obsolete
         //calculates the background noise level on the intensities using the following algorithm:
         //Step 1: Calculate average of all intensities and number of points used
         //Step 2: Calculate standard deviation of all intensities and the number of points used
         //Step 3: Calculate average of all points within +/- 5 standard deviations
         //Step 4: Report background intensity level
+        [Obsolete("Only used by Decon2LS.UI (maybe)", true)]
         public static double GetBackgroundLevel(List<double> intensities, float maxIntensity)
         {
             int numPts = intensities.Count;
@@ -54,6 +57,7 @@ namespace DeconEngine
             return average;
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe)", true)]
         public static double GetBackgroundLevel(float[] intensities, float maxIntensity)
         {
             int numPts = intensities.Length;
@@ -91,6 +95,7 @@ namespace DeconEngine
 
 
         // function calculating standard deviation
+        [Obsolete("Only used by Decon2LS.UI (maybe)", true)]
         public static double GetStandardDev(List<double> intensities, float maxIntensity)
         {
             int numPts = intensities.Count;
@@ -118,6 +123,7 @@ namespace DeconEngine
         }
 
         // function calculating standard deviation
+        [Obsolete("Only used by Decon2LS.UI (maybe)", true)]
         public static double GetStandardDev(float[] intensities, float maxIntensity)
         {
             int numPts = intensities.Length;
@@ -157,6 +163,7 @@ namespace DeconEngine
 
             return filteredData.Average();
         }
+#endif
 
         /// <summary>
         /// Compute the average of the non-zero data in intensities
@@ -178,6 +185,7 @@ namespace DeconEngine
             return filteredData.Average();
         }
 
+#if Enable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static double GetTIC(double min_mz, double max_mz, ref List<double> mzs, ref List<double> intensities,
             float minIntensity, ref double bpi, ref double bp_mz)
@@ -419,6 +427,6 @@ namespace DeconEngine
             for (var i = 0; i < intensities.Length; i++)
                 intensities[i] = arrIntensities[i];
         }
+#endif
     }
 }
-#endif

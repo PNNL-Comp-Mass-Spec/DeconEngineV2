@@ -362,8 +362,6 @@ namespace DeconToolsV2.HornTransform
         }
 #endif
 
-#if Enable_Obsolete
-        [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void LoadV1HornTransformParameters(XmlReader rdr)
         {
             //Add code to handle empty nodes.
@@ -914,7 +912,6 @@ namespace DeconToolsV2.HornTransform
                 }
             }
         }
-#endif
 
 #if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]

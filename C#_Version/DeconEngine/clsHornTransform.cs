@@ -121,6 +121,9 @@ namespace DeconToolsV2.HornTransform
             _rightFitStringencyFactor = 1;
         }
 
+        /// <summary>
+        /// Set the Horn Transform Parameters. To change the internal settings, must update the parameter object and re-set this property.
+        /// </summary>
         public clsHornTransformParameters TransformParameters
         {
 #if Enable_Obsolete

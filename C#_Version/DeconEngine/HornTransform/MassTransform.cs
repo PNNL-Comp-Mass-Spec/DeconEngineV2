@@ -188,7 +188,6 @@ namespace Engine.HornTransform
             }
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void GetOptions(out short maxCharge, out double maxMw, out double maxFit, out double minSignalToNoise,
             out double chargeCarrierMass, out double deleteThresholdIntensity,
@@ -256,7 +255,6 @@ namespace Engine.HornTransform
         {
             _isotopeFitter.SetOptions(averagineFormula, tagFormula, _chargeCarrierMass, useThrash, completeFitThrash);
         }
-#endif
 
         public virtual bool FindTransform(PeakData peakData, ref clsPeak peak, out clsHornTransformResults record,
             double backgroundIntensity = 0)

@@ -213,6 +213,7 @@ namespace DeconToolsV2.HornTransform
             return empiricalFormula;
         }
 
+#if Enable_Obsolete
         public string GenerateAveragineFormula(double averageMass, string averagineFormula, string tagFormula)
         {
 #if Enable_Obsolete
@@ -240,6 +241,7 @@ namespace DeconToolsV2.HornTransform
             //return empiricalFormulaStr;
             return formulaBuilder.ToString();
         }
+#endif
 
         public void SetElementalIsotopeComposition(clsElementIsotopes elementIsotopes)
         {

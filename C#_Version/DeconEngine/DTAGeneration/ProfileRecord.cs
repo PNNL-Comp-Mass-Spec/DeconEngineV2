@@ -1,10 +1,8 @@
-﻿#if Enable_Obsolete
-using System;
+﻿using System;
 
 namespace Engine.DTAProcessing
 {
     // class to store information that logs into the log file of DeconMSn
-    [Obsolete("Only used by Decon2LS.UI", false)]
     internal class ProfileRecord
     {
         // scan number of MSn_scan
@@ -26,4 +24,3 @@ namespace Engine.DTAProcessing
         }
     }
 }
-#endif

@@ -21,6 +21,7 @@ namespace Engine.PeakProcessing
         /// <summary>
         ///     The peak is the m/z value which is a lorentzian fit of the three points around the apex
         /// </summary>
+        [Obsolete("Not currently used by DeconMSn or others", false)]
         Lorentzian
     }
 
@@ -65,6 +66,7 @@ namespace Engine.PeakProcessing
                 return mzs[index];
             if (_peakFitType == PeakFitType.Quadratic)
                 return QuadraticFit(mzs, intensities, index);
+#pragma warning disable 618
             if (_peakFitType == PeakFitType.Lorentzian)
             {
                 var fwhm = _peakStatistician.FindFwhm(mzs, intensities, index);
@@ -72,6 +74,7 @@ namespace Engine.PeakProcessing
                     return LorentzianFit(mzs, intensities, index, fwhm);
                 return mzs[index];
             }
+#pragma warning restore 618
             return 0.0;
         }
 
@@ -111,6 +114,7 @@ namespace Engine.PeakProcessing
         /// <param name="intensities">List of raw data of intensities.</param>
         /// <param name="fwhm"></param>
         /// <returns>returns the m/z of the peak.</returns>
+        [Obsolete("Only accessed when PeakFitType is Lorentzian, which is not currently used", false)]
         private double LorentzianFit(List<double> mzs, List<double> intensities, int index, double fwhm)
         {
             var a = intensities[index];

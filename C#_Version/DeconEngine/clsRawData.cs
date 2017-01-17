@@ -5,17 +5,27 @@ namespace DeconToolsV2.Readers
 {
     public enum FileType
     {
+        [Obsolete("Only used by Decon2LS.UI", true)]
         BRUKER = 0,
         FINNIGAN,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         MICROMASSRAWDATA,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         AGILENT_TOF,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         SUNEXTREL,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         ICR2LSRAWDATA,
         MZXMLRAWDATA,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         PNNL_IMS,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         BRUKER_ASCII,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         ASCII,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         PNNL_UIMF,
+        [Obsolete("Only used by Decon2LS.UI", true)]
         YAFMS,
         UNDEFINED
     }

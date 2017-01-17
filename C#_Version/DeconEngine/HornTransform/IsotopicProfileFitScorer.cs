@@ -776,7 +776,6 @@ namespace Engine.HornTransform
                 debug);
         }
 
-#if Enable_Obsolete
         /// <summary>
         ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
         /// </summary>
@@ -798,7 +797,6 @@ namespace Engine.HornTransform
             averagineFormula = AveragineObj.AveragineFormula;
             tagFormula = AveragineObj.TagFormula;
         }
-#endif
 
         /// <summary>
         ///     set options for the isotope fit. It also sets the options for theoretical isotope generation.
@@ -937,14 +935,11 @@ namespace Engine.HornTransform
             }
         }
 
-#if Enable_Obsolete
-        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetChargeCarrierMass(double mass)
         {
             ChargeCarrierMass = mass;
             _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
-#endif
 
         /// <summary>
         ///     will calculate the delta mz (referenced to the theor) based on several of the observed peaks

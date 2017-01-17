@@ -1,10 +1,8 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 
 namespace Engine.Utilities
 {
-    [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     internal class SavGolSmoother
     {
         // number of points to the left while applying Savitzky Golay filter.
@@ -20,6 +18,7 @@ namespace Engine.Utilities
         private List<double> mvect_temp_y = new List<double>();
         private List<double> mvect_coefficients = new List<double>();
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public SavGolSmoother(int num_left, int num_right, int order)
         {
             SetOptions(num_left, num_right, order);
@@ -300,4 +299,3 @@ namespace Engine.Utilities
         }
     }
 }
-#endif

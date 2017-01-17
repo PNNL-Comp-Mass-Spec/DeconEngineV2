@@ -1,11 +1,9 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Xml;
 
 namespace DeconToolsV2.DTAGeneration
 {
-    [Obsolete("Only used by Decon2LS.UI", false)]
     public enum OUTPUT_TYPE
     {
         DTA = 0,
@@ -15,7 +13,6 @@ namespace DeconToolsV2.DTAGeneration
         MZXML
     };
 
-    [Obsolete("Only used by Decon2LS.UI", false)]
     public enum SPECTRA_TYPE
     {
         ALL = 0,
@@ -24,7 +21,6 @@ namespace DeconToolsV2.DTAGeneration
         HCD
     };
 
-    [Obsolete("Only used by Decon2LS.UI", false)]
     public class clsDTAGenerationParameters : System.ICloneable
     {
         private int mint_min_ion_count;
@@ -52,6 +48,7 @@ namespace DeconToolsV2.DTAGeneration
         private OUTPUT_TYPE menm_output_type;
         private SPECTRA_TYPE menm_spectra_type;
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public virtual Object Clone()
         {
             clsDTAGenerationParameters new_params = new clsDTAGenerationParameters();
@@ -83,6 +80,7 @@ namespace DeconToolsV2.DTAGeneration
             return mvect_msn_levels_to_ignore[index];
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void set_MSnLevelToIgnore(int value)
         {
             mvect_msn_levels_to_ignore.Add(value);
@@ -255,6 +253,7 @@ namespace DeconToolsV2.DTAGeneration
             }
         }*/
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SaveV1DTAGenerationParameters(System.Xml.XmlTextWriter xwriter)
         {
             xwriter.WriteWhitespace("\n\t");
@@ -571,4 +570,3 @@ namespace DeconToolsV2.DTAGeneration
         }
     }
 }
-#endif

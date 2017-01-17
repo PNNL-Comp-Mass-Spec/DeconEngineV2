@@ -1,11 +1,9 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Engine.Utilities
 {
-    [Obsolete("Was used by AutoCorrelationChargeDetermination, now not used except by other code only used by Decon2LS.UI")]
     internal class Interpolation
     {
         // List to store the second derivatives at the knot points of the spline.
@@ -19,6 +17,7 @@ namespace Engine.Utilities
         /// <param name="ya">List of y values.</param>
         /// <param name="x">is the value we want to find the interpolating y value at.</param>
         /// <returns>returns interpolated y at point x.</returns>
+        [Obsolete("Was used by AutoCorrelationChargeDetermination, now not used except by other code only used by Decon2LS.UI")]
         public double Splint(List<double> xa, List<double> ya, double x)
         {
             var n = xa.Count;
@@ -204,6 +203,7 @@ namespace Engine.Utilities
         /// <param name="y">List of y values.</param>
         /// <param name="maxPtsToAddForZero">Maximum number of point to add for zero.</param>
         /// <returns>number of points added.</returns>
+        [Obsolete("Was used by AutoCorrelationChargeDetermination, now not used except by other code only used by Decon2LS.UI")]
         public static int ZeroFillMissing(ref List<float> x, ref List<float> y, int maxPtsToAddForZero)
         {
             // TODO: Somehow combine this and the other ZeroFillMissing (float vs. double)?
@@ -442,4 +442,3 @@ namespace Engine.Utilities
         }
     }
 }
-#endif

@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Xml;
 
@@ -7,7 +6,6 @@ namespace DeconToolsV2.Peaks
     /// <summary>
     /// enumeration for type of fit.
     /// </summary>
-    [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
     public enum PEAK_FIT_TYPE
     {
         APEX = 0,
@@ -15,7 +13,6 @@ namespace DeconToolsV2.Peaks
         LORENTZIAN
     };
 
-    [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
     public class clsPeakProcessorParameters : System.ICloneable
     {
         private double mdbl_SNThreshold;
@@ -24,6 +21,7 @@ namespace DeconToolsV2.Peaks
         private PEAK_FIT_TYPE menm_FitType;
         private bool mbln_writePeaksToTextFile;
 
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public virtual Object Clone()
         {
             clsPeakProcessorParameters new_params = new clsPeakProcessorParameters(mdbl_SNThreshold,
@@ -31,6 +29,7 @@ namespace DeconToolsV2.Peaks
             return new_params;
         }
 
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public bool ThresholdedData
         {
             get { return mbln_thresholded_data; }
@@ -68,6 +67,7 @@ namespace DeconToolsV2.Peaks
             menm_FitType = PEAK_FIT_TYPE.QUADRATIC;
         }
 
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public clsPeakProcessorParameters(double sn, double peak_bg_ratio, bool thresholded_data, PEAK_FIT_TYPE fit_type)
         {
             mdbl_SNThreshold = sn;
@@ -76,6 +76,7 @@ namespace DeconToolsV2.Peaks
             mbln_thresholded_data = thresholded_data;
         }
 
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public void SaveV1PeakParameters(System.Xml.XmlTextWriter xwriter)
         {
             xwriter.WriteWhitespace("\n\t");
@@ -185,4 +186,3 @@ namespace DeconToolsV2.Peaks
         }
     }
 }
-#endif

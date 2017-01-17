@@ -1,15 +1,12 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DeconEngine;
 using DeconToolsV2.Readers;
 using Engine.PeakProcessing;
 using Engine.Utilities;
 
 namespace Engine.Readers
 {
-    [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     internal abstract class RawData
     {
         public const int MAX_FNAME_LEN = 512;
@@ -19,16 +16,24 @@ namespace Engine.Readers
         public static double MAX_MZ = 2000;
         private FileType menm_file_type;
 
+#if Enable_Obsolete
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected Calibrations.Calibrator mobj_calibrator = null;
+#endif
 
         public const int MAX_SCAN_SIZE = 4 * 1024 * 1024;
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract string GetFileName();
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract FileType GetFileType();
 
+#if Enable_Obsolete
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual Calibrations.Calibrator GetCalibrator()
         {
             return mobj_calibrator;
         }
+#endif
 
         public abstract bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid);
         public abstract bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts);
@@ -40,8 +45,10 @@ namespace Engine.Readers
 
         public abstract int GetNumScans();
         public abstract double GetScanTime(int scan_num);
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract int GetScanSize();
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetNumScansLoaded()
         {
             return GetNumScans();
@@ -52,17 +59,21 @@ namespace Engine.Readers
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual void GetScanDescription(int scan, out string description)
         {
             description = "Scan #" + scan;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract double GetSignalRange(int scan_num, bool centroid);
         public abstract bool IsZoomScan(int scan_num);
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic);
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetNextScanNum(int current_scan_num)
         {
             return current_scan_num + 1;
@@ -90,16 +101,19 @@ namespace Engine.Readers
             return false;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual double GetMonoMZFromHeader(int scan_num)
         {
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual short GetMonoChargeFromHeader(int scan_num)
         {
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetFrameNumber()
         {
             return 0;
@@ -115,6 +129,7 @@ namespace Engine.Readers
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public bool IsDir(string path)
         {
             return Directory.Exists(path);
@@ -124,15 +139,19 @@ namespace Engine.Readers
         {
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual void SetCalibrator(Calibrations.Calibrator calib)
         {
             mobj_calibrator = calib;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetMassIndex(double mz)
         {
             return mobj_calibrator.FindIndexByMass(mz);
         }
+#endif
 
         protected virtual void GetRawData(out List<double> vectMZs, out List<double> vectIntensities, int scan,
             double min_mz, double max_mz, bool centroid)
@@ -413,6 +432,7 @@ namespace Engine.Readers
 #endif
         }*/
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual void GetSummedSpectra(out List<double> mzs, out List<double> intensities, int scan_num,
             int scan_range)
         {
@@ -599,6 +619,13 @@ namespace Engine.Readers
                     }
                     scan_interpolator.Spline(scan_mzs, scan_intensities, 0, 0);
                     scan_interpolator.Splint(scan_mzs, scan_intensities, mzs, out interpolatedIntensities);
+                    // TODO: Should be able to replace the internal CubicSpline with the following code:
+                    //var interpolator = CubicSpline.InterpolateNaturalSorted(scan_mzs.ToArray(), scan_intensities.ToArray());
+                    //interpolatedIntensities = new List<double>();
+                    //foreach (var thisMz in mzs)
+                    //{
+                    //    interpolatedIntensities.Add(interpolator.Interpolate(thisMz));
+                    //}
 
                     double maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
                     for (int bin_num = 0; bin_num < num_bins; bin_num++)
@@ -643,6 +670,13 @@ namespace Engine.Readers
                         //[gord] this might be the chokepoint for why summing takes so long
                     scan_interpolator.Splint(scan_mzs, scan_intensities, mzs, out interpolatedIntensities);
                         //[gord] this might be the chokepoint for why summing takes so long
+                    // TODO: Should be able to replace the internal CubicSpline with the following code:
+                    //var interpolator = CubicSpline.InterpolateNaturalSorted(scan_mzs.ToArray(), scan_intensities.ToArray());
+                    //interpolatedIntensities = new List<double>();
+                    //foreach (var thisMz in mzs)
+                    //{
+                    //    interpolatedIntensities.Add(interpolator.Interpolate(thisMz));
+                    //}
 
                     double maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
                     for (int bin_num = 0; bin_num < num_bins; bin_num++)
@@ -669,4 +703,3 @@ namespace Engine.Readers
         }
     }
 }
-#endif

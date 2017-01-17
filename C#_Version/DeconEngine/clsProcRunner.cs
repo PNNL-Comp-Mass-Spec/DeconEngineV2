@@ -1,13 +1,14 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DeconToolsV2.Readers;
+#if Enable_Obsolete
 using DeconToolsV2.HornTransform;
 using DeconToolsV2.Peaks;
-using DeconToolsV2.Readers;
 using Engine.HornTransform;
 using Engine.PeakProcessing;
 using Engine.Utilities;
+#endif
 
 namespace DeconToolsV2
 {
@@ -19,23 +20,27 @@ namespace DeconToolsV2
         ERROR
     };
 
-    [Obsolete("Only used by Decon2LS.UI", false)]
     public class clsProcRunner
     {
         private int mint_percent_done;
-        private int mint_current_scan;
         private enmProcessState menm_state;
         private string mstr_file_name;
         private string mstr_output_path_for_dta_creation;
         private DeconToolsV2.Readers.FileType menm_file_type;
         private DeconToolsV2.Peaks.clsPeakProcessorParameters mobj_peak_parameters;
         private DeconToolsV2.HornTransform.clsHornTransformParameters mobj_transform_parameters;
-        private DeconToolsV2.Readers.clsRawDataPreprocessOptions mobj_fticr_preprocess_parameters;
-        private DeconToolsV2.Results.clsTransformResults mobj_results;
         private DeconToolsV2.DTAGeneration.clsDTAGenerationParameters mobj_dta_generation_parameters;
+
+#if Enable_Obsolete
+        private int mint_current_scan;
+        private DeconToolsV2.Readers.clsRawDataPreprocessOptions mobj_fticr_preprocess_parameters;
+        private DeconToolsV2.Results.clsTransformResults mobj_results = null;
+#endif
 
         //public void OutfileNames(char* fileName, char* iso_file_name, char* scan_file_name, char* data_file_name);
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void Reset()
         {
             mint_percent_done = 0;
@@ -43,6 +48,7 @@ namespace DeconToolsV2
             menm_state = enmProcessState.IDLE;
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public int CurrentScanNum
         {
             get
@@ -53,6 +59,7 @@ namespace DeconToolsV2
             }
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public int PercentDone
         {
             get
@@ -66,10 +73,12 @@ namespace DeconToolsV2
             }
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public enmProcessState ProcessState
         {
             get { return menm_state; }
         }
+#endif
 
         public string FileName
         {
@@ -77,11 +86,14 @@ namespace DeconToolsV2
             set { mstr_file_name = value; }
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public DeconToolsV2.Readers.FileType FileType
         {
             get { return menm_file_type; }
             set { menm_file_type = value; }
         }
+#endif
 
         public string OutputPathForDTACreation
         {
@@ -89,10 +101,13 @@ namespace DeconToolsV2
             set { mstr_output_path_for_dta_creation = value; }
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public int trial
         {
             get { return 1; }
         }
+#endif
 
         public DeconToolsV2.Peaks.clsPeakProcessorParameters PeakProcessorParameters
         {
@@ -106,10 +121,13 @@ namespace DeconToolsV2
             set { mobj_transform_parameters = value; }
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public DeconToolsV2.Results.clsTransformResults HornTransformResults
         {
             get { return mobj_results; }
         }
+#endif
 
         public DeconToolsV2.DTAGeneration.clsDTAGenerationParameters DTAGenerationParameters
         {
@@ -117,11 +135,14 @@ namespace DeconToolsV2
             set { mobj_dta_generation_parameters = value; }
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public DeconToolsV2.Readers.clsRawDataPreprocessOptions FTICRPreprocessOptions
         {
             get { return mobj_fticr_preprocess_parameters; }
             set { mobj_fticr_preprocess_parameters = value; }
         }
+#endif
 
         public clsProcRunner()
         {
@@ -132,9 +153,10 @@ namespace DeconToolsV2
             mobj_peak_parameters = new DeconToolsV2.Peaks.clsPeakProcessorParameters();
             mobj_transform_parameters = new DeconToolsV2.HornTransform.clsHornTransformParameters();
             mobj_dta_generation_parameters = new DeconToolsV2.DTAGeneration.clsDTAGenerationParameters();
-            mobj_results = null;
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         private DeconToolsV2.Results.clsTransformResults CreateTransformResults(string file_name,
             DeconToolsV2.Readers.FileType file_type, DeconToolsV2.Peaks.clsPeakProcessorParameters peak_parameters,
             DeconToolsV2.HornTransform.clsHornTransformParameters transform_parameters,
@@ -708,6 +730,7 @@ namespace DeconToolsV2
             menm_state = enmProcessState.COMPLETE;
             return transform_results;
         }
+#endif
 
         public void CreateDTAFile()
         {
@@ -1122,6 +1145,8 @@ namespace DeconToolsV2
             menm_state = enmProcessState.COMPLETE;
         }
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithPeaksOnly()
         {
             if (mstr_file_name == null)
@@ -1136,6 +1161,7 @@ namespace DeconToolsV2
                 mobj_transform_parameters, mobj_fticr_preprocess_parameters, true, false);
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithNoPeaks()
         {
             if (mstr_file_name == null)
@@ -1154,6 +1180,7 @@ namespace DeconToolsV2
                 mobj_transform_parameters, mobj_fticr_preprocess_parameters, false, true);
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResults()
         {
             if (mstr_file_name == null)
@@ -1205,6 +1232,6 @@ namespace DeconToolsV2
             mvect_peaks.Capacity = 2 * how_many;
             std.cerr << "Blah" << std.endl;*/
         }
+#endif
     }
 }
-#endif

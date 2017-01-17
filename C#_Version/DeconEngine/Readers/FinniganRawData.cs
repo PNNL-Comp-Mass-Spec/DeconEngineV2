@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -69,11 +68,13 @@ namespace Engine.Readers
         private static readonly Regex mFindParentIonOnlyNonMsx = new Regex(PARENTION_ONLY_NONMSX_REGEX, RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex mFindParentIonOnlyMsx = new Regex(PARENTION_ONLY_MSX_REGEX, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.FINNIGAN;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return GetNumScans();
@@ -164,16 +165,19 @@ namespace Engine.Readers
             marr_rawfileName = "";
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetScanDescription(int scan, out string description)
         {
             description = GetScanFilterString(scan);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return marr_rawfileName;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return mint_last_scan_size;
@@ -255,6 +259,7 @@ namespace Engine.Readers
             Open(file_n);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             if (scan_num == mint_last_scan_num)
@@ -597,6 +602,7 @@ namespace Engine.Readers
                 return false;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetMonoMZFromHeader(int scan_num)
         {
             double mono_mz = 0;
@@ -606,6 +612,7 @@ namespace Engine.Readers
             return mono_mz;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override short GetMonoChargeFromHeader(int scan_num)
         {
             short cs = 0;
@@ -802,6 +809,7 @@ namespace Engine.Readers
             return true;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
@@ -882,5 +890,4 @@ namespace Engine.Readers
     }
 }
 
-#endif
 #endif
