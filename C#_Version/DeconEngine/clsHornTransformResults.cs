@@ -170,6 +170,8 @@ namespace DeconToolsV2.HornTransform
             get { return IsotopePeakIndices.Count; }
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         public virtual object Clone()
         {
             var result = new clsHornTransformResults();
@@ -193,7 +195,6 @@ namespace DeconToolsV2.HornTransform
             return result;
         }
 
-#if Enable_Obsolete
         /// <summary>
         ///     intensity of feature; maximum value that can be represented is 2147483648
         /// </summary>

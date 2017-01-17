@@ -9,6 +9,7 @@ namespace Engine.Utilities
         // List to store the second derivatives at the knot points of the spline.
         private readonly List<double> _derivativesY2 = new List<double>();
 
+#if Enable_Obsolete
         /// <summary>
         ///     Cubic Spline interpolation. This function does the actual interpolation at specified point, using provided second
         ///     derivatives at the knot points.
@@ -47,6 +48,7 @@ namespace Engine.Utilities
 
             return y;
         }
+#endif
 
         /// <summary>
         ///     Cubic Spline interpolation. This function does the actual interpolation at specified point, using provided second
@@ -196,6 +198,7 @@ namespace Engine.Utilities
             }
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     Zero filling imputation. This function takes in data which has missing values and adds in zero values
         /// </summary>
@@ -309,6 +312,7 @@ namespace Engine.Utilities
             y.AddRange(tempY);
             return numPtsAdded;
         }
+#endif
 
         /// <summary>
         ///     Zero filling imputation. This function takes in data which has missing values and adds in zero values

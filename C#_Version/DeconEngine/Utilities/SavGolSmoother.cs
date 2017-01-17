@@ -5,23 +5,29 @@ namespace Engine.Utilities
 {
     internal class SavGolSmoother
     {
-        // number of points to the left while applying Savitzky Golay filter.
-        private int mint_Nleft_golay;
-        // the order of the Savitzky Golay smoothing filter.
-        private int mint_golay_order;
-        // the number of points to the right while applying Savitzky Golay filter.
-        private int mint_Nright_golay;
+        /// <summary>
+        /// number of points to the left while applying Savitzky Golay filter.
+        /// </summary>
+        private int _numLeftPoints;
+        /// <summary>
+        /// the order of the Savitzky Golay smoothing filter.
+        /// </summary>
+        private int _golayOrder;
+        /// <summary>
+        /// the number of points to the right while applying Savitzky Golay filter.
+        /// </summary>
+        private int _numRightPoints;
 
-        private int mint_num_coeffs;
+        private int _numberCoefficients;
 
-        private List<double> mvect_temp_x = new List<double>();
-        private List<double> mvect_temp_y = new List<double>();
-        private List<double> mvect_coefficients = new List<double>();
+        private readonly List<double> _tempX = new List<double>();
+        private readonly List<double> _tempY = new List<double>();
+        private readonly List<double> _coefficients = new List<double>();
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
-        public SavGolSmoother(int num_left, int num_right, int order)
+        public SavGolSmoother(int numLeft, int numRight, int order)
         {
-            SetOptions(num_left, num_right, order);
+            SetOptions(numLeft, numRight, order);
         }
 
         public SavGolSmoother()
@@ -29,131 +35,127 @@ namespace Engine.Utilities
             SetOptions(3, 3, 2);
         }
 
-        public void SetOptions(int num_left, int num_right, int order)
+        public void SetOptions(int numLeft, int numRight, int order)
         {
-            mvect_coefficients.Clear();
+            _coefficients.Clear();
 
-            mint_golay_order = order;
-            mint_Nleft_golay = num_left;
-            mint_Nright_golay = num_right;
-            int np = mint_Nleft_golay + mint_Nright_golay + 1;
+            _golayOrder = order;
+            _numLeftPoints = numLeft;
+            _numRightPoints = numRight;
+            var np = _numLeftPoints + _numRightPoints + 1;
 
-            float[] golay_coeffs = new float[np + 2];
+            var golayCoeffs = new float[np + 2];
 
-            for (int i = 0; i < np + 2; i++)
-                golay_coeffs[i] = 0;
+            for (var i = 0; i < np + 2; i++)
+                golayCoeffs[i] = 0;
 
-            int res = savgol(golay_coeffs, np, mint_Nleft_golay, mint_Nright_golay, 0, mint_golay_order);
+            savgol(golayCoeffs, np, _numLeftPoints, _numRightPoints, 0, _golayOrder);
 
-            mint_num_coeffs = mint_Nright_golay * 2;
-            if (mint_Nleft_golay > mint_Nright_golay)
+            _numberCoefficients = _numRightPoints * 2;
+            if (_numLeftPoints > _numRightPoints)
             {
-                mint_num_coeffs = mint_Nleft_golay * 2;
+                _numberCoefficients = _numLeftPoints * 2;
             }
 
             // unwrap golay coeffs
-            mvect_coefficients.Clear();
-            for (int i = 0; i < mint_Nleft_golay + mint_Nright_golay + 1; i++)
-                mvect_coefficients.Add(0);
+            _coefficients.Clear();
+            for (var i = 0; i < _numLeftPoints + _numRightPoints + 1; i++)
+                _coefficients.Add(0);
 
-            for (int i = 0; i <= mint_Nleft_golay; i++)
+            for (var i = 0; i <= _numLeftPoints; i++)
             {
-                mvect_coefficients[mint_num_coeffs / 2 - i] = (double) golay_coeffs[i + 1];
+                _coefficients[_numberCoefficients / 2 - i] = golayCoeffs[i + 1];
             }
-            for (int i = 1; i <= mint_Nright_golay; i++)
+            for (var i = 1; i <= _numRightPoints; i++)
             {
-                mvect_coefficients[mint_num_coeffs / 2 + i] = (double) golay_coeffs[mint_num_coeffs - i];
+                _coefficients[_numberCoefficients / 2 + i] = golayCoeffs[_numberCoefficients - i];
             }
         }
 
         public void Smooth(ref List<double> mzs, ref List<double> intensities)
         {
-            int width = (mint_num_coeffs / 2);
-            int size = (int) mzs.Count;
-            mvect_temp_x.Clear();
-            mvect_temp_y.Clear();
+            var size = mzs.Count;
+            _tempX.Clear();
+            _tempY.Clear();
 
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
-                int start_index = i - mint_Nleft_golay;
-                int stop_index = i + mint_Nright_golay + 1;
+                var startIndex = i - _numLeftPoints;
+                var stopIndex = i + _numRightPoints + 1;
 
-                if (start_index < 0 || stop_index >= size)
+                if (startIndex < 0 || stopIndex >= size)
                 {
                     // dont worry about smoothing just push back and forget.
-                    mvect_temp_x.Add(mzs[i]);
-                    mvect_temp_y.Add(intensities[i]);
+                    _tempX.Add(mzs[i]);
+                    _tempY.Add(intensities[i]);
                     continue;
                 }
-                double sum = 0;
-                double sum_before = 0;
-                for (int j = start_index; j < stop_index; j++)
+                var sum = 0d;
+                for (var j = startIndex; j < stopIndex; j++)
                 {
-                    sum_before = sum;
-                    double val = intensities[j] * mvect_coefficients[j - start_index];
-                    sum = sum_before + val;
+                    sum += intensities[j] * _coefficients[j - startIndex];
                 }
                 if (sum < 0)
                     sum = 0;
-                mvect_temp_x.Add(mzs[i]);
-                mvect_temp_y.Add(sum);
+                _tempX.Add(mzs[i]);
+                _tempY.Add(sum);
             }
             mzs.Clear();
             intensities.Clear();
-            mzs.AddRange(mvect_temp_x);
-            intensities.AddRange(mvect_temp_y);
+            mzs.AddRange(_tempX);
+            intensities.AddRange(_tempY);
         }
 
-        private const float TINY = 1.0e-20f;
+        private const float TinyVal = 1.0e-20f;
 
-        private int ludcmp(float[][] a, int n, int[] indx, out float d)
+        private static int ludcmp(float[,] a, int n, int[] indx, out float d)
         {
-            int i, imax, j, k;
-            imax = 0;
-            float big = 0, dum = 0, sum = 0, temp = 0;
-            float[] vv = new float[n];
-            for (j = 0; j < n; j++)
+            var vv = new float[n];
+            for (var j = 0; j < n; j++)
             {
                 vv[j] = 0;
             }
 
             d = 1.0f;
-            for (i = 1; i <= n; i++)
+            for (var i = 1; i <= n; i++)
             {
-                big = 0.0f;
-                for (j = 1; j <= n; j++)
+                var big = 0.0f;
+                for (var j = 1; j <= n; j++)
                 {
-                    if ((temp = Math.Abs(a[i - 1][j - 1])) > big)
+                    float temp;
+                    if ((temp = Math.Abs(a[i - 1, j - 1])) > big)
                     {
                         big = temp;
                     }
                 }
-                if (big == 0.0)
+                if (big.Equals(0f))
                 {
                     return -1;
                 }
                 vv[i - 1] = 1.0f / big;
             }
-            for (j = 1; j <= n; j++)
+            var imax = 0;
+            for (var j = 1; j <= n; j++)
             {
-                for (i = 1; i < j; i++)
+                for (var i = 1; i < j; i++)
                 {
-                    sum = a[i - 1][j - 1];
-                    for (k = 1; k < i; k++)
+                    var sum = a[i - 1, j - 1];
+                    for (var k = 1; k < i; k++)
                     {
-                        sum -= a[i - 1][k - 1] * a[k - 1][j - 1];
+                        sum -= a[i - 1, k - 1] * a[k - 1, j - 1];
                     }
-                    a[i - 1][j - 1] = sum;
+                    a[i - 1, j - 1] = sum;
                 }
-                big = 0.0f;
-                for (i = j; i <= n; i++)
+                var big = 0.0f;
+                for (var i = j; i <= n; i++)
                 {
-                    sum = a[i - 1][j - 1];
-                    for (k = 1; k < j; k++)
+                    var sum = a[i - 1, j - 1];
+                    for (var k = 1; k < j; k++)
                     {
-                        sum -= a[i - 1][k - 1] * a[k - 1][j - 1];
+                        sum -= a[i - 1, k - 1] * a[k - 1, j - 1];
                     }
-                    a[i - 1][j - 1] = sum;
+                    a[i - 1, j - 1] = sum;
+                    float dum;
                     if ((dum = vv[i - 1] * Math.Abs(sum)) >= big)
                     {
                         big = dum;
@@ -162,140 +164,148 @@ namespace Engine.Utilities
                 }
                 if (j != imax)
                 {
-                    for (k = 1; k <= n; k++)
+                    for (var k = 1; k <= n; k++)
                     {
-                        dum = a[imax - 1][k - 1];
-                        a[imax - 1][k - 1] = a[j - 1][k - 1];
-                        a[j - 1][k - 1] = dum;
+                        var dum = a[imax - 1, k - 1];
+                        a[imax - 1, k - 1] = a[j - 1, k - 1];
+                        a[j - 1, k - 1] = dum;
                     }
                     d = -d;
                     vv[imax - 1] = vv[j - 1];
                 }
                 indx[j - 1] = imax;
-                if (a[j - 1][j - 1] == 0.0)
+                if (a[j - 1, j - 1].Equals(0f))
                 {
-                    a[j - 1][j - 1] = TINY;
+                    a[j - 1, j - 1] = TinyVal;
                 }
                 if (j != n)
                 {
-                    dum = 1.0f / (a[j - 1][j - 1]);
-                    for (i = j + 1; i <= n; i++)
+                    var dum = 1.0f / (a[j - 1, j - 1]);
+                    for (var i = j + 1; i <= n; i++)
                     {
-                        a[i - 1][j - 1] *= dum;
+                        a[i - 1, j - 1] *= dum;
                     }
                 }
             }
             return 0;
         }
 
-        private void lubksb(float[][] a, int n, int[] indx, float[] b)
+        private static void lubksb(float[,] a, int n, int[] indx, float[] b)
         {
-            int i = 0;
-            int ii = 0;
-            int ip = 0;
-            int j = 0;
-            float sum = 0;
+            var ii = 0;
 
-            for (i = 1; i <= n; i++)
+            for (var i = 1; i <= n; i++)
             {
-                ip = indx[i - 1];
-                sum = b[ip - 1];
+                var ip = indx[i - 1];
+                var sum = b[ip - 1];
                 b[ip - 1] = b[i - 1];
                 if (ii != 0)
                 {
-                    for (j = ii; j <= i - 1; j++)
+                    for (var j = ii; j <= i - 1; j++)
                     {
-                        sum -= a[i - 1][j - 1] * b[j - 1];
+                        sum -= a[i - 1, j - 1] * b[j - 1];
                     }
                 }
-                else if (sum != 0)
+                else if (!sum.Equals(0f))
                 {
                     ii = i;
                 }
                 b[i - 1] = sum;
             }
-            for (i = n; i >= 1; i--)
+            for (var i = n; i >= 1; i--)
             {
-                sum = b[i - 1];
-                for (j = i + 1; j <= n; j++)
+                var sum = b[i - 1];
+                for (var j = i + 1; j <= n; j++)
                 {
-                    sum -= a[i - 1][j - 1] * b[j - 1];
+                    sum -= a[i - 1, j - 1] * b[j - 1];
                 }
-                b[i - 1] = sum / a[i - 1][i - 1];
+                b[i - 1] = sum / a[i - 1, i - 1];
             }
         }
 
-        private int savgol(float[] c, int np, int nl, int nr, int ld, int m)
+        /// <summary>
+        /// Main Savitzky-Golay smoothing function
+        /// </summary>
+        /// <param name="c">Modified by the function</param>
+        /// <param name="np"></param>
+        /// <param name="nl"></param>
+        /// <param name="nr"></param>
+        /// <param name="ld"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        private static int savgol(float[] c, int np, int nl, int nr, int ld, int m)
         {
-            int mm = 0;
-            int[] indx;
-            float d = 0, fac = 0, sum = 0;
-            float[][] a;
-            float[] b;
-
             if (np < nl + nr + 1 || nl < 0 || nr < 0 || ld > m || nl + nr < m)
             {
                 return -1;
             }
-            indx = new int[m + 1];
-            b = new float[m + 1];
-            for (int j = 0; j < m + 1; j++)
+            var indx = new int[m + 1];
+            var b = new float[m + 1];
+            for (var j = 0; j < m + 1; j++)
             {
                 indx[j] = 0;
                 b[j] = 0;
             }
 
-            a = new float[m + 1][];
-            for (int j = 0; j < m + 1; j++)
+            var a = new float[m + 1, m + 1];
+            for (var j = 0; j < m + 1; j++)
             {
-                a[j] = new float[m + 1];
                 for (int i = 0; i < m + 1; i++)
                 {
-                    a[j][i] = 0;
+                    a[j, i] = 0;
                 }
             }
 
-            for (int ipj = 0; ipj <= (m << 1); ipj++)
+            for (var ipj = 0; ipj <= (m << 1); ipj++)
             {
-                sum = (ipj != 0 ? 0.0f : 1.0f);
-                for (int k = 1; k <= nr; k++) sum += (float) Math.Pow((double) k, (double) ipj);
-                for (int k = 1; k <= nl; k++) sum += (float) Math.Pow((double) -k, (double) ipj);
-                mm = Math.Min(ipj, 2 * m - ipj);
-                for (int imj = -mm; imj <= mm; imj += 2) a[(ipj + imj) / 2][(ipj - imj) / 2] = sum;
+                var sum = (ipj != 0 ? 0.0f : 1.0f);
+                for (var k = 1; k <= nr; k++)
+                {
+                    sum += (float) Math.Pow((double) k, (double) ipj);
+                }
+                for (var k = 1; k <= nl; k++)
+                {
+                    sum += (float) Math.Pow((double) -k, (double) ipj);
+                }
+                var mm = Math.Min(ipj, 2 * m - ipj);
+                for (var imj = -mm; imj <= mm; imj += 2)
+                {
+                    a[(ipj + imj) / 2, (ipj - imj) / 2] = sum;
+                }
             }
-            int ret_val = ludcmp(a, m + 1, indx, out d);
-            if (ret_val == -1)
+            float d;
+            var retVal = ludcmp(a, m + 1, indx, out d);
+            if (retVal == -1)
             {
-                for (int kk = 1; kk <= np; kk++)
+                for (var kk = 1; kk <= np; kk++)
                 {
                     c[kk] = 0.0f;
                 }
                 return -1;
             }
 
-            for (int j = 1; j <= m + 1; j++)
+            for (var j = 1; j <= m + 1; j++)
             {
                 b[j - 1] = 0.0f;
             }
             b[ld] = 1.0f;
             lubksb(a, m + 1, indx, b);
-            for (int kk = 1; kk <= np; kk++)
+            for (var kk = 1; kk <= np; kk++)
             {
                 c[kk] = 0.0f;
             }
-            for (int k = -nl; k <= nr; k++)
+            for (var k = -nl; k <= nr; k++)
             {
-                sum = b[0];
-                fac = 1.0f;
-                for (mm = 1; mm <= m; mm++)
+                var sum = b[0];
+                var fac = 1.0f;
+                for (var mm = 1; mm <= m; mm++)
                 {
                     sum += b[mm] * (fac *= k);
                 }
-                int kk = ((np - k) % np) + 1;
+                var kk = ((np - k) % np) + 1;
                 c[kk] = sum;
             }
             return 0;
-
         }
     }
 }

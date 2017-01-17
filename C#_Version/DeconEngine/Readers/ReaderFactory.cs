@@ -7,260 +7,201 @@ namespace Engine.Readers
     {
 #if Enable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
-        public static RawData GetMSDataReader(FileType file_type)
+        public static RawData GetMSDataReader(FileType fileType)
         {
-            return GetRawData(file_type);
+            return GetRawData(fileType);
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
-        public static RawData GetMSDataReader(FileType file_type, string file_name)
+        public static RawData GetMSDataReader(FileType fileType, string fileName)
         {
-            return GetRawData(file_type, file_name);
+            return GetRawData(fileType, fileName);
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
-        public static void GetMSDataReader(out RawData raw_data, FileType file_type)
+        public static void GetMSDataReader(out RawData rawData, FileType fileType)
         {
-            GetRawData(out raw_data, file_type);
+            GetRawData(out rawData, fileType);
         }
 #endif
 
-        public static RawData GetRawData(FileType file_type, string file_name)
+        public static RawData GetRawData(FileType fileType, string fileName)
         {
-            switch (file_type)
+            RawData rawData = null;
+            switch (fileType)
             {
 #if Enable_Obsolete
                 case FileType.BRUKER:
-                    BrukerRawData bruker_raw_data;
-                    bruker_raw_data = new BrukerRawData();
-                    bruker_raw_data.Load(file_name);
-                    return bruker_raw_data;
+                    rawData = new BrukerRawData();
+                    rawData.Load(fileName);
                     break;
                 case FileType.BRUKER_ASCII:
-                    BrukerAsciiRawData bruker_baf_raw_data;
-                    bruker_baf_raw_data = new BrukerAsciiRawData();
-                    bruker_baf_raw_data.Load(file_name);
-                    return bruker_baf_raw_data;
+                    rawData = new BrukerAsciiRawData();
+                    rawData.Load(fileName);
                     break;
                 case FileType.ASCII:
-                    AsciiRawData ascii_raw_data;
-                    ascii_raw_data = new AsciiRawData();
-                    ascii_raw_data.Load(file_name);
-                    return ascii_raw_data;
+                    rawData = new AsciiRawData();
+                    rawData.Load(fileName);
                     break;
                 case FileType.AGILENT_TOF:
 #if ANALYST_INSTALLED
-                    AgilentRawData agilent_raw_data;
-                    agilent_raw_data = new AgilentRawData();
-                    agilent_raw_data.Load(file_name);
-                    return agilent_raw_data;
+                    rawData = new AgilentRawData();
+                    rawData.Load(fileName);
 #endif
                     break;
                 case FileType.SUNEXTREL:
-                    SunExtrelRawData sun_extrel_raw_data;
-                    sun_extrel_raw_data = new SunExtrelRawData();
-                    sun_extrel_raw_data.Load(file_name);
-                    return sun_extrel_raw_data;
+                    rawData = new SunExtrelRawData();
+                    rawData.Load(fileName);
                     break;
                 case FileType.ICR2LSRAWDATA:
-                    Icr2lsRawData icr2ls_raw_data;
-                    icr2ls_raw_data = new Icr2lsRawData();
-                    icr2ls_raw_data.Load(file_name);
-                    return icr2ls_raw_data;
+                    rawData = new Icr2lsRawData();
+                    rawData.Load(fileName);
                     break;
 #endif
                 case FileType.FINNIGAN:
 #if XCALIBUR_INSTALLED
-                    FinniganRawData finnigan_raw_data;
-                    finnigan_raw_data = new FinniganRawData();
-                    finnigan_raw_data.Load(file_name);
-                    return finnigan_raw_data;
+                    rawData = new FinniganRawData();
+                    rawData.Load(fileName);
 #endif
-                    //break;
+                    break;
 #if Enable_Obsolete
                 case FileType.MICROMASSRAWDATA:
 #if MASSLYNX_4_INSTALLED
-                    MicromassRawData micro_raw_data;
-                    micro_raw_data = new MicromassRawData();
-                    micro_raw_data.Load(file_name);
-                    return micro_raw_data;
+                    rawData = new MicromassRawData();
+                    rawData.Load(fileName);
 #endif
                     break;
 #endif
                 case FileType.MZXMLRAWDATA:
-                    MZXmlRawData mzxml_raw_data;
-                    mzxml_raw_data = new MZXmlRawData();
-                    mzxml_raw_data.Load(file_name);
-                    return mzxml_raw_data;
-                    //break;
+                    rawData = new MZXmlRawData();
+                    rawData.Load(fileName);
+                    break;
 #if Enable_Obsolete
                 case FileType.PNNL_IMS:
-                    IMSRawData ims_raw_data;
-                    ims_raw_data = new IMSRawData();
-                    ims_raw_data.Load(file_name);
-                    return ims_raw_data;
+                    rawData = new IMSRawData();
+                    rawData.Load(fileName);
                     break;
 #endif
                 //case FileType.PNNL_UIMF:
-                //  UIMFRawData uimf_raw_data;
-                //  uimf_raw_data = new UIMFRawData();
-                //  uimf_raw_data.Load(file_name);
-                //  return uimf_raw_data;
+                //    rawData = new UIMFRawData();
+                //    rawData.Load(file_name);
                 //    break;
                 /*case FileType.YAFMS:
-                    YafmsRawData yafms_raw_data;
-                    yafms_raw_data = new YafmsRawData();
-                    yafms_raw_data.Load(file_name);
-                    return yafms_raw_data;
+                    rawData = new YafmsRawData();
+                    rawData.Load(file_name);
                     break; */
                 default:
                     break;
             }
-            return null;
+            return rawData;
         }
 
 #if Enable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
-        public static void GetRawData(out RawData raw_data, FileType file_type)
+        public static void GetRawData(out RawData rawData, FileType fileType)
         {
-            raw_data = null;
-            switch (file_type)
+            rawData = null;
+            switch (fileType)
             {
                 case FileType.BRUKER:
-                    raw_data = new BrukerRawData();
-                    return;
+                    rawData = new BrukerRawData();
                     break;
                 case FileType.AGILENT_TOF:
 #if ANALYST_INSTALLED
-                    raw_data = new AgilentRawData();
-                    return;
+                    rawData = new AgilentRawData();
 #endif
                     break;
                 case FileType.FINNIGAN:
 #if XCALIBUR_INSTALLED
-                    raw_data = new FinniganRawData();
-                    return;
+                    rawData = new FinniganRawData();
 #endif
-                    //break;
+                    break;
                 case FileType.SUNEXTREL:
-                    raw_data = new SunExtrelRawData();
-                    return;
+                    rawData = new SunExtrelRawData();
                     break;
                 case FileType.ICR2LSRAWDATA:
-                    raw_data = new Icr2lsRawData();
-                    return;
+                    rawData = new Icr2lsRawData();
                     break;
                 case FileType.MICROMASSRAWDATA:
 #if MASSLYNX_4_INSTALLED
-                    raw_data = new MicromassRawData();
+                    rawData = new MicromassRawData();
 #endif
-                    return;
                     break;
                 case FileType.MZXMLRAWDATA:
-                    raw_data = new MZXmlRawData();
-                    return;
-                    //break;
+                    rawData = new MZXmlRawData();
+                    break;
                 case FileType.PNNL_IMS:
-                    raw_data = new IMSRawData();
-                    return;
+                    rawData = new IMSRawData();
                     break;
                 /*case FileType.PNNL_UIMF:
-                    raw_data = new UIMFRawData();
-                    return;
+                    rawData = new UIMFRawData();
                     break; */
                 /*case FileType.YAFMS:
-                    raw_data = new YafmsRawData();
-                    return;
+                    rawData = new YafmsRawData();
                     break; */
                 case FileType.BRUKER_ASCII:
-                    raw_data = new BrukerAsciiRawData();
-                    return;
+                    rawData = new BrukerAsciiRawData();
                     break;
                 case FileType.ASCII:
-                    raw_data = new AsciiRawData();
-                    return;
+                    rawData = new AsciiRawData();
                     break;
                 default:
                     break;
             }
-            return;
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
-        public static RawData GetRawData(FileType file_type)
+        public static RawData GetRawData(FileType fileType)
         {
-            switch (file_type)
+            RawData rawData = null;
+            switch (fileType)
             {
                 case FileType.BRUKER:
-                    BrukerRawData bruker_raw_data;
-                    bruker_raw_data = new BrukerRawData();
-                    return bruker_raw_data;
+                    rawData = new BrukerRawData();
                     break;
                 case FileType.AGILENT_TOF:
 #if ANALYST_INSTALLED
-                    AgilentRawData agilent_raw_data;
-                    agilent_raw_data= new AgilentRawData();
-                    return agilent_raw_data;
+                    rawData = new AgilentRawData();
 #endif
                     break;
                 case FileType.FINNIGAN:
 #if XCALIBUR_INSTALLED
-                    FinniganRawData finnigan_raw_data;
-                    finnigan_raw_data = new FinniganRawData();
-                    return finnigan_raw_data;
+                    rawData = new FinniganRawData();
 #endif
-                    //break;
+                    break;
                 case FileType.SUNEXTREL:
-                    SunExtrelRawData sun_extrel_raw_data;
-                    sun_extrel_raw_data = new SunExtrelRawData();
-                    return sun_extrel_raw_data;
+                    rawData = new SunExtrelRawData();
                     break;
                 case FileType.ICR2LSRAWDATA:
-                    Icr2lsRawData icr2ls_raw_data;
-                    icr2ls_raw_data = new Icr2lsRawData();
-                    return icr2ls_raw_data;
+                    rawData = new Icr2lsRawData();
                     break;
                 case FileType.MICROMASSRAWDATA:
 #if MASSLYNX_4_INSTALLED
-                    MicromassRawData micro_raw_data;
-                    micro_raw_data = new MicromassRawData();
-                    return micro_raw_data;
+                    rawData = new MicromassRawData();
 #endif
                     break;
                 case FileType.MZXMLRAWDATA:
-                    MZXmlRawData mzxml_raw_data;
-                    mzxml_raw_data = new MZXmlRawData();
-                    return mzxml_raw_data;
-                    //break;
+                    rawData = new MZXmlRawData();
+                    break;
                 case FileType.PNNL_IMS:
-                    IMSRawData ims_raw_data;
-                    ims_raw_data = new IMSRawData();
-                    return ims_raw_data;
+                    rawData = new IMSRawData();
                     break;
                 /*case FileType.PNNL_UIMF:
-                    UIMFRawData uimf_raw_data;
-                    uimf_raw_data = new UIMFRawData();
-                    return uimf_raw_data;
+                    rawData = new UIMFRawData();
                     break; */
                 /*case FileType.YAFMS:
-                    YafmsRawData yafms_raw_data;
-                    yafms_raw_data = new YafmsRawData();
-                    return yafms_raw_data;
+                    rawData = new YafmsRawData();
                     break; */
                 case FileType.BRUKER_ASCII:
-                    BrukerAsciiRawData bruker_baf_raw_data;
-                    bruker_baf_raw_data = new BrukerAsciiRawData();
-                    return bruker_baf_raw_data;
+                    rawData = new BrukerAsciiRawData();
                     break;
                 case FileType.ASCII:
-                    AsciiRawData ascii_raw_data;
-                    ascii_raw_data = new AsciiRawData();
-                    return ascii_raw_data;
+                    rawData = new AsciiRawData();
                     break;
                 default:
                     break;
             }
-            return null;
+            return rawData;
         }
 #endif
     }

@@ -84,6 +84,8 @@ namespace Engine.HornTransform
             AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         protected IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
         {
             // only copies settings not variables.
@@ -94,6 +96,7 @@ namespace Engine.HornTransform
             IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
             Init();
         }
+#endif
 
         public bool UseIsotopeDistributionCaching { get; set; }
 
@@ -361,10 +364,12 @@ namespace Engine.HornTransform
             return true;
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     checks if any of the isotopes in the distribution is possibly part of a different distribution
         /// </summary>
         /// <param name="minThreshold">- threshold for that spectrum</param>
+        [Obsolete("Not used anywhere", false)]
         public bool IsIsotopeLinkedDistribution(double minThreshold)
         {
             for (var isotopeNum = 3; isotopeNum < IsotopeMzs.Count; isotopeNum++)
@@ -377,6 +382,7 @@ namespace Engine.HornTransform
 
             return false;
         }
+#endif
 
         /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that
           the user could favor certain fitting parameters (i.e. space between isotopomers) over others
@@ -941,6 +947,7 @@ namespace Engine.HornTransform
             _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     will calculate the delta mz (referenced to the theor) based on several of the observed peaks
         /// </summary>
@@ -950,6 +957,7 @@ namespace Engine.HornTransform
         /// <param name="theorPeakData"></param>
         /// <param name="theorIntensityCutOff"></param>
         /// <returns></returns>
+        [Obsolete("Not used anywhere", false)]
         public double CalculateDeltaFromSeveralObservedPeaks(double startingDelta, double peakWidth,
             PeakData obsPeakData, PeakData theorPeakData, double theorIntensityCutOff)
         {
@@ -1021,5 +1029,6 @@ namespace Engine.HornTransform
 
             return weightedDelta;
         }
+#endif
     }
 }

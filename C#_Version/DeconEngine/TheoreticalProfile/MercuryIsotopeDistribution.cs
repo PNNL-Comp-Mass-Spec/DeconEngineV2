@@ -168,6 +168,8 @@ namespace Engine.TheoreticalProfile
             //NormalizeToPercentIons(vect_y);
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         public double NormalizeToPercentIons(List<double> y)
         {
             var numPoints = y.Count;
@@ -195,6 +197,7 @@ namespace Engine.TheoreticalProfile
             }
             return sum;
         }
+#endif
 
         public void CalculateMasses(DeconToolsV2.MolecularFormula formula)
         {
@@ -216,7 +219,7 @@ namespace Engine.TheoreticalProfile
             }
         }
 
-        public void CalcVariancesAndMassRange(int charge, DeconToolsV2.MolecularFormula formula)
+        private void CalcVariancesAndMassRange(int charge, DeconToolsV2.MolecularFormula formula)
         {
             MassVariance = 0;
             var numElementsFound = formula.NumElements;
@@ -259,7 +262,7 @@ namespace Engine.TheoreticalProfile
         ///     = 3 : ??
         ///     = -1 : Unapodize Gaussian
         /// </remarks>
-        public void Apodize(int numPoints, double resolution, double sub)
+        private void Apodize(int numPoints, double resolution, double sub)
         {
             int i;
             double apVal;
@@ -274,7 +277,7 @@ namespace Engine.TheoreticalProfile
                             apVal = Math.Exp(-(i - 1) * (i - 1) / expDenom);
                         else
                             apVal = Math.Exp(-(numPoints - i - 1) * (numPoints - i - 1) / expDenom);
-                        
+
                         _frequencyData[i - 1] *= apVal;
                     }
                     break;
@@ -305,7 +308,7 @@ namespace Engine.TheoreticalProfile
             } /* End of Apodize() */
         }
 
-        public void OutputData(int numPoints, int charge, out List<double> x, out List<double> y, double threshold,
+        private void OutputData(int numPoints, int charge, out List<double> x, out List<double> y, double threshold,
             out List<double> isotopeMzs, out List<double> isotopeIntensities)
         {
             double maxInt = 0;
@@ -519,7 +522,7 @@ namespace Engine.TheoreticalProfile
             return true;
         }
 
-        public void CalcFrequencies(int charge, int numPoints, DeconToolsV2.MolecularFormula formula)
+        private void CalcFrequencies(int charge, int numPoints, DeconToolsV2.MolecularFormula formula)
         {
             int i;
             int j, k;

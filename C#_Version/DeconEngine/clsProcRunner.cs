@@ -817,59 +817,59 @@ namespace DeconToolsV2
             */
 
             //Raw Object
-            dta_processor.mobj_raw_data_dta =
+            dta_processor.RawDataDTA =
                 Engine.Readers.ReaderFactory.GetRawData((FileType) menm_file_type, mstr_file_name);
-            dta_processor.menm_dataset_type = (FileType) menm_file_type;
+            dta_processor.DatasetType = (FileType) menm_file_type;
 
             //File name base for all dtas
-            dta_processor.mch_output_file = output_file;
+            dta_processor.OutputFile = output_file;
 
             //Datasetname
             int lastSlashIndex = mstr_file_name.LastIndexOf("\\");
             string data_name_plus_extension = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
             string data_name = data_name_plus_extension.Remove(0, lastSlashIndex + 1);
-            dta_processor.mch_dataset_name = data_name;
+            dta_processor.DatasetName = data_name;
 
             // File name for log file
             bool create_log_file_only = false;
-            dta_processor.mch_log_filename = output_file + "_DeconMSn_log.txt";
+            dta_processor.LogFilename = output_file + "_DeconMSn_log.txt";
 
             //File name for profile data
-            dta_processor.mch_profile_filename = output_file + "_profile.txt";
+            dta_processor.ProfileFilename = output_file + "_profile.txt";
 
             if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG)
             {
                 create_log_file_only = true;
             }
 
-            dta_processor.mbln_write_progress_file = false;
-            dta_processor.mch_progress_filename = output_file + "_DeconMSn_progress.txt";
+            dta_processor.DoWriteProgressFile = false;
+            dta_processor.ProgressFilename = output_file + "_DeconMSn_progress.txt";
 
             if (mobj_dta_generation_parameters.WriteProgressFile)
             {
-                dta_processor.mbln_write_progress_file = true;
+                dta_processor.DoWriteProgressFile = true;
             }
 
             //file name for composite dta file
             bool create_composite_dta = false;
             if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
             {
-                dta_processor.mch_comb_dta_filename = output_file + "_dta.txt";
-                dta_processor.mfile_comb_dta =
-                    new StreamWriter(new FileStream(dta_processor.mch_comb_dta_filename, FileMode.Create,
+                dta_processor.CombinedDTAFilename = output_file + "_dta.txt";
+                dta_processor.CombinedDTAFileWriter =
+                    new StreamWriter(new FileStream(dta_processor.CombinedDTAFilename, FileMode.Create,
                         FileAccess.ReadWrite, FileShare.Read));
                 create_composite_dta = true;
                 dta_scanType.DTAScanTypeFilename = output_file + "_ScanType.txt";
                 dta_scanType.DTAScanTypeFileWriter = new StreamWriter(new FileStream(dta_scanType.DTAScanTypeFilename, FileMode.Create,
                     FileAccess.ReadWrite, FileShare.Read));
-                dta_scanType.RawDataReader = dta_processor.mobj_raw_data_dta;
+                dta_scanType.RawDataReader = dta_processor.RawDataDTA;
             }
             //file name for .mgf file
             if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
             {
-                dta_processor.mch_mgf_filename = output_file = ".mgf";
-                dta_processor.mfile_mgf =
-                    new StreamWriter(new FileStream(dta_processor.mch_mgf_filename, FileMode.Create,
+                dta_processor.MGFFilename = output_file = ".mgf";
+                dta_processor.MGFFileWriter =
+                    new StreamWriter(new FileStream(dta_processor.MGFFilename, FileMode.Create,
                         FileAccess.ReadWrite, FileShare.Read));
             }
 
@@ -929,15 +929,15 @@ namespace DeconToolsV2
             int scan_start = scan_num;
             int nextProgressScan = scan_start + 50;
 
-            if (mobj_dta_generation_parameters.MaxScan <= dta_processor.mobj_raw_data_dta.GetNumScans())
+            if (mobj_dta_generation_parameters.MaxScan <= dta_processor.RawDataDTA.GetNumScans())
                 num_scans = mobj_dta_generation_parameters.MaxScan;
             else
-                num_scans = dta_processor.mobj_raw_data_dta.GetNumScans();
+                num_scans = dta_processor.RawDataDTA.GetNumScans();
 
             while (scan_num <= num_scans)
             {
                 mint_percent_done = (scan_num * 100) / num_scans;
-                if (dta_processor.mobj_raw_data_dta.IsMSScan(scan_num))
+                if (dta_processor.RawDataDTA.IsMSScan(scan_num))
                 {
                     //Get MS spectra
                     dta_processor.GetParentScanSpectra(scan_num, mobj_peak_parameters.PeakBackgroundRatio,
@@ -945,13 +945,13 @@ namespace DeconToolsV2
 
                     int msN_scan = scan_num + 1;
                     for (msN_scan = scan_num + 1;
-                        msN_scan < num_scans && !dta_processor.mobj_raw_data_dta.IsMSScan(msN_scan);
+                        msN_scan < num_scans && !dta_processor.RawDataDTA.IsMSScan(msN_scan);
                         msN_scan++)
                     {
                         //GetMS level and see if it is to be ignored
                         if (mobj_dta_generation_parameters.IgnoreMSnScans)
                         {
-                            int msN_level = dta_processor.mobj_raw_data_dta.GetMSLevel(msN_scan);
+                            int msN_level = dta_processor.RawDataDTA.GetMSLevel(msN_scan);
                             bool found_msN_level = false;
                             for (int index = 0; index < vect_msn_ignore.Count; index++)
                             {
@@ -969,7 +969,7 @@ namespace DeconToolsV2
                         dta_processor.GetMsNSpectra(msN_scan, mobj_peak_parameters.PeakBackgroundRatio,
                             mobj_transform_parameters.PeptideMinBackgroundRatio);
                         //Identify which is parent_scan
-                        parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
+                        parent_scan = dta_processor.RawDataDTA.GetParentScan(msN_scan);
                         // AM Modified to recieve new spectra everytime if (parent_scan != scan_num) //MSN data
                         dta_processor.GetParentScanSpectra(parent_scan, mobj_peak_parameters.PeakBackgroundRatio,
                             mobj_transform_parameters.PeptideMinBackgroundRatio);
@@ -1015,7 +1015,7 @@ namespace DeconToolsV2
                     //GetMS level and see if it is to be ignored
                     if (mobj_dta_generation_parameters.IgnoreMSnScans)
                     {
-                        int msN_level = dta_processor.mobj_raw_data_dta.GetMSLevel(msN_scan);
+                        int msN_level = dta_processor.RawDataDTA.GetMSLevel(msN_scan);
                         bool found_msN_level = false;
                         for (int index = 0; index < vect_msn_ignore.Count; index++)
                         {
@@ -1040,7 +1040,7 @@ namespace DeconToolsV2
                         dta_processor.GetSpectraType(msN_scan) == (int) mobj_dta_generation_parameters.SpectraType)
                     {
                         //Identify which is parent_scan
-                        parent_scan = dta_processor.mobj_raw_data_dta.GetParentScan(msN_scan);
+                        parent_scan = dta_processor.RawDataDTA.GetParentScan(msN_scan);
                         // check to see if valid parent which wont be in MRM cases where MSn begins at 1.
                         if (parent_scan < 1)
                         {
@@ -1084,7 +1084,7 @@ namespace DeconToolsV2
                 }
                 scan_num++;
 
-                if (dta_processor.mbln_write_progress_file)
+                if (dta_processor.DoWriteProgressFile)
                 {
                     if (scan_num - scan_start >= nextProgressScan)
                     {
@@ -1136,10 +1136,10 @@ namespace DeconToolsV2
             //dta_processor.mfile_log.close();
             if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA)
             {
-                dta_processor.mfile_comb_dta.Close();
+                dta_processor.CombinedDTAFileWriter.Close();
             }
             if (mobj_dta_generation_parameters.OutputType == DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF)
-                dta_processor.mfile_mgf.Close();
+                dta_processor.MGFFileWriter.Close();
 
             //Done
             menm_state = enmProcessState.COMPLETE;
