@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2;
@@ -82,6 +82,7 @@ namespace Engine.HornTransform
         /// <seealso cref="SetPeakToZero" />
         private short _numPeaksForShoulder;
 
+        /*
         /// <summary>
         ///     If +2Da pair peaks should be reported for O18 labelling
         /// </summary>
@@ -93,6 +94,7 @@ namespace Engine.HornTransform
         ///     the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
         /// </remarks>
         private bool _reportO18Plus2Da;
+        */
 
         private double _rightFitStringencyFactor;
 
@@ -114,7 +116,7 @@ namespace Engine.HornTransform
             _checkO18Pairs = false;
             _chargeCarrierMass = 1.00727638;
             //Charge carrier mass = [atomic mass of hydrogen (1.007825) - atomic mass of an electron (0.00054858)]
-            _reportO18Plus2Da = false;
+            //_reportO18Plus2Da = false;
             DebugFlag = false;
             _numPeaksForShoulder = 1;
             _checkAgainstCharge1 = false;
@@ -186,7 +188,7 @@ namespace Engine.HornTransform
             }
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void GetOptions(out short maxCharge, out double maxMw, out double maxFit, out double minSignalToNoise,
             out double chargeCarrierMass, out double deleteThresholdIntensity,
@@ -366,7 +368,7 @@ namespace Engine.HornTransform
             if (DebugFlag)
                 Console.Error.WriteLine("\tBack with fit = " + record.Fit);
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
             // Abundance has always been reported as a 32-bit integer
             // Added field Abundance in 2015 to allow tracking it as a double
             // For backwards compatibility, if the peak intensity is too large for a 32-bit integer, AbundanceInt will be 2147483648

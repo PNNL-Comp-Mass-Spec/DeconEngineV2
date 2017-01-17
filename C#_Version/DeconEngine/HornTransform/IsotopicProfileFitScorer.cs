@@ -74,7 +74,7 @@ namespace Engine.HornTransform
         protected bool UseThrash;
 
         // default constructor.
-        public IsotopicProfileFitScorer()
+        protected IsotopicProfileFitScorer()
         {
             ChargeCarrierMass = 1.00727638;
             UseThrash = false;
@@ -84,7 +84,7 @@ namespace Engine.HornTransform
             AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
         }
 
-        public IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
+        protected IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
         {
             // only copies settings not variables.
             CompleteFitThrash = fit.CompleteFitThrash;
@@ -378,7 +378,7 @@ namespace Engine.HornTransform
             return false;
         }
 
-        /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that 
+        /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that
           the user could favor certain fitting parameters (i.e. space between isotopomers) over others
         public double FindIsotopicDist(PeakProcessing.PeakData peakData, int cs, PeakProcessing.Peak peak,
             IsotopeFitRecord isoRecord, double deleteIntensityThreshold, double spacingWeight, double spacingVar,
@@ -608,7 +608,7 @@ namespace Engine.HornTransform
                     fit = bestFit + 1000; // make the fit terrible
                 }
                 // TODO: Currently, if fit score is less than best_fit, iteration stops.  Future versions should continue attempted fitting if fit was within a specified range of the best fit
-                // 26th February 2007 Deep Jaitly 
+                // 26th February 2007 Deep Jaitly
                 /*if (fit <= bestFit)
                 {
                     if (nextPeak.mdbl_intensity > peak.mdbl_intensity)
@@ -776,7 +776,7 @@ namespace Engine.HornTransform
                 debug);
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         /// <summary>
         ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
         /// </summary>
@@ -937,7 +937,7 @@ namespace Engine.HornTransform
             }
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetChargeCarrierMass(double mass)
         {

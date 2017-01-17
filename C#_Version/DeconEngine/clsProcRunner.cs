@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -74,21 +74,18 @@ namespace DeconToolsV2
         public string FileName
         {
             get { return mstr_file_name; }
-
             set { mstr_file_name = value; }
         }
 
         public DeconToolsV2.Readers.FileType FileType
         {
             get { return menm_file_type; }
-
             set { menm_file_type = value; }
         }
 
         public string OutputPathForDTACreation
         {
             get { return mstr_output_path_for_dta_creation; }
-
             set { mstr_output_path_for_dta_creation = value; }
         }
 
@@ -100,14 +97,12 @@ namespace DeconToolsV2
         public DeconToolsV2.Peaks.clsPeakProcessorParameters PeakProcessorParameters
         {
             get { return mobj_peak_parameters; }
-
             set { mobj_peak_parameters = value; }
         }
 
         public DeconToolsV2.HornTransform.clsHornTransformParameters HornTransformParameters
         {
             get { return mobj_transform_parameters; }
-
             set { mobj_transform_parameters = value; }
         }
 
@@ -119,14 +114,12 @@ namespace DeconToolsV2
         public DeconToolsV2.DTAGeneration.clsDTAGenerationParameters DTAGenerationParameters
         {
             get { return mobj_dta_generation_parameters; }
-
             set { mobj_dta_generation_parameters = value; }
         }
 
         public DeconToolsV2.Readers.clsRawDataPreprocessOptions FTICRPreprocessOptions
         {
             get { return mobj_fticr_preprocess_parameters; }
-
             set { mobj_fticr_preprocess_parameters = value; }
         }
 
@@ -174,7 +167,7 @@ namespace DeconToolsV2
             Engine.HornTransform.MassTransform mass_transform = null;
             Engine.Utilities.SavGolSmoother sgSmoother = null;
             Engine.Utilities.Interpolation interpolator = null;
-//      Engine.ResultChecker.LCMSCheckResults *lcms_checker = null;
+            //Engine.ResultChecker.LCMSCheckResults *lcms_checker = null;
             DeconToolsV2.Results.clsTransformResults transform_results = new DeconToolsV2.Results.clsTransformResults();
 
             try
@@ -291,28 +284,28 @@ namespace DeconToolsV2
                         transform_parameters.SGNumRight, transform_parameters.SGOrder);
                 }
 
-                int raw_data_read_time = 0;
-                int preprocessing_time = 0;
+                //int raw_data_read_time = 0;
+                //int preprocessing_time = 0;
                 int transform_time = 0;
                 double scan_time = 0;
-                double drift_time = 0;
+                //double drift_time = 0;
                 short scan_ms_level = 1;
 
-                int average_time = 0;
-                int current_time = 0;
-                int tic_time = 0;
-                int peak_discover_time = 0;
-                int peak_save_time = 0;
+                //int average_time = 0;
+                //int current_time = 0;
+                //int tic_time = 0;
+                //int peak_discover_time = 0;
+                //int peak_save_time = 0;
                 bool centroid = false;
 
                 //2009-04-03 [gord] will no longer use the SlidingWindow. It has litte speed benefit and there might be a bug
                 /*if (transform_parameters.SumSpectraAcrossScanRange())
-            {
-                if (file_type == DeconToolsV2.Readers.PNNL_UIMF)
-                    ((Engine.Readers.UIMFRawData *)raw_data).InitializeSlidingWindow(transform_parameters.NumScansToSumOver());
-                else if (file_type == DeconToolsV2.Readers.PNNL_IMS)
-                    ((Engine.Readers.IMSRawData *)raw_data).InitializeSlidingWindow(transform_parameters.NumScansToSumOver());
-            }*/
+                {
+                    if (file_type == DeconToolsV2.Readers.PNNL_UIMF)
+                        ((Engine.Readers.UIMFRawData *)raw_data).InitializeSlidingWindow(transform_parameters.NumScansToSumOver());
+                    else if (file_type == DeconToolsV2.Readers.PNNL_IMS)
+                        ((Engine.Readers.IMSRawData *)raw_data).InitializeSlidingWindow(transform_parameters.NumScansToSumOver());
+                }*/
 
                 for (int scan_num = min_scan;
                     scan_num <= max_scan && scan_num != -1;
@@ -597,7 +590,6 @@ namespace DeconToolsV2
                                         transformRecord.Mz + 2 * transformRecord.FWHM, out originalPeak);
                                     if (originalPeak.Intensity > 0)
                                     {
-                                        transformRecord.AbundanceInt = (int) originalPeak.Intensity;
                                         transformRecord.Abundance = originalPeak.Intensity;
                                         transformRecord.FWHM = originalPeak.FWHM;
                                         // [gord] this might be the source of why FWHM is sometimes 0
@@ -641,9 +633,10 @@ namespace DeconToolsV2
                             {
 #if DEBUG
                                 throw e;
-#endif
+#else
                                 Console.WriteLine(e.Message);
                                 Console.WriteLine(Convert.ToString(currentPeak.PeakIndex));
+#endif
                             }
                         }
                         lcms_results.AddTransforms(vect_transform_records);
@@ -652,8 +645,8 @@ namespace DeconToolsV2
                             //if (file_type != DeconToolsV2.Readers.PNNL_UIMF && scan_num % 20 == 0)
                         {
                             int iso_time = 0,
-                                spline_time = 0,
-                                ac_time = 0,
+                                //spline_time = 0,
+                                //ac_time = 0,
                                 fit_time = 0,
                                 cs_time = 0,
                                 get_fit_score_time = 0,
@@ -676,14 +669,14 @@ namespace DeconToolsV2
                                 " GetFitScore-Isotope-FitScore-FindPeak= ",
                                 Convert.ToString(get_fit_score_time - fit_time - find_peak_cached - find_peak_calc -
                                                  iso_time),
-//                          " Raw Reading Time = ", Convert.ToString(raw_data_read_time),
-//                          " PreProcessing Time = ", Convert.ToString(preprocessing_time),
+                                //" Raw Reading Time = ", Convert.ToString(raw_data_read_time),
+                                //" PreProcessing Time = ", Convert.ToString(preprocessing_time),
                                 " Transform= ", Convert.ToString(transform_time),
                                 " Remaining= ", Convert.ToString(remainder_time),
                                 " transform-cs-get_fit= ",
                                 Convert.ToString(transform_time - cs_time - get_fit_score_time),
                                 " All= ", Convert.ToString(all)
-//                          " all-transform-preprocess-read= ", Convert.ToString(all-transform_time-preprocessing_time-raw_data_read_time)
+                                //" all-transform-preprocess-read= ", Convert.ToString(all-transform_time-preprocessing_time-raw_data_read_time)
                             ));
                         }
                     }
@@ -791,12 +784,14 @@ namespace DeconToolsV2
                 output_file = mstr_file_name.Remove(dotIndex, mstr_file_name.Length - dotIndex);
             }
 
-            bool thresholded;
+            bool thresholded = true;
+            /*
             if (menm_file_type == DeconToolsV2.Readers.FileType.FINNIGAN ||
                 menm_file_type == DeconToolsV2.Readers.FileType.MZXMLRAWDATA)
                 thresholded = true;
             else
                 thresholded = mobj_peak_parameters.ThresholdedData;
+            */
 
             //Raw Object
             dta_processor.mobj_raw_data_dta =
@@ -906,7 +901,7 @@ namespace DeconToolsV2
             int msNScanIndex = 0;
             int num_scans;
             int parent_scan;
-            double parent_mz = 0;
+            //double parent_mz = 0;
             bool low_resolution = false;
             int scan_start = scan_num;
             int nextProgressScan = scan_start + 50;

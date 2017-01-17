@@ -79,6 +79,7 @@ namespace DeconToolsV2.HornTransform
         /// <seealso cref="SetPeakToZero" />
         private short _numPeaksForShoulder;
 
+        /*
         /// <summary>
         ///     If +2Da pair peaks should be reported for O18 labelling
         /// </summary>
@@ -90,6 +91,7 @@ namespace DeconToolsV2.HornTransform
         ///     the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
         /// </remarks>
         private bool _reportO18Plus2Da;
+        */
 
         private double _rightFitStringencyFactor;
         private clsHornTransformParameters _transformParameters = new clsHornTransformParameters();
@@ -110,7 +112,7 @@ namespace DeconToolsV2.HornTransform
             _checkO18Pairs = false;
             _chargeCarrierMass = 1.00727638;
             //Charge carrier mass = [atomic mass of hydrogen (1.007825) - atomic mass of an electron (0.00054858)]
-            _reportO18Plus2Da = false;
+            //_reportO18Plus2Da = false;
             DebugFlag = false;
             _numPeaksForShoulder = 1;
             _checkAgainstCharge1 = false;
@@ -121,7 +123,7 @@ namespace DeconToolsV2.HornTransform
 
         public clsHornTransformParameters TransformParameters
         {
-#if !Disable_Obsolete
+#if Enable_Obsolete
             //get { return _transform.TransformParameters; }
             //set
             //{
@@ -228,7 +230,7 @@ namespace DeconToolsV2.HornTransform
 
                 //--------------------- Transform performed ------------------------------
                 clsHornTransformResults transformRecord;
-#if !Disable_Obsolete
+#if Enable_Obsolete
                 //var foundTransform = _transform.FindTransform(peakData, ref currentPeak, out transformRecord,
                 //    backgroundIntensity);
 #endif
@@ -598,7 +600,7 @@ namespace DeconToolsV2.HornTransform
             }
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         //[Obsolete("MassTransform has been merged into this class", true)]
         //private readonly MassTransform _transform = new MassTransform();
 #endif

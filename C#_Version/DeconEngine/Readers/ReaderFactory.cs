@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using DeconToolsV2.Readers;
 
@@ -71,7 +71,7 @@ namespace Engine.Readers
                     finnigan_raw_data.Load(file_name);
                     return finnigan_raw_data;
 #endif
-                    break;
+                    //break;
                 case FileType.MICROMASSRAWDATA:
 #if MASSLYNX_4_INSTALLED
                     MicromassRawData micro_raw_data;
@@ -85,7 +85,7 @@ namespace Engine.Readers
                     mzxml_raw_data = new MZXmlRawData();
                     mzxml_raw_data.Load(file_name);
                     return mzxml_raw_data;
-                    break;
+                    //break;
                 case FileType.PNNL_IMS:
                     IMSRawData ims_raw_data;
                     ims_raw_data = new IMSRawData();
@@ -97,13 +97,13 @@ namespace Engine.Readers
                 //  uimf_raw_data = new UIMFRawData();
                 //  uimf_raw_data.Load(file_name);
                 //  return uimf_raw_data;
-                    break;
+                //    break;
                 /*case FileType.YAFMS:
                     YafmsRawData yafms_raw_data;
                     yafms_raw_data = new YafmsRawData();
                     yafms_raw_data.Load(file_name);
-                    return yafms_raw_data; */
-                    break;
+                    return yafms_raw_data;
+                    break; */
                 default:
                     break;
             }
@@ -130,7 +130,7 @@ namespace Engine.Readers
                     raw_data = new FinniganRawData();
                     return;
 #endif
-                    break;
+                    //break;
                 case FileType.SUNEXTREL:
                     raw_data = new SunExtrelRawData();
                     return;
@@ -148,7 +148,7 @@ namespace Engine.Readers
                 case FileType.MZXMLRAWDATA:
                     raw_data = new MZXmlRawData();
                     return;
-                    break;
+                    //break;
                 case FileType.PNNL_IMS:
                     raw_data = new IMSRawData();
                     return;
@@ -197,7 +197,7 @@ namespace Engine.Readers
                     finnigan_raw_data = new FinniganRawData();
                     return finnigan_raw_data;
 #endif
-                    break;
+                    //break;
                 case FileType.SUNEXTREL:
                     SunExtrelRawData sun_extrel_raw_data;
                     sun_extrel_raw_data = new SunExtrelRawData();
@@ -219,7 +219,7 @@ namespace Engine.Readers
                     MZXmlRawData mzxml_raw_data;
                     mzxml_raw_data = new MZXmlRawData();
                     return mzxml_raw_data;
-                    break;
+                    //break;
                 case FileType.PNNL_IMS:
                     IMSRawData ims_raw_data;
                     ims_raw_data = new IMSRawData();

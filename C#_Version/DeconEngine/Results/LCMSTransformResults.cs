@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +41,7 @@ namespace Engine.Results
         private bool _deisotoped;
         private string _fileName;
 
-        private int _isoBlockSize;
+        //private int _isoBlockSize;
 
         private Stream _isoFile;
         private int _lastScanAdded;
@@ -53,12 +53,12 @@ namespace Engine.Results
         // false.
         private int _numPeaksStored;
 
-        private int _peakBlockSize;
+        //private int _peakBlockSize;
         private Stream _peakFile;
 
         private bool _saveStructsInMemory;
-        private bool _saveUIMF;
-        private bool _sorted;
+        //private bool _saveUIMF;
+        //private bool _sorted;
         private string _tempIsoFilePath;
         private string _tempPeakFilePath;
         // Stores all the deisotoped patterns found in the lc ms experiment in memory blocks
@@ -75,7 +75,7 @@ namespace Engine.Results
         {
             _isoFile = null;
             _peakFile = null;
-            _saveUIMF = false;
+            //_saveUIMF = false;
             Reset();
             _saveStructsInMemory = false;
             _numPeaksStored = 0;
@@ -229,7 +229,7 @@ namespace Engine.Results
 
         private void Reset()
         {
-            _sorted = true;
+            //_sorted = true;
             _lastScanAdded = -1;
             _deisotoped = false;
             _minScan = int.MaxValue;
@@ -255,7 +255,7 @@ namespace Engine.Results
             _numPeaksStored = 0;
             _numIsoStored = 0;
             ClearPeaksAndIso();
-#if !Disable_Obsolete
+#if Enable_Obsolete
             _dataInMemoryIsIncomplete = false;
 #endif
         }
@@ -269,7 +269,7 @@ namespace Engine.Results
         public void AddInfoForUIMFScan(int scan, double bpMz, double bpIntensity, double tic, double signalRange,
             int numPeaks, int numDeisotoped, double time, short msLevel, double driftTime)
         {
-            _saveUIMF = true;
+            //_saveUIMF = true;
             var data = new ScanData
             {
                 ScanNum = scan,
@@ -444,8 +444,8 @@ namespace Engine.Results
                     // write from stored data in _transforms
                     foreach (var record in _transforms)
                     {
-                        fout.WriteLine("{0},{1},{2},{3:F4},{4:F4},{5:F4},{6:F4},{7:F4},{8:F4},{9:F2},{10},{11}",
-                            record.ScanNum, record.ChargeState, record.AbundanceInt, record.Mz, record.Fit,
+                        fout.WriteLine("{0},{1},{2:F0},{3:F4},{4:F4},{5:F4},{6:F4},{7:F4},{8:F4},{9:F2},{10},{11}",
+                            record.ScanNum, record.ChargeState, record.Abundance, record.Mz, record.Fit,
                             record.AverageMw, record.MonoMw, record.MostIntenseMw, record.FWHM, record.SignalToNoise,
                             record.MonoIntensity, record.MonoPlus2Intensity);
                     }
@@ -581,7 +581,7 @@ namespace Engine.Results
 
                 // how many peaks do we need to read ?
                 _numPeaksStored = fin.ReadInt32();
-                var numRead = 0;
+                //var numRead = 0;
 
                 var totalRead = 0;
                 while (totalRead < _numPeaksStored)
@@ -786,5 +786,4 @@ namespace Engine.Results
         }
     }
 }
-
 #endif

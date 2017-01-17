@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +19,7 @@ namespace Engine.Readers
         public static double MAX_MZ = 2000;
         private FileType menm_file_type;
 
-        protected Calibrations.Calibrator mobj_calibrator;
+        protected Calibrations.Calibrator mobj_calibrator = null;
 
         public const int MAX_SCAN_SIZE = 4 * 1024 * 1024;
         public abstract string GetFileName();
@@ -120,9 +120,8 @@ namespace Engine.Readers
             return Directory.Exists(path);
         }
 
-        public RawData()
+        protected RawData()
         {
-            mobj_calibrator = null;
         }
 
         public virtual void SetCalibrator(Calibrations.Calibrator calib)
@@ -151,7 +150,7 @@ namespace Engine.Readers
             {
                 System.Console.Error.WriteLine(scan);
                 throw new System.Exception("mz_vector empty in GetRawData in RawData.cpp");
-                return;
+                //return;
             }
             int startIndex = PeakIndex.GetNearestBinary(allMZs, min_mz, 0, numPts - 1);
             int stopIndex = PeakIndex.GetNearestBinary(allMZs, max_mz, 0, numPts - 1);
@@ -463,8 +462,9 @@ namespace Engine.Readers
                     intensities.Clear();
 #if DEBUG
                     throw e;
-#endif
+#else
                     return;
+#endif
                 }
             }
         }
@@ -517,15 +517,15 @@ namespace Engine.Readers
                     intensities.Clear();
 #if DEBUG
                     throw e;
-#endif
+#else
                     return;
+#endif
                 }
             }
         }
 
         protected virtual void GetSummedSpectra(out List<double> mzs, out List<double> intensities, int scan,
-            int scan_range,
-            double min_mz, double max_mz, double mz_bin)
+            int scan_range, double min_mz, double max_mz, double mz_bin)
         {
             mzs = new List<double>();
             intensities = new List<double>();
@@ -558,8 +558,9 @@ namespace Engine.Readers
                 intensities.Clear();
 #if DEBUG
                 throw e;
-#endif
+#else
                 return;
+#endif
             }
 
             // first read current scan and move to the left
@@ -661,8 +662,9 @@ namespace Engine.Readers
                 intensities.Clear();
 #if DEBUG
                 throw e;
-#endif
+#else
                 return;
+#endif
             }
         }
     }

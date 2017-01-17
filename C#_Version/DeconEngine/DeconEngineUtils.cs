@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,7 +100,7 @@ namespace DeconEngine
             if (numPts != 0)
             {
                 double sum = 0;
-                double STD_DEV = 0; // returning zero's
+                //double STD_DEV = 0; // returning zero's
 
                 for (int i = 0; i < numPts; i++)
                 {
@@ -127,7 +127,7 @@ namespace DeconEngine
             if (numPts != 0)
             {
                 double sum = 0;
-                double STD_DEV = 0; // returning zero's
+                //double STD_DEV = 0; // returning zero's
 
                 for (int i = 0; i < numPts; i++)
                 {
@@ -144,8 +144,7 @@ namespace DeconEngine
             return stdDev;
         }
 
-       
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        [Obsolete("Not accessed within DeconTools solution except through tests", false)]
         public static double GetAverage(float[] intensities, float maxIntensity)
         {
             var numPts = intensities.Length;
@@ -157,7 +156,6 @@ namespace DeconEngine
                 return 0;
 
             return filteredData.Average();
-
         }
 
         /// <summary>
@@ -178,7 +176,6 @@ namespace DeconEngine
                 return 0;
 
             return filteredData.Average();
-
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]

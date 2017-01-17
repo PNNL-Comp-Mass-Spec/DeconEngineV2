@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -29,14 +29,8 @@ using MSFileReaderLib;
 
 namespace Engine.Readers
 {
-    [Obsolete("Not used by DeconTools anymore - still exists in XCaliburRun, but that is Obsolete - do not use", false)]
     internal class FinniganRawData : RawData
     {
-        private struct DataPeak
-        {
-            double dMass;
-            double dIntensity;
-        }
 
         private string marr_rawfileName;
 
@@ -48,9 +42,9 @@ namespace Engine.Readers
         private double mdbl_last_scan_time;
         private double mdbl_signal_range;
 
-        private int mint_num_points_in_scan;
-        private int[] marr_data_block;
-        private float[] marr_temp_data_block;
+        //private int mint_num_points_in_scan;
+        //private int[] marr_data_block;
+        //private float[] marr_temp_data_block;
 
         private IXRawfile3 m_xraw2_class;
 
@@ -116,6 +110,7 @@ namespace Engine.Readers
                     return 0;
             }
 
+            /*
             var ch_num = filterString.IndexOf('@');
             if (ch_num == -1)
             {
@@ -150,6 +145,7 @@ namespace Engine.Readers
             //      if (strstr(filter_str, "ms2") != null)
             //          return 2;
             //      return 1;
+            */
         }
 
         ~FinniganRawData()
@@ -162,8 +158,8 @@ namespace Engine.Readers
         public FinniganRawData()
         {
             m_xraw2_class = null;
-            marr_data_block = null;
-            marr_temp_data_block = null;
+            //marr_data_block = null;
+            //marr_temp_data_block = null;
             mint_last_scan_size = 0;
             marr_rawfileName = "";
         }
@@ -243,7 +239,7 @@ namespace Engine.Readers
             if (err != 0)
             {
                 throw new System.Exception("Unable to get number of spectra from " + marr_rawfileName);
-                return 1;
+                //return 1;
             }
 
             return 0;
@@ -264,7 +260,7 @@ namespace Engine.Readers
             if (scan_num == mint_last_scan_num)
                 return mdbl_signal_range;
 
-            int lastWholeNumber = 0;
+            //int lastWholeNumber = 0;
             double signal_range = 0;
             object varMassList = null;
             object varPeakFlags = null;
@@ -455,10 +451,10 @@ namespace Engine.Readers
             //gets the filter string
             var filterString = GetScanFilterString(scan_num);
 
-            var intMatchTextLength = 0;
+            //var intMatchTextLength = 0;
 
             ms_level = 1;
-            var charIndex = 0;
+            //var charIndex = 0;
 
             var reMatchMS = mFindMS.Match(filterString);
 
@@ -693,7 +689,7 @@ namespace Engine.Readers
             intensities = new List<double>();
             mzs = new List<double>();
             mint_last_scan_num = scan_num;
-            int lastWholeNumber = 0;
+            //int lastWholeNumber = 0;
 
             object varMassList = null;
             object varPeakFlags = null;
@@ -847,7 +843,7 @@ namespace Engine.Readers
         ///  This was created for use in other programs that only need the parent ion m/z, and no other functions from ThermoRawFileReader.
         ///  Other projects that use this:
         ///       PHRPReader
-        /// 
+        ///
         ///  To copy this, take the code from this function, plus the regex strings <see cref="PARENTION_ONLY_NONMSX_REGEX"/> and <see cref="PARENTION_ONLY_MSX_REGEX"/>,
         ///  with their uses in <see cref="mFindParentIonOnlyNonMsx"/> and <see cref="mFindParentIonOnlyMsx"/>
         ///  </remarks>

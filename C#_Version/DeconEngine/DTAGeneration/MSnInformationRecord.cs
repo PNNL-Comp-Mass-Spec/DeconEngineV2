@@ -1,4 +1,4 @@
-﻿#if !Disable_Obsolete
+﻿#if Enable_Obsolete
 using System;
 
 namespace Engine.DTAProcessing

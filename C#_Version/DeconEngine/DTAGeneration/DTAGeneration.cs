@@ -1,4 +1,4 @@
-﻿#if !Disable_Obsolete
+﻿#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -35,7 +35,7 @@ namespace Engine.DTAProcessing
         private double mdbl_cc_mass;
         private double mdbl_min_fit_for_single_spectra;
 
-        private double mdbl_mono_mz_from_header;
+        //private double mdbl_mono_mz_from_header;
 
         private bool mbln_create_log_file_only;
         private bool mbln_create_composite_dta;
@@ -43,7 +43,7 @@ namespace Engine.DTAProcessing
 
         // Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
         //          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
-        //          Profile m/z         Centroid m/z	Delta_PPM
+        //			Profile m/z			Centroid m/z	Delta_PPM
         //			112.051 			112.077			232
         //			652.3752			652.4645		137
         //			1032.56495			1032.6863		118
@@ -302,8 +302,9 @@ namespace Engine.DTAProcessing
             {
 #if DEBUG
                 throw e;
-#endif
+#else
                 return false;
+#endif
             }
 
             //Not found any peaks
@@ -334,9 +335,9 @@ namespace Engine.DTAProcessing
             List<double> vect_intensities_full;
 
             //Settting to see if found_precursor worked
-            bool found_precursor = false;
-            if (mvect_transformRecords.Count > 0)
-                found_precursor = true;
+            //bool found_precursor = false;
+            //if (mvect_transformRecords.Count > 0)
+            //    found_precursor = true;
 
             //check to see if it is a MS scan i.e. to say perform summing only on MS scans
             if (!mobj_raw_data_dta.IsMSScan(parent_scan_number))
@@ -527,7 +528,7 @@ namespace Engine.DTAProcessing
                     else
                     {
                         // check to see if the mono is the parent here
-                        double mono_mz = (mobj_transformRecord.mdbl_mono_mw) / mobj_transformRecord.mshort_cs + mdbl_cc_mass;
+                        double mono_mz = (mobj_transformRecord.MonoMw) / mobj_transformRecord.ChargeState + mdbl_cc_mass;
                         if (Math.Abs(mono_mz - mdbl_parent_Mz) < 0.01)
                             mono_orig_intensity = (int)mdbl_parent_Intensity;
                         else
@@ -551,8 +552,9 @@ namespace Engine.DTAProcessing
             {
 #if DEBUG
                 throw e;
-#endif
+#else
                 return false;
+#endif
             }
         }
 
@@ -943,18 +945,18 @@ namespace Engine.DTAProcessing
 
                 if (IsZoomScan(parent_scan_number))
                 {
-                    mobj_transformRecord.mdbl_mz = mdbl_parent_Mz;
-                    mobj_transformRecord.mshort_cs = 2;
-                    mobj_transformRecord.mdbl_mono_mw = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs;
-                    mobj_transformRecord.mdbl_fit = 1;
-                    mobj_transformRecord.mint_mono_intensity = (int)mdbl_parent_Intensity;
+                    mobj_transformRecord.Mz = mdbl_parent_Mz;
+                    mobj_transformRecord.ChargeState = 2;
+                    mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) * mobj_transformRecord.ChargeState;
+                    mobj_transformRecord.Fit = 1;
+                    mobj_transformRecord.MonoIntensity = (int)mdbl_parent_Intensity;
                     mvect_transformRecords.Add(mobj_transformRecord);
 
-                    mobj_transformRecord.mdbl_mz = mdbl_parent_Mz;
-                    mobj_transformRecord.mshort_cs = 3;
-                    mobj_transformRecord.mdbl_mono_mw = (mobj_transformRecord.mdbl_mz - mdbl_cc_mass) * mobj_transformRecord.mshort_cs;
-                    mobj_transformRecord.mdbl_fit = 1;
-                    mobj_transformRecord.mint_mono_intensity = (int)mdbl_parent_Intensity;
+                    mobj_transformRecord.Mz = mdbl_parent_Mz;
+                    mobj_transformRecord.ChargeState = 3;
+                    mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) * mobj_transformRecord.ChargeState;
+                    mobj_transformRecord.Fit = 1;
+                    mobj_transformRecord.MonoIntensity = (int)mdbl_parent_Intensity;
                     mvect_transformRecords.Add(mobj_transformRecord);
                     //return true;
                 }
@@ -1050,7 +1052,7 @@ namespace Engine.DTAProcessing
         public void WriteToMGF(int msN_scan_num, int parent_scan_num)
         {
             //second line
-            double massplusH = 0;
+            //double massplusH = 0;
             int numTransforms = mvect_transformRecords.Count;
 
             //check size, else has failed params
@@ -1130,8 +1132,9 @@ namespace Engine.DTAProcessing
             {
 #if DEBUG
                 throw e;
-#endif
+#else
                 System.Console.Error.WriteLine("Error in creating .MGF");
+#endif
             }
         }
 
@@ -1165,7 +1168,7 @@ namespace Engine.DTAProcessing
             mobj_msn_record.mdbl_fit = mobj_transformRecord.Fit;
 
             mobj_msn_record.mint_parent_intensity = (int)mdbl_parent_Intensity;
-            if (mobj_transformRecord.mint_mono_intensity <= 0)
+            if (mobj_transformRecord.MonoIntensity <= 0)
                 mobj_msn_record.mint_mono_intensity = (int)mdbl_parent_Intensity;
             else
                 mobj_msn_record.mint_mono_intensity = mobj_transformRecord.MonoIntensity;
@@ -1291,7 +1294,7 @@ namespace Engine.DTAProcessing
                     }
                 }
 
-                if (mint_consider_charge != 0 && mobj_transformRecord.mshort_cs != mint_consider_charge)
+                if (mint_consider_charge != 0 && mobj_transformRecord.ChargeState != mint_consider_charge)
                 {
                     return;
                 }
@@ -1543,11 +1546,11 @@ namespace Engine.DTAProcessing
                     int cs = mvect_chargeStateList[chargeNum];
                     mobj_transformRecord.Mz = mdbl_parent_Mz;
 
-                    if (mdbl_parent_Mz == 0)
-                    {
-                        bool debug = true;
-                        debug = false;
-                    }
+                    //if (mdbl_parent_Mz == 0)
+                    //{
+                    //    bool debug = true;
+                    //    debug = false;
+                    //}
 
                     mobj_transformRecord.ChargeState = (short) cs;
                     mobj_transformRecord.MonoMw = (mobj_transformRecord.Mz - mdbl_cc_mass) *

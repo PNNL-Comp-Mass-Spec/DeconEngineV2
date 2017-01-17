@@ -1,5 +1,5 @@
 using System;
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using Engine.PeakProcessing;
 #endif
 
@@ -90,7 +90,7 @@ namespace DeconToolsV2.Peaks
             FWHM = fwhm;
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Replacing use of Peak class", false)]
         internal clsPeak(Peak pk)
         {
@@ -102,8 +102,8 @@ namespace DeconToolsV2.Peaks
             PeakIndex = pk.PeakIndex;
         }
 #endif
-        
-#if !Disable_Obsolete
+
+#if Enable_Obsolete
         /// <summary>
         ///     mz of the peak.
         /// </summary>
@@ -212,7 +212,7 @@ namespace DeconToolsV2.Peaks
                    PeakIndex + "\n";
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Unused - use the CompareTo functions.", true)]
         public static bool PeakIntensityComparison(clsPeak pk1, clsPeak pk2)
         {

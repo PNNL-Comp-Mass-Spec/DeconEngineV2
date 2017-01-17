@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -194,22 +194,16 @@ namespace DeconToolsV2.DTAGeneration
                 {
                     case OUTPUT_TYPE.DTA:
                         return "DTA files";
-                        break;
                     case OUTPUT_TYPE.MGF:
                         return "MGF file";
-                        break;
                     case OUTPUT_TYPE.LOG:
                         return "Log file only";
-                        break;
                     case OUTPUT_TYPE.CDTA:
                         return "CDTA (_dta.txt)";
-                        break;
                     case OUTPUT_TYPE.MZXML:
                         return "MzXML";
-                        break;
                     default:
                         return "Unknown";
-                        break;
                 }
             }
         }

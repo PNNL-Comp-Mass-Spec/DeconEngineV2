@@ -1,4 +1,4 @@
-﻿#if !Disable_Obsolete
+﻿#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -154,7 +154,7 @@ namespace Engine.ChargeDetermination
             int parentScan)
         {
             int numPeaks = mzs.Count;
-            double noLoss = 0;
+            //double noLoss = 0;
             double parent_mz = parentPeak.Mz;
             double temp1 = 0;
             double temp2 = 0;
@@ -1297,9 +1297,11 @@ namespace Engine.ChargeDetermination
         private void ReadXmlFromStream(Stream stream)
         {
 
+            // ReSharper disable once NotAccessedVariable
             int weight_count = 0;
-            int feature_count = 0;
+            //int feature_count = 0;
             int support_count = 0;
+            // ReSharper enable NotAccessedVariable
 
             /* Format
              * <SVMParams>

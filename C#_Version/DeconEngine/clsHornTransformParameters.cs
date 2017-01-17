@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace DeconToolsV2.HornTransform
 {
-#if !Disable_Obsolete
+#if Enable_Obsolete
     [Obsolete("Only used by OldDeconToolsParameters", false)]
     public enum enmExportFileType
     {
@@ -14,7 +14,7 @@ namespace DeconToolsV2.HornTransform
 
     public class clsHornTransformParameters : ICloneable
     {
-#if !Disable_Obsolete
+#if Enable_Obsolete
         private static string DEFAULT_ISOTOPE_FILE = "isotope.xml";
 #endif
 
@@ -65,7 +65,7 @@ namespace DeconToolsV2.HornTransform
             RightFitStringencyFactor = 1;
             UseRAPIDDeconvolution = false;
             ReplaceRAPIDScoreWithHornFitScore = false;
-#if !Disable_Obsolete
+#if Enable_Obsolete
             ExportFileType = enmExportFileType.TEXT;
 #endif
             NumPeaksUsedInAbundance = 1;
@@ -135,8 +135,8 @@ namespace DeconToolsV2.HornTransform
         public double AbsolutePeptideIntensity { get; set; }
         public bool UseRAPIDDeconvolution { get; set; }
         public bool ReplaceRAPIDScoreWithHornFitScore { get; set; }
-        
-#if !Disable_Obsolete
+
+#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public enmExportFileType ExportFileType { get; set; }
 #endif
@@ -202,7 +202,7 @@ namespace DeconToolsV2.HornTransform
             newParams.RightFitStringencyFactor = RightFitStringencyFactor;
             newParams.UseRAPIDDeconvolution = UseRAPIDDeconvolution;
             newParams.ReplaceRAPIDScoreWithHornFitScore = ReplaceRAPIDScoreWithHornFitScore;
-#if !Disable_Obsolete
+#if Enable_Obsolete
             newParams.ExportFileType = ExportFileType;
 #endif
             newParams.NumPeaksUsedInAbundance = NumPeaksUsedInAbundance;
@@ -213,8 +213,8 @@ namespace DeconToolsV2.HornTransform
 
             return newParams;
         }
-        
-#if !Disable_Obsolete
+
+#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void SaveV1HornTransformParameters(XmlTextWriter xwriter)
         {
@@ -303,7 +303,7 @@ namespace DeconToolsV2.HornTransform
         }
 #endif
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void SaveV1MiscellaneousParameters(XmlTextWriter xwriter)
         {
@@ -362,7 +362,7 @@ namespace DeconToolsV2.HornTransform
         }
 #endif
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void LoadV1HornTransformParameters(XmlReader rdr)
         {
@@ -916,7 +916,7 @@ namespace DeconToolsV2.HornTransform
         }
 #endif
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void LoadV1MiscellaneousParameters(XmlReader rdr)
         {

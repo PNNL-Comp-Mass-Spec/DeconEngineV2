@@ -71,7 +71,7 @@ namespace Engine.TheoreticalProfile
             MercurySize = 8192;
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Not used anywhere", true)]
         public MercuryIsotopeDistribution(string isotopeFileName)
         {

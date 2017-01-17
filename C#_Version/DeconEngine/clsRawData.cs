@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +20,7 @@ namespace DeconToolsV2.Readers
         UNDEFINED
     }
 
+#if Enable_Obsolete
     [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     public class clsRawData
     {
@@ -503,5 +503,5 @@ namespace DeconToolsV2.Readers
             }
         }*/
     }
-}
 #endif
+}

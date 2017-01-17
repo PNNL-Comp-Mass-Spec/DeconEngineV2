@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.IO;
 using DeconToolsV2.HornTransform;
@@ -157,7 +157,7 @@ namespace Engine.HornTransform
             PeakIndex = a.PeakIndex;
             ScanNum = a.ScanNum;
             ChargeState = a.ChargeState;
-            AbundanceInt = a.AbundanceInt;
+            //AbundanceInt = a.AbundanceInt;
             Abundance = a.Abundance;
             Mz = a.Mz;
             Fit = a.Fit;

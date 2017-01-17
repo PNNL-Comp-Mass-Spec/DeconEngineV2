@@ -130,7 +130,7 @@ namespace Engine.PeakProcessing
             _peakFit.SetOptions(type);
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         /// <summary>
         ///     sets the type of profile
         /// </summary>
@@ -324,7 +324,7 @@ namespace Engine.PeakProcessing
             clsPeak thisPeak;
             double score;
 
-            selectedPeak.mdbl_mz = 0.0;
+            selectedPeak.Mz = 0.0;
 
             try
             {
@@ -337,7 +337,7 @@ namespace Engine.PeakProcessing
                 {
                     mid = (low + high) / 2;
                     thisPeak =  new clsPeak(PeakData.PeakTops[mid]);
-                    score = (peakMz - thisPeak.mdbl_mz) * (peakMz - thisPeak.mdbl_mz);
+                    score = (peakMz - thisPeak.Mz) * (peakMz - thisPeak.Mz);
                     if (score <= min_score)
                     {
 
@@ -353,7 +353,7 @@ namespace Engine.PeakProcessing
                         while (score <= min_score && (mid - 1) >= 0)
                         {
                             thisPeak = new clsPeak(PeakData.PeakTops[mid - 1]);
-                            score = (peakMz - thisPeak.mdbl_mz) * (peakMz - thisPeak.mdbl_mz);
+                            score = (peakMz - thisPeak.Mz) * (peakMz - thisPeak.Mz);
                             if (score < min_score)
                             {
                                 selectedPeak = thisPeak;
@@ -378,7 +378,7 @@ namespace Engine.PeakProcessing
             {
             }
 
-            return selectedPeak.mdbl_mz;
+            return selectedPeak.Mz;
         }
 
         /// <summary>
@@ -456,14 +456,14 @@ namespace Engine.PeakProcessing
             {
                 clsPeak peak;
                 PeakData.GetPeak(i, out peak);
-                vect_intensity.Add(peak.mdbl_intensity);
-                vect_mz.Add(peak.mdbl_mz);
+                vect_intensity.Add(peak.Intensity);
+                vect_mz.Add(peak.Mz);
             }
 
             return false;
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         /// <summary>
         ///     Function discovers the most intense peak in the m/z and intensity vectors supplied within the supplied m/z window.
         /// </summary>

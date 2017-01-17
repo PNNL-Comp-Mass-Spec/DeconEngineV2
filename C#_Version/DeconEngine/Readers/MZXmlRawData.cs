@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2.Readers;
@@ -167,7 +167,7 @@ namespace Engine.Readers
             return !scanData.Centroided;
 
             //default
-            return true;
+            //return true;
         }
 
         public override int GetMSLevel(int scan_num)

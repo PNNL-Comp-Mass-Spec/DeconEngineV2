@@ -19,7 +19,7 @@ namespace DeconMSn
 
             string strAppFolder;
             string strSVMParamFilePath;
-            string strDllFileAndPath;
+            //string strDllFileAndPath;
 
             strAppFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             strSVMParamFilePath = Path.Combine(strAppFolder, "svm_params.xml");
@@ -44,7 +44,7 @@ namespace DeconMSn
             string stringBvalue;
             string stringTvalue;
             string stringCvalue;
-            string stringFileName;
+            //string stringFileName;
             string stringOutputFileFormat;
             string stringSpectraFormat;
             string stringParamFile;

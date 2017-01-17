@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -435,8 +435,9 @@ namespace Engine.Utilities
             {
 #if DEBUG
                 throw e;
-#endif
+#else
                 return 0;
+#endif
             }
         }
     }
