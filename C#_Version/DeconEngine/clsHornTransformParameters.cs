@@ -18,7 +18,7 @@ namespace DeconToolsV2.HornTransform
         private static string DEFAULT_ISOTOPE_FILE = "isotope.xml";
 #endif
 
-        private clsElementIsotopes _elementIsotopes;
+        private clsElementIsotopes _elementIsotopes = new clsElementIsotopes();
 
         public clsHornTransformParameters()
         {
@@ -38,7 +38,6 @@ namespace DeconToolsV2.HornTransform
             ThrashOrNot = true;
             CompleteFit = false;
             UseMercuryCaching = true;
-            _elementIsotopes = new clsElementIsotopes();
             UseMZRange = true;
             MinMZ = 400;
             MaxMZ = 2000;
@@ -97,23 +96,74 @@ namespace DeconToolsV2.HornTransform
         public bool UseMZRange { get; set; }
         public double MinMZ { get; set; }
         public double MaxMZ { get; set; }
+
+        /// <summary>
+        /// maximum charge to check while deisotoping
+        /// </summary>
         public short MaxCharge { get; set; }
+
+        /// <summary>
+        /// minimum signal to noise for a peak to consider it for deisotoping.
+        /// </summary>
         public double MinS2N { get; set; }
         public double PeptideMinBackgroundRatio { get; set; }
+
+        /// <summary>
+        /// Number of peaks from the monoisotope before the shoulder
+        /// </summary>
+        /// <remarks>
+        /// After deisotoping is performed, we delete points corresponding to the isotopic profile, To do so, we move
+        /// to the left and right of each isotope peak and delete points till the shoulder of the peak is reached. To
+        /// decide if the current point is a shoulder, we check if the next (_numPeaksForShoulder) # of
+        /// points are of continuously increasing intensity.
+        /// </remarks>
+        /// <seealso cref="clsHornTransform.SetPeakToZero" />
         public short NumPeaksForShoulder { get; set; }
+
+        /// <summary>
+        /// maximium MW for deisotoping
+        /// </summary>
         public double MaxMW { get; set; }
+
+        /// <summary>
+        /// maximum fit value to report a deisotoped peak
+        /// </summary>
         public double MaxFit { get; set; }
+
+        /// <summary>
+        /// mass of charge carrier
+        /// </summary>
         public double CCMass { get; set; }
+
+        /// <summary>
+        /// After deisotoping is done, we delete the isotopic profile.  This threshold sets the value of the minimum
+        /// intensity of a peak to delete. Note that ths intensity is in the theoretical profile which is scaled to
+        /// where the maximum peak has an intensity of 100.
+        /// </summary>
+        /// <seealso cref="Engine.HornTransform.IsotopicProfileFitScorer.GetZeroingMassRange" />
         public double DeleteIntensityThreshold { get; set; }
         public bool ZeroFill { get; set; }
         public short NumZerosToFill { get; set; }
+
+        /// <summary>
+        /// minimum intensity of a point in the theoretical profile of a peptide for it to be considered in scoring.
+        /// </summary>
+        /// <seealso cref="Engine.HornTransform.IsotopicProfileFitScorer.GetIsotopeDistribution" />
         public double MinIntensityForScore { get; set; }
+
+        /// <summary>
+        /// Is the medium a mixture of O16 and O18 labelled peptides.
+        /// </summary>
         public bool O16O18Media { get; set; }
         public string AveragineFormula { get; set; }
         public string TagFormula { get; set; }
         public bool ThrashOrNot { get; set; }
         public bool CompleteFit { get; set; }
         public bool ProcessMSMS { get; set; }
+
+        /// <summary>
+        /// Check feature against charge 1.
+        /// </summary>
         public bool CheckAllPatternsAgainstCharge1 { get; set; }
 
         public clsElementIsotopes ElementIsotopeComposition

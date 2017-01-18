@@ -22,10 +22,16 @@ namespace Engine.HornTransform
         private bool _lastValueWasCached;
 
         protected clsAveragine AveragineObj = new clsAveragine();
-        // mass of the charge carrier.
-        protected double ChargeCarrierMass;
-        // flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
-        protected bool CompleteFitThrash;
+
+        /// <summary>
+        /// mass of the charge carrier.
+        /// </summary>
+        public double ChargeCarrierMass { get; set; }
+
+        /// <summary>
+        /// flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
+        /// </summary>
+        public bool CompleteFitThrash { get; set; }
 
         /// <summary>
         ///     this variable helps keep track of the last intensity value at the lower m/z which we looked at with the function
@@ -66,12 +72,20 @@ namespace Engine.HornTransform
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Mz2;
 
-        // List to store intensities from the theoretical distribution. Corresponding mzs are stored in IsotopeFit.mvect_distribution_intensities
+        /// <summary>
+        /// List to store intensities from the theoretical distribution. Corresponding mzs are stored in IsotopeFit.mvect_distribution_intensities
+        /// </summary>
         protected List<double> TheoreticalDistIntensities = new List<double>();
-        // List to store m/z values from the theoretical distribution. Corresponding intensities are stored in IsotopeFit.mvect_distribution_intensities
+
+        /// <summary>
+        /// List to store m/z values from the theoretical distribution. Corresponding intensities are stored in IsotopeFit.mvect_distribution_intensities
+        /// </summary>
         protected List<double> TheoreticalDistMzs = new List<double>();
-        // flag to control thrashing about the most intense peak. See details of THRASH algorithm by Horn et. al.
-        protected bool UseThrash;
+
+        /// <summary>
+        /// flag to control thrashing about the most intense peak. See details of THRASH algorithm by Horn et. al.
+        /// </summary>
+        public bool UseThrash { get; set; }
 
         // default constructor.
         protected IsotopicProfileFitScorer()

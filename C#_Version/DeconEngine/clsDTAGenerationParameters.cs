@@ -23,172 +23,83 @@ namespace DeconToolsV2.DTAGeneration
 
     public class clsDTAGenerationParameters : System.ICloneable
     {
-        private int mint_min_ion_count;
-        private int mint_min_scan;
-        private int mint_max_scan;
-        private double mdbl_min_mass;
-        private double mdbl_max_mass;
-        private int mint_consider_charge;
-        private int mint_window_size_to_check;
-        private double mdbl_cc_mass;
-        private string mstr_svm_file_name;
-
-        private bool mbln_is_profile_data_for_mzXML;
-        private bool mbln_consider_multiple_precursors;
-        private bool mbln_centroid_msn;
-
-        private bool mbln_write_progress_file;
-        private bool mbln_ignore_msn_scans;
-        private int mint_num_msn_levels_to_ignore;
-
-        private List<int> mvect_msn_levels_to_ignore;
-
-        private int mint_isolation_window_size;
-
-        private OUTPUT_TYPE menm_output_type;
-        private SPECTRA_TYPE menm_spectra_type;
+        private readonly List<int> _msnLevelsToIgnore = new List<int>();
 
         [Obsolete("Only used by Decon2LS.UI", false)]
         public virtual Object Clone()
         {
-            clsDTAGenerationParameters new_params = new clsDTAGenerationParameters();
+            clsDTAGenerationParameters newParams = new clsDTAGenerationParameters();
 
-            new_params.CCMass = this.CCMass;
-            new_params.ConsiderChargeValue = this.ConsiderChargeValue;
-            new_params.MaxMass = this.MaxMass;
-            new_params.MaxScan = (int) this.MaxScan;
-            new_params.MinMass = this.MinMass;
-            new_params.MinScan = (int) this.MinMass;
-            new_params.WindowSizetoCheck = this.WindowSizetoCheck;
-            new_params.MinIonCount = this.MinIonCount;
-            new_params.OutputType = this.OutputType;
-            new_params.SpectraType = this.SpectraType;
-            new_params.SVMParamFile = this.mstr_svm_file_name;
-            new_params.ConsiderMultiplePrecursors = this.ConsiderMultiplePrecursors;
-            new_params.CentroidMSn = this.CentroidMSn;
-            new_params.IsolationWindowSize = this.IsolationWindowSize;
-            new_params.IsProfileDataForMzXML = this.IsProfileDataForMzXML;
-            new_params.WriteProgressFile = this.WriteProgressFile;
-            new_params.IgnoreMSnScans = this.IgnoreMSnScans;
-            new_params.NumMSnLevelsToIgnore = this.NumMSnLevelsToIgnore;
+            newParams.CCMass = this.CCMass;
+            newParams.ConsiderChargeValue = this.ConsiderChargeValue;
+            newParams.MaxMass = this.MaxMass;
+            newParams.MaxScan = this.MaxScan;
+            newParams.MinMass = this.MinMass;
+            newParams.MinScan = (int) this.MinMass;
+            newParams.WindowSizetoCheck = this.WindowSizetoCheck;
+            newParams.MinIonCount = this.MinIonCount;
+            newParams.OutputType = this.OutputType;
+            newParams.SpectraType = this.SpectraType;
+            newParams.SVMParamFile = this.SVMParamFile;
+            newParams.ConsiderMultiplePrecursors = this.ConsiderMultiplePrecursors;
+            newParams.CentroidMSn = this.CentroidMSn;
+            newParams.IsolationWindowSize = this.IsolationWindowSize;
+            newParams.IsProfileDataForMzXML = this.IsProfileDataForMzXML;
+            newParams.WriteProgressFile = this.WriteProgressFile;
+            newParams.IgnoreMSnScans = this.IgnoreMSnScans;
+            newParams.NumMSnLevelsToIgnore = this.NumMSnLevelsToIgnore;
 
-            return new_params;
+            return newParams;
         }
 
         public int get_MSnLevelToIgnore(int index)
         {
-            return mvect_msn_levels_to_ignore[index];
+            return _msnLevelsToIgnore[index];
         }
 
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void set_MSnLevelToIgnore(int value)
         {
-            mvect_msn_levels_to_ignore.Add(value);
+            _msnLevelsToIgnore.Add(value);
         }
 
-        public bool IgnoreMSnScans
-        {
-            get { return mbln_ignore_msn_scans; }
-            set { mbln_ignore_msn_scans = value; }
-        }
+        public bool IgnoreMSnScans { get; set; }
 
-        public int NumMSnLevelsToIgnore
-        {
-            get { return mint_num_msn_levels_to_ignore; }
-            set { mint_num_msn_levels_to_ignore = value; }
-        }
+        public int NumMSnLevelsToIgnore { get; set; }
 
-        public bool IsProfileDataForMzXML
-        {
-            get { return mbln_is_profile_data_for_mzXML; }
-            set { mbln_is_profile_data_for_mzXML = value; }
-        }
+        public bool IsProfileDataForMzXML { get; set; }
 
-        public int MinScan
-        {
-            get { return mint_min_scan; }
-            set { mint_min_scan = value; }
-        }
+        public int MinScan { get; set; }
 
-        public int MinIonCount
-        {
-            get { return mint_min_ion_count; }
-            set { mint_min_ion_count = value; }
-        }
+        public int MinIonCount { get; set; }
 
-        public int MaxScan
-        {
-            get { return mint_max_scan; }
-            set { mint_max_scan = value; }
-        }
+        public int MaxScan { get; set; }
 
-        public double MinMass
-        {
-            get { return mdbl_min_mass; }
-            set { mdbl_min_mass = value; }
-        }
+        public double MinMass { get; set; }
 
-        public double MaxMass
-        {
-            get { return mdbl_max_mass; }
-            set { mdbl_max_mass = value; }
-        }
+        public double MaxMass { get; set; }
 
-        public string SVMParamFile
-        {
-            get { return mstr_svm_file_name; }
-            set { mstr_svm_file_name = value; }
-        }
+        public string SVMParamFile { get; set; }
 
-        public bool ConsiderMultiplePrecursors
-        {
-            get { return mbln_consider_multiple_precursors; }
-            set { mbln_consider_multiple_precursors = value; }
-        }
+        public bool ConsiderMultiplePrecursors { get; set; }
 
-        // Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
-        // See the definition of mbln_centroid_msn for an example
-        public bool CentroidMSn
-        {
-            get { return mbln_centroid_msn; }
-            set { mbln_centroid_msn = value; }
-        }
+        public bool CentroidMSn { get; set; }
 
-        public int IsolationWindowSize
-        {
-            get { return mint_isolation_window_size; }
-            set { mint_isolation_window_size = value; }
-        }
+        public int IsolationWindowSize { get; set; }
 
-        public int ConsiderChargeValue
-        {
-            get { return mint_consider_charge; }
-            set { mint_consider_charge = value; }
-        }
+        public int ConsiderChargeValue { get; set; }
 
-        public double CCMass
-        {
-            get { return mdbl_cc_mass; }
-            set { mdbl_cc_mass = value; }
-        }
+        public double CCMass { get; set; }
 
-        public int WindowSizetoCheck
-        {
-            get { return mint_window_size_to_check; }
-            set { mint_window_size_to_check = value; }
-        }
+        public int WindowSizetoCheck { get; set; }
 
-        public bool WriteProgressFile
-        {
-            get { return mbln_write_progress_file; }
-            set { mbln_write_progress_file = value; }
-        }
+        public bool WriteProgressFile { get; set; }
 
         public string OutputTypeName
         {
             get
             {
-                switch (menm_output_type)
+                switch (OutputType)
                 {
                     case OUTPUT_TYPE.DTA:
                         return "DTA files";
@@ -206,39 +117,30 @@ namespace DeconToolsV2.DTAGeneration
             }
         }
 
-        public OUTPUT_TYPE OutputType
-        {
-            get { return menm_output_type; }
-            set { menm_output_type = value; }
-        }
+        public OUTPUT_TYPE OutputType { get; set; }
 
-        public SPECTRA_TYPE SpectraType
-        {
-            get { return menm_spectra_type; }
-            set { menm_spectra_type = value; }
-        }
+        public SPECTRA_TYPE SpectraType { get; set; }
 
         public clsDTAGenerationParameters()
         {
-            mint_min_ion_count = 35;
-            mint_min_scan = 1;
-            mint_max_scan = 1000000;
-            mint_consider_charge = 0;
-            mint_window_size_to_check = 5;
-            mdbl_min_mass = 200;
-            mdbl_max_mass = 5000;
-            mdbl_cc_mass = 1.00727638;
-            menm_output_type = OUTPUT_TYPE.CDTA;
-            menm_output_type = OUTPUT_TYPE.DTA;
-            mstr_svm_file_name = "svm_params.xml";
-            mbln_consider_multiple_precursors = false;
-            mbln_centroid_msn = true;
-            mint_isolation_window_size = 3;
-            mbln_is_profile_data_for_mzXML = false;
-            mbln_write_progress_file = false;
-            mbln_ignore_msn_scans = false;
-            mint_num_msn_levels_to_ignore = 0;
-            mvect_msn_levels_to_ignore = new List<int>();
+            MinIonCount = 35;
+            MinScan = 1;
+            MaxScan = 1000000;
+            ConsiderChargeValue = 0;
+            WindowSizetoCheck = 5;
+            MinMass = 200;
+            MaxMass = 5000;
+            CCMass = 1.00727638;
+            OutputType = OUTPUT_TYPE.CDTA;
+            OutputType = OUTPUT_TYPE.DTA;
+            SVMParamFile = "svm_params.xml";
+            ConsiderMultiplePrecursors = false;
+            CentroidMSn = true;
+            IsolationWindowSize = 3;
+            IsProfileDataForMzXML = false;
+            WriteProgressFile = false;
+            IgnoreMSnScans = false;
+            NumMSnLevelsToIgnore = 0;
         }
 
         /*  void clsDTAGenerationParameters.GetMSnLevelToIgnore(ref int[] msnLevelsToIgnore)
@@ -248,11 +150,12 @@ namespace DeconToolsV2.DTAGeneration
 
             for (int levelNum = 0; levelNum < numLevels; levelNum++)
             {
-                int level = mvect_msn_levels_to_ignore[levelNum];
+                int level = _msnLevelsToIgnore[levelNum];
                 msnLevelsToIgnore[levelNum] = level;
             }
         }*/
 
+#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SaveV1DTAGenerationParameters(System.Xml.XmlTextWriter xwriter)
         {
@@ -313,16 +216,15 @@ namespace DeconToolsV2.DTAGeneration
                 int numLevels = this.NumMSnLevelsToIgnore;
                 for (int levelNum = 0; levelNum < numLevels; levelNum++)
                 {
-                    int level = mvect_msn_levels_to_ignore[levelNum];
+                    int level = _msnLevelsToIgnore[levelNum];
                     xwriter.WriteWhitespace("\n\t\t");
                     xwriter.WriteElementString("MSnLevelToIgnore", System.Convert.ToString(level));
-
                 }
             }
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
-
         }
+#endif
 
         public void LoadV1DTAGenerationParameters(System.Xml.XmlReader rdr)
         {
@@ -497,9 +399,9 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            mint_num_msn_levels_to_ignore++;
+                            NumMSnLevelsToIgnore++;
                             int level = short.Parse(rdr.Value);
-                            mvect_msn_levels_to_ignore.Add(level);
+                            _msnLevelsToIgnore.Add(level);
                         }
                         else if (rdr.Name.Equals("CCMass"))
                         {
@@ -541,21 +443,22 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.DTA.ToString()))
+                            // TODO: can probably use Enum.TryParse()...
+                            if (rdr.Value.Equals(OUTPUT_TYPE.DTA.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.DTA;
+                                this.OutputType = OUTPUT_TYPE.DTA;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG.ToString()))
+                            else if (rdr.Value.Equals(OUTPUT_TYPE.LOG.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG;
+                                this.OutputType = OUTPUT_TYPE.LOG;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA.ToString()))
+                            else if (rdr.Value.Equals(OUTPUT_TYPE.CDTA.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA;
+                                this.OutputType = OUTPUT_TYPE.CDTA;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF.ToString()))
+                            else if (rdr.Value.Equals(OUTPUT_TYPE.MGF.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF;
+                                this.OutputType = OUTPUT_TYPE.MGF;
                             }
                         }
                         break;

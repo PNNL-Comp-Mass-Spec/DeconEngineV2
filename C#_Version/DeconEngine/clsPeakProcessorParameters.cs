@@ -15,65 +15,49 @@ namespace DeconToolsV2.Peaks
 
     public class clsPeakProcessorParameters : System.ICloneable
     {
-        private double mdbl_SNThreshold;
-        private double mdbl_PeakBackgroundRatio;
-        private bool mbln_thresholded_data;
-        private PEAK_FIT_TYPE menm_FitType;
-        private bool mbln_writePeaksToTextFile;
-
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public virtual Object Clone()
         {
-            clsPeakProcessorParameters new_params = new clsPeakProcessorParameters(mdbl_SNThreshold,
-                mdbl_PeakBackgroundRatio, mbln_thresholded_data, menm_FitType);
-            return new_params;
+            clsPeakProcessorParameters newParams = new clsPeakProcessorParameters
+            {
+                SignalToNoiseThreshold = this.SignalToNoiseThreshold,
+                PeakBackgroundRatio = this.PeakBackgroundRatio,
+                PeakFitType = this.PeakFitType,
+            };
+#if Enable_Obsolete
+            newParams.ThresholdedData = ThresholdedData;
+#endif
+            return newParams;
         }
 
+#if Enable_Obsolete
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
-        public bool ThresholdedData
-        {
-            get { return mbln_thresholded_data; }
-            set { mbln_thresholded_data = value; }
-        }
+        public bool ThresholdedData { get; set; }
+#endif
 
-        public double PeakBackgroundRatio
-        {
-            get { return mdbl_PeakBackgroundRatio; }
-            set { mdbl_PeakBackgroundRatio = value; }
-        }
+        public double PeakBackgroundRatio { get; set; }
 
-        public double SignalToNoiseThreshold
-        {
-            get { return mdbl_SNThreshold; }
-            set { mdbl_SNThreshold = value; }
-        }
+        public double SignalToNoiseThreshold { get; set; }
 
-        public PEAK_FIT_TYPE PeakFitType
-        {
-            get { return menm_FitType; }
-            set { menm_FitType = value; }
-        }
+        public PEAK_FIT_TYPE PeakFitType { get; set; }
 
-        public bool WritePeaksToTextFile
-        {
-            get { return mbln_writePeaksToTextFile; }
-            set { mbln_writePeaksToTextFile = value; }
-        }
+        public bool WritePeaksToTextFile { get; set; }
 
         public clsPeakProcessorParameters()
         {
-            mdbl_SNThreshold = 3.0;
-            mdbl_PeakBackgroundRatio = 5.0;
-            menm_FitType = PEAK_FIT_TYPE.QUADRATIC;
+            SignalToNoiseThreshold = 3.0;
+            PeakBackgroundRatio = 5.0;
+            PeakFitType = PEAK_FIT_TYPE.QUADRATIC;
         }
 
+#if Enable_Obsolete
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public clsPeakProcessorParameters(double sn, double peak_bg_ratio, bool thresholded_data, PEAK_FIT_TYPE fit_type)
         {
-            mdbl_SNThreshold = sn;
-            mdbl_PeakBackgroundRatio = peak_bg_ratio;
-            menm_FitType = fit_type;
-            mbln_thresholded_data = thresholded_data;
+            SignalToNoiseThreshold = sn;
+            PeakBackgroundRatio = peak_bg_ratio;
+            PeakFitType = fit_type;
+            ThresholdedData = thresholded_data;
         }
 
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
@@ -94,6 +78,7 @@ namespace DeconToolsV2.Peaks
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
         }
+#endif
 
         public void LoadV1PeakParameters(XmlReader rdr)
         {

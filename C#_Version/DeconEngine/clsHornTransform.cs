@@ -126,14 +126,6 @@ namespace DeconToolsV2.HornTransform
         /// </summary>
         public clsHornTransformParameters TransformParameters
         {
-#if Enable_Obsolete
-            //get { return _transform.TransformParameters; }
-            //set
-            //{
-            //    _transformParameters = (clsHornTransformParameters) value.Clone();
-            //    _transform.TransformParameters = value;
-            //}
-#endif
             get { return _transformParameters; }
             set
             {
@@ -233,10 +225,6 @@ namespace DeconToolsV2.HornTransform
 
                 //--------------------- Transform performed ------------------------------
                 clsHornTransformResults transformRecord;
-#if Enable_Obsolete
-                //var foundTransform = _transform.FindTransform(peakData, ref currentPeak, out transformRecord,
-                //    backgroundIntensity);
-#endif
                 var foundTransform = FindTransform(peakData, ref currentPeak, out transformRecord, backgroundIntensity);
                 if (foundTransform && transformRecord.ChargeState <= _transformParameters.MaxCharge)
                 {
@@ -594,18 +582,5 @@ namespace DeconToolsV2.HornTransform
                 lastIntensity = thisIntensity;
             }
         }
-
-        public void Reset()
-        {
-            if (_isotopeFitScorer != null)
-            {
-                _isotopeFitScorer.Reset();
-            }
-        }
-
-#if Enable_Obsolete
-        //[Obsolete("MassTransform has been merged into this class", true)]
-        //private readonly MassTransform _transform = new MassTransform();
-#endif
     }
 }
