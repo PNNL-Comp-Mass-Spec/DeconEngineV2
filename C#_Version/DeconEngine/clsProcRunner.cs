@@ -902,16 +902,7 @@ namespace DeconToolsV2
                 mobj_dta_generation_parameters.IsProfileDataForMzXML);
             dta_processor.SetPeakProcessorOptions(mobj_peak_parameters.SignalToNoiseThreshold, 0, thresholded,
                 (Engine.PeakProcessing.PeakFitType) mobj_peak_parameters.PeakFitType);
-            dta_processor.SetMassTransformOptions(mobj_transform_parameters.MaxCharge,
-                mobj_transform_parameters.MaxMW,
-                mobj_transform_parameters.MaxFit, mobj_transform_parameters.MinS2N, mobj_transform_parameters.CCMass,
-                mobj_transform_parameters.DeleteIntensityThreshold, mobj_transform_parameters.MinIntensityForScore,
-                mobj_transform_parameters.NumPeaksForShoulder, mobj_transform_parameters.UseMercuryCaching,
-                mobj_transform_parameters.O16O18Media, averagine_formula, tag_formula,
-                mobj_transform_parameters.ThrashOrNot, mobj_transform_parameters.CompleteFit,
-                mobj_transform_parameters.CheckAllPatternsAgainstCharge1,
-                (enmIsotopeFitType) mobj_transform_parameters.IsotopeFitType,
-                mobj_transform_parameters.ElementIsotopeComposition);
+            dta_processor.MassTransformOptions = mobj_transform_parameters;
 
             string svm_file = mobj_dta_generation_parameters.SVMParamFile;
             dta_processor.InitializeSVM(svm_file);

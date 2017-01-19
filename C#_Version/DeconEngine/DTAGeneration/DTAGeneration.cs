@@ -220,13 +220,10 @@ namespace Engine.DTAProcessing
             _summedPeakProcessor.SetOptions(s2n, thresh, thresholded, fit_type);
         }
 
-        public void SetMassTransformOptions(clsHornTransformParameters mtParams, enmIsotopeFitType fitType,
-            clsElementIsotopes atomicInfo)
+        public clsHornTransformParameters MassTransformOptions
         {
-            _massTransform.TransformParameters = mtParams;
-
-            _massTransform.ElementalIsotopeComposition = atomicInfo;
-            _massTransform.IsotopeFitType = fitType;
+            get { return _massTransform.TransformParameters; }
+            set { _massTransform.TransformParameters = value; }
         }
 
         public void SetMassTransformOptions(short maxCharge, double maxMw, double maxFit, double minS2n,
@@ -253,10 +250,13 @@ namespace Engine.DTAProcessing
             mtParams.TagFormula = tagMf;
             mtParams.ThrashOrNot = thrashOrNot;
             mtParams.CompleteFit = completeFit;
-            _massTransform.TransformParameters = mtParams;
 
             _massTransform.ElementalIsotopeComposition = atomicInfo;
             _massTransform.IsotopeFitType = fitType;
+            mtParams.IsotopeFitType = fitType;
+            mtParams.ElementIsotopeComposition = atomicInfo;
+
+            _massTransform.TransformParameters = mtParams;
         }
 
         public bool FindPrecursorForChargeStates()

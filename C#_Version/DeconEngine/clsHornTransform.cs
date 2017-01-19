@@ -12,73 +12,8 @@ namespace DeconToolsV2.HornTransform
     {
         private const int MaxIsotopes = 16;
 
-        /// <summary>
-        ///     mass of charge carrier
-        /// </summary>
-        private double _chargeCarrierMass;
-
-        /// <summary>
-        ///     Check feature against charge 1.
-        /// </summary>
-        private bool _checkAgainstCharge1;
-
-        /// <summary>
-        ///     Is the medium a mixture of O16 and O18 labelled peptides.
-        /// </summary>
-        private bool _checkO18Pairs;
-
-        /// <summary>
-        ///     After deisotoping is done, we delete the isotopic profile.  This threshold sets the value of the minimum
-        ///     intensity of a peak to delete. Note that ths intensity is in the theoretical profile which is scaled to
-        ///     where the maximum peak has an intensity of 100.
-        /// </summary>
-        /// <seealso cref="IsotopicProfileFitScorer.GetZeroingMassRange" />
-        private double _deleteIntensityThreshold;
-
-        //gord added
-        private bool _isActualMonoMZUsed;
         private IsotopicProfileFitScorer _isotopeFitScorer;
         private enmIsotopeFitType _isotopeFitType;
-        private double _leftFitStringencyFactor;
-
-        /// <summary>
-        ///     maximum charge to check while deisotoping
-        /// </summary>
-        private short _maxCharge;
-
-        /// <summary>
-        ///     maximum fit value to report a deisotoped peak
-        /// </summary>
-        private double _maxFit;
-
-        /// <summary>
-        ///     maximium MW for deisotoping
-        /// </summary>
-        private double _maxMw;
-
-        /// <summary>
-        ///     minimum signal to noise for a peak to consider it for deisotoping.
-        /// </summary>
-        private double _minSignalToNoise;
-
-        /// <summary>
-        ///     minimum intensity of a point in the theoretical profile of a peptide for it to be considered in scoring.
-        /// </summary>
-        /// <seealso cref="IsotopicProfileFitScorer.GetIsotopeDistribution" />
-        private double _minTheoreticalIntensityForScore;
-
-        /// <summary>
-        ///     Number of peaks from the monoisotope before the shoulder
-        /// </summary>
-        /// <remarks>
-        ///     After deisotoping is performed, we delete points corresponding to the isotopic profile, To do so, we move
-        ///     to the left and right of each isotope peak and delete points till the shoulder of the peak is reached. To
-        ///     decide if the current point is a shoulder, we check if the next (_numPeaksForShoulder) # of
-        ///     points are of continuously increasing intensity.
-        /// </remarks>
-        /// <seealso cref="SetPeakToZero" />
-        private short _numPeaksForShoulder;
-
         /*
         /// <summary>
         ///     If +2Da pair peaks should be reported for O18 labelling
@@ -93,7 +28,6 @@ namespace DeconToolsV2.HornTransform
         private bool _reportO18Plus2Da;
         */
 
-        private double _rightFitStringencyFactor;
         private clsHornTransformParameters _transformParameters = new clsHornTransformParameters();
 
         public bool DebugFlag;
@@ -102,23 +36,27 @@ namespace DeconToolsV2.HornTransform
         {
             _isotopeFitType = enmIsotopeFitType.AREA;
             _isotopeFitScorer = new AreaFitScorer();
+            TransformParameters = new clsHornTransformParameters
+            {
+                IsotopeFitType = enmIsotopeFitType.AREA,
+                MaxCharge = 10,
+                MaxMW = 10000,
+                MaxFit = 0.15,
+                MinS2N = 5,
+                DeleteIntensityThreshold = 1,
+                MinIntensityForScore = 1,
+                O16O18Media = false,
+                //Charge carrier mass = [atomic mass of hydrogen (1.007825) - atomic mass of an electron (0.00054858)]
+                CCMass = 1.00727638,
+                NumPeaksForShoulder = 1,
+                CheckAllPatternsAgainstCharge1 = false,
+                IsActualMonoMZUsed = false,
+                LeftFitStringencyFactor = 1,
+                RightFitStringencyFactor = 1,
+            };
 
-            _maxCharge = 10;
-            _maxMw = 10000;
-            _maxFit = 0.15;
-            _minSignalToNoise = 5;
-            _deleteIntensityThreshold = 1;
-            _minTheoreticalIntensityForScore = 1;
-            _checkO18Pairs = false;
-            _chargeCarrierMass = 1.00727638;
-            //Charge carrier mass = [atomic mass of hydrogen (1.007825) - atomic mass of an electron (0.00054858)]
             //_reportO18Plus2Da = false;
             DebugFlag = false;
-            _numPeaksForShoulder = 1;
-            _checkAgainstCharge1 = false;
-            _isActualMonoMZUsed = false;
-            _leftFitStringencyFactor = 1;
-            _rightFitStringencyFactor = 1;
         }
 
         /// <summary>
@@ -131,20 +69,7 @@ namespace DeconToolsV2.HornTransform
             {
                 _transformParameters = (clsHornTransformParameters) value.Clone();
                 IsotopeFitType = _transformParameters.IsotopeFitType;
-                _maxCharge = _transformParameters.MaxCharge;
-                _maxMw = _transformParameters.MaxMW;
-                _maxFit = _transformParameters.MaxFit;
-                _minSignalToNoise = _transformParameters.MinS2N;
-                _chargeCarrierMass = _transformParameters.CCMass;
-                _deleteIntensityThreshold = _transformParameters.DeleteIntensityThreshold;
-                _minTheoreticalIntensityForScore = _transformParameters.MinIntensityForScore;
-                _numPeaksForShoulder = _transformParameters.NumPeaksForShoulder;
                 _isotopeFitScorer.UseIsotopeDistributionCaching = _transformParameters.UseMercuryCaching;
-                _checkO18Pairs = _transformParameters.O16O18Media;
-                _checkAgainstCharge1 = _transformParameters.CheckAllPatternsAgainstCharge1;
-                _leftFitStringencyFactor = _transformParameters.LeftFitStringencyFactor;
-                _rightFitStringencyFactor = _transformParameters.RightFitStringencyFactor;
-                _isActualMonoMZUsed = _transformParameters.IsActualMonoMZUsed;
 
                 _isotopeFitScorer.SetOptions(_transformParameters.AveragineFormula, _transformParameters.TagFormula,
                     _transformParameters.CCMass, _transformParameters.ThrashOrNot, _transformParameters.CompleteFit);
@@ -196,10 +121,10 @@ namespace DeconToolsV2.HornTransform
             peakData.MzList = mzList;
             peakData.IntensityList = intensityList;
 
-            if (_transformParameters.UseMZRange)
+            if (TransformParameters.UseMZRange)
             {
-                minMz = _transformParameters.MinMZ;
-                maxMz = _transformParameters.MaxMZ;
+                minMz = TransformParameters.MinMZ;
+                maxMz = TransformParameters.MaxMZ;
             }
 
             //loads 'currentPeak' with the most intense peak within minMZ and maxMZ
@@ -226,9 +151,9 @@ namespace DeconToolsV2.HornTransform
                 //--------------------- Transform performed ------------------------------
                 clsHornTransformResults transformRecord;
                 var foundTransform = FindTransform(peakData, ref currentPeak, out transformRecord, backgroundIntensity);
-                if (foundTransform && transformRecord.ChargeState <= _transformParameters.MaxCharge)
+                if (foundTransform && transformRecord.ChargeState <= TransformParameters.MaxCharge)
                 {
-                    if (_transformParameters.IsActualMonoMZUsed)
+                    if (TransformParameters.IsActualMonoMZUsed)
                     {
                         //retrieve experimental monoisotopic peak
                         var monoPeakIndex = transformRecord.IsotopePeakIndices[0];
@@ -264,7 +189,7 @@ namespace DeconToolsV2.HornTransform
             double backgroundIntensity = 0)
         {
             record = new clsHornTransformResults();
-            if (peak.SignalToNoise < _minSignalToNoise || peak.FWHM.Equals(0))
+            if (peak.SignalToNoise < TransformParameters.MinS2N || peak.FWHM.Equals(0))
             {
                 return false;
             }
@@ -272,7 +197,7 @@ namespace DeconToolsV2.HornTransform
             //var resolution = peak.Mz / peak.FWHM;
             var chargeState = AutoCorrelationChargeDetermination.GetChargeState(peak, peakData, DebugFlag);
 
-            if (chargeState == -1 && _checkAgainstCharge1)
+            if (chargeState == -1 && TransformParameters.CheckAllPatternsAgainstCharge1)
             {
                 chargeState = 1;
             }
@@ -288,12 +213,12 @@ namespace DeconToolsV2.HornTransform
                 return false;
             }
 
-            if ((peak.Mz + _chargeCarrierMass) * chargeState > _maxMw)
+            if ((peak.Mz + TransformParameters.CCMass) * chargeState > TransformParameters.MaxMW)
             {
                 return false;
             }
 
-            if (_checkO18Pairs)
+            if (TransformParameters.O16O18Media)
             {
                 if (peak.FWHM < 1.0 / chargeState)
                 {
@@ -324,10 +249,10 @@ namespace DeconToolsV2.HornTransform
             //double deleteThreshold = backgroundIntensity / peak.Intensity * 100;
             //if (backgroundIntensity ==0 || deleteThreshold > _deleteIntensityThreshold)
             //  deleteThreshold = _deleteIntensityThreshold;
-            var deleteThreshold = _deleteIntensityThreshold;
+            var deleteThreshold = TransformParameters.DeleteIntensityThreshold;
             int fitCountBasis;
             var bestFit = _isotopeFitScorer.GetFitScore(peakData, chargeState, ref peak, out record, deleteThreshold,
-                _minTheoreticalIntensityForScore, _leftFitStringencyFactor, _rightFitStringencyFactor, out fitCountBasis,
+                TransformParameters.MinIntensityForScore, TransformParameters.LeftFitStringencyFactor, TransformParameters.RightFitStringencyFactor, out fitCountBasis,
                 DebugFlag);
 
             // When deleting an isotopic profile, this value is set to the first m/z to perform deletion at.
@@ -339,20 +264,20 @@ namespace DeconToolsV2.HornTransform
             //bestFit = _isotopeFitter.GetFitScore(peakData, chargeState, peak, record, _deleteIntensityThreshold, _minTheoreticalIntensityForScore, DebugFlag);
             //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
 
-            if (_checkAgainstCharge1 && chargeState != 1)
+            if (TransformParameters.CheckAllPatternsAgainstCharge1 && chargeState != 1)
             {
                 clsHornTransformResults recordCharge1;
                 int fitCountBasisCharge1;
                 var bestFitCharge1 = _isotopeFitScorer.GetFitScore(peakData, 1, ref peakCharge1, out recordCharge1,
-                    deleteThreshold, _minTheoreticalIntensityForScore, _leftFitStringencyFactor,
-                    _rightFitStringencyFactor, out fitCountBasisCharge1, DebugFlag);
+                    deleteThreshold, TransformParameters.MinIntensityForScore, TransformParameters.LeftFitStringencyFactor,
+                    TransformParameters.RightFitStringencyFactor, out fitCountBasisCharge1, DebugFlag);
 
                 //double bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, peakCharge1, recordCharge1, _deleteIntensityThreshold, _minTheoreticalIntensityForScore, DebugFlag);
                 //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
                 double startMz1 = 0;
                 double stopMz1 = 0;
                 _isotopeFitScorer.GetZeroingMassRange(out startMz1, out stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
-                if (bestFit > _maxFit && bestFitCharge1 < _maxFit)
+                if (bestFit > TransformParameters.MaxFit && bestFitCharge1 < TransformParameters.MaxFit)
                 {
                     bestFit = bestFitCharge1;
                     fitCountBasis = fitCountBasisCharge1;
@@ -364,7 +289,7 @@ namespace DeconToolsV2.HornTransform
                 }
             }
 
-            if (bestFit > _maxFit) // check if fit is good enough
+            if (bestFit > TransformParameters.MaxFit) // check if fit is good enough
                 return false;
 
             if (DebugFlag)
@@ -375,11 +300,11 @@ namespace DeconToolsV2.HornTransform
             record.ChargeState = chargeState;
 
             clsPeak monoPeak;
-            var monoMz = record.MonoMw / record.ChargeState + _chargeCarrierMass;
+            var monoMz = record.MonoMw / record.ChargeState + TransformParameters.CCMass;
 
             // used when _reportO18Plus2Da is true.
             clsPeak m3Peak;
-            var monoPlus2Mz = record.MonoMw / record.ChargeState + 2.0 / record.ChargeState + _chargeCarrierMass;
+            var monoPlus2Mz = record.MonoMw / record.ChargeState + 2.0 / record.ChargeState + TransformParameters.CCMass;
 
             peakData.FindPeak(monoMz - peak.FWHM, monoMz + peak.FWHM, out monoPeak);
             peakData.FindPeak(monoPlus2Mz - peak.FWHM, monoPlus2Mz + peak.FWHM, out m3Peak);
@@ -414,8 +339,8 @@ namespace DeconToolsV2.HornTransform
             }
 
             double maxMz = 0;
-            if (_checkO18Pairs)
-                maxMz = (monoMw + 3.5) / chargeState + _chargeCarrierMass;
+            if (TransformParameters.O16O18Media)
+                maxMz = (monoMw + 3.5) / chargeState + TransformParameters.CCMass;
 
             var numUnprocessedPeaks = peakData.GetNumUnprocessedPeaks();
             if (numUnprocessedPeaks == 0)
@@ -442,7 +367,7 @@ namespace DeconToolsV2.HornTransform
 
             // Delete isotopes of mzs higher than mz of starting isotope
             for (var peakMz = peak.Mz + 1.003 / chargeState;
-                (!_checkO18Pairs || peakMz <= maxMz) && peakMz <= zeroingStopMz + 2 * peak.FWHM;
+                (!TransformParameters.O16O18Media || peakMz <= maxMz) && peakMz <= zeroingStopMz + 2 * peak.FWHM;
                 peakMz += 1.003 / chargeState)
             {
                 if (debug)
@@ -546,7 +471,7 @@ namespace DeconToolsV2.HornTransform
             //double mz1, mz2;
 
             if (debug)
-                Console.Error.WriteLine("\t\tNum Peaks for Shoulder =" + _numPeaksForShoulder);
+                Console.Error.WriteLine("\t\tNum Peaks for Shoulder =" + TransformParameters.NumPeaksForShoulder);
 
             for (var i = index - 1; i >= 0; i--)
             {
@@ -557,7 +482,7 @@ namespace DeconToolsV2.HornTransform
                 {
                     count++;
                     //mz1 = mzs[i];
-                    if (count >= _numPeaksForShoulder)
+                    if (count >= TransformParameters.NumPeaksForShoulder)
                         break;
                 }
                 intensities[i] = 0;
@@ -575,7 +500,7 @@ namespace DeconToolsV2.HornTransform
                 {
                     count++;
                     //mz2 = mzs[i];
-                    if (count >= _numPeaksForShoulder)
+                    if (count >= TransformParameters.NumPeaksForShoulder)
                         break;
                 }
                 intensities[i] = 0;

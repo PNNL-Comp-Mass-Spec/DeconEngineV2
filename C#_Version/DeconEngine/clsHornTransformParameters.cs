@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using Engine.HornTransform;
 
 namespace DeconToolsV2.HornTransform
 {
@@ -19,9 +20,12 @@ namespace DeconToolsV2.HornTransform
 #endif
 
         private clsElementIsotopes _elementIsotopes = new clsElementIsotopes();
+        private enmIsotopeFitType _isotopeFitType = enmIsotopeFitType.AREA;
+        private bool _useMercuryCaching = true;
 
         public clsHornTransformParameters()
         {
+            IsotopeFitScorer = new AreaFitScorer();
             MaxCharge = 10;
             NumPeaksForShoulder = 1;
             MaxMW = 10000;
@@ -83,7 +87,24 @@ namespace DeconToolsV2.HornTransform
         public bool UseSavitzkyGolaySmooth { get; set; }
         public int MinScan { get; set; }
         public int MaxScan { get; set; }
-        public bool UseMercuryCaching { get; set; }
+
+        public bool UseMercuryCaching
+        {
+            get { return _useMercuryCaching; }
+            set
+            {
+                if (_useMercuryCaching == value)
+                {
+                    return;
+                }
+                _useMercuryCaching = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.UseIsotopeDistributionCaching = value;
+                }
+            }
+        }
+
         /// <summary>
         /// whether or not to use a range of scans
         /// </summary>
@@ -177,10 +198,35 @@ namespace DeconToolsV2.HornTransform
             set
             {
                 _elementIsotopes = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.ElementalIsotopeComposition = value;
+                }
             }
         }
 
-        public enmIsotopeFitType IsotopeFitType { get; set; }
+        public enmIsotopeFitType IsotopeFitType
+        {
+            get { return _isotopeFitType; }
+            set
+            {
+                if (_isotopeFitType == value)
+                {
+                    return;
+                }
+                _isotopeFitType = value;
+                IsotopeFitScorer = IsotopicProfileFitScorer.ScorerFactory(_isotopeFitType,
+                    IsotopeFitScorer);
+                IsotopeFitScorer.ElementalIsotopeComposition = ElementIsotopeComposition;
+                IsotopeFitScorer.UseIsotopeDistributionCaching = UseMercuryCaching;
+            }
+        }
+
+        /// <summary>
+        /// Isotope fit scorer. Change by setting <see cref="IsotopeFitType"/>
+        /// </summary>
+        internal IsotopicProfileFitScorer IsotopeFitScorer { get; private set; }
+
         public bool UseAbsolutePeptideIntensity { get; set; }
         public double AbsolutePeptideIntensity { get; set; }
         public bool UseRAPIDDeconvolution { get; set; }
