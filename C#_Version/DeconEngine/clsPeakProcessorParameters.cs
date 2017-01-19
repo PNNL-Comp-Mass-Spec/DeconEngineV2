@@ -8,9 +8,38 @@ namespace DeconToolsV2.Peaks
     /// </summary>
     public enum PEAK_FIT_TYPE
     {
-        APEX = 0,
-        QUADRATIC,
-        LORENTZIAN
+        /// <summary>
+        ///     The peak is the m/z value higher than the points before and after it
+        /// </summary>
+        Apex = 0,
+
+        /// <summary>
+        ///     The peak is the m/z value which is a quadratic fit of the three points around the apex
+        /// </summary>
+        Quadratic,
+
+        /// <summary>
+        ///     The peak is the m/z value which is a lorentzian fit of the three points around the apex
+        /// </summary>
+        Lorentzian,
+
+        /// <summary>
+        /// Alias: The peak is the m/z value higher than the points before and after it
+        /// </summary>
+        [Obsolete("Use Apex.", true)]
+        APEX = Apex,
+
+        /// <summary>
+        /// Alias: The peak is the m/z value which is a quadratic fit of the three points around the apex
+        /// </summary>
+        [Obsolete("Use Quadratic.", true)]
+        QUADRATIC = Quadratic,
+
+        /// <summary>
+        /// Alias: The peak is the m/z value which is a lorentzian fit of the three points around the apex
+        /// </summary>
+        [Obsolete("Use Lorentzian.", true)]
+        LORENTZIAN = Lorentzian
     };
 
     public class clsPeakProcessorParameters : System.ICloneable
@@ -47,7 +76,7 @@ namespace DeconToolsV2.Peaks
         {
             SignalToNoiseThreshold = 3.0;
             PeakBackgroundRatio = 5.0;
-            PeakFitType = PEAK_FIT_TYPE.QUADRATIC;
+            PeakFitType = PEAK_FIT_TYPE.Quadratic;
         }
 
 #if Enable_Obsolete
@@ -131,17 +160,17 @@ namespace DeconToolsV2.Peaks
                                 throw new System.Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
-                            if (rdr.Value.Equals(DeconToolsV2.Peaks.PEAK_FIT_TYPE.QUADRATIC.ToString()))
+                            if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Quadratic.ToString().ToUpper()))
                             {
-                                this.PeakFitType = DeconToolsV2.Peaks.PEAK_FIT_TYPE.QUADRATIC;
+                                this.PeakFitType = PEAK_FIT_TYPE.Quadratic;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Peaks.PEAK_FIT_TYPE.LORENTZIAN.ToString()))
+                            else if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Lorentzian.ToString().ToUpper()))
                             {
-                                this.PeakFitType = DeconToolsV2.Peaks.PEAK_FIT_TYPE.LORENTZIAN;
+                                this.PeakFitType = PEAK_FIT_TYPE.Lorentzian;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Peaks.PEAK_FIT_TYPE.APEX.ToString()))
+                            else if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Apex.ToString().ToUpper()))
                             {
-                                this.PeakFitType = DeconToolsV2.Peaks.PEAK_FIT_TYPE.APEX;
+                                this.PeakFitType = PEAK_FIT_TYPE.Apex;
                             }
                         }
                         else if (rdr.Name.Equals("WritePeaksToTextFile"))

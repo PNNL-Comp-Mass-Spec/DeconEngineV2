@@ -61,7 +61,7 @@ namespace Engine.PeakProcessing
         /// </summary>
         public PeakProcessor()
         {
-            SetPeakFitType(PeakFitType.Quadratic);
+            SetPeakFitType(PEAK_FIT_TYPE.Quadratic);
             PeakData = new PeakData();
             _arePeaksCentroided = false;
         }
@@ -127,7 +127,7 @@ namespace Engine.PeakProcessing
         ///     sets the type of peak fitting used to find m/z values for peaks.
         /// </summary>
         /// <param name="type">specifies the type of peak fitting.</param>
-        public void SetPeakFitType(PeakFitType type)
+        public void SetPeakFitType(PEAK_FIT_TYPE type)
         {
             _peakFit.SetOptions(type);
         }
@@ -148,7 +148,7 @@ namespace Engine.PeakProcessing
         /// <param name="thresh">sets the peak intensity threshold.</param>
         /// <param name="thresholded">if the data is thresholded.</param>
         /// <param name="type">sets the type of peak fitting algorithm used.</param>
-        public void SetOptions(double signalToNoise, double thresh, bool thresholded, PeakFitType type)
+        public void SetOptions(double signalToNoise, double thresh, bool thresholded, PEAK_FIT_TYPE type)
         {
             _isDataThresholded = thresholded;
             // signal to noise should ideally be set before PeakIntensityThreshold

@@ -242,9 +242,9 @@ namespace DeconToolsV2
                 //lcms_checker = new Engine.ResultChecker.LCMSCheckResults();
                 // Set parameters for discovering peaks. intensity threshold is set below.
                 peak_processor.SetOptions(peak_parameters.SignalToNoiseThreshold, 0, thresholded,
-                    (Engine.PeakProcessing.PeakFitType) peak_parameters.PeakFitType);
+                    peak_parameters.PeakFitType);
                 original_peak_processor.SetOptions(peak_parameters.SignalToNoiseThreshold, 0, thresholded,
-                    (Engine.PeakProcessing.PeakFitType) peak_parameters.PeakFitType);
+                    peak_parameters.PeakFitType);
 
                 if (transform)
                 {
@@ -901,7 +901,7 @@ namespace DeconToolsV2
                 mobj_dta_generation_parameters.IsolationWindowSize,
                 mobj_dta_generation_parameters.IsProfileDataForMzXML);
             dta_processor.SetPeakProcessorOptions(mobj_peak_parameters.SignalToNoiseThreshold, 0, thresholded,
-                (Engine.PeakProcessing.PeakFitType) mobj_peak_parameters.PeakFitType);
+                mobj_peak_parameters.PeakFitType);
             dta_processor.MassTransformOptions = mobj_transform_parameters;
 
             string svm_file = mobj_dta_generation_parameters.SVMParamFile;

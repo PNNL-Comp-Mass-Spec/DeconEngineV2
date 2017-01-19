@@ -213,7 +213,7 @@ namespace Engine.DTAProcessing
         /// <param name="thresholded"></param>
         /// <param name="fit_type">Peak-Fit Type</param>
         public void SetPeakProcessorOptions(double s2n, double thresh, bool thresholded,
-            Engine.PeakProcessing.PeakFitType fit_type)
+            PEAK_FIT_TYPE fit_type)
         {
             _parentPeakProcessor.SetOptions(s2n, thresh, thresholded, fit_type);
             _msNPeakProcessor.SetOptions(s2n, thresh, thresholded, fit_type);

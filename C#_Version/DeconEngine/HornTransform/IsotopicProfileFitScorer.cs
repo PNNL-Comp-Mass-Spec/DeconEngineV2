@@ -466,7 +466,7 @@ namespace Engine.HornTransform
         {
             var peakList = new PeakData();
             var processor = new PeakProcessor();
-            processor.SetOptions(0.5, 1, false, PeakFitType.Apex);
+            processor.SetOptions(0.5, 1, false, PEAK_FIT_TYPE.Apex);
             processor.DiscoverPeaks(xvals, yvals, 0, 10000);
 
             var numpeaks = processor.PeakData.GetNumPeaks();
