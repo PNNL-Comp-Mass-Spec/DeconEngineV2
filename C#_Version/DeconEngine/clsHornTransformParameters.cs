@@ -98,10 +98,6 @@ namespace DeconToolsV2.HornTransform
             get { return _useMercuryCaching; }
             set
             {
-                if (_useMercuryCaching == value)
-                {
-                    return;
-                }
                 _useMercuryCaching = value;
                 if (IsotopeFitScorer != null)
                 {
@@ -165,7 +161,10 @@ namespace DeconToolsV2.HornTransform
             set
             {
                 _ccMass = value;
-                IsotopeFitScorer.ChargeCarrierMass = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.ChargeCarrierMass = value;
+                }
             }
         }
 
@@ -196,7 +195,10 @@ namespace DeconToolsV2.HornTransform
             set
             {
                 _averagineFormula = value;
-                IsotopeFitScorer.AveragineFormula = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.AveragineFormula = value;
+                }
             }
         }
 
@@ -206,7 +208,10 @@ namespace DeconToolsV2.HornTransform
             set
             {
                 _tagFormula = value;
-                IsotopeFitScorer.TagFormula = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.TagFormula = value;
+                }
             }
         }
         public bool ThrashOrNot
@@ -215,7 +220,10 @@ namespace DeconToolsV2.HornTransform
             set
             {
                 _thrashOrNot = value;
-                IsotopeFitScorer.UseThrash = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.UseThrash = value;
+                }
             }
         }
         public bool CompleteFit
@@ -224,7 +232,10 @@ namespace DeconToolsV2.HornTransform
             set
             {
                 _completeFit = value;
-                IsotopeFitScorer.CompleteFitThrash = value;
+                if (IsotopeFitScorer != null)
+                {
+                    IsotopeFitScorer.CompleteFitThrash = value;
+                }
             }
         }
         public bool ProcessMSMS { get; set; }
@@ -257,14 +268,12 @@ namespace DeconToolsV2.HornTransform
             get { return _isotopeFitType; }
             set
             {
-                if (_isotopeFitType == value)
+                if (_isotopeFitType != value)
                 {
-                    return;
+                    _isotopeFitType = value;
+                    IsotopeFitScorer = IsotopicProfileFitScorer.ScorerFactory(_isotopeFitType,
+                        IsotopeFitScorer);
                 }
-                _isotopeFitType = value;
-                IsotopeFitScorer = IsotopicProfileFitScorer.ScorerFactory(_isotopeFitType,
-                    IsotopeFitScorer);
-                //IsotopeFitScorer.SetOptions(AveragineFormula, TagFormula, CCMass, ThrashOrNot, CompleteFit);
                 IsotopeFitScorer.AveragineFormula = AveragineFormula;
                 IsotopeFitScorer.TagFormula = TagFormula;
                 IsotopeFitScorer.ChargeCarrierMass = CCMass;
