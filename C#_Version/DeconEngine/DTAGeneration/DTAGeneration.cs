@@ -253,8 +253,6 @@ namespace Engine.DTAProcessing
             mtParams.ThrashOrNot = thrashOrNot;
             mtParams.CompleteFit = completeFit;
 
-            _massTransform.ElementalIsotopeComposition = atomicInfo;
-            _massTransform.IsotopeFitType = fitType;
             mtParams.IsotopeFitType = fitType;
             mtParams.ElementIsotopeComposition = atomicInfo;
 
@@ -499,7 +497,6 @@ namespace Engine.DTAProcessing
                 var mtParams = _massTransform.TransformParameters;
                 var chkcharge1 = mtParams.CheckAllPatternsAgainstCharge1;
                 mtParams.CheckAllPatternsAgainstCharge1 = false;
-                _massTransform.TransformParameters = mtParams;
 
                 // now start THRASH all over again
                 clsPeak currentPeak;
@@ -523,7 +520,6 @@ namespace Engine.DTAProcessing
 
                 //reset chk_charge1
                 mtParams.CheckAllPatternsAgainstCharge1 = chkcharge1;
-                _massTransform.TransformParameters = mtParams;
 
                 // not ejecting precusor record here as the indices are going to be off
                 // also algo is changed to use only THRASH if both cs are equal
