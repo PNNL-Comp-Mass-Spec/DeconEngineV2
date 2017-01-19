@@ -22,6 +22,11 @@ namespace DeconToolsV2.HornTransform
         private clsElementIsotopes _elementIsotopes = new clsElementIsotopes();
         private enmIsotopeFitType _isotopeFitType = enmIsotopeFitType.AREA;
         private bool _useMercuryCaching = true;
+        private string _averagineFormula;
+        private string _tagFormula;
+        private bool _thrashOrNot;
+        private bool _completeFit;
+        private double _ccMass;
 
         public clsHornTransformParameters()
         {
@@ -154,7 +159,15 @@ namespace DeconToolsV2.HornTransform
         /// <summary>
         /// mass of charge carrier
         /// </summary>
-        public double CCMass { get; set; }
+        public double CCMass
+        {
+            get { return _ccMass; }
+            set
+            {
+                _ccMass = value;
+                IsotopeFitScorer.ChargeCarrierMass = value;
+            }
+        }
 
         /// <summary>
         /// After deisotoping is done, we delete the isotopic profile.  This threshold sets the value of the minimum
@@ -176,10 +189,44 @@ namespace DeconToolsV2.HornTransform
         /// Is the medium a mixture of O16 and O18 labelled peptides.
         /// </summary>
         public bool O16O18Media { get; set; }
-        public string AveragineFormula { get; set; }
-        public string TagFormula { get; set; }
-        public bool ThrashOrNot { get; set; }
-        public bool CompleteFit { get; set; }
+
+        public string AveragineFormula
+        {
+            get { return _averagineFormula; }
+            set
+            {
+                _averagineFormula = value;
+                IsotopeFitScorer.AveragineFormula = value;
+            }
+        }
+
+        public string TagFormula
+        {
+            get { return _tagFormula; }
+            set
+            {
+                _tagFormula = value;
+                IsotopeFitScorer.TagFormula = value;
+            }
+        }
+        public bool ThrashOrNot
+        {
+            get { return _thrashOrNot; }
+            set
+            {
+                _thrashOrNot = value;
+                IsotopeFitScorer.UseThrash = value;
+            }
+        }
+        public bool CompleteFit
+        {
+            get { return _completeFit; }
+            set
+            {
+                _completeFit = value;
+                IsotopeFitScorer.CompleteFitThrash = value;
+            }
+        }
         public bool ProcessMSMS { get; set; }
 
         /// <summary>
@@ -217,6 +264,12 @@ namespace DeconToolsV2.HornTransform
                 _isotopeFitType = value;
                 IsotopeFitScorer = IsotopicProfileFitScorer.ScorerFactory(_isotopeFitType,
                     IsotopeFitScorer);
+                //IsotopeFitScorer.SetOptions(AveragineFormula, TagFormula, CCMass, ThrashOrNot, CompleteFit);
+                IsotopeFitScorer.AveragineFormula = AveragineFormula;
+                IsotopeFitScorer.TagFormula = TagFormula;
+                IsotopeFitScorer.ChargeCarrierMass = CCMass;
+                IsotopeFitScorer.UseThrash = ThrashOrNot;
+                IsotopeFitScorer.CompleteFitThrash = CompleteFit;
                 IsotopeFitScorer.ElementalIsotopeComposition = ElementIsotopeComposition;
                 IsotopeFitScorer.UseIsotopeDistributionCaching = UseMercuryCaching;
             }
@@ -248,65 +301,65 @@ namespace DeconToolsV2.HornTransform
 
         public virtual object Clone()
         {
-            var newParams = new clsHornTransformParameters();
-            newParams.AveragineFormula = (string) AveragineFormula.Clone();
-            newParams.CCMass = CCMass;
-            newParams.CompleteFit = CompleteFit;
-            newParams.DeleteIntensityThreshold = DeleteIntensityThreshold;
-            newParams.ElementIsotopeComposition =
-                (clsElementIsotopes) ElementIsotopeComposition.Clone();
-            newParams.MaxCharge = MaxCharge;
-            newParams.MaxFit = MaxFit;
-            newParams.MaxMW = MaxMW;
-            newParams.MinIntensityForScore = MinIntensityForScore;
-            newParams.MinS2N = MinS2N;
-            newParams.NumPeaksForShoulder = NumPeaksForShoulder;
-            newParams.O16O18Media = O16O18Media;
-            newParams.PeptideMinBackgroundRatio = PeptideMinBackgroundRatio;
-            newParams.TagFormula = (string) TagFormula.Clone();
-            newParams.ThrashOrNot = ThrashOrNot;
-            newParams.IsotopeFitType = IsotopeFitType;
-            newParams.UseMercuryCaching = UseMercuryCaching;
+            var newParams = new clsHornTransformParameters
+            {
+                IsotopeFitType = IsotopeFitType,
+                AveragineFormula = (string) AveragineFormula.Clone(),
+                CCMass = CCMass,
+                CompleteFit = CompleteFit,
+                DeleteIntensityThreshold = DeleteIntensityThreshold,
+                ElementIsotopeComposition = (clsElementIsotopes) ElementIsotopeComposition.Clone(),
+                MaxCharge = MaxCharge,
+                MaxFit = MaxFit,
+                MaxMW = MaxMW,
+                MinIntensityForScore = MinIntensityForScore,
+                MinS2N = MinS2N,
+                NumPeaksForShoulder = NumPeaksForShoulder,
+                O16O18Media = O16O18Media,
+                PeptideMinBackgroundRatio = PeptideMinBackgroundRatio,
+                TagFormula = (string) TagFormula.Clone(),
+                ThrashOrNot = ThrashOrNot,
+                UseMercuryCaching = UseMercuryCaching,
 
-            newParams.UseMZRange = UseMZRange;
-            newParams.MinMZ = MinMZ;
-            newParams.MaxMZ = MaxMZ;
-            newParams.UseMercuryCaching = UseMercuryCaching;
-            newParams.MinScan = MinScan;
-            newParams.MaxScan = MaxScan;
-            newParams.UseScanRange = UseScanRange;
-            newParams.CheckAllPatternsAgainstCharge1 = CheckAllPatternsAgainstCharge1;
+                UseMZRange = UseMZRange,
+                MinMZ = MinMZ,
+                MaxMZ = MaxMZ,
+                MinScan = MinScan,
+                MaxScan = MaxScan,
+                UseScanRange = UseScanRange,
+                CheckAllPatternsAgainstCharge1 = CheckAllPatternsAgainstCharge1,
 
-            newParams.UseSavitzkyGolaySmooth = UseSavitzkyGolaySmooth;
-            newParams.SGNumLeft = SGNumLeft;
-            newParams.SGNumRight = SGNumRight;
-            newParams.SGOrder = SGOrder;
+                UseSavitzkyGolaySmooth = UseSavitzkyGolaySmooth,
+                SGNumLeft = SGNumLeft,
+                SGNumRight = SGNumRight,
+                SGOrder = SGOrder,
 
-            newParams.ZeroFill = ZeroFill;
-            newParams.NumZerosToFill = NumZerosToFill;
+                ZeroFill = ZeroFill,
+                NumZerosToFill = NumZerosToFill,
 
-            newParams.AbsolutePeptideIntensity = AbsolutePeptideIntensity;
-            newParams.UseAbsolutePeptideIntensity = UseAbsolutePeptideIntensity;
-            newParams.NumScansToSumOver = NumScansToSumOver;
-            newParams.SumSpectra = SumSpectra;
-            newParams.SumSpectraAcrossScanRange = SumSpectraAcrossScanRange;
-            newParams.NumFramesToSumOver = NumFramesToSumOver;
-            newParams.SumSpectraAcrossFrameRange = SumSpectraAcrossFrameRange;
-            newParams.ProcessMSMS = ProcessMSMS;
-            newParams.IsActualMonoMZUsed = IsActualMonoMZUsed;
-            newParams.LeftFitStringencyFactor = LeftFitStringencyFactor;
-            newParams.RightFitStringencyFactor = RightFitStringencyFactor;
-            newParams.UseRAPIDDeconvolution = UseRAPIDDeconvolution;
-            newParams.ReplaceRAPIDScoreWithHornFitScore = ReplaceRAPIDScoreWithHornFitScore;
+                AbsolutePeptideIntensity = AbsolutePeptideIntensity,
+                UseAbsolutePeptideIntensity = UseAbsolutePeptideIntensity,
+                NumScansToSumOver = NumScansToSumOver,
+                SumSpectra = SumSpectra,
+                SumSpectraAcrossScanRange = SumSpectraAcrossScanRange,
+                NumFramesToSumOver = NumFramesToSumOver,
+                SumSpectraAcrossFrameRange = SumSpectraAcrossFrameRange,
+                ProcessMSMS = ProcessMSMS,
+                IsActualMonoMZUsed = IsActualMonoMZUsed,
+                LeftFitStringencyFactor = LeftFitStringencyFactor,
+                RightFitStringencyFactor = RightFitStringencyFactor,
+                UseRAPIDDeconvolution = UseRAPIDDeconvolution,
+                ReplaceRAPIDScoreWithHornFitScore = ReplaceRAPIDScoreWithHornFitScore,
 #if Enable_Obsolete
-            newParams.ExportFileType = ExportFileType;
+                ExportFileType = ExportFileType,
 #endif
-            newParams.NumPeaksUsedInAbundance = NumPeaksUsedInAbundance;
-            newParams.NumScansToAdvance = NumScansToAdvance;
-            newParams.DetectPeaksOnlyWithNoDeconvolution = DetectPeaksOnlyWithNoDeconvolution;
-            newParams.ProcessMS = ProcessMS;
-            newParams.ScanBasedWorkflowType = (string) ScanBasedWorkflowType.Clone();
-
+                NumPeaksUsedInAbundance = NumPeaksUsedInAbundance,
+                NumScansToAdvance = NumScansToAdvance,
+                DetectPeaksOnlyWithNoDeconvolution = DetectPeaksOnlyWithNoDeconvolution,
+                ProcessMS = ProcessMS,
+                ScanBasedWorkflowType = (string) ScanBasedWorkflowType.Clone(),
+                SaturationThreshold = SaturationThreshold,
+            };
             return newParams;
         }
 

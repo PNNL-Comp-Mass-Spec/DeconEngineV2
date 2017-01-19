@@ -226,6 +226,8 @@ namespace Engine.DTAProcessing
             set { _massTransform.TransformParameters = value; }
         }
 
+#if Enable_Obsolete
+        [Obsolete("Use MassTransformOptions instead")]
         public void SetMassTransformOptions(short maxCharge, double maxMw, double maxFit, double minS2n,
             double ccMass, double deleteThresholdIntensity, double minTheoreticalIntensityForScore,
             short numPeaksForShoulder, bool useMercuryCaching, bool o16O18Media, string averagineMf,
@@ -258,6 +260,7 @@ namespace Engine.DTAProcessing
 
             _massTransform.TransformParameters = mtParams;
         }
+#endif
 
         public bool FindPrecursorForChargeStates()
         {

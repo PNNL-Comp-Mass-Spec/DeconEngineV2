@@ -95,7 +95,8 @@ namespace Engine.HornTransform
             CompleteFitThrash = false;
             UseIsotopeDistributionCaching = false;
             Init();
-            AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
+            ElementalIsotopeComposition = IsotopeDistribution.ElementalIsotopeComposition;
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
 
 #if Enable_Obsolete
@@ -127,6 +128,24 @@ namespace Engine.HornTransform
             }
         }
 
+        public string AveragineFormula
+        {
+            get { return AveragineObj.AveragineFormula; }
+            set { AveragineObj.AveragineFormula = value; }
+        }
+
+        public string TagFormula
+        {
+            get { return AveragineObj.TagFormula; }
+            set { AveragineObj.TagFormula = value; }
+        }
+
+        public void SetChargeCarrierMass(double mass)
+        {
+            ChargeCarrierMass = mass;
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
+        }
+
         /// <summary>
         /// Create a new scorer based on the specified fit type, copying scorer settings from another scorer
         /// </summary>
@@ -139,6 +158,32 @@ namespace Engine.HornTransform
             var scorer = ScorerFactory(fitType);
             scorer.CloneSettings(oldFit);
             return scorer;
+        }
+
+        public void Reset()
+        {
+            LastPointIndex = -1;
+            Mz1 = Mz2 = 0;
+            Intensity1 = Intensity2 = 0;
+        }
+
+        private void Init()
+        {
+            Reset();
+        }
+
+        public IsotopicProfileFitScorer CloneSettings(IsotopicProfileFitScorer fit)
+        {
+            // only copies settings not variables.
+            CompleteFitThrash = fit.CompleteFitThrash;
+            UseThrash = fit.UseThrash;
+            ChargeCarrierMass = fit.ChargeCarrierMass;
+            AveragineObj = new clsAveragine(fit.AveragineObj);
+            IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
+            ElementalIsotopeComposition = fit.ElementalIsotopeComposition;
+            Init();
+            return this;
         }
 
         /// <summary>
@@ -163,6 +208,56 @@ namespace Engine.HornTransform
             }
             return scorer;
         }
+
+#if Enable_Obsolete
+        /// <summary>
+        ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
+        /// </summary>
+        /// <param name="averagineFormula">is the averagine molecular formula.</param>
+        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
+        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
+        /// <param name="completeFitThrash">
+        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
+        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
+        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
+        ///     keeps increasing. If thrash_or_not is false, none is performed.
+        /// </param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
+        public void GetOptions(out string averagineFormula, out string tagFormula, out bool useThrash,
+            out bool completeFitThrash)
+        {
+            useThrash = UseThrash;
+            completeFitThrash = CompleteFitThrash;
+            averagineFormula = AveragineObj.AveragineFormula;
+            tagFormula = AveragineObj.TagFormula;
+        }
+
+        /// <summary>
+        ///     set options for the isotope fit. It also sets the options for theoretical isotope generation.
+        /// </summary>
+        /// <param name="averagineFormula">is the averagine molecular formula.</param>
+        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
+        /// <param name="chargeCarrierMass">is the charge carrier mass.</param>
+        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
+        /// <param name="completeFitThrash">
+        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
+        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
+        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
+        ///     keeps increasing. If thrash_or_not is false, none is performed.
+        /// </param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
+        public void SetOptions(string averagineFormula, string tagFormula, double chargeCarrierMass, bool useThrash,
+            bool completeFitThrash)
+        {
+            AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
+            AveragineObj.AveragineFormula = averagineFormula;
+            AveragineObj.TagFormula = tagFormula;
+            UseThrash = useThrash;
+            CompleteFitThrash = completeFitThrash;
+            ChargeCarrierMass = chargeCarrierMass;
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
+        }
+#endif
 
         /// <summary>
         ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
@@ -263,30 +358,6 @@ namespace Engine.HornTransform
                 return Intensity1;
 
             return (mz - Mz1) / (Mz2 - Mz1) * (Intensity2 - Intensity1) + Intensity1;
-        }
-
-        public void Reset()
-        {
-            LastPointIndex = -1;
-            Mz1 = Mz2 = 0;
-            Intensity1 = Intensity2 = 0;
-        }
-
-        private void Init()
-        {
-            Reset();
-        }
-
-        public IsotopicProfileFitScorer CloneSettings(IsotopicProfileFitScorer fit)
-        {
-            // only copies settings not variables.
-            CompleteFitThrash = fit.CompleteFitThrash;
-            UseThrash = fit.UseThrash;
-            ChargeCarrierMass = fit.ChargeCarrierMass;
-            AveragineObj = new clsAveragine(fit.AveragineObj);
-            IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
-            Init();
-            return this;
         }
 
         public bool FindPeak(double minMz, double maxMz, out double mzValue, out double intensity, bool debug)
@@ -797,53 +868,6 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
-        /// </summary>
-        /// <param name="averagineFormula">is the averagine molecular formula.</param>
-        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
-        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
-        /// <param name="completeFitThrash">
-        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
-        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
-        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
-        ///     keeps increasing. If thrash_or_not is false, none is performed.
-        /// </param>
-        [Obsolete("Only used by Decon2LS.UI", false)]
-        public void GetOptions(out string averagineFormula, out string tagFormula, out bool useThrash,
-            out bool completeFitThrash)
-        {
-            useThrash = UseThrash;
-            completeFitThrash = CompleteFitThrash;
-            averagineFormula = AveragineObj.AveragineFormula;
-            tagFormula = AveragineObj.TagFormula;
-        }
-
-        /// <summary>
-        ///     set options for the isotope fit. It also sets the options for theoretical isotope generation.
-        /// </summary>
-        /// <param name="averagineFormula">is the averagine molecular formula.</param>
-        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
-        /// <param name="chargeCarrierMass">is the charge carrier mass.</param>
-        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
-        /// <param name="completeFitThrash">
-        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
-        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
-        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
-        ///     keeps increasing. If thrash_or_not is false, none is performed.
-        /// </param>
-        public void SetOptions(string averagineFormula, string tagFormula, double chargeCarrierMass, bool useThrash,
-            bool completeFitThrash)
-        {
-            AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
-            AveragineObj.AveragineFormula = averagineFormula;
-            AveragineObj.TagFormula = tagFormula;
-            UseThrash = useThrash;
-            CompleteFitThrash = completeFitThrash;
-            ChargeCarrierMass = chargeCarrierMass;
-            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
-        }
-
-        /// <summary>
         ///     specifies the mass range of the theoretical distribution which covers all points that are of intensity greater than
         ///     specified value.
         /// </summary>
@@ -953,12 +977,6 @@ namespace Engine.HornTransform
                 IsotopeDistribution.MaxPeakMz = _mercuryCache.MostIntenseMw / charge + ChargeCarrierMass -
                                                        MercuryCache.ElectronMass;
             }
-        }
-
-        public void SetChargeCarrierMass(double mass)
-        {
-            ChargeCarrierMass = mass;
-            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
 
 #if Enable_Obsolete

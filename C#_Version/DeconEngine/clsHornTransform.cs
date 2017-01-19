@@ -71,8 +71,11 @@ namespace DeconToolsV2.HornTransform
                 IsotopeFitType = _transformParameters.IsotopeFitType;
                 _isotopeFitScorer.UseIsotopeDistributionCaching = _transformParameters.UseMercuryCaching;
 
-                _isotopeFitScorer.SetOptions(_transformParameters.AveragineFormula, _transformParameters.TagFormula,
-                    _transformParameters.CCMass, _transformParameters.ThrashOrNot, _transformParameters.CompleteFit);
+                _isotopeFitScorer.AveragineFormula = _transformParameters.AveragineFormula;
+                _isotopeFitScorer.TagFormula = _transformParameters.TagFormula;
+                _isotopeFitScorer.ChargeCarrierMass = _transformParameters.CCMass;
+                _isotopeFitScorer.UseThrash = _transformParameters.ThrashOrNot;
+                _isotopeFitScorer.CompleteFitThrash = _transformParameters.CompleteFit;
 
                 ElementalIsotopeComposition = _transformParameters.ElementIsotopeComposition;
             }
