@@ -21,12 +21,13 @@ namespace DeconToolsV2.DTAGeneration
         HCD
     };
 
-    public class clsDTAGenerationParameters : System.ICloneable
+    public class clsDTAGenerationParameters
     {
         private readonly List<int> _msnLevelsToIgnore = new List<int>();
 
+#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
-        public virtual Object Clone()
+        public clsDTAGenerationParameters Clone()
         {
             clsDTAGenerationParameters newParams = new clsDTAGenerationParameters();
 
@@ -51,6 +52,7 @@ namespace DeconToolsV2.DTAGeneration
 
             return newParams;
         }
+#endif
 
         public int get_MSnLevelToIgnore(int index)
         {

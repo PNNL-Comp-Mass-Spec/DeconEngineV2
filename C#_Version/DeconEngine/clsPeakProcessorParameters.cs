@@ -42,24 +42,22 @@ namespace DeconToolsV2.Peaks
         LORENTZIAN = Lorentzian
     };
 
-    public class clsPeakProcessorParameters : System.ICloneable
+    public class clsPeakProcessorParameters
     {
+#if Enable_Obsolete
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
-        public virtual Object Clone()
+        public clsPeakProcessorParameters Clone()
         {
-            clsPeakProcessorParameters newParams = new clsPeakProcessorParameters
+            var newParams = new clsPeakProcessorParameters
             {
                 SignalToNoiseThreshold = this.SignalToNoiseThreshold,
                 PeakBackgroundRatio = this.PeakBackgroundRatio,
                 PeakFitType = this.PeakFitType,
             };
-#if Enable_Obsolete
             newParams.ThresholdedData = ThresholdedData;
-#endif
             return newParams;
         }
 
-#if Enable_Obsolete
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public bool ThresholdedData { get; set; }
 #endif

@@ -164,7 +164,7 @@ namespace Engine.HornTransform
             get { return _transformParameters; }
             set
             {
-                _transformParameters = (clsHornTransformParameters) value.Clone();
+                _transformParameters = value.Clone();
                 IsotopeFitType = _transformParameters.IsotopeFitType;
                 _maxCharge = _transformParameters.MaxCharge;
                 _maxMw = _transformParameters.MaxMW;

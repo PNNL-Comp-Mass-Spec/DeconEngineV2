@@ -67,7 +67,7 @@ namespace DeconToolsV2.HornTransform
             get { return _transformParameters; }
             set
             {
-                _transformParameters = (clsHornTransformParameters) value.Clone();
+                _transformParameters = value.Clone();
                 IsotopeFitType = _transformParameters.IsotopeFitType;
                 _isotopeFitScorer.UseIsotopeDistributionCaching = _transformParameters.UseMercuryCaching;
 

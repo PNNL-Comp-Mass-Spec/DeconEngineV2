@@ -8,7 +8,7 @@ using Engine.TheoreticalProfile;
 
 namespace DeconToolsV2
 {
-    public class clsElementIsotopes : ICloneable
+    public class clsElementIsotopes
     {
         private readonly Dictionary<string, int> _elementIndexDict = new Dictionary<string, int>();
 
@@ -44,7 +44,7 @@ namespace DeconToolsV2
         //}
 #endif
 
-        public virtual object Clone()
+        public clsElementIsotopes Clone()
         {
             var elemIsotopes = new clsElementIsotopes();
 #if Enable_Obsolete

@@ -13,7 +13,7 @@ namespace DeconToolsV2.HornTransform
     }
 #endif
 
-    public class clsHornTransformParameters : ICloneable
+    public class clsHornTransformParameters
     {
 #if Enable_Obsolete
         private static string DEFAULT_ISOTOPE_FILE = "isotope.xml";
@@ -299,7 +299,7 @@ namespace DeconToolsV2.HornTransform
         public string ScanBasedWorkflowType { get; set; }
         public double SaturationThreshold { get; set; }
 
-        public virtual object Clone()
+        public clsHornTransformParameters Clone()
         {
             var newParams = new clsHornTransformParameters
             {
@@ -308,7 +308,7 @@ namespace DeconToolsV2.HornTransform
                 CCMass = CCMass,
                 CompleteFit = CompleteFit,
                 DeleteIntensityThreshold = DeleteIntensityThreshold,
-                ElementIsotopeComposition = (clsElementIsotopes) ElementIsotopeComposition.Clone(),
+                ElementIsotopeComposition = ElementIsotopeComposition.Clone(),
                 MaxCharge = MaxCharge,
                 MaxFit = MaxFit,
                 MaxMW = MaxMW,
