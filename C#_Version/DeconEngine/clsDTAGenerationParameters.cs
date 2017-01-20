@@ -49,6 +49,7 @@ namespace DeconToolsV2.DTAGeneration
             newParams.WriteProgressFile = this.WriteProgressFile;
             newParams.IgnoreMSnScans = this.IgnoreMSnScans;
             newParams.NumMSnLevelsToIgnore = this.NumMSnLevelsToIgnore;
+            newParams.CreateLogFileOnly = this.CreateLogFileOnly;
 
             return newParams;
         }
@@ -66,6 +67,13 @@ namespace DeconToolsV2.DTAGeneration
         }
 
         public bool IgnoreMSnScans { get; set; }
+
+        public bool CreateLogFileOnly { get; set; }
+
+        public bool CreateCompositeDTA
+        {
+            get { return OutputType == OUTPUT_TYPE.CDTA; }
+        }
 
         public int NumMSnLevelsToIgnore { get; set; }
 
@@ -143,6 +151,7 @@ namespace DeconToolsV2.DTAGeneration
             WriteProgressFile = false;
             IgnoreMSnScans = false;
             NumMSnLevelsToIgnore = 0;
+            CreateLogFileOnly = false;
         }
 
         /*  void clsDTAGenerationParameters.GetMSnLevelToIgnore(ref int[] msnLevelsToIgnore)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using DeconToolsV2;
+using DeconToolsV2.DTAGeneration;
 using DeconToolsV2.HornTransform;
 using DeconToolsV2.Peaks;
 using DeconToolsV2.Readers;
@@ -40,13 +41,6 @@ namespace Engine.DTAProcessing
         public bool CreateCompositeDTA { get; set; }
         public bool ConsiderMultiplePrecursors { get; set; }
 
-        // Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
-        //          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
-        //			Profile m/z			Centroid m/z	Delta_PPM
-        //			112.051 			112.077			232
-        //			652.3752			652.4645		137
-        //			1032.56495			1032.6863		118
-        //			1513.7252			1513.9168		127
         public bool DoCentroidMSn { get; set; }
 
         public bool IsProfileDataForMzXML { get; set; }
@@ -67,6 +61,8 @@ namespace Engine.DTAProcessing
         private readonly List<clsHornTransformResults> _transformRecords = new List<clsHornTransformResults>();
         private readonly List<MSnInformationRecord> _msnRecords = new List<MSnInformationRecord>();
         private readonly List<ProfileRecord> _profileRecords = new List<ProfileRecord>();
+
+        private clsDTAGenerationParameters _dtaOptions = new clsDTAGenerationParameters();
 
         public int MSnScanIndex { get; set; }
         public int NumMSnScansProcessed { get; set; }
@@ -127,6 +123,7 @@ namespace Engine.DTAProcessing
             }
         }
 
+#if Enable_Obsolete
         /// <summary>
         /// Set options
         /// </summary>
@@ -174,6 +171,7 @@ namespace Engine.DTAProcessing
         /// <param name="centroid"></param>
         /// <param name="isolationWindowSize"></param>
         /// <param name="isProfileDataForMzXML"></param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetDTAOptions(int minIonCount, int minScan, int maxScan, double minMass, double maxMass,
             bool createLogFileOnly, bool createCompositeDTA, int considerCharge, bool considerMultiplePrecursors,
             bool centroid, int isolationWindowSize, bool isProfileDataForMzXML)
@@ -192,12 +190,37 @@ namespace Engine.DTAProcessing
             IsProfileDataForMzXML = isProfileDataForMzXML;
             _firstScanWritten = false;
         }
+#endif
 
+        public clsDTAGenerationParameters DtaOptions
+        {
+            get { return _dtaOptions; }
+            set
+            {
+                _dtaOptions = value;
+                MinIonCount = _dtaOptions.MinIonCount;
+                MaxMass = _dtaOptions.MaxMass;
+                MinMass = _dtaOptions.MinMass;
+                MaxScan = _dtaOptions.MaxScan;
+                MinScan = _dtaOptions.MinScan;
+                CreateCompositeDTA = _dtaOptions.CreateCompositeDTA;
+                CreateLogFileOnly = _dtaOptions.CreateLogFileOnly;
+                ConsiderCharge = _dtaOptions.ConsiderChargeValue;
+                IsolationWindowSize = _dtaOptions.IsolationWindowSize;
+                ConsiderMultiplePrecursors = _dtaOptions.ConsiderMultiplePrecursors;
+                DoCentroidMSn = _dtaOptions.CentroidMSn;
+                IsProfileDataForMzXML = _dtaOptions.IsProfileDataForMzXML;
+                _firstScanWritten = false;
+            }
+        }
+
+#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetPeakParameters(double pkBkgRatio, double peptideMinBkgRatio)
         {
             SetPeakParametersLowResolution(pkBkgRatio, peptideMinBkgRatio);
         }
+#endif
 
         public void SetPeakParametersLowResolution(double pkBkgRatio, double peptideMinBkgRatio)
         {
@@ -211,13 +234,13 @@ namespace Engine.DTAProcessing
         /// <param name="s2n">Signal-To-Noise Ratio</param>
         /// <param name="thresh">Peak-Intensity Threshold</param>
         /// <param name="thresholded"></param>
-        /// <param name="fit_type">Peak-Fit Type</param>
+        /// <param name="fitType">Peak-Fit Type</param>
         public void SetPeakProcessorOptions(double s2n, double thresh, bool thresholded,
-            PEAK_FIT_TYPE fit_type)
+            PEAK_FIT_TYPE fitType)
         {
-            _parentPeakProcessor.SetOptions(s2n, thresh, thresholded, fit_type);
-            _msNPeakProcessor.SetOptions(s2n, thresh, thresholded, fit_type);
-            _summedPeakProcessor.SetOptions(s2n, thresh, thresholded, fit_type);
+            _parentPeakProcessor.SetOptions(s2n, thresh, thresholded, fitType);
+            _msNPeakProcessor.SetOptions(s2n, thresh, thresholded, fitType);
+            _summedPeakProcessor.SetOptions(s2n, thresh, thresholded, fitType);
         }
 
         public clsHornTransformParameters MassTransformOptions
@@ -521,7 +544,7 @@ namespace Engine.DTAProcessing
                 //reset chk_charge1
                 mtParams.CheckAllPatternsAgainstCharge1 = chkcharge1;
 
-                // not ejecting precusor record here as the indices are going to be off
+                // not ejecting precursor record here as the indices are going to be off
                 // also algo is changed to use only THRASH if both cs are equal
                 var foundTransformRecord = false;
                 var transformRecord2 = new clsHornTransformResults();
@@ -1346,12 +1369,12 @@ namespace Engine.DTAProcessing
                     transformRecord.ChargeState);
                 /*// Purely for TomMetz's data
                 var metz_mod = "";
-                if (mobj_raw_data_dta.IsProfileScan(msN_scan_num))
+                if (RawDataDTA.IsProfileScan(msNScanNum))
                     metz_mod = "_FTMS";
                 else
                     metz_mod = "_ITMS";
-                var fileName = string.Format("{0}.{1}.{2}.{3}.dta", mch_output_file + metz_mod, msN_scan_num, msN_scan_num, mobj_transformRecord.mshort_cs);
-                 */
+                var fileName = string.Format("{0}.{1}.{2}.{3}.dta", OutputFile + metz_mod, msNScanNum, msNScanNum, transformRecord.ChargeState);
+                */
 
                 // for composite dta
                 if (CreateCompositeDTA)
