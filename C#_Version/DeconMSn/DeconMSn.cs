@@ -279,9 +279,9 @@ namespace DeconMSn
                 sw.Stop();
 
                 Console.WriteLine();
-                Console.WriteLine("Done. Finished processing in {0} seconds.", sw.Elapsed.TotalSeconds);
+                Console.WriteLine("Done. Finished processing in {0:F1} seconds.", sw.Elapsed.TotalSeconds);
 
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(1500);
                 return 0;
             }
             catch (Exception ex)

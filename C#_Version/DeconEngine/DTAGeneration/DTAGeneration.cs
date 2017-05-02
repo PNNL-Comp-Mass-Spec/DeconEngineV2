@@ -1237,9 +1237,9 @@ namespace Engine.DTAProcessing
                 // now sorted output all
                 foreach (var profileRecord in _profileRecords)
                 {
-                    fout.WriteLine("{0}\t{1}\t{2:F4}\t{3:F4}", profileRecord.MSnScanNum,
+                    fout.WriteLine("{0}\t{1}\t{2:F4}\t{3}", profileRecord.MSnScanNum,
                         profileRecord.ParentScanNum, profileRecord.AgcTime,
-                        profileRecord.TotalIonCurrent);
+                                   PRISM.StringUtilities.ValueToString(profileRecord.TotalIonCurrent, 4, 1e10));
                 }
             }
         }
