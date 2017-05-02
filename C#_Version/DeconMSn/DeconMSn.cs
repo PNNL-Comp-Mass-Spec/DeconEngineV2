@@ -13,86 +13,63 @@ namespace DeconMSn
     {
         public int RunDeconMSn(string[] args)
         {
-            string commandLine;
-
-            Stopwatch sw; //initialize Begin and End for the timer
-
-            string strAppFolder;
-            string strSVMParamFilePath;
-            string strDllFileAndPath;
-
-            strAppFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            strSVMParamFilePath = Path.Combine(strAppFolder, "svm_params.xml");
-
-            if (args.Length == 0)
+            try
             {
-                PrintUsage();
-                return 0;
-            }
 
-            //default options
-            int IValue = 25; //ion count - resetting it to 25
-            int FValue = 1;
-            int LValue = 1000000;
-            int CValue = 0;
-            double BValue = 200;
-            double TValue = 5000;
+                var strAppFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var strSVMParamFilePath = Path.Combine(strAppFolder, "svm_params.xml");
 
-            string stringIvalue;
-            string stringFvalue;
-            string stringLvalue;
-            string stringBvalue;
-            string stringTvalue;
-            string stringCvalue;
-            string stringFileName;
-            string stringOutputFileFormat;
-            string stringSpectraFormat;
-            string stringParamFile;
-
-            clsProcRunner obj_proc_runner = new clsProcRunner();
-            clsHornTransformParameters obj_transform_parameters = new clsHornTransformParameters();
-            clsDTAGenerationParameters obj_dta_generation_parameters = new clsDTAGenerationParameters();
-            clsPeakProcessorParameters obj_peak_parameters = new clsPeakProcessorParameters();
-
-            bool error = false;
-            obj_dta_generation_parameters.SVMParamFile = strSVMParamFilePath;
-            obj_dta_generation_parameters.CentroidMSn = false;
-
-            sw = new Stopwatch();
-            sw.Start();
-
-            int argvIndex = 1;
-
-            // First check for a parameter file defined using -P
-            if (args.Length > 0)
-            {
-                for (argvIndex = 0; argvIndex < args.Length; argvIndex++)
+                if (args.Length == 0)
                 {
-                    commandLine = args[argvIndex];
-                    if (commandLine.StartsWith("-P") && !commandLine.ToLower().StartsWith("-progress"))
+                    PrintUsage();
+                    return 0;
+                }
+
+                var procRunner = new clsProcRunner();
+                var transformParameters = new clsHornTransformParameters();
+                var dtaGenParameters = new clsDTAGenerationParameters();
+                var peakParameters = new clsPeakProcessorParameters();
+
+                var error = false;
+                dtaGenParameters.SVMParamFile = strSVMParamFilePath;
+                dtaGenParameters.CentroidMSn = false;
+
+                var sw = new Stopwatch();
+                sw.Start();
+
+                // First check for a parameter file defined using -P
+                if (args.Length > 0)
+                {
+                    foreach (var currentArg in args)
                     {
-                        stringParamFile = commandLine.Remove(0, 2);
+                        if (!currentArg.StartsWith("-P") || currentArg.ToLower().StartsWith("-progress"))
+                            continue;
+
+                        var stringParamFile = currentArg.Substring(2);
 
                         Console.WriteLine("Reading Parameter File " + stringParamFile);
 
-                        XmlTextReader rdr = new XmlTextReader(stringParamFile);
+                        var rdr = new XmlTextReader(stringParamFile);
+
                         //Read each node in the tree.
                         while (rdr.Read())
                         {
                             switch (rdr.NodeType)
                             {
                                 case XmlNodeType.Element:
-                                    if (string.Compare(rdr.Name, "PeakParameters") == 0)
+                                    if (string.Equals(rdr.Name, "PeakParameters", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        obj_peak_parameters.LoadV1PeakParameters(rdr);
+                                        peakParameters.LoadV1PeakParameters(rdr);
                                     }
-                                    else if (string.Compare(rdr.Name, "HornTransformParameters") == 0)
+                                    else if (string.Equals(rdr.Name, "HornTransformParameters", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        obj_transform_parameters.LoadV1HornTransformParameters(rdr);
+#pragma warning disable 618
+                                        transformParameters.LoadV1HornTransformParameters(rdr);
+#pragma warning restore 618
                                     }
-                                    else if (string.Compare(rdr.Name, "DTAGenerationParameters") == 0)
+                                    else if (string.Equals(rdr.Name, "DTAGenerationParameters", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        obj_dta_generation_parameters.LoadV1DTAGenerationParameters(rdr);
+                                        dtaGenParameters.LoadV1DTAGenerationParameters(rdr);
                                     }
                                     break;
                                 default:
@@ -100,205 +77,276 @@ namespace DeconMSn
                             }
                         }
 
-                        if (rdr != null)
-                            rdr.Close();
+                        rdr.Close();
                     }
                 }
-            }
 
-            bool filenameDefined = false;
-            stringSpectraFormat = "ALL";
+                var filenameDefined = false;
+                var stringSpectraFormat = "ALL";
 
-            if (args.Length > 0)
-            {
-                // Now read the remaining parameters
-                for (argvIndex = 0; argvIndex < args.Length; argvIndex++)
+                if (args.Length == 0)
                 {
-                    commandLine = args[argvIndex];
-                    if (!error)
+                    PrintUsage();
+                    return 0;
+                }
+
+                // Read the remaining parameters
+                foreach (var arg in args)
+                {
+                    var currentArg = GetCommandLineArg(arg);
+
+                    if (currentArg == "-?" || currentArg == "/?" || currentArg == "-help" || currentArg == "/help")
                     {
-                        if (commandLine.ToLower().StartsWith("-progress"))
-                        {
-                            obj_dta_generation_parameters.WriteProgressFile = true;
-                            continue;
-                        }
-
-                        if (commandLine.ToLower().StartsWith("-centroid"))
-                        {
-                            // Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
-                            //          For example, in scan 8101 of dataset RAW_Franc_Salm_IMAC_0h_R1A_18Jul13_Frodo_13-04-15, we see these values:
-                            //          Profile m/z         Centroid m/z	Delta_PPM
-                            //			112.051 			112.077			232
-                            //			652.3752			652.4645		137
-                            //			1032.56495			1032.6863		118
-                            //			1513.7252			1513.9168		127
-                            obj_dta_generation_parameters.CentroidMSn = true;
-                            continue;
-                        }
-
-                        if (!commandLine.StartsWith("-"))
-                        {
-                            // Treat the first non-switch parameter as the dataset to process
-                            if (!filenameDefined)
-                                obj_proc_runner.FileName = commandLine;
-
-                            filenameDefined = true;
-                        }
-                        else if (commandLine.Length > 1)
-                        {
-                            switch (commandLine[1])
-                            {
-                                case 'I':
-                                    stringIvalue = commandLine.Remove(0, 2);
-                                    IValue = Convert.ToInt32(stringIvalue, 10);
-                                    obj_dta_generation_parameters.MinIonCount = IValue;
-                                    break;
-                                case 'F':
-                                    stringFvalue = commandLine.Remove(0, 2);
-                                    FValue = Convert.ToInt32(stringFvalue, 10);
-                                    obj_dta_generation_parameters.MinScan = FValue;
-                                    break;
-                                case 'L':
-                                    stringLvalue = commandLine.Remove(0, 2);
-                                    LValue = Convert.ToInt32(stringLvalue, 10);
-                                    obj_dta_generation_parameters.MaxScan = LValue;
-                                    break;
-                                case 'B':
-                                    stringBvalue = commandLine.Remove(0, 2);
-                                    BValue = Convert.ToDouble(stringBvalue);
-                                    obj_dta_generation_parameters.MinMass = BValue;
-                                    break;
-                                case 'T':
-                                    stringTvalue = commandLine.Remove(0, 2);
-                                    TValue = Convert.ToDouble(stringTvalue);
-                                    obj_dta_generation_parameters.MaxMass = TValue;
-                                    break;
-                                case 'C':
-                                    stringCvalue = commandLine.Remove(0, 2);
-                                    CValue = Convert.ToInt16(stringCvalue);
-                                    obj_dta_generation_parameters.ConsiderChargeValue = CValue;
-                                    break;
-                                case 'S':
-                                    stringSpectraFormat = commandLine.Remove(0, 2);
-                                    if (string.Compare(stringSpectraFormat, "ETD") == 0)
-                                    {
-                                        obj_dta_generation_parameters.SpectraType = SPECTRA_TYPE.ETD;
-                                    }
-                                    else if (string.Compare(stringSpectraFormat, "CID") == 0)
-                                    {
-                                        obj_dta_generation_parameters.SpectraType = SPECTRA_TYPE.CID;
-                                    }
-                                    else if (string.Compare(stringSpectraFormat, "HCD") == 0)
-                                    {
-                                        obj_dta_generation_parameters.SpectraType = SPECTRA_TYPE.HCD;
-                                    }
-                                    else
-                                    {
-                                        stringSpectraFormat = "ALL";
-                                        obj_dta_generation_parameters.SpectraType = SPECTRA_TYPE.ALL;
-                                    }
-                                    break;
-                                case 'X':
-                                    stringOutputFileFormat = commandLine.Remove(0, 2);
-                                    if (string.Compare(stringOutputFileFormat, "MGF") == 0)
-                                        obj_dta_generation_parameters.OutputType = OUTPUT_TYPE.MGF;
-                                    else if (string.Compare(stringOutputFileFormat, "LOG") == 0)
-                                        obj_dta_generation_parameters.OutputType = OUTPUT_TYPE.LOG;
-                                    else if (string.Compare(stringOutputFileFormat, "CDTA") == 0)
-                                        obj_dta_generation_parameters.OutputType = OUTPUT_TYPE.CDTA;
-                                    else if (string.Compare(stringOutputFileFormat, "MZXML") == 0)
-                                        obj_dta_generation_parameters.OutputType = OUTPUT_TYPE.MZXML;
-                                    else if (string.Compare(stringOutputFileFormat, "DTA") == 0)
-                                        obj_dta_generation_parameters.OutputType = OUTPUT_TYPE.DTA;
-                                    else
-                                    {
-                                        PrintUsage();
-                                        error = true;
-                                    }
-                                    break;
-                                case 'D':
-                                    string outputFolderPath;
-                                    outputFolderPath = commandLine.Remove(0, 2);
-                                    obj_proc_runner.OutputPathForDTACreation = outputFolderPath;
-                                    break;
-                                case 'G': // Used by Extract_msn; ignored by DeconMSn
-                                    break;
-                                case 'M': // Used by Extract_msn; ignored by DeconMSn
-                                    break;
-                                case 'P': // Already handled above
-                                    break;
-                                default:
-                                    PrintUsage();
-                                    error = true;
-                                    break;
-                            } // Switch
-
-                        } // If starts with '-'
-
-                    }
-                    else
-                    {
+                        PrintUsage();
                         return 0;
                     }
+
+                    if (currentArg.ToLower().StartsWith("-progress"))
+                    {
+                        dtaGenParameters.WriteProgressFile = true;
+                        continue;
+                    }
+
+                    if (currentArg.ToLower().StartsWith("-centroid"))
+                    {
+                        dtaGenParameters.CentroidMSn = true;
+                        continue;
+                    }
+
+                    if (!currentArg.StartsWith("-"))
+                    {
+                        // Treat the first non-switch parameter as the dataset to process
+                        if (!filenameDefined)
+                        {
+                            procRunner.FileName = currentArg;
+                            filenameDefined = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ignoring extra argument " + currentArg);
+                        }
+
+                        continue;
+                    }
+
+                    if (currentArg.Length <= 1)
+                    {
+                        Console.WriteLine("Ignoring invalid argument " + currentArg);
+                        continue;
+                    }
+
+                    switch (currentArg[1])
+                    {
+                        case 'I':
+                            if (GetParamInt(currentArg, "Minimum ion count", out var minIonCount))
+                                dtaGenParameters.MinIonCount = minIonCount;
+                            else
+                                error = true;
+                            break;
+                        case 'F':
+                            if (GetParamInt(currentArg, "First scan", out var scanFirst))
+                                dtaGenParameters.MinScan = scanFirst;
+                            else
+                                error = true;
+                            break;
+                        case 'L':
+                            if (GetParamInt(currentArg, "Last scan", out var scanLast))
+                                dtaGenParameters.MaxScan = scanLast;
+                            else
+                                error = true;
+                            break;
+                        case 'B':
+                            if (GetParamDbl(currentArg, "Min mass", out var minMass))
+                                dtaGenParameters.MinMass = minMass;
+                            else
+                                error = true;
+                            break;
+                        case 'T':
+                            if (GetParamDbl(currentArg, "Max mass", out var maxMass))
+                                dtaGenParameters.MaxMass = maxMass;
+                            else
+                                error = true;
+                            break;
+                        case 'C':
+                            if (GetParamInt(currentArg, "Consider charge", out var considerCharge))
+                                dtaGenParameters.ConsiderChargeValue = considerCharge;
+                            else
+                                error = true;
+                            dtaGenParameters.ConsiderChargeValue = considerCharge;
+                            break;
+                        case 'S':
+                            stringSpectraFormat = currentArg.Substring(2);
+                            if (string.Equals(stringSpectraFormat, "ETD", StringComparison.OrdinalIgnoreCase))
+                            {
+                                dtaGenParameters.SpectraType = SPECTRA_TYPE.ETD;
+                            }
+                            else if (string.Equals(stringSpectraFormat, "CID", StringComparison.OrdinalIgnoreCase))
+                            {
+                                dtaGenParameters.SpectraType = SPECTRA_TYPE.CID;
+                            }
+                            else if (string.Equals(stringSpectraFormat, "HCD", StringComparison.OrdinalIgnoreCase))
+                            {
+                                dtaGenParameters.SpectraType = SPECTRA_TYPE.HCD;
+                            }
+                            else
+                            {
+                                stringSpectraFormat = "ALL";
+                                dtaGenParameters.SpectraType = SPECTRA_TYPE.ALL;
+                            }
+                            break;
+                        case 'X':
+                            var outputFileFormat = currentArg.Substring(2);
+                            if (string.Equals(outputFileFormat, "MGF", StringComparison.OrdinalIgnoreCase))
+                                dtaGenParameters.OutputType = OUTPUT_TYPE.MGF;
+                            else if (string.Equals(outputFileFormat, "LOG", StringComparison.OrdinalIgnoreCase))
+                                dtaGenParameters.OutputType = OUTPUT_TYPE.LOG;
+                            else if (string.Equals(outputFileFormat, "CDTA", StringComparison.OrdinalIgnoreCase))
+                                dtaGenParameters.OutputType = OUTPUT_TYPE.CDTA;
+                            else if (string.Equals(outputFileFormat, "MZXML", StringComparison.OrdinalIgnoreCase))
+                                dtaGenParameters.OutputType = OUTPUT_TYPE.MZXML;
+                            else if (string.Equals(outputFileFormat, "DTA", StringComparison.OrdinalIgnoreCase))
+                                dtaGenParameters.OutputType = OUTPUT_TYPE.DTA;
+                            else
+                            {
+                                PrintUsage();
+                                error = true;
+                            }
+                            break;
+                        case 'D':
+                            var outputFolderPath = currentArg.Substring(2);
+                            procRunner.OutputPathForDTACreation = outputFolderPath;
+                            break;
+                        case 'G': // Used by Extract_msn; ignored by DeconMSn
+                            break;
+                        case 'M': // Used by Extract_msn; ignored by DeconMSn
+                            break;
+                        case 'P': // Already handled above
+                            break;
+                        default:
+                            Console.WriteLine("Unrecognized argument: " + currentArg);
+                            error = true;
+                            break;
+                    } // Switch
+
+                    if (!error)
+                        continue;
+
+                    Console.WriteLine();
+                    Console.WriteLine("For program syntax, run " + GetExeName() + " without any parameters");
+                    System.Threading.Thread.Sleep(1500);
+                    return -1;
                 }
-            }
 
-            if (!filenameDefined)
+                if (!filenameDefined)
+                {
+                    PrintUsage();
+                    return -1;
+                }
+
+                var filenameToProcess = procRunner.FileName;
+
+                Console.WriteLine("Processing File {0}", filenameToProcess);
+                Console.WriteLine();
+
+                // Display the settings
+
+                Console.WriteLine("Minimum Number of ions for valid MSn scan: {0}", dtaGenParameters.MinIonCount);
+
+                Console.WriteLine("Scan Start: {0}", dtaGenParameters.MinScan);
+                Console.WriteLine("Scan End: {0}", dtaGenParameters.MaxScan);
+
+                Console.WriteLine("m/z Start: {0}", dtaGenParameters.MinMass);
+                Console.WriteLine("m/z End: {0}", dtaGenParameters.MaxMass);
+
+                if (dtaGenParameters.ConsiderChargeValue > 0)
+                    Console.WriteLine("-C enabled with {0}", dtaGenParameters.ConsiderChargeValue);
+
+                Console.WriteLine("Spectra to process: {0}", stringSpectraFormat);
+
+                var outputTypeName = dtaGenParameters.OutputTypeName;
+                Console.WriteLine("Output format: {0}", outputTypeName);
+
+                Console.WriteLine("Create progress file: {0}", dtaGenParameters.WriteProgressFile);
+                Console.WriteLine("Centroid profile mode MSn spectra: {0}", dtaGenParameters.CentroidMSn.ToString());
+                Console.WriteLine();
+
+                procRunner.HornTransformParameters = transformParameters;
+                procRunner.PeakProcessorParameters = peakParameters;
+                procRunner.DTAGenerationParameters = dtaGenParameters;
+
+                procRunner.CreateDTAFile();
+
+                sw.Stop();
+
+                Console.WriteLine();
+                Console.WriteLine("Done. Finished processing in {0} seconds.", sw.Elapsed.TotalSeconds);
+
+                System.Threading.Thread.Sleep(1000);
+                return 0;
+            }
+            catch (Exception ex)
             {
-                PrintUsage();
+                Console.WriteLine();
+                Console.WriteLine("Error processing: " + ex.Message);
+                Console.WriteLine(PRISM.clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                System.Threading.Thread.Sleep(2000);
                 return -1;
             }
 
-            if (error) //Anoop 05/08
+        }
+
+        private string GetCommandLineArg(string currentArg)
+        {
+
+            if (currentArg.StartsWith("/"))
             {
-                return -1;
+                // DeconMSn arguments start with a dash; auto-switch
+                return "-" + currentArg.Substring(1);
             }
 
-            string filenameToProcess = obj_proc_runner.FileName;
+            return currentArg;
 
-            Console.WriteLine("Processing File {0}", filenameToProcess);
-            Console.WriteLine();
+        }
 
-            // Display the settings
+        private string GetExeName()
+        {
+            var exeName = Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            return exeName;
+        }
 
-            Console.WriteLine("Minimum Number of ions for valid MSn scan: {0}", obj_dta_generation_parameters.MinIonCount);
+        private bool GetParamDbl(string currentArg, string argName, out double argValue)
+        {
+            var argValueText = currentArg.Substring(2).TrimStart(':');
 
-            Console.WriteLine("Scan Start: {0}", obj_dta_generation_parameters.MinScan);
-            Console.WriteLine("Scan End: {0}", obj_dta_generation_parameters.MaxScan);
+            if (double.TryParse(argValueText, out argValue))
+            {
+                return true;
+            }
 
-            Console.WriteLine("m/z Start: {0}", obj_dta_generation_parameters.MinMass);
-            Console.WriteLine("m/z End: {0}", obj_dta_generation_parameters.MaxMass);
+            argValue = 0;
+            Console.WriteLine("{0} for -{1} must be a number", argName, currentArg[0]);
+            return false;
+        }
 
-            if (obj_dta_generation_parameters.ConsiderChargeValue > 0)
-                Console.WriteLine("-C enabled with {0}", obj_dta_generation_parameters.ConsiderChargeValue);
+        private bool GetParamInt(string currentArg, string argName, out int argValue)
+        {
+            var argValueText = currentArg.Substring(2).TrimStart(':');
 
-            Console.WriteLine("Spectra to process: {0}", stringSpectraFormat);
+            if (int.TryParse(argValueText, out argValue))
+            {
+                return true;
+            }
 
-            stringOutputFileFormat = obj_dta_generation_parameters.OutputTypeName;
-            Console.WriteLine("Output format: {0}", stringOutputFileFormat);
-
-            Console.WriteLine("Create progress file: {0}", obj_dta_generation_parameters.WriteProgressFile);
-            Console.WriteLine("Centroid profile mode MSn spectra: {0}", obj_dta_generation_parameters.CentroidMSn.ToString());
-            Console.WriteLine();
-
-            obj_proc_runner.HornTransformParameters = obj_transform_parameters;
-            obj_proc_runner.PeakProcessorParameters = obj_peak_parameters;
-            obj_proc_runner.DTAGenerationParameters = obj_dta_generation_parameters;
-
-            obj_proc_runner.CreateDTAFile();
-
-            sw.Stop();
-
-            Console.WriteLine();
-            Console.WriteLine("Done. Finished processing in {0} seconds.", sw.Elapsed.TotalSeconds);
-
-            return 0;
+            argValue = 0;
+            Console.WriteLine("{0} for -{1} must be an integer", argName, currentArg[0]);
+            return false;
         }
 
         private void PrintUsage()
         {
+
             Console.WriteLine();
-            Console.WriteLine("DeconMSn usage : DeconMSn [options] filename");
+            Console.WriteLine("DeconMSn usage : " + GetExeName() + " [options] filename");
             Console.WriteLine();
             Console.WriteLine("[options] are");
             Console.WriteLine();
@@ -329,6 +377,8 @@ namespace DeconMSn
             Console.WriteLine("Maintained by Matthew Monroe");
             Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or samuel.payne@pnnl.gov");
             Console.WriteLine("Website: http://omics.pnl.gov or http://panomics.pnnl.gov");
+
+            System.Threading.Thread.Sleep(2500);
         }
     }
 }
