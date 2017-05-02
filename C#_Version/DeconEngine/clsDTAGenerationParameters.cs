@@ -145,7 +145,6 @@ namespace DeconToolsV2.DTAGeneration
             MaxMass = 5000;
             CCMass = 1.00727638;
             OutputType = OUTPUT_TYPE.CDTA;
-            OutputType = OUTPUT_TYPE.DTA;
             SVMParamFile = "svm_params.xml";
             ConsiderMultiplePrecursors = false;
             CentroidMSn = true;
