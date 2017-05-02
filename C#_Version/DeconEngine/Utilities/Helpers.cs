@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,6 @@ namespace Engine.Utilities
 {
     internal static class Helpers
     {
-        [Obsolete("Only used by DeconTools for IMFRun; BrukerV2 exists, but has no use path; Other uses have been otherwise handled", false)]
         public static double atof(string str)
         {
             double val = 0;
@@ -22,6 +20,7 @@ namespace Engine.Utilities
             return 0;
         }
 
+#if Enable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static bool GetInt16(string option_str, string search_str, int start, out short val)
         {
@@ -240,6 +239,6 @@ namespace Engine.Utilities
 
             return background_intensity / num_pts_used;
         }
+#endif
     }
 }
-#endif

@@ -28,6 +28,8 @@ namespace Engine.HornTransform
             _useChargeStateInCaching = true;
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere outside of this class", false)]
         public void GetPeakAndIntensity(double mz1, double mz2, double i1, double i2, double halfFwhm, out double mz,
             out double i)
         {
@@ -37,6 +39,7 @@ namespace Engine.HornTransform
             //  i = i1 * Math.Pow(2, (mz1-mz) * (mz1-mz)/ (halfFwhm*halfFwhm));
         }
 
+        [Obsolete("Not used anywhere", false)]
         public void GetPeakTops(List<double> mzs, List<double> intensities, out List<double> peakTopMzs,
             out List<double> peakTopIntensities, List<int> isotopeIndices, double halfFwhm, double mzSpacing)
         {
@@ -91,6 +94,7 @@ namespace Engine.HornTransform
             }
         }
 
+        [Obsolete("Not used anywhere", false)]
         public void ExtractIsotopeIndices(List<double> mzs, List<double> intensities, out List<int> peakIndex,
             double mzSpacing, double threshold)
         {
@@ -147,6 +151,7 @@ namespace Engine.HornTransform
                 peakIndex.Add(mzs.Count - 1);
             }
         }
+#endif
 
         public int MercurySize { get; set; }
 

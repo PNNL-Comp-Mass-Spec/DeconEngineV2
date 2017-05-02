@@ -26,13 +26,14 @@ namespace DeconToolsV2.DTAGeneration
     /// DTA Generation parameters
     /// </summary>
     /// <remarks>Used by DeconMSn</remarks>
-    public class clsDTAGenerationParameters : ICloneable
+    public class clsDTAGenerationParameters
     {
-        private readonly List<int> mvect_msn_levels_to_ignore;
+        private readonly List<int> _msnLevelsToIgnore = new List<int>();
 
+#if Enable_Obsolete
         public virtual Object Clone()
         {
-            var new_params = new clsDTAGenerationParameters
+            var newParams = new clsDTAGenerationParameters
             {
                 CCMass = CCMass,
                 ConsiderChargeValue = ConsiderChargeValue,
@@ -51,24 +52,33 @@ namespace DeconToolsV2.DTAGeneration
                 IsProfileDataForMzXML = IsProfileDataForMzXML,
                 WriteProgressFile = WriteProgressFile,
                 IgnoreMSnScans = IgnoreMSnScans,
-                NumMSnLevelsToIgnore = NumMSnLevelsToIgnore
+                NumMSnLevelsToIgnore = NumMSnLevelsToIgnore,
+				CreateLogFileOnly = CreateLogFileOnly
             };
 
 
-            return new_params;
+            return newParams;
         }
 
         public int get_MSnLevelToIgnore(int index)
         {
-            return mvect_msn_levels_to_ignore[index];
+            return _msnLevelsToIgnore[index];
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void set_MSnLevelToIgnore(int value)
         {
-            mvect_msn_levels_to_ignore.Add(value);
+            _msnLevelsToIgnore.Add(value);
         }
 
         public bool IgnoreMSnScans { get; set; }
+
+        public bool CreateLogFileOnly { get; set; }
+
+        public bool CreateCompositeDTA
+        {
+            get { return OutputType == OUTPUT_TYPE.CDTA; }
+        }
 
         public int NumMSnLevelsToIgnore { get; set; }
 
@@ -146,7 +156,7 @@ namespace DeconToolsV2.DTAGeneration
             WriteProgressFile = false;
             IgnoreMSnScans = false;
             NumMSnLevelsToIgnore = 0;
-            mvect_msn_levels_to_ignore = new List<int>();
+            CreateLogFileOnly = false;
         }
 
         /*  void clsDTAGenerationParameters.GetMSnLevelToIgnore(ref int[] msnLevelsToIgnore)
@@ -156,11 +166,13 @@ namespace DeconToolsV2.DTAGeneration
 
             for (int levelNum = 0; levelNum < numLevels; levelNum++)
             {
-                int level = mvect_msn_levels_to_ignore[levelNum];
+                int level = _msnLevelsToIgnore[levelNum];
                 msnLevelsToIgnore[levelNum] = level;
             }
         }*/
 
+#if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SaveV1DTAGenerationParameters(XmlTextWriter xwriter)
         {
             xwriter.WriteWhitespace("\n\t");
@@ -219,16 +231,15 @@ namespace DeconToolsV2.DTAGeneration
                 var numLevels = NumMSnLevelsToIgnore;
                 for (var levelNum = 0; levelNum < numLevels; levelNum++)
                 {
-                    var level = mvect_msn_levels_to_ignore[levelNum];
+                    int level = mvect_msn_levels_to_ignore[levelNum];
                     xwriter.WriteWhitespace("\n\t\t");
                     xwriter.WriteElementString("MSnLevelToIgnore", level.ToString());
-
                 }
             }
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
-
         }
+#endif
 
         public void LoadV1DTAGenerationParameters(XmlReader rdr)
         {
@@ -405,7 +416,7 @@ namespace DeconToolsV2.DTAGeneration
                             }
                             NumMSnLevelsToIgnore++;
                             int level = short.Parse(rdr.Value);
-                            mvect_msn_levels_to_ignore.Add(level);
+                            _msnLevelsToIgnore.Add(level);
                         }
                         else if (rdr.Name.Equals("CCMass"))
                         {
@@ -447,21 +458,22 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
+                            // TODO: can probably use Enum.TryParse()...
                             if (rdr.Value.Equals(OUTPUT_TYPE.DTA.ToString()))
                             {
-                                OutputType = OUTPUT_TYPE.DTA;
+                                this.OutputType = OUTPUT_TYPE.DTA;
                             }
                             else if (rdr.Value.Equals(OUTPUT_TYPE.LOG.ToString()))
                             {
-                                OutputType = OUTPUT_TYPE.LOG;
+                                this.OutputType = OUTPUT_TYPE.LOG;
                             }
                             else if (rdr.Value.Equals(OUTPUT_TYPE.CDTA.ToString()))
                             {
-                                OutputType = OUTPUT_TYPE.CDTA;
+                                this.OutputType = OUTPUT_TYPE.CDTA;
                             }
                             else if (rdr.Value.Equals(OUTPUT_TYPE.MGF.ToString()))
                             {
-                                OutputType = OUTPUT_TYPE.MGF;
+                                this.OutputType = OUTPUT_TYPE.MGF;
                             }
                         }
                         break;

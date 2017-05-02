@@ -9,70 +9,87 @@ namespace DeconToolsV2.Peaks
     /// <remarks>Used by DeconMSn and OldDecon2LSParameters</remarks>
     public enum PEAK_FIT_TYPE
     {
-        APEX = 0,
-        QUADRATIC,
-        LORENTZIAN
+        /// <summary>
+        ///     The peak is the m/z value higher than the points before and after it
+        /// </summary>
+        Apex = 0,
+
+        /// <summary>
+        ///     The peak is the m/z value which is a quadratic fit of the three points around the apex
+        /// </summary>
+        Quadratic,
+
+        /// <summary>
+        ///     The peak is the m/z value which is a lorentzian fit of the three points around the apex
+        /// </summary>
+        Lorentzian,
+
+        /// <summary>
+        /// Alias: The peak is the m/z value higher than the points before and after it
+        /// </summary>
+        [Obsolete("Use Apex.", true)]
+        APEX = Apex,
+
+        /// <summary>
+        /// Alias: The peak is the m/z value which is a quadratic fit of the three points around the apex
+        /// </summary>
+        [Obsolete("Use Quadratic.", true)]
+        QUADRATIC = Quadratic,
+
+        /// <summary>
+        /// Alias: The peak is the m/z value which is a lorentzian fit of the three points around the apex
+        /// </summary>
+        [Obsolete("Use Lorentzian.", true)]
+        LORENTZIAN = Lorentzian
     };
 
+    public class clsPeakProcessorParameters
+    {
+#if Enable_Obsolete
     /// <summary>
     /// Peak processor parameters
-    /// </summary>
-    /// <remarks>Used by DeconMSn and OldDecon2LSParameters</remarks>
-    public class clsPeakProcessorParameters : System.ICloneable
-    {
-        private double mdbl_SNThreshold;
-        private double mdbl_PeakBackgroundRatio;
-        private bool mbln_thresholded_data;
-        private PEAK_FIT_TYPE menm_FitType;
-
-        public virtual Object Clone()
+        public clsPeakProcessorParameters Clone()
         {
-            var new_params = new clsPeakProcessorParameters(mdbl_SNThreshold,
-                mdbl_PeakBackgroundRatio, mbln_thresholded_data, menm_FitType);
-            return new_params;
+            var newParams = new clsPeakProcessorParameters
+            {
+                SignalToNoiseThreshold = this.SignalToNoiseThreshold,
+                PeakBackgroundRatio = this.PeakBackgroundRatio,
+                PeakFitType = this.PeakFitType,
+            };
+            newParams.ThresholdedData = ThresholdedData;
+            return newParams;
         }
 
-        public bool ThresholdedData
-        {
-            get => mbln_thresholded_data;
-            set => mbln_thresholded_data = value;
-        }
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
+        public bool ThresholdedData { get; set; }
+#endif
 
-        public double PeakBackgroundRatio
-        {
-            get => mdbl_PeakBackgroundRatio;
-            set => mdbl_PeakBackgroundRatio = value;
-        }
+        public double PeakBackgroundRatio { get; set; }
 
-        public double SignalToNoiseThreshold
-        {
-            get => mdbl_SNThreshold;
-            set => mdbl_SNThreshold = value;
-        }
+        public double SignalToNoiseThreshold { get; set; }
 
-        public PEAK_FIT_TYPE PeakFitType
-        {
-            get => menm_FitType;
-            set => menm_FitType = value;
-        }
+        public PEAK_FIT_TYPE PeakFitType { get; set; }
 
         public bool WritePeaksToTextFile { get; set; }
 
         public clsPeakProcessorParameters()
         {
-            mdbl_SNThreshold = 3.0;
-            mdbl_PeakBackgroundRatio = 5.0;
-            menm_FitType = PEAK_FIT_TYPE.QUADRATIC;
+            SignalToNoiseThreshold = 3.0;
+            PeakBackgroundRatio = 5.0;
+            PeakFitType = PEAK_FIT_TYPE.Quadratic;
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public clsPeakProcessorParameters(double sn, double peak_bg_ratio, bool thresholded_data, PEAK_FIT_TYPE fit_type)
         {
-            mdbl_SNThreshold = sn;
-            mdbl_PeakBackgroundRatio = peak_bg_ratio;
-            menm_FitType = fit_type;
-            mbln_thresholded_data = thresholded_data;
+            SignalToNoiseThreshold = sn;
+            PeakBackgroundRatio = peak_bg_ratio;
+            PeakFitType = fit_type;
+            ThresholdedData = thresholded_data;
         }
 
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public void SaveV1PeakParameters(System.Xml.XmlTextWriter xwriter)
         {
             xwriter.WriteWhitespace("\n\t");
@@ -90,6 +107,7 @@ namespace DeconToolsV2.Peaks
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
         }
+#endif
 
         public void LoadV1PeakParameters(XmlReader rdr)
         {
@@ -142,17 +160,17 @@ namespace DeconToolsV2.Peaks
                                 throw new System.Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
-                            if (rdr.Value.Equals(PEAK_FIT_TYPE.QUADRATIC.ToString()))
+                            if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Quadratic.ToString().ToUpper()))
                             {
-                                this.PeakFitType = PEAK_FIT_TYPE.QUADRATIC;
+                                this.PeakFitType = PEAK_FIT_TYPE.Quadratic;
                             }
-                            else if (rdr.Value.Equals(PEAK_FIT_TYPE.LORENTZIAN.ToString()))
+                            else if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Lorentzian.ToString().ToUpper()))
                             {
-                                this.PeakFitType = PEAK_FIT_TYPE.LORENTZIAN;
+                                this.PeakFitType = PEAK_FIT_TYPE.Lorentzian;
                             }
-                            else if (rdr.Value.Equals(PEAK_FIT_TYPE.APEX.ToString()))
+                            else if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Apex.ToString().ToUpper()))
                             {
-                                this.PeakFitType = PEAK_FIT_TYPE.APEX;
+                                this.PeakFitType = PEAK_FIT_TYPE.Apex;
                             }
                         }
                         else if (rdr.Name.Equals("WritePeaksToTextFile"))

@@ -1,56 +1,88 @@
-﻿using System;
-
-namespace Engine.DTAProcessing
+﻿namespace Engine.DTAProcessing
 {
     /// <summary>
-    /// Class to store information that logs into the log file of DeconMSn
+    /// class to store information that logs into the log file of DeconMSn
     /// </summary>
-    /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
     internal class MSnInformationRecord
     {
-        public const int MAX_ISOTOPES = 16;
-        public const int MAX_ID_LEN = 256;
-        // scan number of MSn_scan
-        public int mint_msn_scan_num;
-        // msNLevel of MSn_scan
-        public int mint_msn_scan_level;
-        // parent scam
-        public int mint_parent_scan_num;
-        // msNLevel of parent scan
-        public int mint_parent_scan_level;
-        // m/z value of parent
-        public double mdbl_parent_mz;
-        // mono m/z value of parent
-        public double mdbl_mono_mz;
-        // charge state
-        public short mshort_cs;
-        // fit value .
-        public double mdbl_fit;
-        // monoisotopic mw of feature.
-        public double mdbl_mono_mw;
-        // intensity of monoisotopic peak observed.
-        public int mint_mono_intensity;
-        // intensity of parent peak observed.
-        public int mint_parent_intensity;
+        public const int MaxIsotopes = 16;
+        public const int MaxIdLength = 256;
 
-        // default constructor
+        /// <summary>
+        /// scan number of MSn_scan
+        /// </summary>
+        public int MSnScanNum { get; set; }
+
+        /// <summary>
+        /// msNLevel of MSn_scan
+        /// </summary>
+        public int MSnScanLevel { get; set; }
+
+        /// <summary>
+        /// parent scam
+        /// </summary>
+        public int ParentScanNum { get; set; }
+
+        /// <summary>
+        /// msNLevel of parent scan
+        /// </summary>
+        public int ParentScanLevel { get; set; }
+
+        /// <summary>
+        /// m/z value of parent
+        /// </summary>
+        public double ParentMz { get; set; }
+
+        /// <summary>
+        /// mono m/z value of parent
+        /// </summary>
+        public double MonoMz { get; set; }
+
+        /// <summary>
+        /// charge state
+        /// </summary>
+        public short Charge { get; set; }
+
+        /// <summary>
+        /// fit value.
+        /// </summary>
+        public double FitScore { get; set; }
+
+        /// <summary>
+        /// monoisotopic mw of feature.
+        /// </summary>
+        public double MonoMw { get; set; }
+
+        /// <summary>
+        /// intensity of monoisotopic peak observed.
+        /// </summary>
+        public int MonoIntensity { get; set; }
+
+        /// <summary>
+        /// intensity of parent peak observed.
+        /// </summary>
+        public int ParentIntensity { get; set; }
+
+        /// <summary>
+        /// default constructor
+        /// </summary>
         public MSnInformationRecord()
         {
-            mint_msn_scan_num = 0;
-            mint_parent_scan_num = 0;
+            MSnScanNum = 0;
+            ParentScanNum = 0;
 
-            mint_msn_scan_level = 0;
-            mint_parent_scan_level = 0;
+            MSnScanLevel = 0;
+            ParentScanLevel = 0;
 
-            mdbl_parent_mz = 0;
-            mdbl_mono_mz = 0;
+            ParentMz = 0;
+            MonoMz = 0;
 
-            mint_parent_intensity = 0;
-            mint_mono_intensity = 0;
+            ParentIntensity = 0;
+            MonoIntensity = 0;
 
-            mshort_cs = -1;
-            mdbl_fit = 1;
-            mdbl_mono_mw = 0;
+            Charge = -1;
+            FitScore = 1;
+            MonoMw = 0;
 
         }
     }

@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 
@@ -6,21 +5,32 @@ namespace DeconToolsV2.Readers
 {
     public enum FileType
     {
+        [Obsolete("Only used by Decon2LS.UI", false)]
         BRUKER = 0,
         FINNIGAN,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         MICROMASSRAWDATA,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         AGILENT_TOF,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         SUNEXTREL,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         ICR2LSRAWDATA,
         MZXMLRAWDATA,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         PNNL_IMS,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         BRUKER_ASCII,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         ASCII,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         PNNL_UIMF,
+        [Obsolete("Only used by Decon2LS.UI", false)]
         YAFMS,
         UNDEFINED
     }
 
+#if Enable_Obsolete
     [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     public class clsRawData
     {
@@ -503,5 +513,5 @@ namespace DeconToolsV2.Readers
             }
         }*/
     }
-}
 #endif
+}

@@ -68,7 +68,9 @@ namespace Engine.PeakProcessing
         {
         }
 
+#if Enable_Obsolete
         // copy constructor.
+        [Obsolete("Not used anywhere", false)]
         public PeakData(PeakData a)
         {
             IntensityList = new List<double>(a.IntensityList);
@@ -84,10 +86,12 @@ namespace Engine.PeakProcessing
         /// </summary>
         /// <param name="index">is the index of the peak in <see cref="PeakTops" />.</param>
         /// <returns>the peak which is at the index^th position in <see cref="PeakTops" />.</returns>
+        [Obsolete("Not used anywhere", false)]
         public clsPeak GetPeak(int index)
         {
             return new clsPeak(PeakTops[index]);
         }
+#endif
 
         /// <summary>
         ///     Adds a peak to <see cref="PeakTops" />
@@ -182,9 +186,11 @@ namespace Engine.PeakProcessing
             }
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     Sort peak list <see cref="PeakTops" /> in order of decreasing intensity.
         /// </summary>
+        [Obsolete("Not used anywhere.", false)]
         public void SortPeaksByIntensity()
         {
             // Sort, then call Reverse() to get sorted by descending
@@ -195,6 +201,7 @@ namespace Engine.PeakProcessing
                 PeakTops[i].PeakIndex = i;
             }
         }
+#endif
 
         /// <summary>
         ///     Get the most intense unprocessed peak in the given m/z range and remove it from the processing list.
@@ -326,6 +333,7 @@ namespace Engine.PeakProcessing
             }
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     Removes all the peaks whose m/zs are almost equal to the m/zs supplied in the List peak_mzs with a supplied m/z
         ///     tolerance.
@@ -338,6 +346,7 @@ namespace Engine.PeakProcessing
         ///     maps <see cref="_peakMzToIndexDict" /> and <see cref="_peakIntensityToIndexDict" />
         ///     This function can be used to remove calibration peaks from the list.
         /// </remarks>
+        [Obsolete("Not used anywhere", false)]
         public void RemovePeaks(List<double> peakMzs, double mzTolerance, bool debug = false)
         {
             // in order to remove background peaks and calibration peaks use this function.
@@ -346,6 +355,7 @@ namespace Engine.PeakProcessing
                 RemovePeaks(peakMz - mzTolerance, peakMz + mzTolerance, debug);
             }
         }
+#endif
 
         /// <summary>
         /// Removes the most recently added peak
@@ -431,6 +441,7 @@ namespace Engine.PeakProcessing
             return found;
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     Gets the most intense peak(whether or not it is processed) in the m/z range (mz - width to mz + width).
         /// </summary>
@@ -440,6 +451,7 @@ namespace Engine.PeakProcessing
         /// <param name="excludeMass">is the mass we need to exclude in this search.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak can have an intensity of 0 because it was already processed and removed.</remarks>
+        [Obsolete("Not used anywhere", false)]
         public bool GetPeakFromAll(double startMz, double stopMz, out clsPeak peak, double excludeMass)
         {
             peak = new clsPeak();
@@ -474,6 +486,7 @@ namespace Engine.PeakProcessing
         /// <param name="excludeMass">is the mass we need to exclude in this search.</param>
         /// <returns>returns true if a peak was found in the window (mz - width to mz + width) and false if not found.</returns>
         /// <remarks>The returned peak has the intensity in the original raw data in <see cref="IntensityList" /></remarks>
+        [Obsolete("Not used anywhere", false)]
         public bool GetPeakFromAllOriginalIntensity(double startMz, double stopMz, out clsPeak peak, double excludeMass)
         {
             peak = new clsPeak();
@@ -498,6 +511,7 @@ namespace Engine.PeakProcessing
             }
             return found;
         }
+#endif
 
         /// <summary>
         ///     Gets the most intense peak(whether or not it is processed) in the m/z range (mz - width to mz + width). The
@@ -655,9 +669,11 @@ namespace Engine.PeakProcessing
             PeakTops.AddRange(tempPeakTops);
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     Prints the Peaks to stderr.
         /// </summary>
+        [Obsolete("Not used anywhere", false)]
         public void PrintPeaks()
         {
             Console.Error.WriteLine("\n Peak Tops for the " + PeakTops.Count + " peaks found:");
@@ -672,6 +688,7 @@ namespace Engine.PeakProcessing
         ///     Prints unprocessed peaks to a given file after deleting its contents.
         /// </summary>
         /// <param name="fileName">file that we want to print peaks to.</param>
+        [Obsolete("Not used anywhere", false)]
         public void PrintUnprocessedPeaks(string fileName)
         {
             using (var file = new StreamWriter(new FileStream(fileName, FileMode.Create)))
@@ -690,6 +707,7 @@ namespace Engine.PeakProcessing
         }
 
         // Prints unprocessed peaks to stderr.
+        [Obsolete("Not used anywhere", false)]
         public void PrintUnprocessedPeaks()
         {
             Console.Error.WriteLine("\n " + _peakIntensityToIndexDict.Count + " Unprocessed Peak Tops:");
@@ -709,11 +727,13 @@ namespace Engine.PeakProcessing
         /// </summary>
         /// <param name="mzs">pointer to pointer to mzs. *mzs = <see cref="MzList" /></param>
         /// <param name="intensities">pointer to pointer to intensities. *intensities = <see cref="IntensityList" /></param>
+        [Obsolete("Not used anywhere", false)]
         public void GetMzIntVectors(out List<double> mzs, out List<double> intensities)
         {
             mzs = MzList;
             intensities = IntensityList;
         }
+#endif
 
         /// <summary>
         ///     Gets number of unprocessed peaks remaining.

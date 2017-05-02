@@ -1,3 +1,4 @@
+#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2;
@@ -82,6 +83,7 @@ namespace Engine.HornTransform
         /// <seealso cref="SetPeakToZero" />
         private short _numPeaksForShoulder;
 
+        /*
         /// <summary>
         ///     If +2Da pair peaks should be reported for O18 labelling
         /// </summary>
@@ -92,7 +94,8 @@ namespace Engine.HornTransform
         ///     one O16 ends up getting replaced. This results in isotope pairs separated by 2 Da. When this flag is set,
         ///     the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
         /// </remarks>
-        // Deprecated private bool _reportO18Plus2Da;
+        private bool _reportO18Plus2Da;
+        */
 
         private double _rightFitStringencyFactor;
 
@@ -163,7 +166,7 @@ namespace Engine.HornTransform
             get => _transformParameters;
             set
             {
-                _transformParameters = (clsHornTransformParameters) value.Clone();
+                _transformParameters = value.Clone();
                 IsotopeFitType = _transformParameters.IsotopeFitType;
                 _maxCharge = _transformParameters.MaxCharge;
                 _maxMw = _transformParameters.MaxMW;
@@ -400,7 +403,7 @@ namespace Engine.HornTransform
             if (DebugFlag)
                 Console.Error.WriteLine("\tBack with fit = " + record.Fit);
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
             // Abundance has always been reported as a 32-bit integer
             // Added field Abundance in 2015 to allow tracking it as a double
             // For backwards compatibility, if the peak intensity is too large for a 32-bit integer, AbundanceInt will be 2147483648

@@ -1,4 +1,4 @@
-#if !Disable_Obsolete
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconEngine;
@@ -27,7 +27,7 @@ namespace DeconToolsV2.Peaks
             _peakProcessor = new PeakProcessor();
             _parameters = new clsPeakProcessorParameters();
             _peakProcessor.SetOptions(_parameters.SignalToNoiseThreshold, 0, false,
-                (PeakFitType) _parameters.PeakFitType);
+                _parameters.PeakFitType);
             ProfileType = enmProfileType.PROFILE;
         }
 
@@ -74,7 +74,7 @@ namespace DeconToolsV2.Peaks
             _parameters = parameters;
             // the minimum intensity is not set till the actual data is available in DiscoverPeaks
             _peakProcessor.SetOptions(_parameters.SignalToNoiseThreshold, 0, _parameters.ThresholdedData,
-                (PeakFitType) _parameters.PeakFitType);
+                _parameters.PeakFitType);
         }
     }
 }

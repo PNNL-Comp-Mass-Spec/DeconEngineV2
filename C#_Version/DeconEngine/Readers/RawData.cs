@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DeconEngine;
 using DeconToolsV2.Readers;
 using Engine.PeakProcessing;
 using Engine.Utilities;
@@ -599,6 +598,13 @@ namespace Engine.Readers
                     }
                     scan_interpolator.Spline(scan_mzs, scan_intensities, 0, 0);
                     scan_interpolator.Splint(scan_mzs, scan_intensities, mzs, out interpolatedIntensities);
+                    // TODO: Should be able to replace the internal CubicSpline with the following code:
+                    //var interpolator = CubicSpline.InterpolateNaturalSorted(scan_mzs.ToArray(), scan_intensities.ToArray());
+                    //interpolatedIntensities = new List<double>();
+                    //foreach (var thisMz in mzs)
+                    //{
+                    //    interpolatedIntensities.Add(interpolator.Interpolate(thisMz));
+                    //}
 
                     var maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
                     for (var bin_num = 0; bin_num < num_bins; bin_num++)
@@ -643,6 +649,13 @@ namespace Engine.Readers
                         //[gord] this might be the chokepoint for why summing takes so long
                     scan_interpolator.Splint(scan_mzs, scan_intensities, mzs, out interpolatedIntensities);
                         //[gord] this might be the chokepoint for why summing takes so long
+                    // TODO: Should be able to replace the internal CubicSpline with the following code:
+                    //var interpolator = CubicSpline.InterpolateNaturalSorted(scan_mzs.ToArray(), scan_intensities.ToArray());
+                    //interpolatedIntensities = new List<double>();
+                    //foreach (var thisMz in mzs)
+                    //{
+                    //    interpolatedIntensities.Add(interpolator.Interpolate(thisMz));
+                    //}
 
                     var maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
                     for (var bin_num = 0; bin_num < num_bins; bin_num++)
@@ -662,8 +675,9 @@ namespace Engine.Readers
                 intensities.Clear();
 #if DEBUG
                 throw e;
-#endif
+#else
                 return;
+#endif
             }
         }
     }

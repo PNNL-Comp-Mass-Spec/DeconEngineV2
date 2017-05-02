@@ -23,11 +23,15 @@ namespace Engine.HornTransform
 
         protected clsAveragine AveragineObj = new clsAveragine();
 
-        // mass of the charge carrier.
-        protected double ChargeCarrierMass;
+        /// <summary>
+        /// mass of the charge carrier.
+        /// </summary>
+        public double ChargeCarrierMass { get; set; }
 
-        // flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
-        protected bool CompleteFitThrash;
+        /// <summary>
+        /// flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
+        /// </summary>
+        public bool CompleteFitThrash { get; set; }
 
         /// <summary>
         ///     this variable helps keep track of the last intensity value at the lower m/z which we looked at with the function
@@ -68,12 +72,20 @@ namespace Engine.HornTransform
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Mz2;
 
-        // List to store intensities from the theoretical distribution. Corresponding mzs are stored in IsotopeFit.mvect_distribution_intensities
+        /// <summary>
+        /// List to store intensities from the theoretical distribution. Corresponding mzs are stored in IsotopeFit.mvect_distribution_intensities
+        /// </summary>
         protected List<double> TheoreticalDistIntensities = new List<double>();
-        // List to store m/z values from the theoretical distribution. Corresponding intensities are stored in IsotopeFit.mvect_distribution_intensities
+
+        /// <summary>
+        /// List to store m/z values from the theoretical distribution. Corresponding intensities are stored in IsotopeFit.mvect_distribution_intensities
+        /// </summary>
         protected List<double> TheoreticalDistMzs = new List<double>();
-        // flag to control thrashing about the most intense peak. See details of THRASH algorithm by Horn et. al.
-        protected bool UseThrash;
+
+        /// <summary>
+        /// flag to control thrashing about the most intense peak. See details of THRASH algorithm by Horn et. al.
+        /// </summary>
+        public bool UseThrash { get; set; }
 
         // default constructor.
         protected IsotopicProfileFitScorer()
@@ -83,9 +95,12 @@ namespace Engine.HornTransform
             CompleteFitThrash = false;
             UseIsotopeDistributionCaching = false;
             Init();
-            AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
+            ElementalIsotopeComposition = IsotopeDistribution.ElementalIsotopeComposition;
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         protected IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
         {
             // only copies settings not variables.
@@ -96,6 +111,7 @@ namespace Engine.HornTransform
             IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
             Init();
         }
+#endif
 
         public bool UseIsotopeDistributionCaching { get; set; }
 
@@ -112,6 +128,24 @@ namespace Engine.HornTransform
             }
         }
 
+        public string AveragineFormula
+        {
+            get { return AveragineObj.AveragineFormula; }
+            set { AveragineObj.AveragineFormula = value; }
+        }
+
+        public string TagFormula
+        {
+            get { return AveragineObj.TagFormula; }
+            set { AveragineObj.TagFormula = value; }
+        }
+
+        public void SetChargeCarrierMass(double mass)
+        {
+            ChargeCarrierMass = mass;
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
+        }
+
         /// <summary>
         /// Create a new scorer based on the specified fit type, copying scorer settings from another scorer
         /// </summary>
@@ -124,6 +158,32 @@ namespace Engine.HornTransform
             var scorer = ScorerFactory(fitType);
             scorer.CloneSettings(oldFit);
             return scorer;
+        }
+
+        public void Reset()
+        {
+            LastPointIndex = -1;
+            Mz1 = Mz2 = 0;
+            Intensity1 = Intensity2 = 0;
+        }
+
+        private void Init()
+        {
+            Reset();
+        }
+
+        public IsotopicProfileFitScorer CloneSettings(IsotopicProfileFitScorer fit)
+        {
+            // only copies settings not variables.
+            CompleteFitThrash = fit.CompleteFitThrash;
+            UseThrash = fit.UseThrash;
+            ChargeCarrierMass = fit.ChargeCarrierMass;
+            AveragineObj = new clsAveragine(fit.AveragineObj);
+            IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
+            ElementalIsotopeComposition = fit.ElementalIsotopeComposition;
+            Init();
+            return this;
         }
 
         /// <summary>
@@ -148,6 +208,56 @@ namespace Engine.HornTransform
             }
             return scorer;
         }
+
+#if Enable_Obsolete
+        /// <summary>
+        ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
+        /// </summary>
+        /// <param name="averagineFormula">is the averagine molecular formula.</param>
+        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
+        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
+        /// <param name="completeFitThrash">
+        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
+        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
+        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
+        ///     keeps increasing. If thrash_or_not is false, none is performed.
+        /// </param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
+        public void GetOptions(out string averagineFormula, out string tagFormula, out bool useThrash,
+            out bool completeFitThrash)
+        {
+            useThrash = UseThrash;
+            completeFitThrash = CompleteFitThrash;
+            averagineFormula = AveragineObj.AveragineFormula;
+            tagFormula = AveragineObj.TagFormula;
+        }
+
+        /// <summary>
+        ///     set options for the isotope fit. It also sets the options for theoretical isotope generation.
+        /// </summary>
+        /// <param name="averagineFormula">is the averagine molecular formula.</param>
+        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
+        /// <param name="chargeCarrierMass">is the charge carrier mass.</param>
+        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
+        /// <param name="completeFitThrash">
+        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
+        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
+        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
+        ///     keeps increasing. If thrash_or_not is false, none is performed.
+        /// </param>
+        [Obsolete("Only used by Decon2LS.UI", false)]
+        public void SetOptions(string averagineFormula, string tagFormula, double chargeCarrierMass, bool useThrash,
+            bool completeFitThrash)
+        {
+            AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
+            AveragineObj.AveragineFormula = averagineFormula;
+            AveragineObj.TagFormula = tagFormula;
+            UseThrash = useThrash;
+            CompleteFitThrash = completeFitThrash;
+            ChargeCarrierMass = chargeCarrierMass;
+            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
+        }
+#endif
 
         /// <summary>
         ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
@@ -250,30 +360,6 @@ namespace Engine.HornTransform
             return (mz - Mz1) / (Mz2 - Mz1) * (Intensity2 - Intensity1) + Intensity1;
         }
 
-        public void Reset()
-        {
-            LastPointIndex = -1;
-            Mz1 = Mz2 = 0;
-            Intensity1 = Intensity2 = 0;
-        }
-
-        private void Init()
-        {
-            Reset();
-        }
-
-        public IsotopicProfileFitScorer CloneSettings(IsotopicProfileFitScorer fit)
-        {
-            // only copies settings not variables.
-            CompleteFitThrash = fit.CompleteFitThrash;
-            UseThrash = fit.UseThrash;
-            ChargeCarrierMass = fit.ChargeCarrierMass;
-            AveragineObj = new clsAveragine(fit.AveragineObj);
-            IsotopeDistribution = new MercuryIsotopeDistribution(fit.IsotopeDistribution);
-            Init();
-            return this;
-        }
-
         public bool FindPeak(double minMz, double maxMz, out double mzValue, out double intensity, bool debug)
         {
             if (!_lastValueWasCached)
@@ -363,10 +449,12 @@ namespace Engine.HornTransform
             return true;
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     checks if any of the isotopes in the distribution is possibly part of a different distribution
         /// </summary>
         /// <param name="minThreshold">- threshold for that spectrum</param>
+        [Obsolete("Not used anywhere", false)]
         public bool IsIsotopeLinkedDistribution(double minThreshold)
         {
             for (var isotopeNum = 3; isotopeNum < IsotopeMzs.Count; isotopeNum++)
@@ -379,6 +467,7 @@ namespace Engine.HornTransform
 
             return false;
         }
+#endif
 
         /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that
           the user could favor certain fitting parameters (i.e. space between isotopomers) over others
@@ -448,7 +537,7 @@ namespace Engine.HornTransform
         {
             var peakList = new PeakData();
             var processor = new PeakProcessor();
-            processor.SetOptions(0.5, 1, false, PeakFitType.Apex);
+            processor.SetOptions(0.5, 1, false, PEAK_FIT_TYPE.Apex);
             processor.DiscoverPeaks(xvals, yvals, 0, 10000);
 
             var numpeaks = processor.PeakData.GetNumPeaks();
@@ -585,17 +674,13 @@ namespace Engine.HornTransform
                         out nextPeak);
                 }
 
-                //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
                 if (mzLeft > 0 && nextPeak.Mz > 0)
+                    //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
                 {
-                    // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
                     delta = peak.Mz - mzLeft;
-
-                    // in c++ this copy is created by value;
-                    var currentPeakCopy = new clsPeak(peak) {
-                        Intensity = nextPeak.Intensity
-                    };
-
+                    // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
+                    var currentPeakCopy = new clsPeak(peak); // in c++ this copy is created by value;
+                    currentPeakCopy.Intensity = nextPeak.Intensity;
                     fit = FitScore(peakData, chargeState, currentPeakCopy, delta, minTheoreticalIntensityForScore,
                         out fitCountBasis, debug);
                     if (debug)
@@ -785,55 +870,6 @@ namespace Engine.HornTransform
                 debug);
         }
 
-#if !Disable_Obsolete
-        /// <summary>
-        ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
-        /// </summary>
-        /// <param name="averagineFormula">is the averagine molecular formula.</param>
-        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
-        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
-        /// <param name="completeFitThrash">
-        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
-        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
-        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
-        ///     keeps increasing. If thrash_or_not is false, none is performed.
-        /// </param>
-        [Obsolete("Only used by Decon2LS.UI", false)]
-        public void GetOptions(out string averagineFormula, out string tagFormula, out bool useThrash,
-            out bool completeFitThrash)
-        {
-            useThrash = UseThrash;
-            completeFitThrash = CompleteFitThrash;
-            averagineFormula = AveragineObj.AveragineFormula;
-            tagFormula = AveragineObj.TagFormula;
-        }
-#endif
-
-        /// <summary>
-        ///     set options for the isotope fit. It also sets the options for theoretical isotope generation.
-        /// </summary>
-        /// <param name="averagineFormula">is the averagine molecular formula.</param>
-        /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
-        /// <param name="chargeCarrierMass">is the charge carrier mass.</param>
-        /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
-        /// <param name="completeFitThrash">
-        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
-        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
-        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
-        ///     keeps increasing. If thrash_or_not is false, none is performed.
-        /// </param>
-        public void SetOptions(string averagineFormula, string tagFormula, double chargeCarrierMass, bool useThrash,
-            bool completeFitThrash)
-        {
-            AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
-            AveragineObj.AveragineFormula = averagineFormula;
-            AveragineObj.TagFormula = tagFormula;
-            UseThrash = useThrash;
-            CompleteFitThrash = completeFitThrash;
-            ChargeCarrierMass = chargeCarrierMass;
-            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
-        }
-
         /// <summary>
         ///     specifies the mass range of the theoretical distribution which covers all points that are of intensity greater than
         ///     specified value.
@@ -966,6 +1002,7 @@ namespace Engine.HornTransform
         /// <param name="theorPeakData"></param>
         /// <param name="theorIntensityCutOff"></param>
         /// <returns></returns>
+        [Obsolete("Not used anywhere", false)]
         public double CalculateDeltaFromSeveralObservedPeaks(double startingDelta, double peakWidth,
             PeakData obsPeakData, PeakData theorPeakData, double theorIntensityCutOff)
         {
@@ -1037,5 +1074,6 @@ namespace Engine.HornTransform
 
             return weightedDelta;
         }
+#endif
     }
 }

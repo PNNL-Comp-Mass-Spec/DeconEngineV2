@@ -9,24 +9,29 @@ namespace Engine.Utilities
     /// <remarks>Used by DeconTools for ICR2LSRun and IMFRun; also used by GenerateDTAZoomScans in DeconMSn</remarks>
     internal class SavGolSmoother
     {
-        // number of points to the left while applying Savitzky Golay filter.
-        private int mint_Nleft_golay;
+        /// <summary>
+        /// number of points to the left while applying Savitzky Golay filter.
+        /// </summary>
+        private int _numLeftPoints;
+        /// <summary>
+        /// the order of the Savitzky Golay smoothing filter.
+        /// </summary>
+        private int _golayOrder;
+        /// <summary>
+        /// the number of points to the right while applying Savitzky Golay filter.
+        /// </summary>
+        private int _numRightPoints;
 
-        // the order of the Savitzky Golay smoothing filter.
-        private int mint_golay_order;
+        private int _numberCoefficients;
 
-        // the number of points to the right while applying Savitzky Golay filter.
-        private int mint_Nright_golay;
+        private readonly List<double> _tempX = new List<double>();
+        private readonly List<double> _tempY = new List<double>();
+        private readonly List<double> _coefficients = new List<double>();
 
-        private int mint_num_coeffs;
-
-        private readonly List<double> mvect_temp_x = new List<double>();
-        private readonly List<double> mvect_temp_y = new List<double>();
-        private readonly List<double> mvect_coefficients = new List<double>();
-
-        public SavGolSmoother(int num_left, int num_right, int order)
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+        public SavGolSmoother(int numLeft, int numRight, int order)
         {
-            SetOptions(num_left, num_right, order);
+            SetOptions(numLeft, numRight, order);
         }
 
         public SavGolSmoother()
@@ -34,86 +39,81 @@ namespace Engine.Utilities
             SetOptions(3, 3, 2);
         }
 
-        public void SetOptions(int num_left, int num_right, int order)
+        public void SetOptions(int numLeft, int numRight, int order)
         {
-            mvect_coefficients.Clear();
+            _coefficients.Clear();
 
-            mint_golay_order = order;
-            mint_Nleft_golay = num_left;
-            mint_Nright_golay = num_right;
-            var np = mint_Nleft_golay + mint_Nright_golay + 1;
+            _golayOrder = order;
+            _numLeftPoints = numLeft;
+            _numRightPoints = numRight;
+            var np = _numLeftPoints + _numRightPoints + 1;
 
-            var golay_coeffs = new float[np + 2];
+            var golayCoeffs = new float[np + 2];
 
             for (var i = 0; i < np + 2; i++)
-                golay_coeffs[i] = 0;
+                golayCoeffs[i] = 0;
 
-            var res = savgol(golay_coeffs, np, mint_Nleft_golay, mint_Nright_golay, 0, mint_golay_order);
+            savgol(golayCoeffs, np, _numLeftPoints, _numRightPoints, 0, _golayOrder);
 
-            mint_num_coeffs = mint_Nright_golay * 2;
-            if (mint_Nleft_golay > mint_Nright_golay)
+            _numberCoefficients = _numRightPoints * 2;
+            if (_numLeftPoints > _numRightPoints)
             {
-                mint_num_coeffs = mint_Nleft_golay * 2;
+                _numberCoefficients = _numLeftPoints * 2;
             }
 
             // unwrap golay coeffs
-            mvect_coefficients.Clear();
-            for (var i = 0; i < mint_Nleft_golay + mint_Nright_golay + 1; i++)
-                mvect_coefficients.Add(0);
+            _coefficients.Clear();
+            for (var i = 0; i < _numLeftPoints + _numRightPoints + 1; i++)
+                _coefficients.Add(0);
 
-            for (var i = 0; i <= mint_Nleft_golay; i++)
+            for (var i = 0; i <= _numLeftPoints; i++)
             {
-                mvect_coefficients[mint_num_coeffs / 2 - i] = golay_coeffs[i + 1];
+                _coefficients[_numberCoefficients / 2 - i] = golayCoeffs[i + 1];
             }
-            for (var i = 1; i <= mint_Nright_golay; i++)
+            for (var i = 1; i <= _numRightPoints; i++)
             {
-                mvect_coefficients[mint_num_coeffs / 2 + i] = golay_coeffs[mint_num_coeffs - i];
+                _coefficients[_numberCoefficients / 2 + i] = golayCoeffs[_numberCoefficients - i];
             }
         }
 
         public void Smooth(ref List<double> mzs, ref List<double> intensities)
         {
-            var width = (mint_num_coeffs / 2);
             var size = mzs.Count;
-            mvect_temp_x.Clear();
-            mvect_temp_y.Clear();
+            _tempX.Clear();
+            _tempY.Clear();
 
             for (var i = 0; i < size; i++)
             {
-                var start_index = i - mint_Nleft_golay;
-                var stop_index = i + mint_Nright_golay + 1;
+                var startIndex = i - _numLeftPoints;
+                var stopIndex = i + _numRightPoints + 1;
 
-                if (start_index < 0 || stop_index >= size)
+                if (startIndex < 0 || stopIndex >= size)
                 {
                     // dont worry about smoothing just push back and forget.
-                    mvect_temp_x.Add(mzs[i]);
-                    mvect_temp_y.Add(intensities[i]);
+                    _tempX.Add(mzs[i]);
+                    _tempY.Add(intensities[i]);
                     continue;
                 }
-                double sum = 0;
-                for (var j = start_index; j < stop_index; j++)
+                var sum = 0d;
+                for (var j = startIndex; j < stopIndex; j++)
                 {
-                    var sum_before = sum;
-                    var val = intensities[j] * mvect_coefficients[j - start_index];
-                    sum = sum_before + val;
+                    sum += intensities[j] * _coefficients[j - startIndex];
                 }
                 if (sum < 0)
                     sum = 0;
-                mvect_temp_x.Add(mzs[i]);
-                mvect_temp_y.Add(sum);
+                _tempX.Add(mzs[i]);
+                _tempY.Add(sum);
             }
             mzs.Clear();
             intensities.Clear();
-            mzs.AddRange(mvect_temp_x);
-            intensities.AddRange(mvect_temp_y);
+            mzs.AddRange(_tempX);
+            intensities.AddRange(_tempY);
         }
 
-        private const float TINY = 1.0e-20f;
+        private const float TinyVal = 1.0e-20f;
 
-        private int ludcmp(IReadOnlyList<float[]> a, int n, IList<int> indx, out float d)
+        private static int ludcmp(float[,] a, int n, int[] indx, out float d)
         {
-            var imax = 0;
-            float big;
             var vv = new float[n];
             for (var j = 0; j < n; j++)
             {
@@ -123,43 +123,43 @@ namespace Engine.Utilities
             d = 1.0f;
             for (var i = 1; i <= n; i++)
             {
-                big = 0.0f;
+                var big = 0.0f;
                 for (var j = 1; j <= n; j++)
                 {
                     float temp;
-                    if ((temp = Math.Abs(a[i - 1][j - 1])) > big)
+                    if ((temp = Math.Abs(a[i - 1, j - 1])) > big)
                     {
                         big = temp;
                     }
                 }
-                if (Math.Abs(big) < float.Epsilon)
+                if (big.Equals(0f))
                 {
                     return -1;
                 }
                 vv[i - 1] = 1.0f / big;
             }
+            var imax = 0;
             for (var j = 1; j <= n; j++)
             {
-                float sum;
                 for (var i = 1; i < j; i++)
                 {
-                    sum = a[i - 1][j - 1];
+                    var sum = a[i - 1, j - 1];
                     for (var k = 1; k < i; k++)
                     {
-                        sum -= a[i - 1][k - 1] * a[k - 1][j - 1];
+                        sum -= a[i - 1, k - 1] * a[k - 1, j - 1];
                     }
-                    a[i - 1][j - 1] = sum;
+                    a[i - 1, j - 1] = sum;
                 }
-                big = 0.0f;
-                float dum;
+                var big = 0.0f;
                 for (var i = j; i <= n; i++)
                 {
-                    sum = a[i - 1][j - 1];
+                    var sum = a[i - 1, j - 1];
                     for (var k = 1; k < j; k++)
                     {
-                        sum -= a[i - 1][k - 1] * a[k - 1][j - 1];
+                        sum -= a[i - 1, k - 1] * a[k - 1, j - 1];
                     }
-                    a[i - 1][j - 1] = sum;
+                    a[i - 1, j - 1] = sum;
+                    float dum;
                     if ((dum = vv[i - 1] * Math.Abs(sum)) >= big)
                     {
                         big = dum;
@@ -170,48 +170,47 @@ namespace Engine.Utilities
                 {
                     for (var k = 1; k <= n; k++)
                     {
-                        dum = a[imax - 1][k - 1];
-                        a[imax - 1][k - 1] = a[j - 1][k - 1];
-                        a[j - 1][k - 1] = dum;
+                        var dum = a[imax - 1, k - 1];
+                        a[imax - 1, k - 1] = a[j - 1, k - 1];
+                        a[j - 1, k - 1] = dum;
                     }
                     d = -d;
                     vv[imax - 1] = vv[j - 1];
                 }
                 indx[j - 1] = imax;
-                if (Math.Abs(a[j - 1][j - 1]) < float.Epsilon)
+                if (a[j - 1, j - 1].Equals(0f))
                 {
-                    a[j - 1][j - 1] = TINY;
+                    a[j - 1, j - 1] = TinyVal;
                 }
                 if (j != n)
                 {
-                    dum = 1.0f / (a[j - 1][j - 1]);
+                    var dum = 1.0f / (a[j - 1, j - 1]);
                     for (var i = j + 1; i <= n; i++)
                     {
-                        a[i - 1][j - 1] *= dum;
+                        a[i - 1, j - 1] *= dum;
                     }
                 }
             }
             return 0;
         }
 
-        private void lubksb(IReadOnlyList<float[]> a, int n, IReadOnlyList<int> indx, IList<float> b)
+        private static void lubksb(float[,] a, int n, int[] indx, float[] b)
         {
             var ii = 0;
-            float sum;
 
             for (var i = 1; i <= n; i++)
             {
                 var ip = indx[i - 1];
-                sum = b[ip - 1];
+                var sum = b[ip - 1];
                 b[ip - 1] = b[i - 1];
                 if (ii != 0)
                 {
                     for (var j = ii; j <= i - 1; j++)
                     {
-                        sum -= a[i - 1][j - 1] * b[j - 1];
+                        sum -= a[i - 1, j - 1] * b[j - 1];
                     }
                 }
-                else if (Math.Abs(sum) > float.Epsilon)
+                else if (!sum.Equals(0f))
                 {
                     ii = i;
                 }
@@ -219,21 +218,27 @@ namespace Engine.Utilities
             }
             for (var i = n; i >= 1; i--)
             {
-                sum = b[i - 1];
+                var sum = b[i - 1];
                 for (var j = i + 1; j <= n; j++)
                 {
-                    sum -= a[i - 1][j - 1] * b[j - 1];
+                    sum -= a[i - 1, j - 1] * b[j - 1];
                 }
-                b[i - 1] = sum / a[i - 1][i - 1];
+                b[i - 1] = sum / a[i - 1, i - 1];
             }
         }
 
-        private int savgol(IList<float> c, int np, int nl, int nr, int ld, int m)
+        /// <summary>
+        /// Main Savitzky-Golay smoothing function
+        /// </summary>
+        /// <param name="c">Modified by the function</param>
+        /// <param name="np"></param>
+        /// <param name="nl"></param>
+        /// <param name="nr"></param>
+        /// <param name="ld"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        private static int savgol(float[] c, int np, int nl, int nr, int ld, int m)
         {
-            int mm;
-            float d;
-            float sum;
-
             if (np < nl + nr + 1 || nl < 0 || nr < 0 || ld > m || nl + nr < m)
             {
                 return -1;
@@ -246,26 +251,35 @@ namespace Engine.Utilities
                 b[j] = 0;
             }
 
-            var a = new float[m + 1][];
+            var a = new float[m + 1, m + 1];
             for (var j = 0; j < m + 1; j++)
             {
-                a[j] = new float[m + 1];
-                for (var i = 0; i < m + 1; i++)
+                for (int i = 0; i < m + 1; i++)
                 {
-                    a[j][i] = 0;
+                    a[j, i] = 0;
                 }
             }
 
             for (var ipj = 0; ipj <= (m << 1); ipj++)
             {
-                sum = (ipj != 0 ? 0.0f : 1.0f);
-                for (var k = 1; k <= nr; k++) sum += (float) Math.Pow(k, ipj);
-                for (var k = 1; k <= nl; k++) sum += (float) Math.Pow(-k, ipj);
-                mm = Math.Min(ipj, 2 * m - ipj);
-                for (var imj = -mm; imj <= mm; imj += 2) a[(ipj + imj) / 2][(ipj - imj) / 2] = sum;
+                var sum = (ipj != 0 ? 0.0f : 1.0f);
+                for (var k = 1; k <= nr; k++)
+                {
+                    sum += (float) Math.Pow((double) k, (double) ipj);
+                }
+                for (var k = 1; k <= nl; k++)
+                {
+                    sum += (float) Math.Pow((double) -k, (double) ipj);
+                }
+                var mm = Math.Min(ipj, 2 * m - ipj);
+                for (var imj = -mm; imj <= mm; imj += 2)
+                {
+                    a[(ipj + imj) / 2, (ipj - imj) / 2] = sum;
+                }
             }
-            var ret_val = ludcmp(a, m + 1, indx, out d);
-            if (ret_val == -1)
+            float d;
+            var retVal = ludcmp(a, m + 1, indx, out d);
+            if (retVal == -1)
             {
                 for (var kk = 1; kk <= np; kk++)
                 {
@@ -286,9 +300,9 @@ namespace Engine.Utilities
             }
             for (var k = -nl; k <= nr; k++)
             {
-                sum = b[0];
+                var sum = b[0];
                 var fac = 1.0f;
-                for (mm = 1; mm <= m; mm++)
+                for (var mm = 1; mm <= m; mm++)
                 {
                     sum += b[mm] * (fac *= k);
                 }
@@ -296,7 +310,6 @@ namespace Engine.Utilities
                 c[kk] = sum;
             }
             return 0;
-
         }
     }
 }

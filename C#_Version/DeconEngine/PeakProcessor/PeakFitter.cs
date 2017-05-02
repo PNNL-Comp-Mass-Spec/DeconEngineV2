@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using DeconToolsV2.Peaks;
 
 namespace Engine.PeakProcessing
 {
+    /*
     /// <summary>
     ///     enumeration for type of fit.
     /// </summary>
+    [Obsolete("Merged into DeconToolsV2.Peaks.PEAK_FIT_TYPE, and all usages changed", true)]
     internal enum PeakFitType
     {
         /// <summary>
@@ -21,8 +24,10 @@ namespace Engine.PeakProcessing
         /// <summary>
         ///     The peak is the m/z value which is a lorentzian fit of the three points around the apex
         /// </summary>
+        [Obsolete("Not currently used by DeconMSn or others", false)]
         Lorentzian
     }
+    */
 
     /// <summary>
     ///     Used for detecting peaks in the data.
@@ -32,7 +37,7 @@ namespace Engine.PeakProcessing
         // member variable to find out information about peaks such as signal to noise and full width at half maximum.
         private readonly PeakStatistician _peakStatistician = new PeakStatistician();
         // Type of fit function used to find the peaks
-        private PeakFitType _peakFitType;
+        private PEAK_FIT_TYPE _peakFitType;
 
         /// <summary>
         ///     Default constructor.
@@ -40,14 +45,14 @@ namespace Engine.PeakProcessing
         /// <remarks>By default uses Quadratic fit.</remarks>
         public PeakFitter()
         {
-            _peakFitType = PeakFitType.Quadratic;
+            _peakFitType = PEAK_FIT_TYPE.Quadratic;
         }
 
         /// <summary>
         ///     Sets the type of fit.
         /// </summary>
         /// <param name="type">sets the type of fit function that this instance uses.</param>
-        public void SetOptions(PeakFitType type)
+        public void SetOptions(PEAK_FIT_TYPE type)
         {
             _peakFitType = type;
         }
@@ -61,11 +66,11 @@ namespace Engine.PeakProcessing
         /// <returns>returns the m/z of the peak.</returns>
         public double Fit(int index, List<double> mzs, List<double> intensities)
         {
-            if (_peakFitType == PeakFitType.Apex)
+            if (_peakFitType == PEAK_FIT_TYPE.Apex)
                 return mzs[index];
-            if (_peakFitType == PeakFitType.Quadratic)
+            if (_peakFitType == PEAK_FIT_TYPE.Quadratic)
                 return QuadraticFit(mzs, intensities, index);
-            if (_peakFitType == PeakFitType.Lorentzian)
+            if (_peakFitType == PEAK_FIT_TYPE.Lorentzian)
             {
                 var fwhm = _peakStatistician.FindFwhm(mzs, intensities, index);
                 if (!fwhm.Equals(0))

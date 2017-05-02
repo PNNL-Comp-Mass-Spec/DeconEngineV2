@@ -114,7 +114,7 @@ namespace DeconToolsV2.HornTransform
             NeedMultipleIsotopes = false;
         }
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         [Obsolete("Use clsHornTransformResults instead", false)]
         internal clsHornTransformResults(IsotopeFitRecord fitRecord)
         {
@@ -166,6 +166,8 @@ namespace DeconToolsV2.HornTransform
         /// </summary>
         public int NumIsotopesObserved => IsotopePeakIndices.Count;
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         public virtual object Clone()
         {
             var result = new clsHornTransformResults
@@ -191,7 +193,6 @@ namespace DeconToolsV2.HornTransform
             return result;
         }
 
-#if !Disable_Obsolete
         /// <summary>
         ///     intensity of feature; maximum value that can be represented is 2147483648
         /// </summary>

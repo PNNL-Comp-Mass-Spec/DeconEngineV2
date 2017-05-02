@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2.Readers;
@@ -6,7 +5,6 @@ using MSDataFileReader;
 
 namespace Engine.Readers
 {
-    [Obsolete("Only use in Decon Tools is obsolete, use not allowed", false)]
     internal class MZXmlRawData : RawData
     {
         private string mstr_file_name;
@@ -21,11 +19,13 @@ namespace Engine.Readers
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetScanDescription(int scan, out string description)
         {
             description = "Scan #" + scan;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNextScanNum(int current_scan_num)
         {
             return current_scan_num + 1;
@@ -41,6 +41,7 @@ namespace Engine.Readers
             return mint_num_scans;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return mint_current_scan;
@@ -62,11 +63,13 @@ namespace Engine.Readers
             }
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return mstr_file_name;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.MZXMLRAWDATA;
@@ -104,6 +107,7 @@ namespace Engine.Readers
             }
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return 0;
@@ -167,7 +171,7 @@ namespace Engine.Readers
             return !scanData.Centroided;
 
             //default
-            return true;
+            //return true;
         }
 
         public override int GetMSLevel(int scan_num)
@@ -251,11 +255,13 @@ namespace Engine.Readers
             return true;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
@@ -296,4 +302,3 @@ namespace Engine.Readers
         }
     }
 }
-#endif

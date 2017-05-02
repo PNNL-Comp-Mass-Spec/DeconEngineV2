@@ -97,6 +97,7 @@ namespace Engine.HornTransform
         {
             throw new System.Exception("Don't Ever come into this FitScore overload in PeakFit");
 
+            /*
             var numPoints = TheoreticalDistMzs.Count;
             if (numPoints < 3)
                 return 1;
@@ -132,6 +133,7 @@ namespace Engine.HornTransform
             }
 
             return fit / (sum + 0.001);
+            */
         }
     }
 }

@@ -1,30 +1,39 @@
 ﻿namespace Engine.DTAProcessing
 {
     /// <summary>
-    /// Class to store information that logs into the log file of DeconMSn
+    /// class to store information that logs into the log file of DeconMSn
     /// </summary>
-    /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
     internal class ProfileRecord
     {
-        // scan number of MSn_scan
-        public int mint_msn_scan_num;
+        /// <summary>
+        /// scan number of MSn_scan
+        /// </summary>
+        public int MSnScanNum { get; set; }
 
-        // parent scan
-        public int mint_parent_scan_num;
+        /// <summary>
+        /// parent scan
+        /// </summary>
+        public int ParentScanNum { get; set; }
 
-        // ion injection value
-        public double mdbl_agc_time;
+        /// <summary>
+        /// ion injection value
+        /// </summary>
+        public double AgcTime { get; set; }
 
-        // tic
-        public double mdbl_tic_val;
+        /// <summary>
+        /// tic
+        /// </summary>
+        public double TotalIonCurrent { get; set; }
 
-        // default constructor
+        /// <summary>
+        /// default constructor
+        /// </summary>
         public ProfileRecord()
         {
-            mint_msn_scan_num = 0;
-            mint_parent_scan_num = 0;
-            mdbl_agc_time = -1.0;
-            mdbl_tic_val = -1.0;
+            MSnScanNum = 0;
+            ParentScanNum = 0;
+            AgcTime = -1.0;
+            TotalIonCurrent = -1.0;
         }
     }
 }

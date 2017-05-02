@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-#if !Disable_Obsolete
+#if Enable_Obsolete
 //using Engine.TheoreticalProfile;
 #endif
 
@@ -12,7 +12,7 @@ namespace DeconToolsV2.HornTransform
         //private const string DefaultRNAAveragineFormula = "C3.9 H4.9 N1.5 O2.4 P0.4";
         //private const string DefaultDNAAveragineFormula = "C3.8 H4.7 N1.5 O2.8 P0.4";
 
-#if !Disable_Obsolete
+#if Enable_Obsolete
         //[Obsolete("Class Averagine has been collapsed into this class", true)]
         //private readonly Averagine _averagine;
         //[Obsolete("Class Averagine has been collapsed into this class", true)]
@@ -36,7 +36,7 @@ namespace DeconToolsV2.HornTransform
         {
             _useTag = false;
             _tagMass = 0;
-#if !Disable_Obsolete
+#if Enable_Obsolete
             //_averagine = new Averagine();
             //_elementIsotopes = new clsElementIsotopes();
             //_averagine.SetElementalIsotopeComposition(_elementIsotopes);
@@ -50,8 +50,8 @@ namespace DeconToolsV2.HornTransform
             _averagineFormula = new MolecularFormula(a._averagineFormula);
             _tagFormula = a._tagFormula;
         }
-        
-#if !Disable_Obsolete
+
+#if Enable_Obsolete
         //[Obsolete("Not used outside of Decon2LS.UI (maybe)", true)]
         //public clsElementIsotopes ElementIsotopeComposition
         //{
@@ -64,9 +64,11 @@ namespace DeconToolsV2.HornTransform
         //}
 #endif
 
+#if Enable_Obsolete
         public double MonoMass => 0;
 
         public double AverageMass => 0;
+#endif
 
         public string AveragineFormula
         {
@@ -205,9 +207,10 @@ namespace DeconToolsV2.HornTransform
             return empiricalFormula;
         }
 
+#if Enable_Obsolete
         public string GenerateAveragineFormula(double averageMass, string averagineFormula, string tagFormula)
         {
-#if !Disable_Obsolete
+#if Enable_Obsolete
             //_averagine.AveragineFormula = averagineFormula;
             //_averagine.TagFormula = tagFormula;
             //var empiricalFormula = _averagine.GetAverageFormulaForMass(averageMass);
@@ -223,7 +226,7 @@ namespace DeconToolsV2.HornTransform
             {
                 var atomicCount = empiricalFormula.ElementalComposition[elementNum];
                 //empiricalFormulaStr = string.Concat(empiricalFormulaStr, atomicInfo.ElementalIsotopesList[atomicCount.Index].Symbol, System.Convert.ToString(Convert.ToInt32(atomicCount.NumCopies)));
-#if !Disable_Obsolete
+#if Enable_Obsolete
                 //formulaBuilder.Append(_elementIsotopes.ElementalIsotopesList[atomicCount.Index].Symbol);
 #endif
                 formulaBuilder.Append(_elementIsotopeAbundance.ElementalIsotopesList[atomicCount.Index].Symbol);
@@ -232,6 +235,7 @@ namespace DeconToolsV2.HornTransform
             //return empiricalFormulaStr;
             return formulaBuilder.ToString();
         }
+#endif
 
         public void SetElementalIsotopeComposition(clsElementIsotopes elementIsotopes)
         {

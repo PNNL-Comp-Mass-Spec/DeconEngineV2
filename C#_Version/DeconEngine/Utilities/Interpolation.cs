@@ -437,8 +437,9 @@ namespace Engine.Utilities
             {
 #if DEBUG
                 throw e;
-#endif
+#else
                 return 0;
+#endif
             }
         }
     }

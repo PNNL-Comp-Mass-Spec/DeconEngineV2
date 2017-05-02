@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,7 +99,7 @@ namespace DeconEngine
             if (numPts != 0)
             {
                 double sum = 0;
-                double STD_DEV = 0; // returning zero's
+                //double STD_DEV = 0; // returning zero's
 
                 for (var i = 0; i < numPts; i++)
                 {
@@ -127,7 +126,7 @@ namespace DeconEngine
             if (numPts != 0)
             {
                 double sum = 0;
-                double STD_DEV = 0; // returning zero's
+                //double STD_DEV = 0; // returning zero's
 
                 for (var i = 0; i < numPts; i++)
                 {
@@ -144,8 +143,7 @@ namespace DeconEngine
             return stdDev;
         }
 
-       
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        [Obsolete("Not accessed within DeconTools solution except through tests", false)]
         public static double GetAverage(float[] intensities, float maxIntensity)
         {
             var numPts = intensities.Length;
@@ -157,8 +155,8 @@ namespace DeconEngine
                 return 0;
 
             return filteredData.Average();
-
         }
+#endif
 
         /// <summary>
         /// Compute the average of the non-zero data in intensities
@@ -178,7 +176,6 @@ namespace DeconEngine
                 return 0;
 
             return filteredData.Average();
-
         }
 
         /// <summary>

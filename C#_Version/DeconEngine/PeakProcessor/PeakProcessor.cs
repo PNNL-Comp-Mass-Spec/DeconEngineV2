@@ -43,7 +43,7 @@ namespace Engine.PeakProcessing
         /// <summary>
         /// peaks in profile spectra within this tolerance will be merged into a single peak
         /// </summary>
-        private double mdbl_PeakMergeTolerancePPM;
+        private const double PeakMergeTolerancePPM = 2;
 
         /// <summary>
         ///     PeakData instance that stores the peaks found by an instance of this PeakProcessor.
@@ -61,16 +61,18 @@ namespace Engine.PeakProcessing
         /// </summary>
         public PeakProcessor()
         {
-            SetPeakFitType(PeakFitType.Quadratic);
+            SetPeakFitType(PEAK_FIT_TYPE.Quadratic);
             PeakData = new PeakData();
             _arePeaksCentroided = false;
-            mdbl_PeakMergeTolerancePPM = 2;
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         public void ApplyMovingAverageFilter(List<double> vect_mz, List<double> vect_intensity, int num_points)
         {
             PeakStatistician.MovingAverageFilter(ref vect_mz, ref vect_intensity, num_points);
         }
+#endif
 
         /// <summary>
         ///     sets the threshold for signal to noise for a peak to be considered as real.
@@ -125,12 +127,11 @@ namespace Engine.PeakProcessing
         ///     sets the type of peak fitting used to find m/z values for peaks.
         /// </summary>
         /// <param name="type">specifies the type of peak fitting.</param>
-        public void SetPeakFitType(PeakFitType type)
+        public void SetPeakFitType(PEAK_FIT_TYPE type)
         {
             _peakFit.SetOptions(type);
         }
 
-#if !Disable_Obsolete
         /// <summary>
         /// Sets the type of profile
         /// </summary>
@@ -140,7 +141,6 @@ namespace Engine.PeakProcessing
         {
             _arePeaksCentroided = !profile;
         }
-#endif
 
         /// <summary>
         ///     sets the options for this instance.
@@ -149,7 +149,7 @@ namespace Engine.PeakProcessing
         /// <param name="thresh">sets the peak intensity threshold.</param>
         /// <param name="thresholded">if the data is thresholded.</param>
         /// <param name="type">sets the type of peak fitting algorithm used.</param>
-        public void SetOptions(double signalToNoise, double thresh, bool thresholded, PeakFitType type)
+        public void SetOptions(double signalToNoise, double thresh, bool thresholded, PEAK_FIT_TYPE type)
         {
             _isDataThresholded = thresholded;
             // signal to noise should ideally be set before PeakIntensityThreshold
@@ -262,16 +262,14 @@ namespace Engine.PeakProcessing
                             {
                                 // Compare this peak to the previous peak
                                 // If within PeakMergeTolerancePPM then only keep one of the peaks
-                                //Console.WriteLine("{0}\t{1}\t{2}", fittedPeak, currentIntensity, signalToNoise);
-
-                                var deltaPPM = mdbl_PeakMergeTolerancePPM * 2;
+                                //System.Console.WriteLine("{0}\t{1}\t{2}", fittedPeak, currentIntensity, signalToNoise);
                                 var addPeak = true;
 
                                 if (previousPeakIndex > -1)
                                 {
-                                    deltaPPM = (fittedPeak - previousPeakMz) / (previousPeakMz / 1E6);
+                                    var deltaPPM = (fittedPeak - previousPeakMz) / (previousPeakMz / 1E6);
 
-                                    if (deltaPPM <= mdbl_PeakMergeTolerancePPM)
+                                    if (deltaPPM <= PeakMergeTolerancePPM)
                                     {
 
 
@@ -318,6 +316,8 @@ namespace Engine.PeakProcessing
             return PeakData.GetNumPeaks();
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         public double GetClosestPeakMzFast(double peakMz, ref clsPeak selectedPeak)
         {
             var min_score = 1.00727638;
@@ -380,6 +380,7 @@ namespace Engine.PeakProcessing
 
             return selectedPeak.Mz;
         }
+#endif
 
         /// <summary>
         ///     Gets the closest to peakMz among the peak list mzList
@@ -446,6 +447,8 @@ namespace Engine.PeakProcessing
             return DiscoverPeaks(mzList, intensityList, minMz, maxMz);
         }
 
+#if Enable_Obsolete
+        [Obsolete("Not used anywhere", false)]
         public bool ConvertPeakListToSpectra(List<double> vect_mz, List<double> vect_intensity)
         {
             vect_intensity.Clear();
@@ -463,7 +466,6 @@ namespace Engine.PeakProcessing
             return false;
         }
 
-#if !Disable_Obsolete
         /// <summary>
         ///     Function discovers the most intense peak in the m/z and intensity vectors supplied within the supplied m/z window.
         /// </summary>
@@ -536,10 +538,12 @@ namespace Engine.PeakProcessing
             PeakData.Clear();
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     Removes peaks from unprocessed list that do not have any neighbour peaks within the specified tolerance window.
         /// </summary>
         /// <param name="tolerance">the tolerance in looking for neighbouring peaks.</param>
+        [Obsolete("Not used anywhere", false)]
         public void FilterPeakList(double tolerance)
         {
             PeakData.FilterList(tolerance);
@@ -553,6 +557,7 @@ namespace Engine.PeakProcessing
         /// <param name="dataIndex">is the index of the point at which we want to find FWHM and SN.</param>
         /// <param name="signalToNoiseThreshold">is the threshold signal to noise.</param>
         /// <returns>returns the m/z value of the peak.</returns>
+        [Obsolete("Not used anywhere", false)]
         public double GetFWHM(List<double> mzList, List<double> intensityList, int dataIndex,
             double signalToNoiseThreshold)
         {
@@ -566,6 +571,7 @@ namespace Engine.PeakProcessing
         /// <param name="intensityList">is List of intensity values.</param>
         /// <param name="peak">is the m/z value at which we want to find FWHM.</param>
         /// <returns>returns the m/z value of the peak.</returns>
+        [Obsolete("Not used anywhere", false)]
         public double GetFWHM(List<double> mzList, List<double> intensityList, double peak)
         {
             var index = PeakIndex.GetNearest(mzList, peak, 0);
@@ -578,6 +584,7 @@ namespace Engine.PeakProcessing
         /// <param name="intensityList">is List of intensity values.</param>
         /// <param name="dataIndex">is the index of the point at which we want to find SN.</param>
         /// <returns>returns the signal to noise value of the peak.</returns>
+        [Obsolete("Not used anywhere", false)]
         public double GetSignalToNoise(List<double> intensityList, int dataIndex)
         {
             return PeakStatistician.FindSignalToNoise(intensityList[dataIndex], intensityList, dataIndex);
@@ -590,10 +597,12 @@ namespace Engine.PeakProcessing
         /// <param name="intensityList">is List of intensity values.</param>
         /// <param name="peak">is the m/z value at which we want to find the signal to noise ratio.</param>
         /// <returns>returns the signal to noise value of the peak.</returns>
+        [Obsolete("Not used anywhere", false)]
         public double GetSignalToNoise(List<double> mzList, List<double> intensityList, double peak)
         {
             var index = PeakIndex.GetNearest(mzList, peak, 0);
             return PeakStatistician.FindSignalToNoise(intensityList[index], intensityList, index);
         }
+#endif
     }
 }
