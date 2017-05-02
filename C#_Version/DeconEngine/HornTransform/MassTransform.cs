@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2;

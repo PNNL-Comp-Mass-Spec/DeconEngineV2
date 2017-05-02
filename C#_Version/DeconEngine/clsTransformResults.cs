@@ -1,3 +1,4 @@
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using Engine.Results;
@@ -8,7 +9,7 @@ namespace DeconToolsV2.Results
     /// <summary>
     /// Transform results
     /// </summary>
-    /// <remarks>Used by Decon2LS.UI and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
+    /// <remarks>Used by Decon2LS.UI and by PeakImporter (from peak.dat files)</remarks>
     public class clsTransformResults
     {
         private Readers.FileType menmFileType = Readers.FileType.UNDEFINED;
@@ -99,6 +100,7 @@ namespace DeconToolsV2.Results
             return mobj_lcms_results.IsDeisotoped();
         }
 
+#if Enable_Obsolete
         [Obsolete("Use GetRawDataSortedInIntensity that works on Engine.Results.LcmsPeak")]
         public void GetRawDataSortedInIntensity(out clsLCMSPeakOld[] lcms_peaks)
         {
@@ -108,6 +110,7 @@ namespace DeconToolsV2.Results
 
             lcms_peaks = ConvertLcmsPeaksToLCMSPeaks(lcmsPeaks);
         }
+#endif
 
         public void GetRawDataSortedInIntensity(out LcmsPeak[] lcmsPeaks)
         {
@@ -151,6 +154,7 @@ namespace DeconToolsV2.Results
             }
         }
 
+#if Enable_Obsolete
         [Obsolete("Use GetRawDataSortedInIntensity that works on Engine.Results.LcmsPeak")]
         public void GetRawData(out clsLCMSPeakOld[] lcms_peaks)
         {
@@ -160,6 +164,7 @@ namespace DeconToolsV2.Results
 
             lcms_peaks = ConvertLcmsPeaksToLCMSPeaks(lcmsPeaks);
         }
+#endif
 
         public void GetRawData(out LcmsPeak[] lcmsPeaks)
         {
@@ -238,6 +243,7 @@ namespace DeconToolsV2.Results
                 mobj_lcms_results.SaveScanResults(fileName, true);
         }
 
+#if Enable_Obsolete
         [Obsolete("Conversion class; only used by obsolete methods")]
         private clsLCMSPeakOld[] ConvertLcmsPeaksToLCMSPeaks(IReadOnlyList<LcmsPeak> lcmsPeaks)
         {
@@ -249,5 +255,8 @@ namespace DeconToolsV2.Results
             }
             return lcms_peaks;
         }
+#endif
+
     }
 }
+#endif

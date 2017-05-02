@@ -53,12 +53,13 @@ namespace DeconToolsV2.DTAGeneration
                 WriteProgressFile = WriteProgressFile,
                 IgnoreMSnScans = IgnoreMSnScans,
                 NumMSnLevelsToIgnore = NumMSnLevelsToIgnore,
-				CreateLogFileOnly = CreateLogFileOnly
+                CreateLogFileOnly = CreateLogFileOnly
             };
 
 
             return newParams;
         }
+#endif
 
         public int get_MSnLevelToIgnore(int index)
         {

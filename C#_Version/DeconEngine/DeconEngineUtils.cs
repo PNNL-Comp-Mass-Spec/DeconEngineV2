@@ -156,7 +156,6 @@ namespace DeconEngine
 
             return filteredData.Average();
         }
-#endif
 
         /// <summary>
         /// Compute the average of the non-zero data in intensities
@@ -183,7 +182,7 @@ namespace DeconEngine
         /// </summary>
         /// <remarks> DeconTools for ICR2LSRun and IMFRun; also used by DeconMSn</remarks>
         public static double GetTIC(double min_mz, double max_mz, ref List<double> mzs, ref List<double> intensities,
-            float minIntensity, ref double bpi, ref double bp_mz)
+                                    float minIntensity, ref double bpi, ref double bp_mz)
         {
             var numPts = intensities.Count;
             if (numPts == 0)
@@ -332,7 +331,7 @@ namespace DeconEngine
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static void SavitzkyGolaySmooth(short num_left, short num_right, short order, ref float[] mzs,
-            ref float[] intensities)
+                                               ref float[] intensities)
         {
             var sgSmoother = new SavGolSmoother(num_left, num_right, order);
             var vectX = new List<double>();
@@ -381,7 +380,9 @@ namespace DeconEngine
             }
             return num_pts_new;
         }
+    }
 
+#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe)", true)]
         public static void Apodize(double minX, double maxX, double sampleRate, int apexPositionPercent,
             ref float[] intensities, ApodizationType type)
@@ -423,5 +424,5 @@ namespace DeconEngine
                 intensities[i] = arrIntensities[i];
         }
     }
-}
 #endif
+}

@@ -209,7 +209,7 @@ namespace Engine.HornTransform
             return scorer;
         }
 
-#if Enable_Obsolete
+#if !Disable_Obsolete
         /// <summary>
         ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
         /// </summary>
@@ -983,17 +983,6 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        /// Set the charge carrier mass
-        /// </summary>
-        /// <param name="mass"></param>
-        /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
-        public void SetChargeCarrierMass(double mass)
-        {
-            ChargeCarrierMass = mass;
-            _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
-        }
-
-        /// <summary>
         ///     will calculate the delta mz (referenced to the theor) based on several of the observed peaks
         /// </summary>
         /// <param name="startingDelta"></param>
@@ -1074,6 +1063,6 @@ namespace Engine.HornTransform
 
             return weightedDelta;
         }
-#endif
     }
+
 }

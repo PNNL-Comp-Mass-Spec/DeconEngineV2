@@ -20,16 +20,19 @@ namespace Engine.Readers
         public static double MAX_MZ = 2000;
         private FileType menm_file_type;
 
+#if Enable_Obsolete
         protected Calibrations.Calibrator mobj_calibrator;
-
-        public const int MAX_SCAN_SIZE = 4 * 1024 * 1024;
-        public abstract string GetFileName();
-        public abstract FileType GetFileType();
 
         public virtual Calibrations.Calibrator GetCalibrator()
         {
             return mobj_calibrator;
         }
+
+#endif
+
+        public const int MAX_SCAN_SIZE = 4 * 1024 * 1024;
+        public abstract string GetFileName();
+        public abstract FileType GetFileType();
 
         public abstract bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid);
         public abstract bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts);
@@ -123,9 +126,12 @@ namespace Engine.Readers
 
         protected RawData()
         {
+#if Enable_Obsolete
             mobj_calibrator = null;
-        }
+#endif
 
+        }
+#if Enable_Obsolete
         public virtual void SetCalibrator(Calibrations.Calibrator calib)
         {
             mobj_calibrator = calib;
@@ -135,6 +141,7 @@ namespace Engine.Readers
         {
             return mobj_calibrator.FindIndexByMass(mz);
         }
+#endif
 
         protected virtual void GetRawData(out List<double> vectMZs, out List<double> vectIntensities, int scan,
             double min_mz, double max_mz, bool centroid)

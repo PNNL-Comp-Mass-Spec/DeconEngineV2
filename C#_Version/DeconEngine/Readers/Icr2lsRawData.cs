@@ -1,3 +1,4 @@
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -728,3 +729,4 @@ namespace Engine.Readers
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -370,7 +371,7 @@ namespace Engine.Results
             }
         }
 
-        [Obsolete("Appears unused")]
+#if Enable_Obsolete
         public void AddTransforms(List<clsHornTransformResults> fitResults)
         {
             try
@@ -415,6 +416,7 @@ namespace Engine.Results
 #endif
             }
         }
+#endif
 
         public int GetMinScan()
         {
@@ -790,3 +792,4 @@ namespace Engine.Results
         }
     }
 }
+#endif

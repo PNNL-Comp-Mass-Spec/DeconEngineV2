@@ -997,7 +997,7 @@ namespace DeconToolsV2
             {
                 try
                 {
-                    Console.WriteLine("Writing to file " + dta_scanType.DTAScanTypeFilename);
+                    Console.WriteLine("Writing to file " + dtaScanType.DTAScanTypeFilename);
                     dtaScanType.GenerateScanTypeFile();
                 }
                 catch (Exception ex)
