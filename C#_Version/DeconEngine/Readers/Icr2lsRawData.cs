@@ -133,11 +133,11 @@ namespace Engine.Readers
             GetFileName(mint_last_scan_num, out file_name);
             if (string.IsNullOrWhiteSpace(file_name))
                 return;
-            bool loaded = LoadFile(file_name, mint_last_scan_num);
+            var loaded = LoadFile(file_name, mint_last_scan_num);
             if (!loaded)
                 return;
             Buffer.BlockCopy(mptr_data, 0, mptr_data_copy, 0, mint_allocated_size * flt_size);
-            for (int pt_num = 0; pt_num < mint_allocated_size; pt_num++)
+            for (var pt_num = 0; pt_num < mint_allocated_size; pt_num++)
             {
                 vect_intensities.Add(mptr_data_copy[pt_num]);
             }
@@ -146,16 +146,16 @@ namespace Engine.Readers
         private bool LoadFile(string f_name, int scan_num)
         {
             const int flt_size = sizeof (float);
-            using (FileStream fin = new FileStream(f_name, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var fin = new FileStream(f_name, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 //std.ifstream fin(f_name, std.ios.binary);
-                bool found_data = ReadHeader(fin);
+                var found_data = ReadHeader(fin);
                 if (!found_data)
                 {
                     fin.Close();
                     return false;
                 }
-                long pos = fin.Position;
+                var pos = fin.Position;
                 if (mint_allocated_size < mint_num_points_in_scan)
                 {
                     mint_allocated_size = mint_num_points_in_scan;
@@ -171,22 +171,22 @@ namespace Engine.Readers
                 pos = fin.Position;
                 fin.Flush();
                 fin.Seek(pos, SeekOrigin.Begin);
-                byte[] buffer = new byte[mint_num_points_in_scan * flt_size];
-                int num_read = fin.Read(buffer, 0, mint_num_points_in_scan * flt_size);
+                var buffer = new byte[mint_num_points_in_scan * flt_size];
+                var num_read = fin.Read(buffer, 0, mint_num_points_in_scan * flt_size);
                 //Buffer.BlockCopy(buffer, 0, mptr_data, 0, mint_num_points_in_scan * flt_size);
                 Buffer.BlockCopy(buffer, 0, mptr_data, 0, num_read);
             }
-            double max_intensity = -1 * double.MaxValue;
-            double min_intensity = double.MaxValue;
+            var max_intensity = -1 * double.MaxValue;
+            var min_intensity = double.MaxValue;
             const int interval_size = 2000;
-            int skip = (mint_num_points_in_scan - 1) / interval_size + 1;
-            bool max_side = true; // to take reading from max size.
-            for (int i = 0; i < mint_num_points_in_scan; i += skip)
+            var skip = (mint_num_points_in_scan - 1) / interval_size + 1;
+            var max_side = true; // to take reading from max size.
+            for (var i = 0; i < mint_num_points_in_scan; i += skip)
             {
-                double current_max_intensity = -1 * double.MaxValue;
-                double current_min_intensity = double.MaxValue;
+                var current_max_intensity = -1 * double.MaxValue;
+                var current_min_intensity = double.MaxValue;
 
-                for (int j = i; j < mint_num_points_in_scan && j < i + skip; j++)
+                for (var j = i; j < mint_num_points_in_scan && j < i + skip; j++)
                 {
                     if (current_max_intensity < mptr_data[j])
                         current_max_intensity = mptr_data[j];
@@ -224,9 +224,9 @@ namespace Engine.Readers
             if (mshort_num_zeros != 0)
             {
                 mint_allocated_size = mint_num_points_in_scan * (1 << mshort_num_zeros);
-                float[] temp = new float[mint_allocated_size];
+                var temp = new float[mint_allocated_size];
                 Buffer.BlockCopy(mptr_data, 0, temp, 0, mint_num_points_in_scan * sizeof (float));
-                for (int zeroIndex = mint_num_points_in_scan;
+                for (var zeroIndex = mint_num_points_in_scan;
                     zeroIndex < mint_allocated_size;
                     zeroIndex++)
                 {
@@ -243,7 +243,7 @@ namespace Engine.Readers
 
             if (!mbln_use_specified_calibration || mobj_calibrator == null)
             {
-                Calibrations.Calibrator calib = new Calibrations.Calibrator(menm_calibration_type);
+                var calib = new Calibrations.Calibrator(menm_calibration_type);
                 calib.NumPointsInScan = mint_num_points_in_scan;
                 calib.LowMassFrequency = mdbl_low_mass_freq;
                 calib.SampleRate = mdbl_sample_rate;
@@ -274,7 +274,7 @@ namespace Engine.Readers
         {
             mbln_use_specified_calibration = true;
             menm_calibration_type = calibType;
-            Calibrations.Calibrator calib = new Calibrations.Calibrator(menm_calibration_type);
+            var calib = new Calibrations.Calibrator(menm_calibration_type);
             calib.NumPointsInScan = mint_num_points_in_scan;
             calib.LowMassFrequency = mdbl_low_mass_freq;
             calib.SampleRate = mdbl_sample_rate;
@@ -308,7 +308,7 @@ namespace Engine.Readers
 
         private bool ReadHeader(Stream fin)
         {
-            string buffer = "";
+            var buffer = "";
 
             const string comment_tag = "Comment:";
             const string commentend_tag = "CommentEnd";
@@ -330,7 +330,7 @@ namespace Engine.Readers
             const string xmin_tag = "CurrentXmin:";
             const string xmax_tag = "CurrentXmax:";
 
-            using (StreamReader afin = new StreamReader(fin, Encoding.ASCII, true, 128, true))
+            using (var afin = new StreamReader(fin, Encoding.ASCII, true, 128, true))
             {
                 while (!afin.EndOfStream)
                 {
@@ -355,7 +355,7 @@ namespace Engine.Readers
                             continue;
                         }
                     }
-                    int ptr = -1;
+                    var ptr = -1;
                     if ((ptr = buffer.IndexOf(file_type_tag, StringComparison.InvariantCulture)) > -1)
                     {
                         ptr += file_type_tag.Length;
@@ -397,7 +397,7 @@ namespace Engine.Readers
                     if ((ptr = buffer.IndexOf(cal_type_tag, StringComparison.InvariantCulture)) > -1)
                     {
                         ptr += cal_type_tag.Length;
-                        int cal_num = int.Parse(buffer.Substring(ptr));
+                        var cal_num = int.Parse(buffer.Substring(ptr));
                         menm_calibration_type = (CalibrationType) cal_num;
                     }
                     if ((ptr = buffer.IndexOf(cal_a_tag, StringComparison.InvariantCulture)) > -1)
@@ -467,7 +467,7 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
-            int num_pts = mint_num_points_in_scan * (1 << mshort_num_zeros);
+            var num_pts = mint_num_points_in_scan * (1 << mshort_num_zeros);
             return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
         }
 
@@ -492,14 +492,14 @@ namespace Engine.Readers
             SetIsTic(true); // don't ask why, in fact..forgedd abouddd idddd!!
             string file_name;
             const int flt_size = sizeof (float);
-            int scan_num = 0; //as the tic is atored as scan 0
+            var scan_num = 0; //as the tic is atored as scan 0
 
             GetFileName(scan_num, out file_name);
             if (string.IsNullOrWhiteSpace(file_name))
                 return;
             mint_last_scan_num = scan_num;
-            bool loaded = LoadFile(file_name, scan_num);
-            int num_pts = mint_num_points_in_scan * (1 << mshort_num_zeros);
+            var loaded = LoadFile(file_name, scan_num);
+            var num_pts = mint_num_points_in_scan * (1 << mshort_num_zeros);
             Buffer.BlockCopy(mptr_data, 0, mptr_data_copy, 0, num_pts * flt_size);
             mobj_calibrator.GetRawPointsApplyFFT(ref mptr_data, out scan_times, out intensities, num_pts);
         }
@@ -519,7 +519,7 @@ namespace Engine.Readers
             if (scan_num != mint_last_scan_num)
             {
                 mint_last_scan_num = scan_num;
-                bool loaded = LoadFile(file_name, scan_num);
+                var loaded = LoadFile(file_name, scan_num);
                 if (num_pts <= 0 || num_pts > mint_num_points_in_scan * (1 << mshort_num_zeros))
                     num_pts = mint_num_points_in_scan * (1 << mshort_num_zeros);
                 if (!loaded)
@@ -549,7 +549,7 @@ namespace Engine.Readers
                 (folder_name[3] >= '0' && folder_name[3] <= '9'))
             {
                 directory_name = directory_path;
-                int len = directory_name.Length;
+                var len = directory_name.Length;
                 if (directory_name[len - 1] != '\\' && directory_name[len - 1] != '/')
                 {
                     directory_name += "\\";
@@ -562,7 +562,7 @@ namespace Engine.Readers
                 }
 
                 // Skip subdirectories
-                foreach (string path in Directory.EnumerateFiles(directory_name))
+                foreach (var path in Directory.EnumerateFiles(directory_name))
                 {
                     file_name = Path.GetFileName(path);
                     AddScanFile(directory_name, file_name);
@@ -575,18 +575,18 @@ namespace Engine.Readers
         {
             // add file to list of files. Extract scan number by starting from last letter
             // of file_name.
-            int len_filen = file_name.Length;
-            int len_pathn = path.Length;
+            var len_filen = file_name.Length;
+            var len_pathn = path.Length;
             string full_path;
-            int start_index = len_filen;
-            for (int i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
+            var start_index = len_filen;
+            for (var i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
             {
                 start_index = i;
             }
             if (start_index != len_filen && file_name[start_index - 1] == '.')
             {
                 // have the right format.
-                int scan_num = int.Parse(file_name.Substring(start_index));
+                var scan_num = int.Parse(file_name.Substring(start_index));
                 full_path = path;
 
                 if (full_path[len_pathn - 1] != '\\' && full_path[len_pathn] != '/')
@@ -602,16 +602,16 @@ namespace Engine.Readers
         {
             // add file to list of files. Extract scan number by starting from last letter
             // of file_name.
-            int len_filen = file_name.Length;
-            int start_index = len_filen;
-            for (int i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
+            var len_filen = file_name.Length;
+            var start_index = len_filen;
+            for (var i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
             {
                 start_index = i;
             }
             if (start_index != len_filen && file_name[start_index - 1] == '.')
             {
                 // have the right format.
-                int scan_num = int.Parse(file_name.Substring(start_index));
+                var scan_num = int.Parse(file_name.Substring(start_index));
                 AddScanFile(file_name, scan_num);
             }
             else
@@ -635,14 +635,14 @@ namespace Engine.Readers
             }
 
             sfile_name = directory_path;
-            int len = directory_path.Length;
+            var len = directory_path.Length;
 
             if (directory_path[len - 1] != '\\' && directory_path[len - 1] != '/')
                 sfile_name += "\\*";
             else
                 sfile_name += "*";
 
-            foreach (string path in Directory.EnumerateFileSystemEntries(directory_path))
+            foreach (var path in Directory.EnumerateFileSystemEntries(directory_path))
             {
                 file_name = path;
                 if (file_name == "." || file_name == "..")

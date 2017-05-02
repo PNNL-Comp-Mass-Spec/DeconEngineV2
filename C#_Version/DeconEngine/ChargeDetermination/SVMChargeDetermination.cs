@@ -18,12 +18,12 @@ namespace Engine.ChargeDetermination
 
         //Param file and params
         private string mchar_svm_param_xml_file;
-        private List<double> mvect_w = new List<double>();
-        private List<double> mvect_w_aux = new List<double>();
-        private List<double> mvect_b = new List<double>();
-        private List<double> mvect_b_aux = new List<double>();
-        private List<double> mvect_nbsv = new List<double>();
-        private List<double> mvect_aux = new List<double>();
+        private readonly List<double> mvect_w = new List<double>();
+        // Unused: private readonly List<double> mvect_w_aux = new List<double>();
+        private readonly List<double> mvect_b = new List<double>();
+        // Unused: private readonly List<double> mvect_b_aux = new List<double>();
+        private readonly List<double> mvect_nbsv = new List<double>();
+        private readonly List<double> mvect_aux = new List<double>();
         /*/
         private Matrix mmat_vote = new Matrix();
         private double[,] mmat_vote_val = new double[1, 1];
@@ -34,24 +34,24 @@ namespace Engine.ChargeDetermination
         private Matrix<double> mmat_discriminant_scores;
         /**/
 
-        private List<Engine.ChargeDetermination.FeatureList> mvect_xsup = new List<FeatureList>();
-        private Engine.ChargeDetermination.FeatureList mobj_support_features;
+        private readonly List<Engine.ChargeDetermination.FeatureList> mvect_xsup = new List<FeatureList>();
+        private readonly Engine.ChargeDetermination.FeatureList mobj_support_features;
         //private List<Engine.ChargeDetermination.FeatureList> mvect_xsup_aux = new List<FeatureList>();
 
         //Test and result
-        private List<Engine.ChargeDetermination.FeatureList> mvect_xtest = new List<FeatureList>();
+        private readonly List<Engine.ChargeDetermination.FeatureList> mvect_xtest = new List<FeatureList>();
         //private List<Engine.ChargeDetermination.FeatureList> mvect_xtest_aux = new List<FeatureList>();
 
-        private List<double> mvect_ypredict = new List<double>();
-        private double[] marr_min_values = new double[num_features];
-        private double[] marr_max_values = new double[num_features];
+        private readonly List<double> mvect_ypredict = new List<double>();
+        private readonly double[] marr_min_values = new double[num_features];
+        private readonly double[] marr_max_values = new double[num_features];
 
         // Input scan
-        private Engine.ChargeDetermination.FeatureList mobj_scan_features;
-        private List<double> mvect_mzs = new List<double>();
-        private List<double> mvect_intensities = new List<double>();
-        private int[] marr_pk_distribution = new int[num_bins];
-        private int[] marr_intensity_distribution = new int[num_bins];
+        private readonly Engine.ChargeDetermination.FeatureList mobj_scan_features;
+        private readonly List<double> mvect_mzs = new List<double>();
+        private readonly List<double> mvect_intensities = new List<double>();
+        private readonly int[] marr_pk_distribution = new int[num_bins];
+        private readonly int[] marr_intensity_distribution = new int[num_bins];
 
         //For features
         /*/
@@ -59,13 +59,13 @@ namespace Engine.ChargeDetermination
         private Matrix marr_mean_charge3;
         private Matrix mmat_C;
         /*/
-        private Matrix<double> marr_mean_charge2;
-        private Matrix<double> marr_mean_charge3;
-        private Matrix<double> mmat_C;
+        private readonly Matrix<double> marr_mean_charge2;
+        private readonly Matrix<double> marr_mean_charge3;
+        private readonly Matrix<double> mmat_C;
         /**/
-        private double mdbl_mass_CO;
-        private double mdbl_mass_H2O;
-        private double mdbl_mass_NH3;
+        private readonly double mdbl_mass_CO;
+        private readonly double mdbl_mass_H2O;
+        private readonly double mdbl_mass_NH3;
 
         public SVMChargeDetermine()
         {
@@ -81,7 +81,7 @@ namespace Engine.ChargeDetermination
             marr_mean_charge2 = Matrix<double>.Build.Dense(1, 2, 0);
             marr_mean_charge3 = Matrix<double>.Build.Dense(1, 2, 0);
             /**/
-            for (int i = 0; i < num_bins; i++)
+            for (var i = 0; i < num_bins; i++)
             {
                 marr_pk_distribution[i] = 0;
                 marr_intensity_distribution[i] = 0;
@@ -91,7 +91,7 @@ namespace Engine.ChargeDetermination
             mdbl_mass_H2O = 18.0105633;
             mdbl_mass_NH3 = 17.0265458;
 
-            for (int i = 0; i < mobj_scan_features.GetNumFeatures(); i++)
+            for (var i = 0; i < mobj_scan_features.GetNumFeatures(); i++)
             {
                 marr_min_values[i] = double.MaxValue;
                 marr_max_values[i] = 0; //double.MinValue;
@@ -109,7 +109,7 @@ namespace Engine.ChargeDetermination
         {
             mvect_intensities.Clear();
             mvect_mzs.Clear();
-            for (int bin_num = 0; bin_num < num_bins; bin_num++)
+            for (var bin_num = 0; bin_num < num_bins; bin_num++)
             {
                 marr_pk_distribution[bin_num] = 0;
                 marr_intensity_distribution[bin_num] = 0;
@@ -155,9 +155,9 @@ namespace Engine.ChargeDetermination
         public bool IdentifyIfChargeOne(List<double> mzs, List<double> intensities, clsPeak parentPeak,
             int parentScan)
         {
-            int numPeaks = mzs.Count;
+            var numPeaks = mzs.Count;
             double noLoss = 0;
-            double parent_mz = parentPeak.Mz;
+            var parent_mz = parentPeak.Mz;
             double temp1 = 0;
             double temp2 = 0;
             double temp3 = 0;
@@ -165,7 +165,7 @@ namespace Engine.ChargeDetermination
 
             //Get input spectra
             InitVectors();
-            for (int i = 0; i < numPeaks; i++)
+            for (var i = 0; i < numPeaks; i++)
             {
                 mvect_intensities.Add(intensities[i]);
                 mvect_mzs.Add(mzs[i]);
@@ -228,37 +228,34 @@ namespace Engine.ChargeDetermination
             second_term3_value = second_term3.ptr;
             fscore3 = first_term3_value[0, 0] - 0.5 * second_term3_value[0, 0] + prob[1];
             /*/
-            Matrix<double> m1, m2, m3, m4;
-            Matrix<double> first_term2, second_term2;
-            Matrix<double> first_term3, second_term3;
-            Matrix<double> invC, x, x_T;
-            double[] prob = new double[2];
+
+            var prob = new double[2];
             double totalPeaks = 0;
 
-            for (int i = 0; i < num_bins; i++)
+            for (var i = 0; i < num_bins; i++)
                 totalPeaks += marr_pk_distribution[i];
 
             prob[0] = (double)marr_pk_distribution[1] / totalPeaks;
             prob[1] = (double)marr_pk_distribution[2] / totalPeaks;
 
-            x = Matrix<double>.Build.Dense(1, 2, 0);
+            var x = Matrix<double>.Build.Dense(1, 2, 0);
 
             x[0, 0] = (double)marr_pk_distribution[1];
             x[0, 1] = (double)marr_pk_distribution[2];
 
-            x_T = x.Transpose();
-            invC = mmat_C.Inverse();
-            m1 = marr_mean_charge2.Multiply(invC);
-            m2 = marr_mean_charge2.Transpose();
-            first_term2 = m1.Multiply(x_T);
-            second_term2 = m1.Multiply(m2);
+            var x_T = x.Transpose();
+            var invC = mmat_C.Inverse();
+            var m1 = marr_mean_charge2.Multiply(invC);
+            var m2 = marr_mean_charge2.Transpose();
+            var first_term2 = m1.Multiply(x_T);
+            var second_term2 = m1.Multiply(m2);
 
             fscore2 = first_term2[0, 0] - 0.5 * second_term2[0, 0] + prob[0];
 
-            m3 = marr_mean_charge3.Multiply(invC);
-            m4 = marr_mean_charge3.Transpose();
-            first_term3 = m3.Multiply(x_T);
-            second_term3 = m3.Multiply(m4);
+            var m3 = marr_mean_charge3.Multiply(invC);
+            var m4 = marr_mean_charge3.Transpose();
+            var first_term3 = m3.Multiply(x_T);
+            var second_term3 = m3.Multiply(m4);
 
             fscore3 = first_term3[0, 0] - 0.5 * second_term3[0, 0] + prob[1];
             /**/
@@ -285,14 +282,14 @@ namespace Engine.ChargeDetermination
             double xscore2_NH3;
             double xscore3_NH3;
 
-            int numPeaks = mzs.Count;
+            var numPeaks = mzs.Count;
 
             double noLoss = 0;
-            double parent_mz = parentPeak.Mz;
+            var parent_mz = parentPeak.Mz;
 
             //Get input spectra
             InitVectors();
-            for (int i = 0; i < numPeaks; i++)
+            for (var i = 0; i < numPeaks; i++)
             {
                 mvect_intensities.Add(intensities[i]);
                 mvect_mzs.Add(mzs[i]);
@@ -322,34 +319,35 @@ namespace Engine.ChargeDetermination
             double pk4_prb, double fscore2, double fscore3, double x_score2_CO, double x_score3_CO, double x_score2_H2O,
             double x_score3_H20, double x_score2_NH3, double x_score3_NH3)
         {
-            List<double> vect_features = new List<double>();
-            double val = 0;
-            vect_features.Add(scan_num);
-            vect_features.Add(parent_Mz);
-            vect_features.Add(x_score2);
-            vect_features.Add(x_score3);
-            vect_features.Add(x_score_ratio);
-            vect_features.Add(b_score2);
-            vect_features.Add(b_score3);
-            vect_features.Add(pk1_prb);
-            vect_features.Add(pk2_prb);
-            vect_features.Add(pk3_prob);
-            vect_features.Add(pk4_prb);
-            vect_features.Add(fscore2);
-            vect_features.Add(fscore3);
-            vect_features.Add(x_score2_CO);
-            vect_features.Add(x_score3_CO);
-            vect_features.Add(x_score2_H2O);
-            vect_features.Add(x_score3_H20);
-            vect_features.Add(x_score2_NH3);
-            vect_features.Add(x_score3_NH3);
+            var vect_features = new List<double>
+            {
+                scan_num,
+                parent_Mz,
+                x_score2,
+                x_score3,
+                x_score_ratio,
+                b_score2,
+                b_score3,
+                pk1_prb,
+                pk2_prb,
+                pk3_prob,
+                pk4_prb,
+                fscore2,
+                fscore3,
+                x_score2_CO,
+                x_score3_CO,
+                x_score2_H2O,
+                x_score3_H20,
+                x_score2_NH3,
+                x_score3_NH3
+            };
 
             mobj_scan_features.InitValues(vect_features);
             mvect_xtest.Add(new FeatureList(mobj_scan_features));
 
-            for (int i = 0; i < num_features; i++)
+            for (var i = 0; i < num_features; i++)
             {
-                val = vect_features[i];
+                var val = vect_features[i];
                 if (val <= marr_min_values[i])
                     marr_min_values[i] = val;
                 if (val >= marr_max_values[i])
@@ -361,10 +359,10 @@ namespace Engine.ChargeDetermination
         {
             double threshold = 5;
             double median = 0;
-            int size = mvect_intensities.Count;
-            List<double> vect_sort_intensities = new List<double>();
+            var size = mvect_intensities.Count;
+            var vect_sort_intensities = new List<double>();
 
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 vect_sort_intensities.Add(mvect_intensities[i]);
             }
@@ -376,9 +374,9 @@ namespace Engine.ChargeDetermination
             else
                 median = (vect_sort_intensities[(size - 1) / 2] + vect_sort_intensities[(size + 1) / 2]) / 2;
 
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
-                double val = mvect_intensities[i] / median;
+                var val = mvect_intensities[i] / median;
                 if (val > threshold)
                     mvect_intensities[i] = val;
                 else
@@ -391,46 +389,30 @@ namespace Engine.ChargeDetermination
             parent_Mz = parent_Mz - neutralLoss;
             xscore2 = 0;
             xscore3 = 0;
-            double SumMForwardCS2 = 0;
-            double mzForwardBeginCS2 = 0;
-            double mzForwardEndCS2 = 0;
 
-            //for xscore3
-            double SumMForwardCS3_1 = 0;
-            double SumMForwardCS3_2 = 0;
-            double mzForwardBeginCS3_1 = 0;
-            double mzForwardEndCS3_1 = 0;
-            double mzForwardBeginCS3_2 = 0;
-            double mzForwardEndCS3_2 = 0;
-
-            double SumMReverse = 0;
-            double mzReverseBegin = 0;
-            double mzReverseEnd = 0;
-            double mz = 0;
-
-            for (int i = 0; i < parent_Mz; i ++)
+            for (var i = 0; i < parent_Mz; i ++)
             {
                 //for xscore2
-                SumMForwardCS2 = 0;
-                mzForwardBeginCS2 = (parent_Mz + i) - 0.5;
-                mzForwardEndCS2 = (parent_Mz + i) + 0.5;
+                double SumMForwardCS2 = 0;
+                var mzForwardBeginCS2 = (parent_Mz + i) - 0.5;
+                var mzForwardEndCS2 = (parent_Mz + i) + 0.5;
 
                 //for xscore3
-                SumMForwardCS3_1 = 0;
-                SumMForwardCS3_2 = 0;
-                mzForwardBeginCS3_1 = (3 * parent_Mz - 2 * i) - 0.5;
-                mzForwardEndCS3_1 = (3 * parent_Mz - 2 * i) + 0.5;
-                mzForwardBeginCS3_2 = (3 * parent_Mz - i) / 2 - 0.5;
-                mzForwardEndCS3_2 = (3 * parent_Mz - i) / 2 + 0.5;
+                double SumMForwardCS3_1 = 0;
+                double SumMForwardCS3_2 = 0;
+                var mzForwardBeginCS3_1 = (3 * parent_Mz - 2 * i) - 0.5;
+                var mzForwardEndCS3_1 = (3 * parent_Mz - 2 * i) + 0.5;
+                var mzForwardBeginCS3_2 = (3 * parent_Mz - i) / 2 - 0.5;
+                var mzForwardEndCS3_2 = (3 * parent_Mz - i) / 2 + 0.5;
 
                 //for both
-                SumMReverse = 0;
-                mzReverseBegin = (parent_Mz - i) - 0.5;
-                mzReverseEnd = (parent_Mz - i) + 0.5;
+                double SumMReverse = 0;
+                var mzReverseBegin = (parent_Mz - i) - 0.5;
+                var mzReverseEnd = (parent_Mz - i) + 0.5;
 
-                for (int j = 0; j < (int) mvect_mzs.Count; j++)
+                for (var j = 0; j < (int) mvect_mzs.Count; j++)
                 {
-                    mz = mvect_mzs[j];
+                    var mz = mvect_mzs[j];
                     if (mz >= mzForwardBeginCS2 && mz <= mzForwardEndCS2)
                         SumMForwardCS2 += (mvect_intensities[j]);
                     if (mz >= mzForwardBeginCS3_1 && mz <= mzForwardEndCS3_1)
@@ -479,12 +461,11 @@ namespace Engine.ChargeDetermination
             return charge;
             /*/
             //return values 1 - +1, 2 - +2, 3 - +3, 4 - +4, 0 - +2 or +3
-            int num_class = mmat_vote.ColumnCount;
-            int charge = 0;
-            for (int col = 0; col < num_class; col++)
+            var num_class = mmat_vote.ColumnCount;
+            var charge = 0;
+            for (var col = 0; col < num_class; col++)
             {
-                int rank = (int)mmat_vote[index, col];
-                if (mmat_vote[index, col] == 3)
+                if (Math.Abs(mmat_vote[index, col] - 3) < float.Epsilon)
                 {
                     charge = col + 1;
                 }
@@ -492,7 +473,7 @@ namespace Engine.ChargeDetermination
             if (charge == 2 || charge == 3)
             {
                 // As column 3 gives score between 2 and 3
-                double val = mmat_discriminant_scores[index, 3];
+                var val = mmat_discriminant_scores[index, 3];
                 if (val > -5 && val < 2.5) //these thresholds were found using the score distribution curves
                     charge = 0;
             }
@@ -511,14 +492,12 @@ namespace Engine.ChargeDetermination
             /**/
             if (mvect_b.Count != 0)
                 mvect_b.Clear();
-            if (mvect_b_aux.Count != 0)
-                mvect_b_aux.Clear();
+            // Unused: if (mvect_b_aux.Count != 0) mvect_b_aux.Clear();
             if (mvect_aux.Count != 0)
                 mvect_aux.Clear();
             if (mvect_w.Count != 0)
                 mvect_w.Clear();
-            if (mvect_w_aux.Count != 0)
-                mvect_w_aux.Clear();
+            // Unused: if (mvect_w_aux.Count != 0) mvect_w_aux.Clear();
             if (mvect_xsup.Count != 0)
                 mvect_xsup.Clear();
             if (mvect_xtest.Count != 0)
@@ -550,12 +529,12 @@ namespace Engine.ChargeDetermination
                 }
             }
             /*/
-            int num_rows = mmat_vote.RowCount;
-            int num_cols = mmat_vote.ColumnCount;
-            for (int row = 0; row < num_rows; row++)
+            var num_rows = mmat_vote.RowCount;
+            var num_cols = mmat_vote.ColumnCount;
+            for (var row = 0; row < num_rows; row++)
             {
-                int charge = 1;
-                for (int col = 0; col < num_cols; col++)
+                var charge = 1;
+                for (var col = 0; col < num_cols; col++)
                 {
                     if (mmat_vote[row, col].Equals(3))
                     {
@@ -578,11 +557,10 @@ namespace Engine.ChargeDetermination
             double sumRight_CS3 = 0;
             double sumTotal_CS2 = 0;
             double sumTotal_CS3 = 0;
-            double mz = 0;
 
-            for (int i = 0; i < (int) mvect_mzs.Count; i++)
+            for (var i = 0; i < mvect_mzs.Count; i++)
             {
-                mz = mvect_mzs[i];
+                var mz = mvect_mzs[i];
                 if (mz < parent_Mz - 1)
                     sumLeft += mvect_intensities[i];
                 if (mz > parent_Mz + 1 && mz <= (2 * parent_Mz))
@@ -607,19 +585,16 @@ namespace Engine.ChargeDetermination
         public void CalculatePeakProbabilities(double parent_Mz, out double pk1, out double pk2, out double pk3,
             out double pk4)
         {
-            int numPeaks = mvect_intensities.Count;
-            int sum = 0;
-            double mz = 0;
-            double intensity = 0;
+            var numPeaks = mvect_intensities.Count;
+            double sum = 0;
             pk1 = -1;
             pk2 = -1;
             pk3 = -1;
             pk4 = -1;
 
-            for (int i = 1; i < numPeaks - 1; i++)
+            for (var i = 1; i < numPeaks - 1; i++)
             {
-                mz = mvect_mzs[i];
-                intensity = mvect_intensities[i];
+                var mz = mvect_mzs[i];
                 if (mz > 0 && mz <= parent_Mz)
                 {
                     marr_pk_distribution[0]++;
@@ -642,37 +617,34 @@ namespace Engine.ChargeDetermination
                 }
             }
 
-            for (int i = 0; i < num_bins; i++)
+            for (var i = 0; i < num_bins; i++)
             {
-                int val = marr_pk_distribution[i];
+                var val = marr_pk_distribution[i];
                 sum += marr_pk_distribution[i];
             }
 
-            pk1 = (double) marr_pk_distribution[0] / (double) sum;
-            pk2 = (double) marr_pk_distribution[1] / (double) sum;
-            pk3 = (double) marr_pk_distribution[2] / (double) sum;
-            pk4 = (double) marr_pk_distribution[3] / (double) sum;
+            pk1 = marr_pk_distribution[0] / sum;
+            pk2 = marr_pk_distribution[1] / sum;
+            pk3 = marr_pk_distribution[2] / sum;
+            pk4 = marr_pk_distribution[3] / sum;
         }
 
         public void NormalizeDataSet()
         {
             // Normalize Data Set
-            int num_vectors = (int) mvect_xtest.Count;
+            var num_vectors = (int) mvect_xtest.Count;
 
             if (num_vectors < 2)
                 return;
 
             double val = 0;
 
-            for (int vector_num = 0; vector_num < num_vectors; vector_num++)
+            for (var vector_num = 0; vector_num < num_vectors; vector_num++)
             {
-                Engine.ChargeDetermination.FeatureList this_test_vector;
-                this_test_vector = mvect_xtest[vector_num];
+                var this_test_vector = mvect_xtest[vector_num];
 
-                for (int feature_num = 0; feature_num < num_features; feature_num++)
+                for (var feature_num = 0; feature_num < num_features; feature_num++)
                 {
-                    double max_feature = marr_max_values[feature_num];
-                    double min_feature = marr_min_values[feature_num];
                     val = this_test_vector.GetValueAt(feature_num);
                     if (marr_max_values[feature_num] > marr_min_values[feature_num])
                         val = (val - marr_min_values[feature_num]) /
@@ -868,117 +840,96 @@ namespace Engine.ChargeDetermination
         public Matrix<double> GetKernel(List<Engine.ChargeDetermination.FeatureList> vect_xtest,
             List<Engine.ChargeDetermination.FeatureList> vect_xsup)
         {
-            Engine.ChargeDetermination.FeatureList this_test_vector;
-            Engine.ChargeDetermination.FeatureList this_support_vector;
-
-            Matrix<double> norm_x;
-            Matrix<double> norm_xsup;
-            Matrix<double> norm_xsup_t;
-            Matrix<double> metric;
-            Matrix<double> xsup;
-            Matrix<double> xsup_t;
-            Matrix<double> xsup2;
-            Matrix<double> x;
-            Matrix<double> x2;
-            Matrix<double> ps;
-            Matrix<double> psTemp;
-            Matrix<double> m1;
-            Matrix<double> m2;
-            Matrix<double> m3;
-            Matrix<double> kernel;
-
-            int num_vectors = (int)vect_xsup.Count;
-            int num_test = (int)vect_xtest.Count;
-            int ps_rows;
-            int ps_cols;
+            var num_vectors = vect_xsup.Count;
+            var num_test = vect_xtest.Count;
 
             //get vectors
-            xsup = Matrix<double>.Build.Dense(num_vectors, num_features, 0);
-            for (int i = 0; i < num_vectors; i++)
+            var xsup = Matrix<double>.Build.Dense(num_vectors, num_features, 0);
+            for (var i = 0; i < num_vectors; i++)
             {
-                this_support_vector = vect_xsup[i];
-                for (int j = 0; j < num_features; j++)
+                var this_support_vector = vect_xsup[i];
+                for (var j = 0; j < num_features; j++)
                 {
-                    double val_sup = this_support_vector.GetValueAt(j);
+                    var val_sup = this_support_vector.GetValueAt(j);
                     xsup[i, j] = val_sup;
                 }
             }
 
-            x = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_features, 0); // num_test == 0 causes an exception...
-            for (int i = 0; i < num_test; i++)
+            var x = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_features, 0); // num_test == 0 causes an exception...
+            for (var i = 0; i < num_test; i++)
             {
-                this_test_vector = vect_xtest[i];
-                for (int j = 0; j < num_features; j++)
+                var this_test_vector = vect_xtest[i];
+                for (var j = 0; j < num_features; j++)
                 {
-                    double val_x = this_test_vector.GetValueAt(j);
+                    var val_x = this_test_vector.GetValueAt(j);
                     x[i, j] = val_x;
                 }
             }
 
             //Init metric
-            metric = Matrix<double>.Build.Dense(num_features, num_features, 0);
-            for (int i = 0; i < num_features; i++)
+            var metric = Matrix<double>.Build.Dense(num_features, num_features, 0);
+            for (var i = 0; i < num_features; i++)
                 metric[i, i] = 1;
 
             // Get ps
-            m1 = x.Multiply(metric);
-            xsup_t = xsup.Transpose();
+            var m1 = x.Multiply(metric);
+            var xsup_t = xsup.Transpose();
 
-            ps = m1.Multiply(xsup_t);
-            ps_rows = ps.RowCount; //num_test
-            ps_cols = ps.ColumnCount; //num_support
+            var ps = m1.Multiply(xsup_t);
+            var ps_rows = ps.RowCount;
+            var ps_cols = ps.ColumnCount;
 
             // Get norms
-            norm_x = Matrix<double>.Build.Dense(ps_rows, ps_cols, 0);
-            norm_xsup = Matrix<double>.Build.Dense(ps_cols, ps_rows, 0);
+            var norm_x = Matrix<double>.Build.Dense(ps_rows, ps_cols, 0);
+            var norm_xsup = Matrix<double>.Build.Dense(ps_cols, ps_rows, 0);
 
-            x2 = x.PointwiseMultiply(x);
-            m2 = x2.Multiply(metric);
+            var x2 = x.PointwiseMultiply(x);
+            var m2 = x2.Multiply(metric);
 
-            for (int row_num = 0; row_num < m2.RowCount; row_num++)
+            for (var row_num = 0; row_num < m2.RowCount; row_num++)
             {
                 double sumX = 0;
-                for (int col_num = 0; col_num < m2.ColumnCount; col_num++)
+                for (var col_num = 0; col_num < m2.ColumnCount; col_num++)
                 {
-                    double val_m2 = m2[row_num, col_num];
+                    var val_m2 = m2[row_num, col_num];
                     sumX = sumX + val_m2;
                 }
                 //This is for ease of matrix addition
-                for (int col_num = 0; col_num < norm_x.ColumnCount; col_num++)
+                for (var col_num = 0; col_num < norm_x.ColumnCount; col_num++)
                     norm_x[row_num, col_num] = sumX;
             }
 
-            xsup2 = xsup.PointwiseMultiply(xsup);
-            m3 = xsup2.Multiply(metric);
-            for (int row_num = 0; row_num < m3.RowCount; row_num++)
+            var xsup2 = xsup.PointwiseMultiply(xsup);
+            var m3 = xsup2.Multiply(metric);
+            for (var row_num = 0; row_num < m3.RowCount; row_num++)
             {
                 double sumXsup = 0;
-                for (int col_num = 0; col_num < m3.ColumnCount; col_num++)
+                for (var col_num = 0; col_num < m3.ColumnCount; col_num++)
                 {
-                    double val_m3 = m3[row_num, col_num];
+                    var val_m3 = m3[row_num, col_num];
                     sumXsup = sumXsup + val_m3;
                 }
 
-                for (int col_num = 0; col_num < norm_xsup.ColumnCount; col_num++)
+                for (var col_num = 0; col_num < norm_xsup.ColumnCount; col_num++)
                     norm_xsup[row_num, col_num] = sumXsup;
             }
 
-            norm_xsup_t = norm_xsup.Transpose();
+            var norm_xsup_t = norm_xsup.Transpose();
 
-            double scale = -2.0;
-            psTemp = ps.Multiply(scale);
-            Matrix<double> ps2 = psTemp.Add(norm_x);
-            Matrix<double> ps3 = ps2.Add(norm_xsup_t);
+            var scale = -2.0;
+            var psTemp = ps.Multiply(scale);
+            var ps2 = psTemp.Add(norm_x);
+            var ps3 = ps2.Add(norm_xsup_t);
             ps = ps3.Multiply(1 / scale);
 
-            kernel = Matrix<double>.Build.Dense(ps.RowCount, ps.ColumnCount, 0);
+            var kernel = Matrix<double>.Build.Dense(ps.RowCount, ps.ColumnCount, 0);
 
-            for (int row_num = 0; row_num < ps.RowCount; row_num++)
+            for (var row_num = 0; row_num < ps.RowCount; row_num++)
             {
-                for (int col_num = 0; col_num < ps.ColumnCount; col_num++)
+                for (var col_num = 0; col_num < ps.ColumnCount; col_num++)
                 {
-                    double val = ps[row_num, col_num];
-                    double eval = Math.Exp(val);
+                    var val = ps[row_num, col_num];
+                    var eval = Math.Exp(val);
                     kernel[row_num, col_num] = eval;
                 }
             }
@@ -1053,59 +1004,55 @@ namespace Engine.ChargeDetermination
                 }
             }
             /*/
-            int length_nbsv = 0;
-            int num_class = 0;
-            int num_test = 0;
-            int k = 0;
-            int num_iterations = 6;
-            int iter_num = 0;
+            var k = 0;
+            var num_iterations = 6;
+            var iter_num = 0;
 
-            length_nbsv = mvect_nbsv.Count;
-            num_class = 4; //(int)(1 + (int)(Math.Sqrt(1+4*2*length_nbsv)))/2;
-            num_test = (int)mvect_xtest.Count;
+            var num_class = 4;
+            var num_test = mvect_xtest.Count;
             mmat_vote = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_class, 0); // num_test == 0 causes an exception...
             mmat_discriminant_scores = Matrix<double>.Build.Dense(Math.Max(num_test, 1), num_iterations, 0); // num_test == 0 causes an exception...
             CalculateCumSum();
 
-            for (int row = 0; row < (int)mvect_xtest.Count; row++)
+            for (var row = 0; row < mvect_xtest.Count; row++)
                 mvect_ypredict.Add(0);
 
-            for (int row = 0; row < mmat_vote.RowCount && mvect_xtest.Count > 0; row++)
+            for (var row = 0; row < mmat_vote.RowCount && mvect_xtest.Count > 0; row++)
             {
-                for (int col = 0; col < mmat_vote.ColumnCount; col++)
+                for (var col = 0; col < mmat_vote.ColumnCount; col++)
                 {
                     mmat_vote[row, col] = 0;
                 }
-                for (int col = 0; col < mmat_discriminant_scores.ColumnCount; col++)
+                for (var col = 0; col < mmat_discriminant_scores.ColumnCount; col++)
                 {
                     mmat_discriminant_scores[row, col] = 0;
                 }
             }
 
-            for (int i = 0; i < num_class; i++)
+            for (var i = 0; i < num_class; i++)
             {
-                for (int j = i + 1; j < num_class; j++)
+                for (var j = i + 1; j < num_class; j++)
                 {
-                    int startIndexToConsider = (int)mvect_aux[k];
-                    int stopIndexToConsider = (int)(mvect_aux[k] + mvect_nbsv[k + 1]) - 1;
+                    var startIndexToConsider = (int)mvect_aux[k];
+                    var stopIndexToConsider = (int)(mvect_aux[k] + mvect_nbsv[k + 1]) - 1;
                     SVMClassification(startIndexToConsider, stopIndexToConsider, k);
                     //for (int row = 0; row < mmat_vote.RowCount; row++)
-                    for (int row = 0; row < num_test; row++)
+                    for (var row = 0; row < num_test; row++)
                     {
-                        double val = mvect_ypredict[row];
+                        var val = mvect_ypredict[row];
 
                         mmat_discriminant_scores[row, iter_num] = val;
 
                         mvect_ypredict[row] = 0;
                         if (val >= 0)
                         {
-                            double val2 = mmat_vote[row, i];
+                            var val2 = mmat_vote[row, i];
                             val2++;
                             mmat_vote[row, i] = val2;
                         }
                         else
                         {
-                            double val1 = mmat_vote[row, j];
+                            var val1 = mmat_vote[row, j];
                             val1++;
                             mmat_vote[row, j] = val1;
                         }
@@ -1119,11 +1066,10 @@ namespace Engine.ChargeDetermination
 
         public void CalculateCumSum()
         {
-            double sum = 0;
-            for (int i = 0; i < (int) mvect_nbsv.Count; i++)
+            for (var i = 0; i < mvect_nbsv.Count; i++)
             {
-                sum = 0;
-                for (int j = 0; j <= i; j++)
+                double sum = 0;
+                for (var j = 0; j <= i; j++)
                 {
                     sum += mvect_nbsv[j];
                 }
@@ -1133,60 +1079,56 @@ namespace Engine.ChargeDetermination
 
         public void SVMClassification(int startIndex, int stopIndex, int k_bias)
         {
-            List<double> span = new List<double>();
-            List<double> y = new List<double>();
-            List<Engine.ChargeDetermination.FeatureList> chunk_xtest = new List<FeatureList>();
-            List<Engine.ChargeDetermination.FeatureList> chunk_xsup = new List<FeatureList>();
-            Engine.ChargeDetermination.FeatureList this_test_vector;
-            Engine.ChargeDetermination.FeatureList this_support_vector;
+            var chunk_xtest = new List<FeatureList>();
+            var chunk_xsup = new List<FeatureList>();
 
-            int num_support = stopIndex - startIndex;
-            int num_test = (int) mvect_xtest.Count;
+            var num_support = stopIndex - startIndex;
+            var num_test = (int) mvect_xtest.Count;
             const int chunksize = 100;
-            List<int> ind1 = new List<int>();
-            List<int> ind2 = new List<int>();
+            var ind1 = new List<int>();
+            var ind2 = new List<int>();
 
-            int chunks1 = (int) (num_support / chunksize) + 1;
-            int chunks2 = (int) (num_test / chunksize) + 1;
+            var chunks1 = (int) (num_support / chunksize) + 1;
+            var chunks2 = (int) (num_test / chunksize) + 1;
 
             // Performing y2(ind2)=y2(ind2)+ kchunk*w(ind1);
-            for (int ch1 = 1; ch1 <= chunks1; ch1++)
+            for (var ch1 = 1; ch1 <= chunks1; ch1++)
             {
                 //Get ind1
-                int low_ind1_index = (ch1 - 1) * chunksize + startIndex;
-                int high_ind1_index = (ch1 * chunksize) - 1 + startIndex;
+                var low_ind1_index = (ch1 - 1) * chunksize + startIndex;
+                var high_ind1_index = (ch1 * chunksize) - 1 + startIndex;
                 if (high_ind1_index > stopIndex)
                     high_ind1_index = stopIndex;
                 ind1.Clear();
-                for (int index = 0; index <= (high_ind1_index - low_ind1_index); index++)
+                for (var index = 0; index <= (high_ind1_index - low_ind1_index); index++)
                     ind1.Add(index + low_ind1_index);
 
                 //Get support vectors
                 chunk_xsup.Clear();
-                for (int j = 0; j < (int) ind1.Count; j++)
+                for (var j = 0; j < (int) ind1.Count; j++)
                 {
-                    int xsupIndex = ind1[j];
-                    this_support_vector = new FeatureList(mvect_xsup[xsupIndex]);
+                    var xsupIndex = ind1[j];
+                    var this_support_vector = new FeatureList(mvect_xsup[xsupIndex]);
                     chunk_xsup.Add(this_support_vector);
                 }
 
-                for (int ch2 = 1; ch2 <= chunks2; ch2++)
+                for (var ch2 = 1; ch2 <= chunks2; ch2++)
                 {
                     //Get ind2
-                    int low_ind2_index = (ch2 - 1) * chunksize;
-                    int high_ind2_index = (ch2 * chunksize) - 1;
+                    var low_ind2_index = (ch2 - 1) * chunksize;
+                    var high_ind2_index = (ch2 * chunksize) - 1;
                     if (high_ind2_index > num_test)
                         high_ind2_index = num_test - 1;
                     ind2.Clear();
-                    for (int index2 = 0; index2 <= (high_ind2_index - low_ind2_index); index2++)
+                    for (var index2 = 0; index2 <= (high_ind2_index - low_ind2_index); index2++)
                         ind2.Add(index2 + low_ind2_index);
 
                     //Get X vector
                     chunk_xtest.Clear();
-                    for (int j = 0; j < (int) ind2.Count; j++)
+                    for (var j = 0; j < ind2.Count; j++)
                     {
-                        int xIndex = ind2[j];
-                        this_test_vector = mvect_xtest[xIndex];
+                        var xIndex = ind2[j];
+                        var this_test_vector = mvect_xtest[xIndex];
                         chunk_xtest.Add(new FeatureList(this_test_vector));
                     }
                     /*/
@@ -1229,28 +1171,25 @@ namespace Engine.ChargeDetermination
                     /*/
 
                     //Get the kernel
-                    Matrix<double> svm_kernel;
-                    svm_kernel = GetKernel(chunk_xtest, chunk_xsup);
+                    var svm_kernel = GetKernel(chunk_xtest, chunk_xsup);
 
                     //Read in the weights w(ind1)
-                    Matrix<double> w;
-                    w = Matrix<double>.Build.Dense(ind1.Count, 1, 0);
-                    for (int i = 0; i < (int)ind1.Count; i++)
+                    var w = Matrix<double>.Build.Dense(ind1.Count, 1, 0);
+                    for (var i = 0; i < ind1.Count; i++)
                     {
-                        int index = ind1[i];
+                        var index = ind1[i];
                         w[i, 0] = mvect_w[index];
                     }
 
                     // m1 = kchunk*w(ind1)
-                    Matrix<double> m1;
-                    m1 = svm_kernel.Multiply(w);
+                    var m1 = svm_kernel.Multiply(w);
 
                     //y2(ind2) += m1;
-                    for (int i = 0; i < (int)ind2.Count; i++)
+                    for (var i = 0; i < ind2.Count; i++)
                     {
-                        int index = ind2[i];
+                        var index = ind2[i];
 
-                        int vale = (int)mvect_ypredict[index];
+                        var vale = (int)mvect_ypredict[index];
                         mvect_ypredict[index] += m1[i, 0];
                         vale = (int)mvect_ypredict[index];
                     }
@@ -1259,13 +1198,13 @@ namespace Engine.ChargeDetermination
             }
 
             //Add w0
-            for (int i = 0; i < (int) mvect_ypredict.Count; i++)
+            for (var i = 0; i < mvect_ypredict.Count; i++)
             {
-                double debug = mvect_ypredict[i];
+                var debug = mvect_ypredict[i];
                 if (i == 6312)
                 {
                     debug ++;
-                    double b = mvect_b[k_bias];
+                    var b = mvect_b[k_bias];
                     b++;
                 }
                 mvect_ypredict[i] += mvect_b[k_bias];
@@ -1299,9 +1238,9 @@ namespace Engine.ChargeDetermination
         private void ReadXmlFromStream(Stream stream)
         {
 
-            int weight_count = 0;
-            int feature_count = 0;
-            int support_count = 0;
+            var weight_count = 0;
+            var feature_count = 0;
+            var support_count = 0;
 
             /* Format
              * <SVMParams>
@@ -1336,8 +1275,8 @@ namespace Engine.ChargeDetermination
              * </SVMParams>
              */
 
-            XmlReaderSettings rdrSettings = new XmlReaderSettings {IgnoreWhitespace = true,};
-            using (XmlReader rdr = XmlReader.Create(stream, rdrSettings))
+            var rdrSettings = new XmlReaderSettings {IgnoreWhitespace = true,};
+            using (var rdr = XmlReader.Create(stream, rdrSettings))
             {
                 rdr.MoveToContent();
                 //start walking down the tree
@@ -1355,7 +1294,7 @@ namespace Engine.ChargeDetermination
                                 rdr.ReadEndElement();
                                 break;
                             case b_tag:
-                                double b = rdr.ReadElementContentAsDouble();
+                                var b = rdr.ReadElementContentAsDouble();
                                 mvect_b.Add(b);
                                 break;
                             case bias_support_tag:
@@ -1363,7 +1302,7 @@ namespace Engine.ChargeDetermination
                                 rdr.ReadEndElement();
                                 break;
                             case nbsv_tag:
-                                double nbsv = rdr.ReadElementContentAsDouble();
+                                var nbsv = rdr.ReadElementContentAsDouble();
                                 mvect_nbsv.Add(nbsv);
                                 break;
                             case weights_tag:
@@ -1371,7 +1310,7 @@ namespace Engine.ChargeDetermination
                                 rdr.ReadEndElement();
                                 break;
                             case w_tag:
-                                double w = rdr.ReadElementContentAsDouble();
+                                var w = rdr.ReadElementContentAsDouble();
                                 mvect_w.Add(w);
                                 weight_count++;
                                 break;
@@ -1405,7 +1344,7 @@ namespace Engine.ChargeDetermination
                     switch (rdr.Name)
                     {
                         case b_tag:
-                            double b = rdr.ReadElementContentAsDouble();
+                            var b = rdr.ReadElementContentAsDouble();
                             mvect_b.Add(b);
                             break;
                         default:
@@ -1433,7 +1372,7 @@ namespace Engine.ChargeDetermination
                     switch (rdr.Name)
                     {
                         case nbsv_tag:
-                            double nbsv = rdr.ReadElementContentAsDouble();
+                            var nbsv = rdr.ReadElementContentAsDouble();
                             mvect_nbsv.Add(nbsv);
                             break;
                         default:
@@ -1449,7 +1388,7 @@ namespace Engine.ChargeDetermination
 
         private int ReadXmlSupportWeights(XmlReader rdr)
         {
-            int weight_count = 0;
+            var weight_count = 0;
             rdr.MoveToContent();
             //start walking down the tree
             if (rdr.NodeType == XmlNodeType.Element && rdr.Name == weights_tag)
@@ -1462,7 +1401,7 @@ namespace Engine.ChargeDetermination
                     switch (rdr.Name)
                     {
                         case w_tag:
-                            double w = rdr.ReadElementContentAsDouble();
+                            var w = rdr.ReadElementContentAsDouble();
                             mvect_w.Add(w);
                             weight_count++;
                             break;
@@ -1480,8 +1419,8 @@ namespace Engine.ChargeDetermination
 
         private int ReadXmlSupportVectors(XmlReader rdr)
         {
-            int feature_count = 0;
-            int support_count = 0;
+            var feature_count = 0;
+            var support_count = 0;
             rdr.MoveToContent();
             //start walking down the tree
             if (rdr.NodeType == XmlNodeType.Element && rdr.Name == support_tag)
@@ -1513,8 +1452,8 @@ namespace Engine.ChargeDetermination
 
         private int ReadXmlSupportVectorFeatures(XmlReader rdr)
         {
-            int feature_count = 0;
-            List<double> vect_xsup = new List<double>();
+            var feature_count = 0;
+            var vect_xsup = new List<double>();
             rdr.MoveToContent();
             //start walking down the tree
             if (rdr.NodeType == XmlNodeType.Element && rdr.Name == xsup_tag)
@@ -1527,7 +1466,7 @@ namespace Engine.ChargeDetermination
                     switch (rdr.Name)
                     {
                         case feature_tag:
-                            double feature = rdr.ReadElementContentAsDouble();
+                            var feature = rdr.ReadElementContentAsDouble();
                             vect_xsup.Add(feature);
                             feature_count++;
                             break;
@@ -1547,7 +1486,7 @@ namespace Engine.ChargeDetermination
 
         public void LoadDefaultSVM()
         {
-            System.Console.WriteLine("Could not find svm param file \"{0}\"; Loading embedded defaults.", mchar_svm_param_xml_file);
+            Console.WriteLine("Could not find svm param file \"{0}\"; Loading embedded defaults.", mchar_svm_param_xml_file);
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             ReadXmlFromStream(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml"));
             using (var fileReader = new StreamReader(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml")))

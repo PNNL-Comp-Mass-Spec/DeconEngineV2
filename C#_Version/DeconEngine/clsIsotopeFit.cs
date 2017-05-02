@@ -17,8 +17,8 @@ namespace DeconToolsV2
         public void SetOptions(string averagine_mf, string tag_mf,
             double cc_mass, bool thrash_or_not, bool complete_fit)
         {
-            string averagine_formula = "";
-            string tag_formula = "";
+            var averagine_formula = "";
+            var tag_formula = "";
 
             if (averagine_mf != null)
             {
@@ -33,7 +33,7 @@ namespace DeconToolsV2
 
         public enmIsotopeFitType IsotopeFitType
         {
-            get { return menmFitType; }
+            get => menmFitType;
             set
             {
                 menmFitType = value;
@@ -71,9 +71,9 @@ namespace DeconToolsV2
             short charge, int peak_index, double delete_intensity_threshold, double min_intensity_for_score,
             System.Collections.Hashtable elementCounts)
         {
-            List<double> vectMzs = new List<double>();
-            List<double> vectIntensities = new List<double>();
-            int numPoints = mzs.Length;
+            var vectMzs = new List<double>();
+            var vectIntensities = new List<double>();
+            var numPoints = mzs.Length;
 
             if (mzs.Length == 0)
             {
@@ -86,7 +86,7 @@ namespace DeconToolsV2
             vectMzs = new List<double>(mzs.Select(x => (double) x));
             vectIntensities = new List<double>(intensities.Select(x => (double) x));
 
-            Engine.PeakProcessing.PeakData peakData = new PeakData();
+            var peakData = new PeakData();
             clsPeak currentPeak;
 
             peakData.SetPeaks(peaks);
@@ -94,7 +94,7 @@ namespace DeconToolsV2
             peakData.IntensityList = vectIntensities;
             peakData.GetPeak(peak_index, out currentPeak);
 
-            MolecularFormula formula = new MolecularFormula();
+            var formula = new MolecularFormula();
             DeconEngine.Utils.ConvertElementTableToFormula(
                 ref mobj_fit.IsotopeDistribution.ElementalIsotopeComposition, elementCounts, out formula);
 

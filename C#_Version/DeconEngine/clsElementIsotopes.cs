@@ -2030,7 +2030,7 @@ namespace DeconToolsV2
                 }
             });
 
-            for (int i = 0; i < ElementalIsotopesList.Count; i++)
+            for (var i = 0; i < ElementalIsotopesList.Count; i++)
             {
                 _elementIndexDict.Add(ElementalIsotopesList[i].Symbol, i);
             }

@@ -2043,18 +2043,18 @@ namespace Engine.TheoreticalProfile
             //{
             //  isotopes = mvect_elemental_isotopes[element_num];
 
-            //  System.Console.WriteLine("strcpy(isotopes.marr_symbol, \""<<isotopes.marr_symbol<<"\");\n";
-            //  System.Console.WriteLine("strcpy(isotopes.marr_name, \""<<isotopes.marr_name<<"\");\n\n";
-            //  System.Console.WriteLine("isotopes.mdbl_average_mass = "<<isotopes.mdbl_average_mass<<";\n";
-            //  System.Console.WriteLine("isotopes.mdbl_mass_variance = "<<isotopes.mdbl_mass_variance<<";\n\n";
-            //  System.Console.WriteLine("isotopes.mint_atomicity = "<<isotopes.mint_atomicity<<";\n";
-            //  System.Console.WriteLine("isotopes.mint_num_isotopes = "<<isotopes.mint_num_isotopes<<";\n\n";
+            //  Console.WriteLine("strcpy(isotopes.marr_symbol, \""<<isotopes.marr_symbol<<"\");\n";
+            //  Console.WriteLine("strcpy(isotopes.marr_name, \""<<isotopes.marr_name<<"\");\n\n";
+            //  Console.WriteLine("isotopes.mdbl_average_mass = "<<isotopes.mdbl_average_mass<<";\n";
+            //  Console.WriteLine("isotopes.mdbl_mass_variance = "<<isotopes.mdbl_mass_variance<<";\n\n";
+            //  Console.WriteLine("isotopes.mint_atomicity = "<<isotopes.mint_atomicity<<";\n";
+            //  Console.WriteLine("isotopes.mint_num_isotopes = "<<isotopes.mint_num_isotopes<<";\n\n";
             //  for (int isotope_num = 0; isotope_num < isotopes.mint_num_isotopes; isotope_num++)
             //  {
-            //      System.Console.WriteLine("isotopes.marr_isotope_mass["<<isotope_num<<"] = "<<isotopes.marr_isotope_mass[isotope_num]<<";\n";
-            //      System.Console.WriteLine("isotopes.marr_isotope_prob["<<isotope_num<<"] = "<<isotopes.marr_isotope_prob[isotope_num]<<";\n";
+            //      Console.WriteLine("isotopes.marr_isotope_mass["<<isotope_num<<"] = "<<isotopes.marr_isotope_mass[isotope_num]<<";\n";
+            //      Console.WriteLine("isotopes.marr_isotope_prob["<<isotope_num<<"] = "<<isotopes.marr_isotope_prob[isotope_num]<<";\n";
             //  }
-            //  System.Console.WriteLine("\nmvect_elemental_isotopes.Add(isotopes); \n\n";
+            //  Console.WriteLine("\nmvect_elemental_isotopes.Add(isotopes); \n\n";
             //}
         }
 

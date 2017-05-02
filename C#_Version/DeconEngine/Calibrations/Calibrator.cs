@@ -51,8 +51,8 @@ namespace Engine.Calibrations
         [Obsolete("Use NumPointsInScan", true)]
         public int Size
         {
-            get { return NumPointsInScan; }
-            set { NumPointsInScan = value; }
+            get => NumPointsInScan;
+            set => NumPointsInScan = value;
         }
 
         public double SampleRate { get; set; }

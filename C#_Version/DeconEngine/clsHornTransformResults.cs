@@ -6,7 +6,7 @@ using Engine.HornTransform;
 namespace DeconToolsV2.HornTransform
 {
     /// <summary>
-    ///     class to store results of isotope fitting/horn transform.
+    /// Class to store results of isotope fitting/horn transform.
     /// </summary>
     public class clsHornTransformResults
     {
@@ -146,7 +146,6 @@ namespace DeconToolsV2.HornTransform
             PeakIndex = a.PeakIndex;
             ScanNum = a.ScanNum;
             ChargeState = a.ChargeState;
-            //AbundanceInt = a.AbundanceInt;
             Abundance = a.Abundance;
             Mz = a.Mz;
             Fit = a.Fit;
@@ -165,31 +164,30 @@ namespace DeconToolsV2.HornTransform
         /// <summary>
         ///     number of isotope peaks
         /// </summary>
-        public int NumIsotopesObserved
-        {
-            get { return IsotopePeakIndices.Count; }
-        }
+        public int NumIsotopesObserved => IsotopePeakIndices.Count;
 
         public virtual object Clone()
         {
-            var result = new clsHornTransformResults();
-            result.PeakIndex = PeakIndex;
-            result.ScanNum = ScanNum;
-            result.ChargeState = ChargeState;
+            var result = new clsHornTransformResults
+            {
+                PeakIndex = PeakIndex,
+                ScanNum = ScanNum,
+                ChargeState = ChargeState,
+                Abundance = Abundance,
+                Mz = Mz,
+                Fit = Fit,
+                FitCountBasis = FitCountBasis,
+                AverageMw = AverageMw,
+                MonoMw = MonoMw,
+                MostIntenseMw = MostIntenseMw,
+                FWHM = FWHM,
+                SignalToNoise = SignalToNoise,
+                MonoIntensity = MonoIntensity,
+                MonoPlus2Intensity = MonoPlus2Intensity,
+                DeltaMz = DeltaMz,
+                IsotopePeakIndices = new List<int>(IsotopePeakIndices)
+            };
             //result.AbundanceInt = this.AbundanceInt;
-            result.Abundance = Abundance;
-            result.Mz = Mz;
-            result.Fit = Fit;
-            result.FitCountBasis = FitCountBasis;
-            result.AverageMw = AverageMw;
-            result.MonoMw = MonoMw;
-            result.MostIntenseMw = MostIntenseMw;
-            result.FWHM = FWHM;
-            result.SignalToNoise = SignalToNoise;
-            result.MonoIntensity = MonoIntensity;
-            result.MonoPlus2Intensity = MonoPlus2Intensity;
-            result.DeltaMz = DeltaMz;
-            result.IsotopePeakIndices = new List<int>(IsotopePeakIndices);
             return result;
         }
 
@@ -206,7 +204,7 @@ namespace DeconToolsV2.HornTransform
                     return int.MaxValue;
                 return Convert.ToInt32(Abundance);
             }
-            set { Abundance = value; }
+            set => Abundance = value;
         }
 
         /// <summary>
@@ -215,8 +213,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use PeakIndex", false)]
         public int mint_peak_index
         {
-            get { return PeakIndex; }
-            set { PeakIndex = value; }
+            get => PeakIndex;
+            set => PeakIndex = value;
         }
 
         /// <summary>
@@ -225,8 +223,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use ScanNum", false)]
         public int mint_scan_num
         {
-            get { return ScanNum; }
-            set { ScanNum = value; }
+            get => ScanNum;
+            set => ScanNum = value;
         }
 
         /// <summary>
@@ -235,8 +233,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use ChargeState", false)]
         public short mshort_cs
         {
-            get { return (short) ChargeState; }
-            set { ChargeState = value; }
+            get => (short) ChargeState;
+            set => ChargeState = value;
         }
 
         /// <summary>
@@ -245,8 +243,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use Abundance (double); sometimes intensity can be greater than 2147483648", false)]
         public int mint_abundance
         {
-            get { return AbundanceInt; }
-            set { AbundanceInt = value; }
+            get => AbundanceInt;
+            set => AbundanceInt = value;
         }
 
         /// <summary>
@@ -255,8 +253,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use Abundance", false)]
         public double mdbl_abundance
         {
-            get { return Abundance; }
-            set { Abundance = value; }
+            get => Abundance;
+            set => Abundance = value;
         }
 
         /// <summary>
@@ -265,8 +263,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use Mz", false)]
         public double mdbl_mz
         {
-            get { return Mz; }
-            set { Mz = value; }
+            get => Mz;
+            set => Mz = value;
         }
 
         /// <summary>
@@ -275,8 +273,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use Fit", false)]
         public double mdbl_fit
         {
-            get { return Fit; }
-            set { Fit = value; }
+            get => Fit;
+            set => Fit = value;
         }
 
         /// <summary>
@@ -285,8 +283,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use FitCountBasis", false)]
         public int mint_fit_count_basis
         {
-            get { return FitCountBasis; }
-            set { FitCountBasis = value; }
+            get => FitCountBasis;
+            set => FitCountBasis = value;
         }
 
         /// <summary>
@@ -295,8 +293,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use AverageMw", false)]
         public double mdbl_average_mw
         {
-            get { return AverageMw; }
-            set { AverageMw = value; }
+            get => AverageMw;
+            set => AverageMw = value;
         }
 
         /// <summary>
@@ -305,8 +303,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use MonoMw", false)]
         public double mdbl_mono_mw
         {
-            get { return MonoMw; }
-            set { MonoMw = value; }
+            get => MonoMw;
+            set => MonoMw = value;
         }
 
         /// <summary>
@@ -315,8 +313,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use MostIntenseMw", false)]
         public double mdbl_most_intense_mw
         {
-            get { return MostIntenseMw; }
-            set { MostIntenseMw = value; }
+            get => MostIntenseMw;
+            set => MostIntenseMw = value;
         }
 
         /// <summary>
@@ -325,8 +323,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use FwHm", false)]
         public double mdbl_fwhm
         {
-            get { return FWHM; }
-            set { FWHM = value; }
+            get => FWHM;
+            set => FWHM = value;
         }
 
         /// <summary>
@@ -335,8 +333,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use SignalToNoise", false)]
         public double mdbl_sn
         {
-            get { return SignalToNoise; }
-            set { SignalToNoise = value; }
+            get => SignalToNoise;
+            set => SignalToNoise = value;
         }
 
         /// <summary>
@@ -345,8 +343,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use MonoIntensity", false)]
         public int mint_mono_intensity
         {
-            get { return MonoIntensity; }
-            set { MonoIntensity = value; }
+            get => MonoIntensity;
+            set => MonoIntensity = value;
         }
 
         /// <summary>
@@ -355,8 +353,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use MonoPlus2Intensity", false)]
         public int mint_iplus2_intensity
         {
-            get { return MonoPlus2Intensity; }
-            set { MonoPlus2Intensity = value; }
+            get => MonoPlus2Intensity;
+            set => MonoPlus2Intensity = value;
         }
 
         /// <summary>
@@ -365,8 +363,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use DeltaMz", false)]
         public double mdbl_delta_mz
         {
-            get { return DeltaMz; }
-            set { DeltaMz = value; }
+            get => DeltaMz;
+            set => DeltaMz = value;
         }
 
         /// <summary>
@@ -375,19 +373,15 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use NeedMultipleIsotopes", false)]
         public bool mbln_need_multiple_isotopes
         {
-            get { return NeedMultipleIsotopes; }
-            set { NeedMultipleIsotopes = value; }
+            get => NeedMultipleIsotopes;
+            set => NeedMultipleIsotopes = value;
         }
 
         /// <summary>
         ///     number of isotope peaks
         /// </summary>
         [Obsolete("Use NumIsotopesObserved", false)]
-        public int mint_num_isotopes_observed
-        {
-            get { return NumIsotopesObserved; }
-            set { /*NumIsotopesObserved = value;*/ }
-        }
+        public int mint_num_isotopes_observed => NumIsotopesObserved;
 
         /// <summary>
         ///     array of indices of peak tops
@@ -395,8 +389,8 @@ namespace DeconToolsV2.HornTransform
         [Obsolete("Use IsotopePeakIndices", false)]
         public int[] marr_isotope_peak_indices
         {
-            get { return IsotopePeakIndices.ToArray(); }
-            set { IsotopePeakIndices = value.ToList(); }
+            get => IsotopePeakIndices.ToArray();
+            set => IsotopePeakIndices = value.ToList();
         }
 #endif
     }

@@ -132,10 +132,10 @@ namespace Engine.PeakProcessing
 
 #if !Disable_Obsolete
         /// <summary>
-        ///     sets the type of profile
+        /// Sets the type of profile
         /// </summary>
         /// <param name="profile">is a boolean, true if profile data, false if centroided</param>
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <remarks>Used by DeconMSn</remarks>
         public void SetPeaksProfileType(bool profile)
         {
             _arePeaksCentroided = !profile;
@@ -184,7 +184,7 @@ namespace Engine.PeakProcessing
 
             double previousPeakMz = 0;
             double previousPeakIntensity = 0;
-            int previousPeakIndex = -1;
+            var previousPeakIndex = -1;
             var startIndex = PeakIndex.GetNearestBinary(mzList, startMz, 0, numDataPts - 1);
             var stopIndex = PeakIndex.GetNearestBinary(mzList, stopMz, startIndex, numDataPts - 1);
             if (startIndex <= 0)
@@ -262,9 +262,9 @@ namespace Engine.PeakProcessing
                             {
                                 // Compare this peak to the previous peak
                                 // If within PeakMergeTolerancePPM then only keep one of the peaks
-                                //System.Console.WriteLine("{0}\t{1}\t{2}", fittedPeak, currentIntensity, signalToNoise);
+                                //Console.WriteLine("{0}\t{1}\t{2}", fittedPeak, currentIntensity, signalToNoise);
 
-                                double deltaPPM = mdbl_PeakMergeTolerancePPM * 2;
+                                var deltaPPM = mdbl_PeakMergeTolerancePPM * 2;
                                 var addPeak = true;
 
                                 if (previousPeakIndex > -1)
@@ -320,24 +320,24 @@ namespace Engine.PeakProcessing
 
         public double GetClosestPeakMzFast(double peakMz, ref clsPeak selectedPeak)
         {
-            double min_score = 1.00727638;
+            var min_score = 1.00727638;
             clsPeak thisPeak;
             double score;
 
-            selectedPeak.mdbl_mz = 0.0;
+            selectedPeak.Mz = 0.0;
 
             try
             {
-                int high = PeakData.PeakTops.Count;
-                int low = 0;
-                int mid = (low + high) / 2;
-                bool peakFound = false;
+                var high = PeakData.PeakTops.Count;
+                var low = 0;
+                var mid = (low + high) / 2;
+                var peakFound = false;
 
                 while (low <= high && !peakFound)
                 {
                     mid = (low + high) / 2;
                     thisPeak =  new clsPeak(PeakData.PeakTops[mid]);
-                    score = (peakMz - thisPeak.mdbl_mz) * (peakMz - thisPeak.mdbl_mz);
+                    score = (peakMz - thisPeak.Mz) * (peakMz - thisPeak.Mz);
                     if (score <= min_score)
                     {
 
@@ -353,7 +353,7 @@ namespace Engine.PeakProcessing
                         while (score <= min_score && (mid - 1) >= 0)
                         {
                             thisPeak = new clsPeak(PeakData.PeakTops[mid - 1]);
-                            score = (peakMz - thisPeak.mdbl_mz) * (peakMz - thisPeak.mdbl_mz);
+                            score = (peakMz - thisPeak.Mz) * (peakMz - thisPeak.Mz);
                             if (score < min_score)
                             {
                                 selectedPeak = thisPeak;
@@ -378,7 +378,7 @@ namespace Engine.PeakProcessing
             {
             }
 
-            return selectedPeak.mdbl_mz;
+            return selectedPeak.Mz;
         }
 
         /// <summary>
@@ -451,13 +451,13 @@ namespace Engine.PeakProcessing
             vect_intensity.Clear();
             vect_mz.Clear();
 
-            int numPeaks = PeakData.GetNumPeaks();
-            for (int i = 0; i < numPeaks; i++)
+            var numPeaks = PeakData.GetNumPeaks();
+            for (var i = 0; i < numPeaks; i++)
             {
                 clsPeak peak;
                 PeakData.GetPeak(i, out peak);
-                vect_intensity.Add(peak.mdbl_intensity);
-                vect_mz.Add(peak.mdbl_mz);
+                vect_intensity.Add(peak.Intensity);
+                vect_mz.Add(peak.Mz);
             }
 
             return false;

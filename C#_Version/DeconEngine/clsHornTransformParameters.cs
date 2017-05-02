@@ -14,9 +14,6 @@ namespace DeconToolsV2.HornTransform
 
     public class clsHornTransformParameters : ICloneable
     {
-#if !Disable_Obsolete
-        private static string DEFAULT_ISOTOPE_FILE = "isotope.xml";
-#endif
 
         private clsElementIsotopes _elementIsotopes;
 
@@ -124,10 +121,7 @@ namespace DeconToolsV2.HornTransform
                     _elementIsotopes = new clsElementIsotopes();
                 return _elementIsotopes;
             }
-            set
-            {
-                _elementIsotopes = value;
-            }
+            set => _elementIsotopes = value;
         }
 
         public enmIsotopeFitType IsotopeFitType { get; set; }

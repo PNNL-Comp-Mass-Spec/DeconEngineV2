@@ -123,34 +123,34 @@ namespace Engine.Readers
             marr_file_name = file_n;
             mint_file_handle = new BinaryReader(new FileStream(marr_file_name, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.ASCII);
 
-            long end_pos = mint_file_handle.BaseStream.Length;
+            var end_pos = mint_file_handle.BaseStream.Length;
             long start_pos = 0;
 
             long pos = 0;
 
-            int mint_last_scan = -1;
-            int leftover_length = 0;
+            var mint_last_scan = -1;
+            var leftover_length = 0;
 
             float scan_time = 0;
-            float last_scan_time = -1 * float.MaxValue;
+            var last_scan_time = -1 * float.MaxValue;
 
             double mz=0, intensity = 0;
-            char[] temp_buffer = new char[MAX_SCAN_SIZE];
-            List<double> vect_mz = new List<double>();
-            List<double> vect_intensity = new List<double>();
-            int line_start_index = 0;
+            var temp_buffer = new char[MAX_SCAN_SIZE];
+            var vect_mz = new List<double>();
+            var vect_intensity = new List<double>();
+            var line_start_index = 0;
 
             mchar_delimiter = ',';
-            int num_read = 0;
-            bool first_line = true;
+            var num_read = 0;
+            var first_line = true;
 
-            int temp_copy_length = 511;
-            char[] temp_copy = new char [temp_copy_length+1];
+            var temp_copy_length = 511;
+            var temp_copy = new char [temp_copy_length+1];
 
             while (mint_file_handle.BaseStream.Position < mint_file_handle.BaseStream.Length)
             {
                 num_read = mint_file_handle.Read(temp_buffer, leftover_length, MAX_SCAN_SIZE - leftover_length) + leftover_length;
-                for (int current_index = 0; current_index < num_read; current_index++)
+                for (var current_index = 0; current_index < num_read; current_index++)
                 {
                     if (temp_buffer[current_index] == '\n')
                     {
@@ -158,7 +158,7 @@ namespace Engine.Readers
                         {
                             // look for mchar_delimiter..
                             first_line = false;
-                            int pt_index = 0;
+                            var pt_index = 0;
                             while(pt_index < current_index)
                             {
                                 if (temp_buffer[pt_index] != '.' &&
@@ -172,7 +172,7 @@ namespace Engine.Readers
                         }
                         mint_percent_done = (int) ((100.0 * ((pos + current_index)*1.0)) / (end_pos+1.0));
 
-                        int current_len = current_index - line_start_index;
+                        var current_len = current_index - line_start_index;
                         if (current_len > temp_copy_length)
                         {
                             temp_copy_length = current_len;
@@ -181,9 +181,9 @@ namespace Engine.Readers
                         Buffer.BlockCopy(temp_buffer, line_start_index, temp_copy, 0, current_len);
                         temp_copy[current_len] = '\0';
 
-                        string temp_str = new string(temp_copy, 0, current_len);
+                        var temp_str = new string(temp_copy, 0, current_len);
                         mz = Helpers.atof(new string(temp_copy));
-                        int next_val_index = 1;
+                        var next_val_index = 1;
                         while(next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
                             next_val_index++;
                         intensity = Helpers.atof(temp_str.Substring(next_val_index + 1));
@@ -202,8 +202,8 @@ namespace Engine.Readers
                             if (last_scan_time != float.MinValue)
                             {
                                 double bpi_mz = 0;
-                                double bpi = GetBasePeakIntensity(vect_mz, vect_intensity, out bpi_mz);
-                                double tic = GetTotalIonCount(vect_mz, vect_intensity);
+                                var bpi = GetBasePeakIntensity(vect_mz, vect_intensity, out bpi_mz);
+                                var tic = GetTotalIonCount(vect_mz, vect_intensity);
 
                                 mvect_scan_time.Add(scan_time);
                                 mvect_scan_tic.Add(tic);
@@ -224,7 +224,7 @@ namespace Engine.Readers
                 }
 
                 leftover_length = num_read - line_start_index;
-                int num_copied = 0;
+                var num_copied = 0;
                 while(line_start_index < num_read)
                 {
                     temp_buffer[num_copied++] = temp_buffer[line_start_index++];
@@ -232,7 +232,7 @@ namespace Engine.Readers
                 line_start_index = 0;
                 if (num_copied != leftover_length)
                 {
-                    System.Console.Error.WriteLine("PROBLEMO");
+                    Console.Error.WriteLine("PROBLEMO");
                 }
                 pos+= (num_read-leftover_length);
             }
@@ -241,10 +241,10 @@ namespace Engine.Readers
             if (leftover_length != 0)
             {
                 // there is one line left behind.
-                string temp_str = new string(temp_buffer, 0, leftover_length);
+                var temp_str = new string(temp_buffer, 0, leftover_length);
                 mz = Helpers.atof(temp_str.Substring(line_start_index));
 
-                int next_val_index = line_start_index+1;
+                var next_val_index = line_start_index+1;
 
                 while(next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
                     next_val_index++;
@@ -258,8 +258,8 @@ namespace Engine.Readers
                 if (last_scan_time != scan_time)
                 {
                     double bpi_mz = 0;
-                    double bpi = GetBasePeakIntensity(vect_mz, vect_intensity, out bpi_mz);
-                    double tic = GetTotalIonCount(vect_mz, vect_intensity);
+                    var bpi = GetBasePeakIntensity(vect_mz, vect_intensity, out bpi_mz);
+                    var tic = GetTotalIonCount(vect_mz, vect_intensity);
 
                     mvect_scan_time.Add(scan_time);
                     mvect_scan_tic.Add(tic);
@@ -284,8 +284,8 @@ namespace Engine.Readers
             if (last_scan_time == scan_time)
             {
                 double bpi_mz = 0;
-                double bpi = GetBasePeakIntensity(vect_mz, vect_intensity, out bpi_mz);
-                double tic = GetTotalIonCount(vect_mz, vect_intensity);
+                var bpi = GetBasePeakIntensity(vect_mz, vect_intensity, out bpi_mz);
+                var tic = GetTotalIonCount(vect_mz, vect_intensity);
 
                 mvect_scan_time.Add(scan_time);
                 mvect_scan_tic.Add(tic);
@@ -306,7 +306,7 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
-            int num_pts = mint_num_points_in_scan;
+            var num_pts = mint_num_points_in_scan;
             return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
         }
 
@@ -344,23 +344,23 @@ namespace Engine.Readers
             pos = mint_file_handle.BaseStream.Seek(startOffset, SeekOrigin.Begin);
 
             // there's an extra carriage return in the end.
-            char[] temp_buffer = new char[stopOffset - startOffset+1];
-            int num_read = mint_file_handle.Read(temp_buffer, 0, (int)(stopOffset - startOffset));
+            var temp_buffer = new char[stopOffset - startOffset+1];
+            var num_read = mint_file_handle.Read(temp_buffer, 0, (int)(stopOffset - startOffset));
             temp_buffer[num_read] = '\0';
 
-            int pt_num = 0;
+            var pt_num = 0;
 
-            int read_scan_num = 0;
+            var read_scan_num = 0;
             double mz=0, intensity = 0;
-            int line_start_index = 0;
+            var line_start_index = 0;
 
-            int temp_copy_length = 512;
-            char[] temp_copy = new char [temp_copy_length+1];
-            for (int current_index = 0; current_index < num_read; current_index++)
+            var temp_copy_length = 512;
+            var temp_copy = new char [temp_copy_length+1];
+            for (var current_index = 0; current_index < num_read; current_index++)
             {
                 if (temp_buffer[current_index] == '\n')
                 {
-                    int current_len = current_index - line_start_index;
+                    var current_len = current_index - line_start_index;
                     if (current_len > temp_copy_length)
                     {
                         temp_copy_length = current_len;
@@ -369,9 +369,9 @@ namespace Engine.Readers
                     Buffer.BlockCopy(temp_buffer, line_start_index, temp_copy, 0, current_len);
                     temp_copy[current_len] = '\0';
 
-                    string temp_str = new string(temp_copy, 0, current_len);
+                    var temp_str = new string(temp_copy, 0, current_len);
                     mz = Helpers.atof(temp_str);
-                    int next_val_index = 1;
+                    var next_val_index = 1;
                     while(next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
                         next_val_index++;
                     intensity = Helpers.atof(temp_str.Substring(next_val_index + 1));
@@ -384,10 +384,10 @@ namespace Engine.Readers
             }
             if (line_start_index < (uint) num_read)
             {
-                string temp_str = new string(temp_buffer);
+                var temp_str = new string(temp_buffer);
                 mz = Helpers.atof(temp_str.Substring(line_start_index));
 
-                int next_val_index = line_start_index+1;
+                var next_val_index = line_start_index+1;
 
                 while(next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
                     next_val_index++;
@@ -416,11 +416,11 @@ namespace Engine.Readers
         private double GetBasePeakIntensity(List<double> mzs, List<double> intensities, out double bpi_mz)
         {
             bpi_mz = 0;
-            int num_pts = intensities.Count;
+            var num_pts = intensities.Count;
             if (num_pts == 0)
                 return 0;
-            double max_intensity = -1 * double.MaxValue;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            var max_intensity = -1 * double.MaxValue;
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (intensities[pt_num] > max_intensity && mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
@@ -433,24 +433,24 @@ namespace Engine.Readers
 
         private double GetTotalIonCount(List<double> mzs, List<double> intensities)
         {
-            int num_pts = intensities.Count;
+            var num_pts = intensities.Count;
             if (num_pts == 0)
                 return 0;
 
             double intensity_sum = 0;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
                     intensity_sum += intensities[pt_num];
                 }
             }
-            double bg_intensity = intensity_sum / num_pts;
+            var bg_intensity = intensity_sum / num_pts;
 
-            double min_intensity = bg_intensity * BACKGROUND_RATIO_FOR_TIC;
+            var min_intensity = bg_intensity * BACKGROUND_RATIO_FOR_TIC;
 
             intensity_sum = 0;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (intensities[pt_num] > min_intensity && mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
@@ -465,7 +465,7 @@ namespace Engine.Readers
             intensities = new List<double>();
             scan_times = new List<double>();
 
-            for (int scan_num = 0; scan_num < (int) mvect_scan_tic.Count; scan_num++)
+            for (var scan_num = 0; scan_num < (int) mvect_scan_tic.Count; scan_num++)
             {
                 scan_times.AddRange(mvect_scan_time);
                 if (base_peak_tic)

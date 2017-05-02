@@ -28,53 +28,32 @@ namespace DeconToolsV2.DTAGeneration
     /// <remarks>Used by DeconMSn</remarks>
     public class clsDTAGenerationParameters : ICloneable
     {
-        private int mint_min_ion_count;
-        private int mint_min_scan;
-        private int mint_max_scan;
-        private double mdbl_min_mass;
-        private double mdbl_max_mass;
-        private int mint_consider_charge;
-        private int mint_window_size_to_check;
-        private double mdbl_cc_mass;
-        private string mstr_svm_file_name;
-
-        private bool mbln_is_profile_data_for_mzXML;
-        private bool mbln_consider_multiple_precursors;
-        private bool mbln_centroid_msn;
-
-        private bool mbln_write_progress_file;
-        private bool mbln_ignore_msn_scans;
-        private int mint_num_msn_levels_to_ignore;
-
-        private List<int> mvect_msn_levels_to_ignore;
-
-        private int mint_isolation_window_size;
-
-        private OUTPUT_TYPE menm_output_type;
-        private SPECTRA_TYPE menm_spectra_type;
+        private readonly List<int> mvect_msn_levels_to_ignore;
 
         public virtual Object Clone()
         {
-            clsDTAGenerationParameters new_params = new clsDTAGenerationParameters();
+            var new_params = new clsDTAGenerationParameters
+            {
+                CCMass = CCMass,
+                ConsiderChargeValue = ConsiderChargeValue,
+                MaxMass = MaxMass,
+                MaxScan = (int)MaxScan,
+                MinMass = MinMass,
+                MinScan = (int)MinMass,
+                WindowSizetoCheck = WindowSizetoCheck,
+                MinIonCount = MinIonCount,
+                OutputType = OutputType,
+                SpectraType = SpectraType,
+                SVMParamFile = SVMParamFile,
+                ConsiderMultiplePrecursors = ConsiderMultiplePrecursors,
+                CentroidMSn = CentroidMSn,
+                IsolationWindowSize = IsolationWindowSize,
+                IsProfileDataForMzXML = IsProfileDataForMzXML,
+                WriteProgressFile = WriteProgressFile,
+                IgnoreMSnScans = IgnoreMSnScans,
+                NumMSnLevelsToIgnore = NumMSnLevelsToIgnore
+            };
 
-            new_params.CCMass = this.CCMass;
-            new_params.ConsiderChargeValue = this.ConsiderChargeValue;
-            new_params.MaxMass = this.MaxMass;
-            new_params.MaxScan = (int) this.MaxScan;
-            new_params.MinMass = this.MinMass;
-            new_params.MinScan = (int) this.MinMass;
-            new_params.WindowSizetoCheck = this.WindowSizetoCheck;
-            new_params.MinIonCount = this.MinIonCount;
-            new_params.OutputType = this.OutputType;
-            new_params.SpectraType = this.SpectraType;
-            new_params.SVMParamFile = this.mstr_svm_file_name;
-            new_params.ConsiderMultiplePrecursors = this.ConsiderMultiplePrecursors;
-            new_params.CentroidMSn = this.CentroidMSn;
-            new_params.IsolationWindowSize = this.IsolationWindowSize;
-            new_params.IsProfileDataForMzXML = this.IsProfileDataForMzXML;
-            new_params.WriteProgressFile = this.WriteProgressFile;
-            new_params.IgnoreMSnScans = this.IgnoreMSnScans;
-            new_params.NumMSnLevelsToIgnore = this.NumMSnLevelsToIgnore;
 
             return new_params;
         }
@@ -89,164 +68,84 @@ namespace DeconToolsV2.DTAGeneration
             mvect_msn_levels_to_ignore.Add(value);
         }
 
-        public bool IgnoreMSnScans
-        {
-            get { return mbln_ignore_msn_scans; }
-            set { mbln_ignore_msn_scans = value; }
-        }
+        public bool IgnoreMSnScans { get; set; }
 
-        public int NumMSnLevelsToIgnore
-        {
-            get { return mint_num_msn_levels_to_ignore; }
-            set { mint_num_msn_levels_to_ignore = value; }
-        }
+        public int NumMSnLevelsToIgnore { get; set; }
 
-        public bool IsProfileDataForMzXML
-        {
-            get { return mbln_is_profile_data_for_mzXML; }
-            set { mbln_is_profile_data_for_mzXML = value; }
-        }
+        public bool IsProfileDataForMzXML { get; set; }
 
-        public int MinScan
-        {
-            get { return mint_min_scan; }
-            set { mint_min_scan = value; }
-        }
+        public int MinScan { get; set; }
 
-        public int MinIonCount
-        {
-            get { return mint_min_ion_count; }
-            set { mint_min_ion_count = value; }
-        }
+        public int MinIonCount { get; set; }
 
-        public int MaxScan
-        {
-            get { return mint_max_scan; }
-            set { mint_max_scan = value; }
-        }
+        public int MaxScan { get; set; }
 
-        public double MinMass
-        {
-            get { return mdbl_min_mass; }
-            set { mdbl_min_mass = value; }
-        }
+        public double MinMass { get; set; }
 
-        public double MaxMass
-        {
-            get { return mdbl_max_mass; }
-            set { mdbl_max_mass = value; }
-        }
+        public double MaxMass { get; set; }
 
-        public string SVMParamFile
-        {
-            get { return mstr_svm_file_name; }
-            set { mstr_svm_file_name = value; }
-        }
+        public string SVMParamFile { get; set; }
 
-        public bool ConsiderMultiplePrecursors
-        {
-            get { return mbln_consider_multiple_precursors; }
-            set { mbln_consider_multiple_precursors = value; }
-        }
+        public bool ConsiderMultiplePrecursors { get; set; }
 
-        // Warning: the masses reported by GetMassListFromScanNum when centroiding are not properly calibrated and thus could be off by 0.3 m/z or more
-        // See the definition of mbln_centroid_msn for an example
-        public bool CentroidMSn
-        {
-            get { return mbln_centroid_msn; }
-            set { mbln_centroid_msn = value; }
-        }
+        public bool CentroidMSn { get; set; }
 
-        public int IsolationWindowSize
-        {
-            get { return mint_isolation_window_size; }
-            set { mint_isolation_window_size = value; }
-        }
+        public int IsolationWindowSize { get; set; }
 
-        public int ConsiderChargeValue
-        {
-            get { return mint_consider_charge; }
-            set { mint_consider_charge = value; }
-        }
+        public int ConsiderChargeValue { get; set; }
 
-        public double CCMass
-        {
-            get { return mdbl_cc_mass; }
-            set { mdbl_cc_mass = value; }
-        }
+        public double CCMass { get; set; }
 
-        public int WindowSizetoCheck
-        {
-            get { return mint_window_size_to_check; }
-            set { mint_window_size_to_check = value; }
-        }
+        public int WindowSizetoCheck { get; set; }
 
-        public bool WriteProgressFile
-        {
-            get { return mbln_write_progress_file; }
-            set { mbln_write_progress_file = value; }
-        }
+        public bool WriteProgressFile { get; set; }
 
         public string OutputTypeName
         {
             get
             {
-                switch (menm_output_type)
+                switch (OutputType)
                 {
                     case OUTPUT_TYPE.DTA:
                         return "DTA files";
-                        break;
                     case OUTPUT_TYPE.MGF:
                         return "MGF file";
-                        break;
                     case OUTPUT_TYPE.LOG:
                         return "Log file only";
-                        break;
                     case OUTPUT_TYPE.CDTA:
                         return "CDTA (_dta.txt)";
-                        break;
                     case OUTPUT_TYPE.MZXML:
                         return "MzXML";
-                        break;
                     default:
                         return "Unknown";
-                        break;
                 }
             }
         }
 
-        public OUTPUT_TYPE OutputType
-        {
-            get { return menm_output_type; }
-            set { menm_output_type = value; }
-        }
+        public OUTPUT_TYPE OutputType { get; set; }
 
-        public SPECTRA_TYPE SpectraType
-        {
-            get { return menm_spectra_type; }
-            set { menm_spectra_type = value; }
-        }
+        public SPECTRA_TYPE SpectraType { get; set; }
 
         public clsDTAGenerationParameters()
         {
-            mint_min_ion_count = 35;
-            mint_min_scan = 1;
-            mint_max_scan = 1000000;
-            mint_consider_charge = 0;
-            mint_window_size_to_check = 5;
-            mdbl_min_mass = 200;
-            mdbl_max_mass = 5000;
-            mdbl_cc_mass = 1.00727638;
-            menm_output_type = OUTPUT_TYPE.CDTA;
-            menm_output_type = OUTPUT_TYPE.DTA;
-            mstr_svm_file_name = "svm_params.xml";
-            mbln_consider_multiple_precursors = false;
-            mbln_centroid_msn = true;
-            mint_isolation_window_size = 3;
-            mbln_is_profile_data_for_mzXML = false;
-            mbln_write_progress_file = false;
-            mbln_ignore_msn_scans = false;
-            mint_num_msn_levels_to_ignore = 0;
+            MinIonCount = 35;
+            MinScan = 1;
+            MaxScan = 1000000;
+            ConsiderChargeValue = 0;
+            WindowSizetoCheck = 5;
+            MinMass = 200;
+            MaxMass = 5000;
+            CCMass = 1.00727638;
+            OutputType = OUTPUT_TYPE.CDTA;
+            OutputType = OUTPUT_TYPE.DTA;
+            SVMParamFile = "svm_params.xml";
+            ConsiderMultiplePrecursors = false;
+            CentroidMSn = true;
+            IsolationWindowSize = 3;
+            IsProfileDataForMzXML = false;
+            WriteProgressFile = false;
+            IgnoreMSnScans = false;
+            NumMSnLevelsToIgnore = 0;
             mvect_msn_levels_to_ignore = new List<int>();
         }
 
@@ -262,68 +161,67 @@ namespace DeconToolsV2.DTAGeneration
             }
         }*/
 
-        public void SaveV1DTAGenerationParameters(System.Xml.XmlTextWriter xwriter)
+        public void SaveV1DTAGenerationParameters(XmlTextWriter xwriter)
         {
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteStartElement("DTAGenerationParameters");
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MinScan", System.Convert.ToString(this.MinScan));
+            xwriter.WriteElementString("MinScan", MinScan.ToString());
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MaxScan", System.Convert.ToString(this.MaxScan));
+            xwriter.WriteElementString("MaxScan", MaxScan.ToString());
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MinMass", System.Convert.ToString(this.MinMass));
+            xwriter.WriteElementString("MinMass", MinMass.ToString("0.0000"));
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MaxMass", System.Convert.ToString(this.MaxMass));
-            xwriter.WriteWhitespace("\n\t\t");
-
-            xwriter.WriteElementString("MinIonCount", System.Convert.ToString(this.MinIonCount));
+            xwriter.WriteElementString("MaxMass", MaxMass.ToString("0.0000"));
             xwriter.WriteWhitespace("\n\t\t");
 
-            if (this.ConsiderChargeValue > 0)
+            xwriter.WriteElementString("MinIonCount", MinIonCount.ToString());
+            xwriter.WriteWhitespace("\n\t\t");
+
+            if (ConsiderChargeValue > 0)
             {
-                xwriter.WriteElementString("ConsiderCharge", System.Convert.ToString(true));
+                xwriter.WriteElementString("ConsiderCharge", "true");
                 xwriter.WriteWhitespace("\n\t\t");
             }
             else
             {
-                xwriter.WriteElementString("ConsiderCharge", System.Convert.ToString(false));
+                xwriter.WriteElementString("ConsiderCharge", "false");
                 xwriter.WriteWhitespace("\n\t\t");
             }
-            xwriter.WriteElementString("ChargeValueToConsider", System.Convert.ToString(this.ConsiderChargeValue));
+            xwriter.WriteElementString("ChargeValueToConsider", ConsiderChargeValue.ToString());
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("CCMass", System.Convert.ToString(this.CCMass));
+            xwriter.WriteElementString("CCMass", CCMass.ToString("0.0000"));
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("WindowSizeToCheck", System.Convert.ToString(this.WindowSizetoCheck));
+            xwriter.WriteElementString("WindowSizeToCheck", WindowSizetoCheck.ToString("0.0000"));
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("ConsiderMultiplePrecursors",
-                System.Convert.ToString(this.ConsiderMultiplePrecursors));
+            xwriter.WriteElementString("ConsiderMultiplePrecursors", ConsiderMultiplePrecursors.ToString());
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("IsolationWindowSize", System.Convert.ToString(this.IsolationWindowSize));
+            xwriter.WriteElementString("IsolationWindowSize", IsolationWindowSize.ToString());
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("OutputType", this.OutputType.ToString());
+            xwriter.WriteElementString("OutputType", OutputType.ToString());
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("IsProfileDataForMzXML", System.Convert.ToString(this.IsProfileDataForMzXML));
+            xwriter.WriteElementString("IsProfileDataForMzXML", IsProfileDataForMzXML.ToString());
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("WriteProgressFile", System.Convert.ToString(this.WriteProgressFile));
+            xwriter.WriteElementString("WriteProgressFile", WriteProgressFile.ToString());
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("IgnoreMSnScans", System.Convert.ToString(this.IgnoreMSnScans));
+            xwriter.WriteElementString("IgnoreMSnScans", IgnoreMSnScans.ToString());
 
-            if (this.IgnoreMSnScans)
+            if (IgnoreMSnScans)
             {
-                int numLevels = this.NumMSnLevelsToIgnore;
-                for (int levelNum = 0; levelNum < numLevels; levelNum++)
+                var numLevels = NumMSnLevelsToIgnore;
+                for (var levelNum = 0; levelNum < numLevels; levelNum++)
                 {
-                    int level = mvect_msn_levels_to_ignore[levelNum];
+                    var level = mvect_msn_levels_to_ignore[levelNum];
                     xwriter.WriteWhitespace("\n\t\t");
-                    xwriter.WriteElementString("MSnLevelToIgnore", System.Convert.ToString(level));
+                    xwriter.WriteElementString("MSnLevelToIgnore", level.ToString());
 
                 }
             }
@@ -332,7 +230,7 @@ namespace DeconToolsV2.DTAGeneration
 
         }
 
-        public void LoadV1DTAGenerationParameters(System.Xml.XmlReader rdr)
+        public void LoadV1DTAGenerationParameters(XmlReader rdr)
         {
             while (rdr.Read())
             {
@@ -343,7 +241,7 @@ namespace DeconToolsV2.DTAGeneration
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for minimum mass in parameter file");
+                                throw new Exception("No information for minimum mass in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -351,13 +249,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.MinMass = double.Parse(rdr.Value);
+                            MinMass = double.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("MaxMass"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for maximum mass in parameter file");
+                                throw new Exception("No information for maximum mass in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -365,13 +263,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.MaxMass = double.Parse(rdr.Value);
+                            MaxMass = double.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("MinScan"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for minimum scan in parameter file");
+                                throw new Exception("No information for minimum scan in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -379,13 +277,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.MinScan = int.Parse(rdr.Value);
+                            MinScan = int.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("MaxScan"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for maximum scan in parameter file");
+                                throw new Exception("No information for maximum scan in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -393,13 +291,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.MaxScan = int.Parse(rdr.Value);
+                            MaxScan = int.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("MinIonCount"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for minimum ion count in parameter file");
+                                throw new Exception("No information for minimum ion count in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -407,13 +305,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.MinIonCount = short.Parse(rdr.Value);
+                            MinIonCount = short.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("ChargeValueToConsider"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for considering charge in parameter file");
+                                throw new Exception("No information for considering charge in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -421,13 +319,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.ConsiderChargeValue = short.Parse(rdr.Value);
+                            ConsiderChargeValue = short.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("ConsiderMultiplePrecursors"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for considering multiple precursors");
+                                throw new Exception("No information for considering multiple precursors");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -435,13 +333,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.ConsiderMultiplePrecursors = bool.Parse(rdr.Value);
+                            ConsiderMultiplePrecursors = bool.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("IsolationWindowSize"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for isolation window size");
+                                throw new Exception("No information for isolation window size");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -449,13 +347,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.IsolationWindowSize = short.Parse(rdr.Value);
+                            IsolationWindowSize = short.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("IsProfileDataForMzXML"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information mzXML profile data in parameter file");
+                                throw new Exception("No information mzXML profile data in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -463,13 +361,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.IsProfileDataForMzXML = bool.Parse(rdr.Value);
+                            IsProfileDataForMzXML = bool.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("WriteProgressFile"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information about writing progress file");
+                                throw new Exception("No information about writing progress file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -477,13 +375,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.WriteProgressFile = bool.Parse(rdr.Value);
+                            WriteProgressFile = bool.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("IgnoreMSnScans"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information about ignoring MSn scans");
+                                throw new Exception("No information about ignoring MSn scans");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -491,13 +389,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.IgnoreMSnScans = bool.Parse(rdr.Value);
+                            IgnoreMSnScans = bool.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("MSnLevelToIgnore"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information about which MSn level to ignore");
+                                throw new Exception("No information about which MSn level to ignore");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -505,7 +403,7 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            mint_num_msn_levels_to_ignore++;
+                            NumMSnLevelsToIgnore++;
                             int level = short.Parse(rdr.Value);
                             mvect_msn_levels_to_ignore.Add(level);
                         }
@@ -513,7 +411,7 @@ namespace DeconToolsV2.DTAGeneration
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for charge carrier mass in parameter file");
+                                throw new Exception("No information for charge carrier mass in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -521,13 +419,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.CCMass = double.Parse(rdr.Value);
+                            CCMass = double.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("WindowSizeToCheck"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for window size to check in parameter file");
+                                throw new Exception("No information for window size to check in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -535,13 +433,13 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            this.WindowSizetoCheck = short.Parse(rdr.Value);
+                            WindowSizetoCheck = short.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("OutputType"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                throw new System.Exception("No information for output type in parameter file");
+                                throw new Exception("No information for output type in parameter file");
                             }
                             rdr.Read();
                             while (rdr.NodeType == XmlNodeType.Whitespace ||
@@ -549,29 +447,27 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.DTA.ToString()))
+                            if (rdr.Value.Equals(OUTPUT_TYPE.DTA.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.DTA;
+                                OutputType = OUTPUT_TYPE.DTA;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG.ToString()))
+                            else if (rdr.Value.Equals(OUTPUT_TYPE.LOG.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.LOG;
+                                OutputType = OUTPUT_TYPE.LOG;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA.ToString()))
+                            else if (rdr.Value.Equals(OUTPUT_TYPE.CDTA.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.CDTA;
+                                OutputType = OUTPUT_TYPE.CDTA;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF.ToString()))
+                            else if (rdr.Value.Equals(OUTPUT_TYPE.MGF.ToString()))
                             {
-                                this.OutputType = DeconToolsV2.DTAGeneration.OUTPUT_TYPE.MGF;
+                                OutputType = OUTPUT_TYPE.MGF;
                             }
                         }
                         break;
                     case XmlNodeType.EndElement:
                         if (rdr.Name.Equals("DTAGenerationParameters"))
                             return;
-                        break;
-                    default:
                         break;
                 }
             }

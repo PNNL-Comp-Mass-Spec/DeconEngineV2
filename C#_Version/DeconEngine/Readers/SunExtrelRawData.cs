@@ -117,7 +117,7 @@ namespace Engine.Readers
         {
             // Gets the number of points in scan, the size of the header which gives the offset to the actual data.
 
-            string tag = FindDetectSlice(fStream);
+            var tag = FindDetectSlice(fStream);
 
             if (!string.IsNullOrWhiteSpace(tag))
             {
@@ -138,10 +138,10 @@ namespace Engine.Readers
             mshort_options_size = Helpers.ReadInt16(fStream.BaseStream, 10);
             mint_data_section_start = mshort_options_size + 64;
 
-            string options_str = Helpers.ReadFileString(fStream.BaseStream, 64, mshort_options_size);
+            var options_str = Helpers.ReadFileString(fStream.BaseStream, 64, mshort_options_size);
 
-            int start_ptr = options_str.IndexOf(tag);
-            int end_ptr = -1;
+            var start_ptr = options_str.IndexOf(tag);
+            var end_ptr = -1;
             if (start_ptr >= 0)
                 end_ptr = options_str.IndexOf("}", start_ptr);
             //char *start_ptr = strstr(options_str, tag);
@@ -172,7 +172,7 @@ namespace Engine.Readers
                 double this_time;
                 if (!Helpers.GetDouble(options_str, "time:", (int) pos, out this_time))
                     break;
-                int pos2 = options_str.IndexOf("time:", (int) pos);
+                var pos2 = options_str.IndexOf("time:", (int) pos);
                 pos = pos2 + 5;
                 total_time += this_time;
             }
@@ -251,7 +251,7 @@ namespace Engine.Readers
             }
             menm_calibration_type = (CalibrationType) calibration_type;
 
-            Calibrations.Calibrator calib = new Calibrations.Calibrator(menm_calibration_type);
+            var calib = new Calibrations.Calibrator(menm_calibration_type);
 
             calib.NumPointsInScan = this.mint_num_points_in_scan;
             calib.LowMassFrequency = low_mass_frequency;
@@ -289,8 +289,8 @@ namespace Engine.Readers
 
             long pos;
             long length;
-            int start = 0;
-            int count = 0;
+            var start = 0;
+            var count = 0;
             string labels;
 
             if (ReadFinniganHeader(fStream, out FH) != 0)
@@ -301,7 +301,7 @@ namespace Engine.Readers
             // TODO: This should probably be split on newlines...
             labels = Helpers.ReadFileString(fStream.BaseStream, pos, length);
 
-            int index = -1;
+            var index = -1;
 
             //while (start < length)
             //{
@@ -368,11 +368,11 @@ namespace Engine.Readers
                 return false; // File does not exist!
             }
             using (
-                BinaryReader sun_extrel_file =
+                var sun_extrel_file =
                     new BinaryReader(new FileStream(marr_file_name, FileMode.Open, FileAccess.Read,
                         FileShare.Read), Encoding.ASCII))
             {
-                long data_section_start = ReadHeader(sun_extrel_file);
+                var data_section_start = ReadHeader(sun_extrel_file);
                 long file_pointer = this.mint_data_section_start + scan_num * this.mint_num_points_in_scan * 4;
 
                 if (mint_allocated_size < mint_num_points_in_scan || mptr_data == null)
@@ -383,14 +383,14 @@ namespace Engine.Readers
                 }
                 // seek to location and read.
                 sun_extrel_file.BaseStream.Seek(file_pointer, SeekOrigin.Begin);
-                byte[] bytes = new byte[mint_num_points_in_scan * sizeof (float)];
-                int bytesRead = 0;
+                var bytes = new byte[mint_num_points_in_scan * sizeof (float)];
+                var bytesRead = 0;
                 bytesRead = sun_extrel_file.Read(bytes, 0, mint_num_points_in_scan * sizeof (float));
-                bool found = bytesRead < mint_num_points_in_scan * sizeof (float);
+                var found = bytesRead < mint_num_points_in_scan * sizeof (float);
 
-                double min_intensity = double.MaxValue;
-                double max_intensity = double.MinValue;
-                for (int i = 0; i < mint_num_points_in_scan; i++)
+                var min_intensity = double.MaxValue;
+                var max_intensity = double.MinValue;
+                for (var i = 0; i < mint_num_points_in_scan; i++)
                 {
                     if (BitConverter.IsLittleEndian)
                     {
@@ -424,7 +424,7 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
-            int num_pts = mint_num_points_in_scan;
+            var num_pts = mint_num_points_in_scan;
             return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
         }
 
@@ -456,7 +456,7 @@ namespace Engine.Readers
             if (num_pts > mint_num_points_in_scan || scan_num != mint_last_scan_num)
             {
                 mint_last_scan_num = scan_num;
-                bool loaded = LoadFile(file_name, scan_num);
+                var loaded = LoadFile(file_name, scan_num);
                 if (!loaded)
                     return false;
                 Buffer.BlockCopy(mptr_data, 0, mptr_data_copy, 0, mint_num_points_in_scan * flt_size);
@@ -483,7 +483,7 @@ namespace Engine.Readers
                 (folder_name[3] >= '0' && folder_name[3] <= '9'))
             {
                 directory_name = directory_path;
-                int len = directory_name.Length;
+                var len = directory_name.Length;
                 if (directory_name[len - 1] != '\\' && directory_name[len - 1] != '/')
                 {
                     directory_name += "\\";
@@ -496,7 +496,7 @@ namespace Engine.Readers
                 }
 
                 // Skip subdirectories
-                foreach (string path in Directory.EnumerateFiles(directory_name))
+                foreach (var path in Directory.EnumerateFiles(directory_name))
                 {
                     file_name = Path.GetFileName(path);
                     AddScanFile(directory_name, file_name);
@@ -509,19 +509,19 @@ namespace Engine.Readers
         {
             // add file to list of files. Extract scan number by starting from last letter
             // of file_name.
-            int len_filen = file_name.Length;
-            int len_pathn = path.Length;
+            var len_filen = file_name.Length;
+            var len_pathn = path.Length;
             string full_path;
-            int start_index = len_filen;
-            for (int i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
+            var start_index = len_filen;
+            for (var i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
             {
                 start_index = i;
             }
             if (start_index != len_filen && file_name[start_index - 1] == '.')
             {
                 // have the right format.
-                string scanNum = file_name.Substring(start_index);
-                int scan_num = int.Parse(scanNum);
+                var scanNum = file_name.Substring(start_index);
+                var scan_num = int.Parse(scanNum);
                 full_path = path;
 
                 if (full_path[len_pathn - 1] != '\\' && full_path[len_pathn] != '/')
@@ -535,17 +535,17 @@ namespace Engine.Readers
         {
             // add file to list of files. Extract scan number by starting from last letter
             // of file_name.
-            int len_filen = file_name.Length;
-            int start_index = len_filen;
-            for (int i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
+            var len_filen = file_name.Length;
+            var start_index = len_filen;
+            for (var i = len_filen - 1; i >= 0 && file_name[i] >= '0' && file_name[i] <= '9'; i--)
             {
                 start_index = i;
             }
             if (start_index != len_filen && file_name[start_index - 1] == '.')
             {
                 // have the right format.
-                string scanNum = file_name.Substring(start_index);
-                int scan_num = int.Parse(scanNum);
+                var scanNum = file_name.Substring(start_index);
+                var scan_num = int.Parse(scanNum);
                 AddScanFile(file_name, scan_num);
             }
         }
@@ -567,14 +567,14 @@ namespace Engine.Readers
             }
 
             sfile_name = directory_path;
-            int len = directory_path.Length;
+            var len = directory_path.Length;
 
             if (directory_path[len - 1] != '\\' && directory_path[len - 1] != '/')
                 sfile_name += "\\*";
             else
                 sfile_name += "*";
 
-            foreach (string path in Directory.EnumerateFileSystemEntries(directory_path))
+            foreach (var path in Directory.EnumerateFileSystemEntries(directory_path))
             {
                 file_name = path;
                 if (file_name == "." || file_name == "..")

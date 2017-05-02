@@ -172,7 +172,7 @@ namespace Engine.HornTransform
             DeltaMz = a.DeltaMz;
             NumIsotopesObserved = a.NumIsotopesObserved;
             IsotopePeakIndices = new int[MaxIsotopes];
-            for (int i = 0; i < NumIsotopesObserved; i++)
+            for (var i = 0; i < NumIsotopesObserved; i++)
             {
                 IsotopePeakIndices[i] = a.IsotopePeakIndices[i];
             }

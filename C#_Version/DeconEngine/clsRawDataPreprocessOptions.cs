@@ -70,70 +70,61 @@ namespace DeconToolsV2.Readers
 
         public DeconToolsV2.Readers.ApodizationType ApodizationType
         {
-            get { return menmApodizationType; }
-            set { menmApodizationType = value; }
+            get => menmApodizationType;
+            set => menmApodizationType = value;
         }
 
-        public bool IsToBePreprocessed
-        {
-            get
-            {
-                return menmApodizationType != ApodizationType.NOAPODIZATION ||
-                       menmCalibrationType != CalibrationType.UNDEFINED;
-            }
-        }
+        public bool IsToBePreprocessed => menmApodizationType != ApodizationType.NOAPODIZATION ||
+                                          menmCalibrationType != CalibrationType.UNDEFINED;
 
         public double ApodizationMinX
         {
-            get { return mdbl_apodization_min_x; }
-            set { mdbl_apodization_min_x = value; }
+            get => mdbl_apodization_min_x;
+            set => mdbl_apodization_min_x = value;
         }
 
         public double ApodizationMaxX
         {
-            get { return mdbl_apodization_max_x; }
-            set { mdbl_apodization_max_x = value; }
+            get => mdbl_apodization_max_x;
+            set => mdbl_apodization_max_x = value;
         }
 
         public int ApodizationPercent
         {
-            get { return mintApodizationPercent; }
-            set { mintApodizationPercent = value; }
+            get => mintApodizationPercent;
+            set => mintApodizationPercent = value;
         }
 
         public short NumZeroFills
         {
-            get { return mshort_num_zeros; }
-            set { mshort_num_zeros = value; }
+            get => mshort_num_zeros;
+            set => mshort_num_zeros = value;
         }
 
-        public bool ApplyCalibration
-        {
-            get { return menmCalibrationType != CalibrationType.UNDEFINED; }
-        }
+        public bool ApplyCalibration => menmCalibrationType != CalibrationType.UNDEFINED;
 
         public DeconToolsV2.Readers.CalibrationType CalibrationType
         {
-            get { return menmCalibrationType; }
-            set { menmCalibrationType = value; }
+            get => menmCalibrationType;
+            set => menmCalibrationType = value;
         }
 
         public double A
         {
-            get { return mdbl_A; }
-            set { mdbl_A = value; }
+            get => mdbl_A;
+            set => mdbl_A = value;
         }
 
         public double B
         {
-            get { return mdbl_B; }
-            set { mdbl_B = value; }
+            get => mdbl_B;
+            set => mdbl_B = value;
         }
 
         public double C
         {
-            get { return mdbl_C; }
-            set { mdbl_C = value; }
+            get => mdbl_C;
+            set => mdbl_C = value;
         }
 
         public void SaveV1FTICRPreProcessOptions(System.Xml.XmlTextWriter xwriter)
@@ -170,7 +161,7 @@ namespace DeconToolsV2.Readers
 
         public Object Clone()
         {
-            clsRawDataPreprocessOptions new_params = new clsRawDataPreprocessOptions();
+            var new_params = new clsRawDataPreprocessOptions();
             new_params.ApodizationMaxX = this.ApodizationMaxX;
             new_params.ApodizationMinX = this.ApodizationMinX;
             new_params.ApodizationPercent = this.ApodizationPercent;
@@ -186,7 +177,7 @@ namespace DeconToolsV2.Readers
         public void LoadV1FTICRPreProcessOptions(System.Xml.XmlReader rdr)
         {
             //Add code to handle empty nodes.
-            bool readingCalibrations = false;
+            var readingCalibrations = false;
             //Read each node in the tree.
             while (rdr.Read())
             {
@@ -382,9 +373,9 @@ namespace DeconToolsV2.Readers
                                 rdr.Read();
                             }
 
-                            System.Type type = typeof (DeconToolsV2.Readers.CalibrationType);
+                            var type = typeof (DeconToolsV2.Readers.CalibrationType);
                             //System.Type.GetType("DeconToolsV2.Readers.CalibrationType");
-                            DeconToolsV2.Readers.CalibrationType calibrationType =
+                            var calibrationType =
                                 (DeconToolsV2.Readers.CalibrationType) Enum.Parse(type, rdr.Value);
                             this.CalibrationType = calibrationType;
                         }

@@ -14,7 +14,7 @@ namespace DeconToolsV2
         {
         }
 
-        private void WritePeakParameters(StreamWriter file, Peaks.clsPeakProcessorParameters peak_parameters)
+        private void WritePeakParameters(TextWriter file, Peaks.clsPeakProcessorParameters peak_parameters)
         {
             // In a wierd pseudo xml/raw file format, we will write out tags in text
             // but keep all the data in binary.
@@ -48,7 +48,7 @@ namespace DeconToolsV2
             }
         }
 
-        private void WriteTransformParameters(StreamWriter file,
+        private void WriteTransformParameters(TextWriter file,
             HornTransform.clsHornTransformParameters transform_parameters)
         {
             if (transform_parameters != null)
@@ -70,7 +70,7 @@ namespace DeconToolsV2
 
         private void WritePeaks(StreamWriter file, DeconToolsV2.Results.clsTransformResults results)
         {
-            int num_peaks = results.GetNumPeaks();
+            var num_peaks = results.GetNumPeaks();
             file.Write("<PeakResults><NumPeaks>" + num_peaks + "</NumPeaks>");
             file.Write("<Peaks>");
 
@@ -82,9 +82,9 @@ namespace DeconToolsV2
             //}
             //file.Write(peaks);
             file.Flush();
-            using (BinaryWriter bWriter = new BinaryWriter(file.BaseStream, Encoding.ASCII, true))
+            using (var bWriter = new BinaryWriter(file.BaseStream, Encoding.ASCII, true))
             {
-                for (int pk_num = 0; pk_num < num_peaks; pk_num++)
+                for (var pk_num = 0; pk_num < num_peaks; pk_num++)
                 {
                     results.mobj_lcms_results.GetPeak(pk_num).WriteToBinaryStream(bWriter);
                 }
@@ -96,7 +96,7 @@ namespace DeconToolsV2
             Peaks.clsPeakProcessorParameters peak_parameters,
             HornTransform.clsHornTransformParameters transform_parameters)
         {
-            using (StreamWriter file = new StreamWriter(new FileStream(file_name, FileMode.Create, FileAccess.Write)))
+            using (var file = new StreamWriter(new FileStream(file_name, FileMode.Create, FileAccess.Write)))
             {
                 // Write out descriptors. Some information is unavailable for now.
                 // i.e. what is the start position of the peaks data block and

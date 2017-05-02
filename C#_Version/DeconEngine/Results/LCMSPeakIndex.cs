@@ -25,20 +25,20 @@ namespace Engine.Results
         public int LookLeft(List<Engine.Results.LcmsPeak> vec, double mz_val, int start_index)
         {
             // mv_val <= vec[start_index] so start moving index further left.
-            int nearest_index = start_index;
-            int next_index = start_index;
+            var nearest_index = start_index;
+            var next_index = start_index;
 
             if (next_index == 0)
                 return 0;
 
-            double next_val = vec[next_index].Mz;
-            double best_distance = Math.Abs(mz_val - next_val);
+            var next_val = vec[next_index].Mz;
+            var best_distance = Math.Abs(mz_val - next_val);
 
             while (next_val > mz_val)
             {
                 next_index--;
                 next_val = vec[next_index].Mz;
-                double dist = Math.Abs(next_val - mz_val);
+                var dist = Math.Abs(next_val - mz_val);
                 if (dist < best_distance)
                 {
                     best_distance = dist;
@@ -60,15 +60,15 @@ namespace Engine.Results
         public int LookRight(List<Engine.Results.LcmsPeak> vec, double mz_val, int start_index)
         {
             // mv_val >= vec[start_index] so start moving index further right.
-            int nearest_index = start_index;
-            int next_index = start_index;
-            int num_pts = (int) vec.Count;
+            var nearest_index = start_index;
+            var next_index = start_index;
+            var num_pts = (int) vec.Count;
 
             if (next_index >= num_pts - 1)
                 return num_pts - 1;
 
-            double next_val = vec[next_index].Mz;
-            double best_distance = Math.Abs(mz_val - next_val);
+            var next_val = vec[next_index].Mz;
+            var best_distance = Math.Abs(mz_val - next_val);
 
             // we've gone back too far, posibly. Move pas the mz_val and return that value.
             while (next_val < mz_val)
@@ -76,7 +76,7 @@ namespace Engine.Results
                 next_index++;
 
                 next_val = vec[next_index].Mz;
-                double dist = Math.Abs(next_val - mz_val);
+                var dist = Math.Abs(next_val - mz_val);
                 if (dist < best_distance)
                 {
                     best_distance = dist;
@@ -119,7 +119,7 @@ namespace Engine.Results
                     return stop_index;
                 }
 
-                double ratio = ((max_val - mz_val) * 1.0) / (max_val - min_val);
+                var ratio = ((max_val - mz_val) * 1.0) / (max_val - min_val);
                 mid_index = (int) (start_index * ratio + stop_index * (1 - ratio) + 0.5);
 
                 if (mid_index == start_index)

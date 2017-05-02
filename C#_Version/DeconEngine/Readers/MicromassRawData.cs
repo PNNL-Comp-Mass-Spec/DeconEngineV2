@@ -130,7 +130,7 @@ namespace Engine.Readers
         {
             mbln_get_ms_data_only = false;
             menm_masslynx_version = GetLatestInstalledVersion();
-            for (int funcNum = 0; funcNum < MAX_FUNCTIONS; funcNum++)
+            for (var funcNum = 0; funcNum < MAX_FUNCTIONS; funcNum++)
                 marr_num_scans_per_function[funcNum] = 0;
 
             mint_num_points = 0;
@@ -237,10 +237,10 @@ namespace Engine.Readers
             if (file.Length < 4)
             {
                 // should end in .dat or .raw
-                string message = "Invalid Masslynx 4 file name: " + file + " Should have a .raw in the path name";
+                var message = "Invalid Masslynx 4 file name: " + file + " Should have a .raw in the path name";
                 throw new System.Exception(message);
             }
-            string ext = Path.GetExtension(file);
+            var ext = Path.GetExtension(file);
             if (ext.ToLower() == ".raw")
             {
                 marr_filename = file;
@@ -248,11 +248,11 @@ namespace Engine.Readers
             else if (ext.ToLower() == ".dat")
             {
                 //find index of .raw the file name or complain.
-                int ptr = file.ToLower().IndexOf(".raw");
+                var ptr = file.ToLower().IndexOf(".raw");
                 if (ptr == -1)
                 {
                     // should end in .dat or .raw
-                    string message = "Invalid Masslynx 4 file name: " + file + " Should have a .raw in the path name";
+                    var message = "Invalid Masslynx 4 file name: " + file + " Should have a .raw in the path name";
                     throw new System.Exception(message);
                 }
                 marr_filename = file.Substring(ptr + 4);
@@ -350,7 +350,7 @@ namespace Engine.Readers
             _bstr_t bstr = marr_filename;
 
             ScanInfo info = mvectScanInfo[scan_num-1];
-            System.Console.Error.WriteLine(bstr<<" Scan = "<<info.mint_scan_num<<" Func # = "<<info.mshort_function_num);
+            Console.Error.WriteLine(bstr<<" Scan = "<<info.mint_scan_num<<" Func # = "<<info.mshort_function_num);
             mptr_dac_spectrum.GetSpectrum(bstr, info.mshort_function_num, 0, info.mint_scan_num);
 
             long num_pts_spectrum;

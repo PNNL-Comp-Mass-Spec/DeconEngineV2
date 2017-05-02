@@ -58,9 +58,9 @@ namespace Engine.Readers
 
         private double GetMassFromBin(int bin)
         {
-            double bin_val = bin * 0.1; //(bin/16 (for index) * 16/10(to convert to ns))
+            var bin_val = bin * 0.1; //(bin/16 (for index) * 16/10(to convert to ns))
 //          double bin_val = bin * 1.6; for better resolution
-            double t = bin_val + mint_time_offset;
+            var t = bin_val + mint_time_offset;
             return mdbl_k0 * mdbl_k0 * (t - mdbl_t0) * (t - mdbl_t0);
         }
 
@@ -137,9 +137,9 @@ namespace Engine.Readers
             const int SIZE_BUF = 512;
             mint_max_scan_size = 0;
             marr_filename = file;
-            string stringBuf = "";
+            var stringBuf = "";
             int pStr;
-            int dataType = 0;
+            var dataType = 0;
             double agilent_t0 = 0;
             double agilent_k0 = 0;
 
@@ -148,10 +148,10 @@ namespace Engine.Readers
                 throw new System.Exception(" Could not open " + marr_filename + " perhaps it does not exist.");
             }
             using (
-                StreamReader pFile =
+                var pFile =
                     new StreamReader(new FileStream(marr_filename, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.ASCII))
             {
-                char last_char = (char) 0;
+                var last_char = (char) 0;
 
                 // Read the header in, and initialize values
                 while (!pFile.EndOfStream)
@@ -179,9 +179,9 @@ namespace Engine.Readers
                         mbln_is_adc_data = true;
                     }
 
-                    int len = stringBuf.Length;
-                    bool foundEndBlock = false;
-                    for (int charIndex = 0; charIndex < len; charIndex++)
+                    var len = stringBuf.Length;
+                    var foundEndBlock = false;
+                    for (var charIndex = 0; charIndex < len; charIndex++)
                     {
                         if (stringBuf[charIndex] == 0x1B)
                         {
@@ -200,11 +200,11 @@ namespace Engine.Readers
 
             //open file and skip through header
             using (
-                BinaryReader fh =
+                var fh =
                     new BinaryReader(new FileStream(marr_filename, FileMode.Open, FileAccess.Read, FileShare.Read),
                         Encoding.ASCII))
             {
-                byte last_byte = Byte.MinValue;
+                var last_byte = Byte.MinValue;
                 while (fh.BaseStream.Position < fh.BaseStream.Length && last_byte != 0x1B)
                 {
                     last_byte = fh.ReadByte();
@@ -225,7 +225,7 @@ namespace Engine.Readers
                 // Multiplexed IMS - float
                 // AGC IMS - int
 
-                int tof_rec_size = 0;
+                var tof_rec_size = 0;
                 if (mbln_is_multiplexed_data)
                     tof_rec_size = FLT_SIZE + INT_SIZE;
                 else if (mbln_is_adc_data)
@@ -236,11 +236,11 @@ namespace Engine.Readers
                 //Read in number of IMS scans
                 //int num_read = _read(fh, &mint_num_scans, INT_SIZE);
                 mint_num_scans = fh.ReadInt32();
-                int num_read = 0;
+                var num_read = 0;
 
                 // Read in the lengths and the tic values.
-                int[] int_vals = new int[2 * mint_num_scans];
-                byte[] buffer = new byte[4 * 2 * mint_num_scans];
+                var int_vals = new int[2 * mint_num_scans];
+                var buffer = new byte[4 * 2 * mint_num_scans];
                 // TODO: These all really do the exact same thing.... 8 * num_scans
                 if (mbln_is_multiplexed_data)
                 {
@@ -259,8 +259,8 @@ namespace Engine.Readers
                 }
 
                 // now the values are fetched, lets save them.
-                int num_pts_so_far = 0;
-                for (int scan_num = 0; scan_num < mint_num_scans; scan_num++)
+                var num_pts_so_far = 0;
+                for (var scan_num = 0; scan_num < mint_num_scans; scan_num++)
                 {
                     mvect_scan_bpi.Add((short) int_vals[2 * scan_num]);
                     mvect_scan_bpi_adc.Add(int_vals[2 * scan_num]);
@@ -269,20 +269,20 @@ namespace Engine.Readers
                 }
                 mvect_scan_start_index.Add(num_pts_so_far);
 
-                int data_size = tof_rec_size * num_pts_so_far;
+                var data_size = tof_rec_size * num_pts_so_far;
 
                 //byte[] temp = new byte[(int) data_size];
                 //num_read = fh.Read(temp, 0, data_size);
                 // TODO: Or switch entirely to use the BinaryReader to read values one by one...
 
                 mvect_data.Capacity = num_pts_so_far;
-                int current_scan = 0;
+                var current_scan = 0;
                 //std.cerr.precision(6);
                 //std.cerr.setf(std.ios.fixed, std.ios.floatfield);
-                //System.Console.Error.WriteLine("Loading " + file + " # of points = " + num_pts_so_far + " Read points = " + (num_read/TOFREC_SIZE));
+                //Console.Error.WriteLine("Loading " + file + " # of points = " + num_pts_so_far + " Read points = " + (num_read/TOFREC_SIZE));
 
                 // Now copy into TOFRecords and stuff them into the vector
-                for (int pt_num = 0; pt_num < num_pts_so_far; pt_num++)
+                for (var pt_num = 0; pt_num < num_pts_so_far; pt_num++)
                 {
                     try
                     {
@@ -293,7 +293,7 @@ namespace Engine.Readers
                         //TOFRecord *ptr = (TOFRecord *) &temp[pt_num*TOFREC_SIZE];
                         if (mbln_is_multiplexed_data)
                         {
-                            TOFRecord<float> mxed_rec = new TOFRecord<float>();
+                            var mxed_rec = new TOFRecord<float>();
                             //Buffer.BlockCopy(temp, pt_num * tof_rec_size, mxed_rec, 0, tof_rec_size);
                             mxed_rec.tof_bin = fh.ReadInt32();
                             mxed_rec.intensity = fh.ReadSingle();
@@ -304,7 +304,7 @@ namespace Engine.Readers
                         }
                         else if (mbln_is_adc_data)
                         {
-                            TOFRecord<int> adc_rec = new TOFRecord<int>();
+                            var adc_rec = new TOFRecord<int>();
                             //Buffer.BlockCopy(temp, pt_num * tof_rec_size, adc_rec, 0, tof_rec_size);
                             adc_rec.tof_bin = fh.ReadInt32();
                             adc_rec.intensity = fh.ReadInt32();
@@ -315,7 +315,7 @@ namespace Engine.Readers
                         }
                         else
                         {
-                            TOFRecord<short> rec = new TOFRecord<short>();
+                            var rec = new TOFRecord<short>();
                             //Buffer.BlockCopy(temp, pt_num * tof_rec_size, rec, 0, tof_rec_size);
                             rec.tof_bin = fh.ReadInt32();
                             rec.intensity = fh.ReadInt16();
@@ -330,7 +330,7 @@ namespace Engine.Readers
 #if DEBUG
                         throw e;
 #endif
-                        System.Console.Error.WriteLine(e.Message);
+                        Console.Error.WriteLine(e.Message);
                     }
                 }
 
@@ -340,11 +340,11 @@ namespace Engine.Readers
             mint_start_bin = int.MaxValue;
             mint_stop_bin = 0;
 
-            for (int i = 0; i < mint_max_scan_size; i++)
+            for (var i = 0; i < mint_max_scan_size; i++)
             {
                 //ignoring /16 to increase resolution
-                int index_shifted = i / 16;
-                double mz_val = GetMassFromBin(i);
+                var index_shifted = i / 16;
+                var mz_val = GetMassFromBin(i);
 
                 if (mz_val < mdbl_max_mz)
                 {
@@ -422,7 +422,7 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
-            bool found_data = GetRawData(out mzs, out intensities, scan_num, centroid, -1);
+            var found_data = GetRawData(out mzs, out intensities, scan_num, centroid, -1);
             if (!found_data)
                 return found_data;
             //mobj_savgol.Smooth(mzs, intensities);
@@ -432,14 +432,14 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
-            SortedDictionary<int, double> bin_intensity_map = new SortedDictionary<int, double>();
+            var bin_intensity_map = new SortedDictionary<int, double>();
             mzs = new List<double>();
             intensities = new List<double>();
             // get all the points for now.
             if (scan_num > mint_num_scans || scan_num <= 0)
                 return false;
 
-            int startIndex = mvect_scan_start_index[scan_num - 1];
+            var startIndex = mvect_scan_start_index[scan_num - 1];
             int stopIndex;
             if (mbln_is_multiplexed_data)
                 stopIndex = mvect_mxed_data.Count;
@@ -463,9 +463,9 @@ namespace Engine.Readers
             mdbl_max_drift_time = mint_num_scans * mdbl_avg_tof_length;
             mdbl_elution_time = (mint_frame_num * mdbl_max_drift_time) + mdbl_drift_time;
 
-            for (int index = startIndex; index < stopIndex; index++)
+            for (var index = startIndex; index < stopIndex; index++)
             {
-                int bin = 0;
+                var bin = 0;
                 double intensity_val = 0;
                 if (mbln_is_multiplexed_data)
                 {
@@ -497,11 +497,11 @@ namespace Engine.Readers
             }
 
             // now copy all the m/z values into vector.
-            int last_bin = 0;
-            int last_intensity = 0;
+            var last_bin = 0;
+            var last_intensity = 0;
             double mz_val = 0;
-            bool first = true;
-            foreach (KeyValuePair<int, double> item in bin_intensity_map)
+            var first = true;
+            foreach (var item in bin_intensity_map)
             {
                 if (item.Key > last_bin + 1 && !first) //need to revisit this
                 {
@@ -551,12 +551,12 @@ namespace Engine.Readers
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
-            int num_pts = mvect_scan_bpi.Count;
+            var num_pts = mvect_scan_bpi.Count;
             intensities = new List<double>();
             scan_times = new List<double>();
             intensities.Capacity = num_pts;
             scan_times.Capacity = num_pts;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 double intensity;
                 if (mbln_is_adc_data)
@@ -581,7 +581,7 @@ namespace Engine.Readers
         {
             mzs = new List<double>();
             intensities = new List<double>();
-            SortedDictionary<int, double> bin_intensity_map = new SortedDictionary<int, double>();
+            var bin_intensity_map = new SortedDictionary<int, double>();
             double mz;
 
             TOFRecord<short> rec;
@@ -589,7 +589,7 @@ namespace Engine.Readers
             TOFRecord<int> adc_rec;
 
             // Start
-            for (int scan_num = start_scan; scan_num <= stop_scan; scan_num++)
+            for (var scan_num = start_scan; scan_num <= stop_scan; scan_num++)
             {
                 if (scan_num > mint_num_scans || scan_num <= 0)
                     return;
@@ -597,7 +597,7 @@ namespace Engine.Readers
                 if (mvect_scan_start_index[scan_num - 1] < 0)
                     break;
 
-                int startIndex = mvect_scan_start_index[scan_num - 1];
+                var startIndex = mvect_scan_start_index[scan_num - 1];
                 int stopIndex;
                 if (mbln_is_multiplexed_data)
                     stopIndex = mvect_mxed_data.Count;
@@ -609,9 +609,9 @@ namespace Engine.Readers
                 if (scan_num < mint_num_scans)
                     stopIndex = mvect_scan_start_index[scan_num];
 
-                for (int index = startIndex; index < stopIndex; index++)
+                for (var index = startIndex; index < stopIndex; index++)
                 {
-                    int bin = 0;
+                    var bin = 0;
                     double intensity_val = 0;
                     if (mbln_is_multiplexed_data)
                     {
@@ -648,7 +648,7 @@ namespace Engine.Readers
                 }
             }
 
-            foreach (KeyValuePair<int, double> item in bin_intensity_map)
+            foreach (var item in bin_intensity_map)
             {
                 mz = this.GetMassFromBin(item.Key);
                 if (mz >= min_mz && mz <= max_mz)
@@ -668,14 +668,14 @@ namespace Engine.Readers
             TOFRecord<float> mxed_rec;
             TOFRecord<int> adc_rec;
 
-            double min_mz = double.MaxValue;
-            double max_mz = double.MinValue;
-            int min_mz_bin = 0;
-            int max_mz_bin = 0;
+            var min_mz = double.MaxValue;
+            var max_mz = double.MinValue;
+            var min_mz_bin = 0;
+            var max_mz_bin = 0;
             int bin;
 
             // get mz_range to sum over
-            int startIndex = mvect_scan_start_index[current_scan - 1];
+            var startIndex = mvect_scan_start_index[current_scan - 1];
             int stopIndex;
             if (mbln_is_multiplexed_data)
                 stopIndex = mvect_mxed_data.Count;
@@ -687,7 +687,7 @@ namespace Engine.Readers
                 stopIndex = mvect_scan_start_index[current_scan];
 
             //get min and max values for m/z and bin
-            for (int index = startIndex; index < stopIndex; index++)
+            for (var index = startIndex; index < stopIndex; index++)
             {
                 if (mbln_is_multiplexed_data)
                 {
@@ -740,8 +740,8 @@ namespace Engine.Readers
             }
 
             // now start the summing
-            int start_scan = current_scan - scan_range - 1;
-            int stop_scan = current_scan + scan_range;
+            var start_scan = current_scan - scan_range - 1;
+            var stop_scan = current_scan + scan_range;
 
             // Subtract start_scan from bin_intensity_map
             if (start_scan > 1)
@@ -757,7 +757,7 @@ namespace Engine.Readers
                 if (start_scan < mint_num_scans)
                     stopIndex = mvect_scan_start_index[start_scan];
 
-                for (int index = startIndex; index < stopIndex; index++)
+                for (var index = startIndex; index < stopIndex; index++)
                 {
                     bin = 0;
                     double intensity_val = 0;
@@ -791,7 +791,7 @@ namespace Engine.Readers
             {
                 startIndex = mvect_scan_start_index[stop_scan - 1];
                 stopIndex = mvect_scan_start_index[stop_scan];
-                for (int index = startIndex; index < stopIndex; index++)
+                for (var index = startIndex; index < stopIndex; index++)
                 {
                     bin = 0;
                     double intensity_val = 0;
@@ -830,7 +830,7 @@ namespace Engine.Readers
 
             // now choose the mz range we care about
             foreach (
-                KeyValuePair<int, double> item in
+                var item in
                     mmap_bin_intensity_map.Where(x => x.Key >= min_mz_bin && x.Key <= max_mz_bin))
             {
                 mz = this.GetMassFromBin(item.Key);
@@ -851,7 +851,7 @@ namespace Engine.Readers
             TOFRecord<int> adc_rec;
 
             // Start
-            for (int scan_num = 1; scan_num <= scan_range; scan_num++)
+            for (var scan_num = 1; scan_num <= scan_range; scan_num++)
             {
                 if (scan_num > mint_num_scans || scan_num <= 0)
                     return;
@@ -859,7 +859,7 @@ namespace Engine.Readers
                 if (mvect_scan_start_index[scan_num - 1] < 0)
                     break;
 
-                int startIndex = mvect_scan_start_index[scan_num - 1];
+                var startIndex = mvect_scan_start_index[scan_num - 1];
                 int stopIndex;
                 if (mbln_is_multiplexed_data)
                     stopIndex = mvect_mxed_data.Count;
@@ -871,9 +871,9 @@ namespace Engine.Readers
                 if (scan_num < mint_num_scans)
                     stopIndex = mvect_scan_start_index[scan_num];
 
-                for (int index = startIndex; index < stopIndex; index++)
+                for (var index = startIndex; index < stopIndex; index++)
                 {
-                    int bin = 0;
+                    var bin = 0;
                     double intensity_val = 0;
                     if (mbln_is_multiplexed_data)
                     {
@@ -912,19 +912,19 @@ namespace Engine.Readers
         {
             mzs = new List<double>();
             intensities = new List<double>();
-            SortedDictionary<int, double> bin_intensity_map = new SortedDictionary<int, double>();
+            var bin_intensity_map = new SortedDictionary<int, double>();
             double mz;
 
             TOFRecord<short> rec;
             TOFRecord<float> mxed_rec;
             TOFRecord<int> adc_rec;
 
-            double min_mz = double.MaxValue;
-            double max_mz = double.MinValue;
+            var min_mz = double.MaxValue;
+            var max_mz = double.MinValue;
             int bin;
 
-            int start_scan = current_scan - scan_range;
-            int stop_scan = current_scan + scan_range;
+            var start_scan = current_scan - scan_range;
+            var stop_scan = current_scan + scan_range;
 
             //check
             if (start_scan < 1)
@@ -933,7 +933,7 @@ namespace Engine.Readers
                 stop_scan = mint_num_scans;
 
             // Setting m/z range to view
-            int startIndex = mvect_scan_start_index[current_scan - 1];
+            var startIndex = mvect_scan_start_index[current_scan - 1];
             int stopIndex;
             if (mbln_is_multiplexed_data)
                 stopIndex = mvect_mxed_data.Count;
@@ -943,7 +943,7 @@ namespace Engine.Readers
                 stopIndex = mvect_data.Count;
 
             stopIndex = mvect_scan_start_index[current_scan];
-            for (int index = startIndex; index < stopIndex; index++)
+            for (var index = startIndex; index < stopIndex; index++)
             {
                 if (mbln_is_multiplexed_data)
                 {
@@ -977,7 +977,7 @@ namespace Engine.Readers
                 }
             }
 
-            for (int scan_num = start_scan; scan_num <= stop_scan; scan_num++)
+            for (var scan_num = start_scan; scan_num <= stop_scan; scan_num++)
             {
                 //if it goes out of bounds, then return
                 if (scan_num > mint_num_scans || scan_num <= 0)
@@ -989,7 +989,7 @@ namespace Engine.Readers
                 if (scan_num < mint_num_scans)
                     stopIndex = mvect_scan_start_index[scan_num];
 
-                for (int index = startIndex; index < stopIndex; index++)
+                for (var index = startIndex; index < stopIndex; index++)
                 {
                     bin = 0;
                     double intensity_val = 0;
@@ -1029,7 +1029,7 @@ namespace Engine.Readers
                 }
             }
 
-            foreach (KeyValuePair<int, double> item in bin_intensity_map)
+            foreach (var item in bin_intensity_map)
             {
                 mz = this.GetMassFromBin(item.Key);
                 if (mz >= min_mz && mz <= max_mz)

@@ -39,13 +39,13 @@ namespace DeconToolsV2.Readers
 
         public DeconToolsV2.Readers.clsRawDataPreprocessOptions FTICRRawPreprocessOptions
         {
-            get { return mobj_preprocess_options; }
+            get => mobj_preprocess_options;
             set
             {
                 mobj_preprocess_options = value;
                 if (mobj_raw_data != null && mobj_raw_data.GetFileType() == FileType.ICR2LSRAWDATA)
                 {
-                    Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+                    var icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
                     icr_raw_data.SetApodizationZeroFillOptions(
                         mobj_preprocess_options.ApodizationType, mobj_preprocess_options.ApodizationMinX,
                         mobj_preprocess_options.ApodizationMaxX, mobj_preprocess_options.ApodizationPercent,
@@ -80,10 +80,10 @@ namespace DeconToolsV2.Readers
                 {
                     return ((Engine.Readers.AsciiRawData) mobj_raw_data).GetPercentDone();
                 }
-                int num_scans = mobj_raw_data.GetNumScans();
+                var num_scans = mobj_raw_data.GetNumScans();
                 if (num_scans != 0)
                 {
-                    int percent_done = (100 * mobj_raw_data.GetNumScansLoaded()) / num_scans;
+                    var percent_done = (100 * mobj_raw_data.GetNumScansLoaded()) / num_scans;
                     if (percent_done < 0)
                         return 0;
                     if (percent_done > 100)
@@ -100,8 +100,8 @@ namespace DeconToolsV2.Readers
             {
                 if (mobj_raw_data == null)
                     return "";
-                int current_scan = mobj_raw_data.GetNumScansLoaded();
-                int num_scans = mobj_raw_data.GetNumScans();
+                var current_scan = mobj_raw_data.GetNumScansLoaded();
+                var num_scans = mobj_raw_data.GetNumScans();
                 return string.Concat("Processed :", System.Convert.ToString(current_scan), " of ",
                     System.Convert.ToString(num_scans), " scans");
             }
@@ -132,7 +132,7 @@ namespace DeconToolsV2.Readers
 
         public void SetFFTCalibrationValues(CalibrationSettings calSettings)
         {
-            Engine.Calibrations.Calibrator calib =
+            var calib =
                 new Engine.Calibrations.Calibrator(CalibrationType.A_OVER_F_PLUS_B);
             calib.NumPointsInScan = calSettings.TD;
             calib.LowMassFrequency = calSettings.FRLow;
@@ -151,7 +151,7 @@ namespace DeconToolsV2.Readers
             if (file_type == FileType.ICR2LSRAWDATA && mobj_preprocess_options != null &&
                 mobj_preprocess_options.ApodizationType != ApodizationType.NOAPODIZATION)
             {
-                Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+                var icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
                 icr_raw_data.SetApodizationZeroFillOptions(mobj_preprocess_options.ApodizationType,
                     mobj_preprocess_options.ApodizationMinX, mobj_preprocess_options.ApodizationMaxX,
                     mobj_preprocess_options.ApodizationPercent, mobj_preprocess_options.NumZeroFills);
@@ -160,7 +160,7 @@ namespace DeconToolsV2.Readers
             if (file_type == FileType.ICR2LSRAWDATA && mobj_preprocess_options != null &&
                 mobj_preprocess_options.ApplyCalibration)
             {
-                Engine.Readers.Icr2lsRawData icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+                var icr_raw_data = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
                 icr_raw_data.OverrideDefaultCalibrator(mobj_preprocess_options.CalibrationType,
                     mobj_preprocess_options.A, mobj_preprocess_options.B, mobj_preprocess_options.C);
             }
@@ -236,11 +236,11 @@ namespace DeconToolsV2.Readers
             List<double> vect_scan_times;
             mobj_raw_data.GetTicFromFile(out vect_intensities, out vect_scan_times, base_peak_tic);
 
-            int num_pts = (int) vect_intensities.Count;
+            var num_pts = (int) vect_intensities.Count;
             intensities = new float[num_pts];
             scan_times = new float[num_pts];
 
-            for (int i = 0; i < num_pts; i++)
+            for (var i = 0; i < num_pts; i++)
             {
                 scan_times[i] = (float) vect_scan_times[i];
                 intensities[i] = (float) vect_intensities[i];
@@ -268,11 +268,11 @@ namespace DeconToolsV2.Readers
             List<double> vect_mzs;
             List<double> vect_intensities;
             mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, start_scan, stop_scan, min_mz, max_mz);
-            int num_pts = (int) vect_intensities.Count;
+            var num_pts = (int) vect_intensities.Count;
             intensities = new double[num_pts];
             mzs = new double[num_pts];
 
-            for (int i = 0; i < num_pts; i++)
+            for (var i = 0; i < num_pts; i++)
             {
                 mzs[i] = vect_mzs[i];
                 intensities[i] = vect_intensities[i];
@@ -286,14 +286,14 @@ namespace DeconToolsV2.Readers
                 throw new System.ApplicationException("No file has been opened");
             }
 
-            List<double> vect_mzs = new List<double>();
-            List<double> vect_intensities = new List<double>();
+            var vect_mzs = new List<double>();
+            var vect_intensities = new List<double>();
             mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, current_scan, scan_range);
-            int num_pts = (int) vect_intensities.Count;
+            var num_pts = (int) vect_intensities.Count;
             intensities = new double[num_pts];
             mzs = new double[num_pts];
 
-            for (int i = 0; i < num_pts; i++)
+            for (var i = 0; i < num_pts; i++)
             {
                 mzs[i] = vect_mzs[i];
                 intensities[i] = vect_intensities[i];
@@ -306,14 +306,14 @@ namespace DeconToolsV2.Readers
             {
                 throw new System.ApplicationException("No file has been opened");
             }
-            List<double> vect_mzs = new List<double>();
-            List<double> vect_intensities = new List<double>();
+            var vect_mzs = new List<double>();
+            var vect_intensities = new List<double>();
             mobj_raw_data.GetRawData(out vect_mzs, out vect_intensities, scan_num, centroid);
-            int num_pts = (int) vect_intensities.Count;
+            var num_pts = (int) vect_intensities.Count;
             intensities = new double[num_pts];
             mzs = new double[num_pts];
 
-            for (int i = 0; i < num_pts; i++)
+            for (var i = 0; i < num_pts; i++)
             {
                 mzs[i] = vect_mzs[i];
                 intensities[i] = vect_intensities[i];
@@ -331,9 +331,9 @@ namespace DeconToolsV2.Readers
         public void GetMzsInRange(ref float[] in_mzs, ref float[] in_intensities, ref float[] out_mzs,
             ref float[] out_intensities, float central_value, float range)
         {
-            int index = 0;
+            var index = 0;
             //get count first
-            for (int i = 0; i < in_mzs.Length; i++)
+            for (var i = 0; i < in_mzs.Length; i++)
             {
                 if (in_mzs[i] >= (central_value - range) && in_mzs[i] <= (central_value + range))
                 {
@@ -343,7 +343,7 @@ namespace DeconToolsV2.Readers
             out_intensities = new float[index];
             out_mzs = new float[index];
             index = 0;
-            for (int i = 0; i < in_mzs.Length; i++)
+            for (var i = 0; i < in_mzs.Length; i++)
             {
                 if (in_mzs[i] >= (central_value - range) && in_mzs[i] <= (central_value + range))
                 {
@@ -370,7 +370,7 @@ namespace DeconToolsV2.Readers
             if (mobj_raw_data == null)
                 throw new System.Exception("RawData not instantiated");
 
-            Engine.Readers.Icr2lsRawData icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+            var icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
             return icrRawData.GetSampleRate();
         }
 
@@ -381,14 +381,14 @@ namespace DeconToolsV2.Readers
             if (mobj_raw_data == null)
                 throw new System.Exception("RawData not instantiated");
 
-            Engine.Readers.Icr2lsRawData icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
-            List<float> vect_intensities = new List<float>();
+            var icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
+            var vect_intensities = new List<float>();
             icrRawData.GetFTICRTransient(ref vect_intensities);
 
-            int num_pts = (int) vect_intensities.Count;
+            var num_pts = (int) vect_intensities.Count;
             intensities = new float[num_pts];
 
-            for (int i = 0; i < num_pts; i++)
+            for (var i = 0; i < num_pts; i++)
             {
                 intensities[i] = (float) vect_intensities[i];
             }

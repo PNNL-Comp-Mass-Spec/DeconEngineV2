@@ -39,13 +39,13 @@ namespace Engine.TheoreticalProfile
 
         public string AveragineFormula
         {
-            get { return _averagineFormula.Formula; }
-            set { _averagineFormula.SetMolecularFormula(value, _elementIsotopeAbundance); }
+            get => _averagineFormula.Formula;
+            set => _averagineFormula.SetMolecularFormula(value, _elementIsotopeAbundance);
         }
 
         public string TagFormula
         {
-            get { return _tagFormula.Formula; }
+            get => _tagFormula.Formula;
             set
             {
                 _useTag = false;

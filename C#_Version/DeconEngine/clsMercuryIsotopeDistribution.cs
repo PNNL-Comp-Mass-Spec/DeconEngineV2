@@ -29,7 +29,7 @@ namespace DeconToolsV2
         /// </summary>
         public int MercurySize
         {
-            get { return mMercuryIsotopeDistribution.MercurySize; }
+            get => mMercuryIsotopeDistribution.MercurySize;
             set
             {
                 if (value <= 0)
@@ -58,14 +58,14 @@ namespace DeconToolsV2
 
         public double ChargeCarrierMass
         {
-            get { return mMercuryIsotopeDistribution.ChargeCarrierMass; }
-            set { mMercuryIsotopeDistribution.ChargeCarrierMass = value; }
+            get => mMercuryIsotopeDistribution.ChargeCarrierMass;
+            set => mMercuryIsotopeDistribution.ChargeCarrierMass = value;
         }
 
         public ApodizationType ApodizationType
         {
-            get { return mMercuryIsotopeDistribution.ApType; }
-            set { mMercuryIsotopeDistribution.ApType = value; }
+            get => mMercuryIsotopeDistribution.ApType;
+            set => mMercuryIsotopeDistribution.ApType = value;
         }
 
         public double Resolution { get; set; }
@@ -75,50 +75,35 @@ namespace DeconToolsV2
         /// </summary>
         public short ChargeState
         {
-            get { return (short) mChargeState; }
+            get => (short) mChargeState;
 
-            set { mChargeState = value; }
+            set => mChargeState = value;
         }
 
         /// <summary>
         ///     Gets average molecular weight of the last call to CalculateDistribution
         /// </summary>
-        public double AverageMolecularMass
-        {
-            get { return mMercuryIsotopeDistribution.AverageMw; }
-        }
+        public double AverageMolecularMass => mMercuryIsotopeDistribution.AverageMw;
 
         /// <summary>
         ///     Gets the monoisotopic molecular weight of the last call to CalculateDistribution
         /// </summary>
-        public double MonoMolecularMass
-        {
-            get { return mMercuryIsotopeDistribution.MonoMw; }
-        }
+        public double MonoMolecularMass => mMercuryIsotopeDistribution.MonoMw;
 
         /// <summary>
         ///     Gets the most abundant MZ of the last call to CalculateDistribution
         /// </summary>
-        public double MostAbundantMZ
-        {
-            get { return mMercuryIsotopeDistribution.MaxPeakMz; }
-        }
+        public double MostAbundantMZ => mMercuryIsotopeDistribution.MaxPeakMz;
 
         /// <summary>
         ///     Gets the mass variance of the last call to CalculateDistribution
         /// </summary>
-        public double MassVariance
-        {
-            get { return mMercuryIsotopeDistribution.MassVariance; }
-        }
+        public double MassVariance => mMercuryIsotopeDistribution.MassVariance;
 
         public clsElementIsotopes ElementIsotopes
         {
-            set
-            {
-                mMercuryIsotopeDistribution.SetElementalIsotopeComposition(
-                    value);
-            }
+            set => mMercuryIsotopeDistribution.SetElementalIsotopeComposition(
+                value);
         }
 
         /// <summary>

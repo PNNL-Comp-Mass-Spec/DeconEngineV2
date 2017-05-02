@@ -155,7 +155,7 @@ namespace Engine.Readers
                 mlng_num_experiments = mobj_wiff_file.GetNumberOfExperiments(mlng_sample_num,mlng_period_num);
             } catch (_com_error& e)
             {
-                System.Console.Error.WriteLine(e.ErrorMessage());
+                Console.Error.WriteLine(e.ErrorMessage());
             }
             try
             {
@@ -163,7 +163,7 @@ namespace Engine.Readers
                 mobj_wiff_file.GetActualPeriodAndCycleFromTime(mlng_sample_num, mlng_experiment_num, 1000*60, &mlng_stop_period, &mlng_stop_cycle);
             }catch (_com_error& e)
             {
-                System.Console.Error.WriteLine(e.ErrorMessage());
+                Console.Error.WriteLine(e.ErrorMessage());
             }
         }
 
@@ -225,20 +225,20 @@ namespace Engine.Readers
             catch (System.Runtime.InteropServices.SEHException *err)
             {
                 if (err != null)
-                    System.Console.Error.WriteLine("Close error with Agilent");
+                    Console.Error.WriteLine("Close error with Agilent");
             }
             catch (System.NullReferenceException *err)
             {
-                System.Console.Error.WriteLine("Here");
+                Console.Error.WriteLine("Here");
             }
             catch (_com_error *e)
             {
                 if (e != null)
-                    System.Console.Error.WriteLine(e.Description());
+                    Console.Error.WriteLine(e.Description());
             }
             catch (char *mesg)
             {
-                System.Console.Error.WriteLine(mesg);
+                Console.Error.WriteLine(mesg);
             }
         }
 

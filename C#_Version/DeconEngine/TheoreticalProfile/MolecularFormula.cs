@@ -82,10 +82,7 @@ namespace Engine.TheoreticalProfile
 
         public string Formula { get; private set; }
 
-        public int NumElements
-        {
-            get { return ElementalComposition.Count; }
-        }
+        public int NumElements => ElementalComposition.Count;
 
         public override string ToString()
         {

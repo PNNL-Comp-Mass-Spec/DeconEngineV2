@@ -136,7 +136,7 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
-            int num_pts = mint_num_points_in_scan;
+            var num_pts = mint_num_points_in_scan;
             return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
         }
 
@@ -186,14 +186,14 @@ namespace Engine.Readers
                 while (mint_file_handle.BaseStream.Position < mint_file_handle.BaseStream.Length &&
                        mint_last_scan_num <= scan_num)
                 {
-                    int numRead = mint_file_handle.Read(marr_buffer, 0, MAX_SCAN_SIZE);
+                    var numRead = mint_file_handle.Read(marr_buffer, 0, MAX_SCAN_SIZE);
 
                     if (numRead < 0)
                         return false;
                     // now go through this loaded data and set up positions first.
                     // start at index 1 because the end of the previous last loaded scan will be at the
                     // return character.
-                    for (int current_index = 1; current_index < numRead; current_index++)
+                    for (var current_index = 1; current_index < numRead; current_index++)
                     {
                         if (marr_buffer[current_index] == '\n')
                         {
@@ -221,18 +221,18 @@ namespace Engine.Readers
 
             if (pos == -1)
             {
-                System.Console.Error.WriteLine("Could not read data for scan = " + scan_num + " at location " +
+                Console.Error.WriteLine("Could not read data for scan = " + scan_num + " at location " +
                                                startOffset);
                 Environment.Exit(1);
             }
 
             // there's an extra carriage return in the end.
-            int num_read = mint_file_handle.Read(marr_buffer, 0, (int) (stopOffset - startOffset));
-            string buffer_string = new string(marr_buffer, 0, (int) (stopOffset - startOffset));
-            double scan_time = Helpers.atof(buffer_string);
+            var num_read = mint_file_handle.Read(marr_buffer, 0, (int) (stopOffset - startOffset));
+            var buffer_string = new string(marr_buffer, 0, (int) (stopOffset - startOffset));
+            var scan_time = Helpers.atof(buffer_string);
 
-            int index = -1;
-            int colNum = 0;
+            var index = -1;
+            var colNum = 0;
             while (index < num_read && colNum != 7)
             {
                 index++;
@@ -243,9 +243,9 @@ namespace Engine.Readers
             if (colNum != 7)
                 return false;
 
-            int num_pts_in_scan = (int) Helpers.atol(buffer_string.Substring(index + 1));
+            var num_pts_in_scan = (int) Helpers.atol(buffer_string.Substring(index + 1));
 
-            int pt_num = 0;
+            var pt_num = 0;
             mzs.Capacity = num_pts_in_scan;
             intensities.Capacity = num_pts_in_scan;
 
@@ -253,18 +253,18 @@ namespace Engine.Readers
             while (index < num_read && marr_buffer[index] != ',')
                 index++;
             index++;
-            int startIndex1 = index;
+            var startIndex1 = index;
 
-            char[] temp = new char[32];
+            var temp = new char[32];
             while (pt_num < num_pts_in_scan && index < num_read)
             {
                 while (index < num_read && marr_buffer[index] != ' ')
                     index++;
-                int startIndex2 = index;
+                var startIndex2 = index;
 
                 Buffer.BlockCopy(marr_buffer, startIndex1, temp, 0, startIndex2 - startIndex1);
                 temp[startIndex2 - startIndex1] = '\0';
-                double mz = Helpers.atof(new string(temp, 0, startIndex2 - startIndex1));
+                var mz = Helpers.atof(new string(temp, 0, startIndex2 - startIndex1));
 
                 while (index < num_read && marr_buffer[index] != ',')
                     index++;
@@ -273,7 +273,7 @@ namespace Engine.Readers
 
                 Buffer.BlockCopy(marr_buffer, startIndex2, temp, 0, startIndex1 - startIndex2 - 1);
                 temp[startIndex1 - startIndex2 - 1] = '\0';
-                int intensity = (int) Helpers.atol(new string(temp, 0, startIndex1 - startIndex2 - 1));
+                var intensity = (int) Helpers.atol(new string(temp, 0, startIndex1 - startIndex2 - 1));
 
                 pt_num++;
                 mzs.Add(mz);
@@ -295,11 +295,11 @@ namespace Engine.Readers
 
         private double GetBasePeakIntensity(List<double> mzs, List<double> intensities)
         {
-            int num_pts = intensities.Count;
+            var num_pts = intensities.Count;
             if (num_pts == 0)
                 return 0;
-            double max_intensity = -1 * double.MaxValue;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            var max_intensity = -1 * double.MaxValue;
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (intensities[pt_num] > max_intensity && mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
@@ -311,24 +311,24 @@ namespace Engine.Readers
 
         private double GetTotalIonCount(List<double> mzs, List<double> intensities)
         {
-            int num_pts = intensities.Count;
+            var num_pts = intensities.Count;
             if (num_pts == 0)
                 return 0;
 
             double intensity_sum = 0;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
                     intensity_sum += intensities[pt_num];
                 }
             }
-            double bg_intensity = intensity_sum / num_pts;
+            var bg_intensity = intensity_sum / num_pts;
 
-            double min_intensity = bg_intensity * BACKGROUND_RATIO_FOR_TIC;
+            var min_intensity = bg_intensity * BACKGROUND_RATIO_FOR_TIC;
 
             intensity_sum = 0;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (intensities[pt_num] > min_intensity && mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
@@ -347,11 +347,11 @@ namespace Engine.Readers
             List<double> scan_mzs;
             List<double> scan_intensities;
 
-            bool centroid = false;
+            var centroid = false;
 
             // remember that we are not going to know the number of spectra to begin with at it will update itself each time.
-            bool got_data = true;
-            int scan_num = 1;
+            var got_data = true;
+            var scan_num = 1;
             while (got_data)
             {
                 // its time to read in that scan.
@@ -362,13 +362,13 @@ namespace Engine.Readers
                 scan_times.Add(scan_num);
                 if (base_peak_tic)
                 {
-                    double bp_intensity = GetBasePeakIntensity(scan_mzs, scan_intensities);
+                    var bp_intensity = GetBasePeakIntensity(scan_mzs, scan_intensities);
 
                     intensities.Add(bp_intensity);
                 }
                 else
                 {
-                    double tic_intensity = GetTotalIonCount(scan_mzs, scan_intensities);
+                    var tic_intensity = GetTotalIonCount(scan_mzs, scan_intensities);
                     intensities.Add(tic_intensity);
                 }
                 scan_num++;

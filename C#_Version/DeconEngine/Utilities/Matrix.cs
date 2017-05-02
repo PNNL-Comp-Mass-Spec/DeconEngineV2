@@ -183,8 +183,8 @@ SCALE_MAT(a,b,s,rows,cols,rowoff,coloff,typea,typeb)
 //             }
         private static void SCALE_MAT(Matrix a, Matrix b, double s, int rows, int cols, int rowoff, int coloff)
         {
-            double[,] adata = a.ptr;
-            double[,] bdata = b.ptr;
+            var adata = a.ptr;
+            var bdata = b.ptr;
             for (int bi = 0, ai = rowoff; bi < rows; bi++, ai++)
             {
                 for (int bj = 0, aj = coloff; bj < cols; bj++, aj++)
@@ -359,9 +359,9 @@ PWISE_MAT(a,b,c,rowsa,colsa,oper,typea,typeb,typec,cast)
 
         private static void PWISE_MAT(Matrix a, Matrix b, Matrix c, int rowsa, int colsa, operation oper)
         {
-            for (int i = 0; i < rowsa; i++)
+            for (var i = 0; i < rowsa; i++)
             {
-                for (int j = 0; j < colsa; j++)
+                for (var j = 0; j < colsa; j++)
                 {
                     switch (oper)
                     {
@@ -659,12 +659,12 @@ MULT_MAT(a,b,c,rowsa,colsa,colsb,typea,typeb,typec)
 
         private static void MULT_MAT(Matrix a, Matrix b, Matrix c, int rowsa, int colsa, int colsb)
         {
-            for (int i = 0; i < rowsa; i++)
+            for (var i = 0; i < rowsa; i++)
             {
-                for (int j = 0; j < colsb; j++)
+                for (var j = 0; j < colsb; j++)
                 {
                     c.ptr[i, j] = 0;
-                    for (int k = 0; k < colsa; k++)
+                    for (var k = 0; k < colsa; k++)
                     {
                         c.ptr[i, j] += a.ptr[i, k] * b.ptr[k, j];
                     }
@@ -951,9 +951,9 @@ Exits and prints error message on invalid MATRIX structure.
                 /* unless swap_row is still zero we must swap two rows */
                 if (swap_row != 0)
                 {
-                    for (int i = 0; i < Adet.cols; i++)
+                    for (var i = 0; i < Adet.cols; i++)
                     {
-                        double swap = a[pivot, i];
+                        var swap = a[pivot, i];
                         a[pivot, i] = a[swap_row, i];
                         a[swap_row, i] = swap;
                     }

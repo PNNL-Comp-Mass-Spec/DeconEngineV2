@@ -175,8 +175,8 @@ namespace DeconToolsV2.HornTransform
 
         public clsElementIsotopes ElementalIsotopeComposition
         {
-            get { return _isotopeFitScorer.ElementalIsotopeComposition; }
-            set { _isotopeFitScorer.ElementalIsotopeComposition = value; }
+            get => _isotopeFitScorer.ElementalIsotopeComposition;
+            set => _isotopeFitScorer.ElementalIsotopeComposition = value;
         }
 
         public void PerformTransform(float backgroundIntensity, float minPeptideIntensity, ref float[] mzs,

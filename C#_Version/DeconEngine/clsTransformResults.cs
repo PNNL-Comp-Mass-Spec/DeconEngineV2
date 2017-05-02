@@ -11,31 +11,27 @@ namespace DeconToolsV2.Results
     /// <remarks>Used by Decon2LS.UI and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
     public class clsTransformResults
     {
-        private int mint_percent_done;
-        private DeconToolsV2.Readers.FileType menmFileType = DeconToolsV2.Readers.FileType.UNDEFINED;
-        internal Engine.Results.LCMSTransformResults mobj_lcms_results;
+        private Readers.FileType menmFileType = Readers.FileType.UNDEFINED;
+        internal LCMSTransformResults mobj_lcms_results;
 
 
-        public string FileName
+        public string FileName => mobj_lcms_results.GetFileName();
+
+        public Readers.FileType FileType
         {
-            get { return mobj_lcms_results.GetFileName(); }
-        }
-
-        public DeconToolsV2.Readers.FileType FileType
-        {
-            get { return menmFileType; }
-            set { menmFileType = value; }
+            get => menmFileType;
+            set => menmFileType = value;
         }
 
         public float[] MonoMasses
         {
             get
             {
-                int numDeisotoped = mobj_lcms_results.GetNumTransforms();
-                float[] mono_masses = new float[numDeisotoped];
-                for (int index = 0; index < numDeisotoped; index++)
+                var numDeisotoped = mobj_lcms_results.GetNumTransforms();
+                var mono_masses = new float[numDeisotoped];
+                for (var index = 0; index < numDeisotoped; index++)
                 {
-                    Engine.HornTransform.IsotopeFitRecord fitRecord = mobj_lcms_results.GetIsoPattern(index);
+                    var fitRecord = mobj_lcms_results.GetIsoPattern(index);
                     mono_masses[index] = (float) fitRecord.MonoMw;
                 }
                 return mono_masses;
@@ -46,11 +42,11 @@ namespace DeconToolsV2.Results
         {
             get
             {
-                int numDeisotoped = mobj_lcms_results.GetNumTransforms();
-                short[] charges = new short[numDeisotoped];
-                for (int index = 0; index < numDeisotoped; index++)
+                var numDeisotoped = mobj_lcms_results.GetNumTransforms();
+                var charges = new short[numDeisotoped];
+                for (var index = 0; index < numDeisotoped; index++)
                 {
-                    Engine.HornTransform.IsotopeFitRecord fitRecord = mobj_lcms_results.GetIsoPattern(index);
+                    var fitRecord = mobj_lcms_results.GetIsoPattern(index);
                     charges[index] = (short)fitRecord.ChargeState;
                 }
                 return charges;
@@ -61,12 +57,12 @@ namespace DeconToolsV2.Results
         {
             get
             {
-                int numDeisotoped = mobj_lcms_results.GetNumTransforms();
-                float[] scans = new float[numDeisotoped];
-                for (int index = 0; index < numDeisotoped; index++)
+                var numDeisotoped = mobj_lcms_results.GetNumTransforms();
+                var scans = new float[numDeisotoped];
+                for (var index = 0; index < numDeisotoped; index++)
                 {
-                    Engine.HornTransform.IsotopeFitRecord fitRecord = mobj_lcms_results.GetIsoPattern(index);
-                    scans[index] = (float) fitRecord.ScanNum;
+                    var fitRecord = mobj_lcms_results.GetIsoPattern(index);
+                    scans[index] = fitRecord.ScanNum;
                 }
                 return scans;
             }
@@ -77,7 +73,7 @@ namespace DeconToolsV2.Results
             mobj_lcms_results = null;
         }
 
-        internal void SetLCMSTransformResults(Engine.Results.LCMSTransformResults results)
+        internal void SetLCMSTransformResults(LCMSTransformResults results)
         {
             mobj_lcms_results = results;
         }
@@ -99,20 +95,30 @@ namespace DeconToolsV2.Results
         public bool IsDeisotoped()
         {
             if (mobj_lcms_results == null)
-                throw new System.Exception("No results stored.");
+                throw new Exception("No results stored.");
             return mobj_lcms_results.IsDeisotoped();
         }
 
-        public void GetRawDataSortedInIntensity(ref DeconToolsV2.Results.clsLCMSPeak[] lcms_peaks)
+        [Obsolete("Use GetRawDataSortedInIntensity that works on Engine.Results.LcmsPeak")]
+        public void GetRawDataSortedInIntensity(out clsLCMSPeakOld[] lcms_peaks)
+        {
+            LcmsPeak[] lcmsPeaks;
+
+            GetRawDataSortedInIntensity(out lcmsPeaks);
+
+            lcms_peaks = ConvertLcmsPeaksToLCMSPeaks(lcmsPeaks);
+        }
+
+        public void GetRawDataSortedInIntensity(out LcmsPeak[] lcmsPeaks)
         {
             if (mobj_lcms_results == null)
             {
-                lcms_peaks = null;
+                lcmsPeaks = null;
                 return;
             }
 
-            List<Engine.Results.LcmsPeak> vectPeaks = new List<LcmsPeak>();
-            int num_peaks = mobj_lcms_results.GetNumPeaks();
+            var vectPeaks = new List<LcmsPeak>();
+            var num_peaks = mobj_lcms_results.GetNumPeaks();
             vectPeaks.Capacity = num_peaks;
             mobj_lcms_results.GetAllPeaks(out vectPeaks);
 
@@ -128,7 +134,7 @@ namespace DeconToolsV2.Results
             // Used by the sort algorithm to sort List of peaks in descending order of mdbl_intensity.
             vectPeaks.Sort((x, y) =>
             {
-                int result = y.Intensity.CompareTo(x.Intensity);
+                var result = y.Intensity.CompareTo(x.Intensity);
                 if (result == 0)
                 {
                     result = y.Mz.CompareTo(x.Mz);
@@ -136,68 +142,68 @@ namespace DeconToolsV2.Results
                 return result;
             });
 
-            lcms_peaks = new DeconToolsV2.Results.clsLCMSPeak[num_peaks];
-            int min_scan = mobj_lcms_results.GetMinScan();
-            int max_scan = mobj_lcms_results.GetMaxScan();
-            Engine.Results.LcmsPeak pk;
+            lcmsPeaks = new LcmsPeak[num_peaks];
 
-            for (int pk_num = 0; pk_num < num_peaks; pk_num++)
+            for (var pk_num = 0; pk_num < num_peaks; pk_num++)
             {
-                mint_percent_done = (pk_num * 100) / num_peaks;
-                pk = vectPeaks[pk_num];
-                lcms_peaks[pk_num] = new clsLCMSPeak(pk.ScanNum, (float)pk.Mz, (float)pk.Intensity);
+                var pk = vectPeaks[pk_num];
+                lcmsPeaks[pk_num] = new LcmsPeak(pk.ScanNum, pk.Mz, pk.Intensity);
             }
-            mint_percent_done = 100;
         }
 
-        public void GetRawData(ref DeconToolsV2.Results.clsLCMSPeak[] lcms_peaks)
+        [Obsolete("Use GetRawDataSortedInIntensity that works on Engine.Results.LcmsPeak")]
+        public void GetRawData(out clsLCMSPeakOld[] lcms_peaks)
+        {
+            LcmsPeak[] lcmsPeaks;
+
+            GetRawDataSortedInIntensity(out lcmsPeaks);
+
+            lcms_peaks = ConvertLcmsPeaksToLCMSPeaks(lcmsPeaks);
+        }
+
+        public void GetRawData(out LcmsPeak[] lcmsPeaks)
         {
             if (mobj_lcms_results == null)
             {
-                lcms_peaks = null;
+                lcmsPeaks = null;
                 return;
             }
 
-            int num_peaks = mobj_lcms_results.GetNumPeaks();
-            lcms_peaks = new DeconToolsV2.Results.clsLCMSPeak[num_peaks];
-            int min_scan = mobj_lcms_results.GetMinScan();
-            int max_scan = mobj_lcms_results.GetMaxScan();
-            Engine.Results.LcmsPeak pk;
+            var num_peaks = mobj_lcms_results.GetNumPeaks();
+            lcmsPeaks = new LcmsPeak[num_peaks];
 
-            for (int pk_num = 0; pk_num < num_peaks; pk_num++)
+            for (var pk_num = 0; pk_num < num_peaks; pk_num++)
             {
-                mint_percent_done = (pk_num * 100) / num_peaks;
-                pk = mobj_lcms_results.GetPeak(pk_num);
-                lcms_peaks[pk_num] = new clsLCMSPeak(pk.ScanNum, (float)pk.Mz, (float)pk.Intensity);
+                var pk = mobj_lcms_results.GetPeak(pk_num);
+                lcmsPeaks[pk_num] = new LcmsPeak(pk.ScanNum, pk.Mz, pk.Intensity);
             }
-            mint_percent_done = 100;
         }
 
-        public void GetSIC(int min_scan, int max_scan, float mz, float mz_tolerance, ref float[] peak_intensities)
+        public void GetSIC(int min_scan, int max_scan, float mz, float mz_tolerance, out float[] peak_intensities)
         {
-            List<double> vect_intensities = new List<double>();
+            List<double> vect_intensities;
             mobj_lcms_results.GetSIC(min_scan, max_scan, mz - mz_tolerance, mz + mz_tolerance, out vect_intensities);
-            int num_scans = max_scan - min_scan + 1;
+            var num_scans = max_scan - min_scan + 1;
             peak_intensities = new float[num_scans];
 
-            for (int scan_num = min_scan; scan_num <= max_scan; scan_num++)
+            for (var scan_num = min_scan; scan_num <= max_scan; scan_num++)
             {
                 peak_intensities[scan_num - min_scan] = (float)vect_intensities[scan_num - min_scan];
             }
         }
 
-        public void GetScanPeaks(int scan_num, ref float[] peak_mzs, ref float[] peak_intensities)
+        public void GetScanPeaks(int scan_num, out float[] peak_mzs, out float[] peak_intensities)
         {
-            List<double> vect_mzs = new List<double>();
-            List<double> vect_intensities = new List<double>();
+            List<double> vect_mzs;
+            List<double> vect_intensities;
 
             mobj_lcms_results.GetScanPeaks(scan_num, out vect_mzs, out vect_intensities);
 
-            int num_pts = vect_intensities.Count;
+            var num_pts = vect_intensities.Count;
             peak_mzs = new float[num_pts];
             peak_intensities = new float[num_pts];
 
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 peak_mzs[pt_num] = (float)vect_mzs[pt_num];
                 peak_intensities[pt_num] = (float)vect_intensities[pt_num];
@@ -213,7 +219,7 @@ namespace DeconToolsV2.Results
         {
             if (mobj_lcms_results == null)
             {
-                mobj_lcms_results = new Engine.Results.LCMSTransformResults();
+                mobj_lcms_results = new LCMSTransformResults();
             }
 
             mobj_lcms_results.LoadResults(fileName);
@@ -226,10 +232,22 @@ namespace DeconToolsV2.Results
 
         public void WriteScanResults(string fileName)
         {
-            if (menmFileType != DeconToolsV2.Readers.FileType.ICR2LSRAWDATA)
+            if (menmFileType != Readers.FileType.ICR2LSRAWDATA)
                 mobj_lcms_results.SaveScanResults(fileName, false);
             else
                 mobj_lcms_results.SaveScanResults(fileName, true);
+        }
+
+        [Obsolete("Conversion class; only used by obsolete methods")]
+        private clsLCMSPeakOld[] ConvertLcmsPeaksToLCMSPeaks(IReadOnlyList<LcmsPeak> lcmsPeaks)
+        {
+            var lcms_peaks = new clsLCMSPeakOld[lcmsPeaks.Count];
+
+            for (var i = 0; i < lcmsPeaks.Count; i++)
+            {
+                lcms_peaks[i] = new clsLCMSPeakOld(lcmsPeaks[i].ScanNum, lcmsPeaks[i].Mz, lcmsPeaks[i].Intensity);
+            }
+            return lcms_peaks;
         }
     }
 }

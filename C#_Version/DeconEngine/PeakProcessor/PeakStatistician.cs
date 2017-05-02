@@ -73,22 +73,22 @@ namespace Engine.PeakProcessing
 
         public void MovingAverageFilter(ref List<double> vect_mzs, ref List<double> vect_intensities, int num_points)
         {
-            List<double> intensities = new List<double>();
+            var intensities = new List<double>();
 
             if (num_points % 2 == 0)
             {
                 num_points += 1;
             }
 
-            int range = num_points / 2;
+            var range = num_points / 2;
             double sum = 0;
 
             intensities.Add(vect_intensities[0]);
             intensities.Add((vect_intensities[0] + vect_intensities[1]) / 2);
 
-            for (int i = num_points - 1; i < vect_mzs.Count - num_points + 1; i++)
+            for (var i = num_points - 1; i < vect_mzs.Count - num_points + 1; i++)
             {
-                for (int j = -range; j < range + 1; j++)
+                for (var j = -range; j < range + 1; j++)
                 {
                     sum += vect_intensities[i + j];
                 }
@@ -97,7 +97,7 @@ namespace Engine.PeakProcessing
                 sum = 0;
             }
 
-            for (int i = 0; i < intensities.Count; i++)
+            for (var i = 0; i < intensities.Count; i++)
             {
                 vect_intensities[i] = intensities[i];
             }

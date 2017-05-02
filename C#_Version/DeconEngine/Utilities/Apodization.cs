@@ -157,9 +157,9 @@ namespace Engine.Utilities
         {
             float val1 = 0;
             long li;
-            float A = 1.0f;
-            double temp1 = 0.5 * (double) (stopIndex - startIndex - 1);
-            double temp2 = 0.5 * (double) (stopIndex - startIndex + 1);
+            var A = 1.0f;
+            var temp1 = 0.5 * (double) (stopIndex - startIndex - 1);
+            var temp2 = 0.5 * (double) (stopIndex - startIndex + 1);
 
             for (li = startIndex; li <= stopIndex; li++)
             {
@@ -177,11 +177,11 @@ namespace Engine.Utilities
         public static void Apodize(double minX, double maxX, double sampleRate, bool invert, ApodizationType type,
             float[] vectIntensities, int numPts, int apexPosition = 50)
         {
-            int startIndex = (int) (minX * sampleRate);
-            int stopIndex = (int) (maxX * sampleRate);
+            var startIndex = (int) (minX * sampleRate);
+            var stopIndex = (int) (maxX * sampleRate);
             if (startIndex > stopIndex)
             {
-                int temp = startIndex;
+                var temp = startIndex;
                 startIndex = stopIndex;
                 stopIndex = startIndex;
             }
@@ -190,12 +190,12 @@ namespace Engine.Utilities
 
             if (apexPosition != 50)
             {
-                int apexIndex = startIndex + ((stopIndex - startIndex) * apexPosition) / 100;
-                for (int index = startIndex; index < apexIndex; index++)
+                var apexIndex = startIndex + ((stopIndex - startIndex) * apexPosition) / 100;
+                for (var index = startIndex; index < apexIndex; index++)
                 {
                     vectIntensities[index] = vectIntensities[index] * (index - startIndex) / (apexIndex - startIndex);
                 }
-                for (int index = apexIndex; index < stopIndex; index++)
+                for (var index = apexIndex; index < stopIndex; index++)
                 {
                     vectIntensities[index] = vectIntensities[index] * (stopIndex - index) / (stopIndex - apexIndex);
                 }

@@ -22,7 +22,7 @@ namespace DeconEngine
         //Step 4: Report background intensity level
         public static double GetBackgroundLevel(List<double> intensities, float maxIntensity)
         {
-            int numPts = intensities.Count;
+            var numPts = intensities.Count;
             double average = 0;
 
             if (numPts != 0)
@@ -31,15 +31,15 @@ namespace DeconEngine
                 average = GetAverage(intensities, maxIntensity);
 
                 //step 2
-                double stdDev = GetStandardDev(intensities, maxIntensity);
+                var stdDev = GetStandardDev(intensities, maxIntensity);
 
                 //step 3:
-                double lowLevel = average - (stdDev * 5);
-                double highLevel = average + (stdDev * 5);
+                var lowLevel = average - (stdDev * 5);
+                var highLevel = average + (stdDev * 5);
 
-                int numPtsUsed = 0;
+                var numPtsUsed = 0;
                 average = 0.0;
-                for (int i = 0; i < numPts; i++)
+                for (var i = 0; i < numPts; i++)
                 {
                     if (lowLevel <= intensities[i] && intensities[i] <= highLevel)
                     {
@@ -56,7 +56,7 @@ namespace DeconEngine
 
         public static double GetBackgroundLevel(float[] intensities, float maxIntensity)
         {
-            int numPts = intensities.Length;
+            var numPts = intensities.Length;
             double average = 0;
 
             if (numPts != 0)
@@ -65,15 +65,15 @@ namespace DeconEngine
                 average = GetAverage(intensities, maxIntensity);
 
                 //step 2
-                double stdDev = GetStandardDev(intensities, maxIntensity);
+                var stdDev = GetStandardDev(intensities, maxIntensity);
 
                 //step 3:
-                double lowLevel = average - (stdDev * 5);
-                double highLevel = average + (stdDev * 5);
+                var lowLevel = average - (stdDev * 5);
+                var highLevel = average + (stdDev * 5);
 
-                int numPtsUsed = 0;
+                var numPtsUsed = 0;
                 average = 0.0;
-                for (int i = 0; i < numPts; i++)
+                for (var i = 0; i < numPts; i++)
                 {
                     if (lowLevel <= intensities[i] && intensities[i] <= highLevel)
                     {
@@ -93,16 +93,16 @@ namespace DeconEngine
         // function calculating standard deviation
         public static double GetStandardDev(List<double> intensities, float maxIntensity)
         {
-            int numPts = intensities.Count;
+            var numPts = intensities.Count;
             double stdDev = 0;
-            int numPtsUsed = 0;
+            var numPtsUsed = 0;
 
             if (numPts != 0)
             {
                 double sum = 0;
                 double STD_DEV = 0; // returning zero's
 
-                for (int i = 0; i < numPts; i++)
+                for (var i = 0; i < numPts; i++)
                 {
                     if (intensities[i] <= maxIntensity && intensities[i] != 0)
                     {
@@ -120,16 +120,16 @@ namespace DeconEngine
         // function calculating standard deviation
         public static double GetStandardDev(float[] intensities, float maxIntensity)
         {
-            int numPts = intensities.Length;
+            var numPts = intensities.Length;
             double stdDev = 0;
-            int numPtsUsed = 0;
+            var numPtsUsed = 0;
 
             if (numPts != 0)
             {
                 double sum = 0;
                 double STD_DEV = 0; // returning zero's
 
-                for (int i = 0; i < numPts; i++)
+                for (var i = 0; i < numPts; i++)
                 {
                     if (intensities[i] <= maxIntensity && intensities[i] != 0)
                     {
@@ -181,7 +181,10 @@ namespace DeconEngine
 
         }
 
-        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+        /// <summary>
+        /// Get TIC
+        /// </summary>
+        /// <remarks> DeconTools for ICR2LSRun and IMFRun; also used by DeconMSn</remarks>
         public static double GetTIC(double min_mz, double max_mz, ref List<double> mzs, ref List<double> intensities,
             float minIntensity, ref double bpi, ref double bp_mz)
         {

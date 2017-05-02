@@ -122,7 +122,7 @@ namespace Engine.Readers
             return Directory.Exists(path);
         }
 
-        public RawData()
+        protected RawData()
         {
             mobj_calibrator = null;
         }
@@ -148,15 +148,14 @@ namespace Engine.Readers
             List<double> allMZs;
             List<double> allIntensities;
             GetRawData(out allMZs, out allIntensities, scan, centroid);
-            int numPts = allMZs.Count;
+            var numPts = allMZs.Count;
             if (numPts <= 1)
             {
-                System.Console.Error.WriteLine(scan);
+                Console.Error.WriteLine(scan);
                 throw new System.Exception("mz_vector empty in GetRawData in RawData.cpp");
-                return;
             }
-            int startIndex = PeakIndex.GetNearestBinary(allMZs, min_mz, 0, numPts - 1);
-            int stopIndex = PeakIndex.GetNearestBinary(allMZs, max_mz, 0, numPts - 1);
+            var startIndex = PeakIndex.GetNearestBinary(allMZs, min_mz, 0, numPts - 1);
+            var stopIndex = PeakIndex.GetNearestBinary(allMZs, max_mz, 0, numPts - 1);
             if ((stopIndex - startIndex) <= 1) //nothing in this m/z range
                 return;
 
@@ -419,11 +418,11 @@ namespace Engine.Readers
         public virtual void GetSummedSpectra(out List<double> mzs, out List<double> intensities, int scan_num,
             int scan_range)
         {
-            Engine.Utilities.Interpolation interpolator = new Interpolation();
-            bool centroid = false;
+            var interpolator = new Interpolation();
+            var centroid = false;
             // Get scan info
             GetRawData(out mzs, out intensities, scan_num, centroid);
-            int num_mzs = mzs.Count;
+            var num_mzs = mzs.Count;
             const int numZeroFills = 3;
             if (num_mzs > numZeroFills)
             {
@@ -434,9 +433,9 @@ namespace Engine.Readers
                     //recheck
                     if (num_mzs > numZeroFills)
                     {
-                        int demarcationPoint = (int) ((mzs.Count * 1.0) / 1.414);
-                        double mzBin = mzs[demarcationPoint + 1] - mzs[demarcationPoint];
-                        double minMZBin = mzs[1] - mzs[0];
+                        var demarcationPoint = (int) ((mzs.Count * 1.0) / 1.414);
+                        var mzBin = mzs[demarcationPoint + 1] - mzs[demarcationPoint];
+                        var minMZBin = mzs[1] - mzs[0];
 
                         // Do not allow mzBin to be too small
                         if (mzBin < 0.00001)
@@ -454,8 +453,8 @@ namespace Engine.Readers
                             mzBin = 0.1;
 
                         //checking range
-                        double minMZ = mzs[0];
-                        double maxMZ = mzs[num_mzs - 1];
+                        var minMZ = mzs[0];
+                        var maxMZ = mzs[num_mzs - 1];
                         GetSummedSpectra(out mzs, out intensities, scan_num, scan_range, minMZ, maxMZ, mzBin);
                     }
                 }
@@ -474,12 +473,12 @@ namespace Engine.Readers
         public virtual void GetSummedSpectra(out List<double> mzs, out List<double> intensities,
             int scan, int scan_range, double min_mz, double max_mz)
         {
-            Engine.Utilities.Interpolation interpolator = new Interpolation();
-            bool centroid = false;
+            var interpolator = new Interpolation();
+            var centroid = false;
 
             // Get scan info
             GetRawData(out mzs, out intensities, scan, min_mz, max_mz, centroid);
-            int num_mzs = mzs.Count;
+            var num_mzs = mzs.Count;
             const int numZeroFills = 3;
             if (num_mzs > numZeroFills)
             {
@@ -491,9 +490,9 @@ namespace Engine.Readers
                     // recheck
                     if (num_mzs > numZeroFills)
                     {
-                        int demarcationPoint = (int) ((mzs.Count * 1.0) / 1.414);
-                        double mzBin = mzs[demarcationPoint + 1] - mzs[demarcationPoint];
-                        double minMZBin = mzs[1] - mzs[0];
+                        var demarcationPoint = (int) ((mzs.Count * 1.0) / 1.414);
+                        var mzBin = mzs[demarcationPoint + 1] - mzs[demarcationPoint];
+                        var minMZBin = mzs[1] - mzs[0];
 
                         // Do not allow mzBin to be too small
                         if (mzBin < 0.00001)
@@ -531,23 +530,22 @@ namespace Engine.Readers
         {
             mzs = new List<double>();
             intensities = new List<double>();
-            int minDatasetScan = GetFirstScanNum();
-            int maxDatasetScan = GetLastScanNum();
+            var minDatasetScan = GetFirstScanNum();
+            var maxDatasetScan = GetLastScanNum();
 
-            List<double> scan_mzs = new List<double>();
-            List<double> scan_intensities = new List<double>();
-            List<double> interpolatedIntensities;
+            var scan_mzs = new List<double>();
+            var scan_intensities = new List<double>();
 
             if (max_mz <= min_mz)
             {
                 return;
             }
 
-            int num_bins = (int) ((max_mz - min_mz) / mz_bin);
-            double mz = min_mz;
+            var num_bins = (int) ((max_mz - min_mz) / mz_bin);
+            var mz = min_mz;
             try
             {
-                for (int bin_num = 0; bin_num < num_bins; bin_num++)
+                for (var bin_num = 0; bin_num < num_bins; bin_num++)
                 {
                     mzs.Add(mz);
                     intensities.Add(0);
@@ -565,14 +563,15 @@ namespace Engine.Readers
             }
 
             // first read current scan and move to the left
-            int currentScan = scan;
-            int numScansSummed = 0;
-            bool centroid = false;
+            var currentScan = scan;
+            var numScansSummed = 0;
+            var centroid = false;
 
             try
             {
                 // numScansSummed needs to be 1 + the scan range because we are summing the first
                 // scan here.
+                List<double> interpolatedIntensities;
                 while (currentScan >= minDatasetScan && numScansSummed < scan_range + 1)
                 {
                     if (!IsMSScan(currentScan))
@@ -590,7 +589,7 @@ namespace Engine.Readers
                         continue;
                     }
 
-                    Engine.Utilities.Interpolation scan_interpolator = new Interpolation();
+                    var scan_interpolator = new Interpolation();
                     Interpolation.ZeroFillMissing(ref scan_mzs, ref scan_intensities, 3);
                     if (scan_intensities.Count <= 3) //re-check
                     {
@@ -601,8 +600,8 @@ namespace Engine.Readers
                     scan_interpolator.Spline(scan_mzs, scan_intensities, 0, 0);
                     scan_interpolator.Splint(scan_mzs, scan_intensities, mzs, out interpolatedIntensities);
 
-                    double maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
-                    for (int bin_num = 0; bin_num < num_bins; bin_num++)
+                    var maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
+                    for (var bin_num = 0; bin_num < num_bins; bin_num++)
                     {
                         if (bin_num * mz_bin + min_mz >= maxScanMz)
                             break;
@@ -631,7 +630,7 @@ namespace Engine.Readers
                         continue;
                     }
 
-                    Engine.Utilities.Interpolation scan_interpolator = new Interpolation();
+                    var scan_interpolator = new Interpolation();
                     Interpolation.ZeroFillMissing(ref scan_mzs, ref scan_intensities, 3);
                     if (scan_intensities.Count <= 3) //re-check
                     {
@@ -645,8 +644,8 @@ namespace Engine.Readers
                     scan_interpolator.Splint(scan_mzs, scan_intensities, mzs, out interpolatedIntensities);
                         //[gord] this might be the chokepoint for why summing takes so long
 
-                    double maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
-                    for (int bin_num = 0; bin_num < num_bins; bin_num++)
+                    var maxScanMz = scan_mzs[(int) scan_mzs.Count - 1];
+                    for (var bin_num = 0; bin_num < num_bins; bin_num++)
                     {
                         if (bin_num * mz_bin + min_mz >= maxScanMz)
                             break;

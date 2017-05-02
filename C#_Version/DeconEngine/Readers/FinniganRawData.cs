@@ -214,7 +214,7 @@ namespace Engine.Readers
             MSFileReader_XRawfile temp = new MSFileReader_XRawfileClass();
             m_xraw2_class = (IXRawfile3)temp;
 
-            int err = 0;
+            var err = 0;
             try
             {
                 m_xraw2_class.Open(marr_rawfileName);
@@ -264,18 +264,18 @@ namespace Engine.Readers
             if (scan_num == mint_last_scan_num)
                 return mdbl_signal_range;
 
-            int lastWholeNumber = 0;
+            var lastWholeNumber = 0;
             double signal_range = 0;
             object varMassList = null;
             object varPeakFlags = null;
-            int nArraySize = 0;
+            var nArraySize = 0;
 
-            string bstr = "";
+            var bstr = "";
             double peak_width = 0;
 
-            int scanN = scan_num;
+            var scanN = scan_num;
 
-            int centroidFlag = 0;
+            var centroidFlag = 0;
             if (centroid)
                 centroidFlag = 1;
 
@@ -335,13 +335,13 @@ namespace Engine.Readers
 
             if (nArraySize > 0)
             {
-                double[,] peaks = (double[,]) varMassList;
-                double min_intensity = double.MaxValue;
-                double max_intensity = double.MinValue;
+                var peaks = (double[,]) varMassList;
+                var min_intensity = double.MaxValue;
+                var max_intensity = double.MinValue;
 
                 for (long j = 0; j < nArraySize; j++)
                 {
-                    double intensity = peaks[1, j];
+                    var intensity = peaks[1, j];
                     if (intensity > max_intensity)
                         max_intensity = intensity;
                     if (intensity < min_intensity)
@@ -372,10 +372,10 @@ namespace Engine.Readers
 
         public override int GetParentScan(int scan_num)
         {
-            int msN_level = GetMSLevel(scan_num);
-            int level = msN_level;
+            var msN_level = GetMSLevel(scan_num);
+            var level = msN_level;
 
-            int i = 0;
+            var i = 0;
 
             while (level >= msN_level)
             {
@@ -388,7 +388,7 @@ namespace Engine.Readers
 
         public override bool IsProfileScan(int scan_num)
         {
-            int is_profile_scan = 0;
+            var is_profile_scan = 0;
             m_xraw2_class.IsProfileScanForScanNum(scan_num, ref is_profile_scan);
             if (is_profile_scan == 1)
                 return true;
@@ -420,7 +420,7 @@ namespace Engine.Readers
         {
             object var_value = null;
             m_xraw2_class.GetTrailerExtraValueForScanNum(scan_num, "Ion Injection Time (ms):", ref var_value);
-            double time = 0.0;
+            var time = 0.0;
             if (var_value is double)
                 time = (double) var_value;
             else if (var_value is float)
@@ -430,7 +430,7 @@ namespace Engine.Readers
 
         public override double GetTICForScan(int scan_num)
         {
-            int num_packets = 0;
+            var num_packets = 0;
             double start_time = 0;
             double low_mass = 0;
             double high_mass = 0;
@@ -438,8 +438,8 @@ namespace Engine.Readers
             double base_peak = 0;
             double base_intensity = 0;
             double frequency = 0;
-            int unif_time = 0;
-            int num_channels = 0;
+            var unif_time = 0;
+            var num_channels = 0;
 
             m_xraw2_class.GetScanHeaderInfoForScanNum(scan_num, ref num_packets, ref start_time, ref low_mass,
                 ref high_mass, ref tic, ref base_peak,
@@ -450,7 +450,7 @@ namespace Engine.Readers
 
         public override int GetMSLevel(int scan_num)
         {
-            int ms_level = 1;
+            var ms_level = 1;
 
             //gets the filter string
             var filterString = GetScanFilterString(scan_num);
@@ -585,7 +585,7 @@ namespace Engine.Readers
         {
             //Returns true if the scan is a MS-level scan
 
-            int ms_level = GetMSLevel(scan_num);
+            var ms_level = GetMSLevel(scan_num);
             if (ms_level == 1)
             {
                 var filterString = GetScanFilterString(scan_num);
@@ -633,19 +633,19 @@ namespace Engine.Readers
                 return parent_mz;
             }
 
-            int ms_level = GetMSLevel(scan_num);
+            var ms_level = GetMSLevel(scan_num);
 
-            int parent_count = 0;
+            var parent_count = 0;
 
-            string ch_mz = "";
+            var ch_mz = "";
             if (ms_level == 2)
             {
-                for (int chNum = 0; chNum < bstr_filter.Length; chNum++)
+                for (var chNum = 0; chNum < bstr_filter.Length; chNum++)
                 {
                     if (bstr_filter[chNum] == '2')
                     {
                         chNum++;
-                        int mzIndex = 0;
+                        var mzIndex = 0;
                         while (bstr_filter[chNum] != '@')
                         {
                             ch_mz += bstr_filter[chNum];
@@ -673,7 +673,7 @@ namespace Engine.Readers
                 while (bstr_filter[chNum] != ' ')
                     chNum ++;
 
-                int mzIndex = 0;
+                var mzIndex = 0;
                 while (bstr_filter[chNum] != '@')
                 {
                     ch_mz += bstr_filter[chNum];
@@ -693,18 +693,18 @@ namespace Engine.Readers
             intensities = new List<double>();
             mzs = new List<double>();
             mint_last_scan_num = scan_num;
-            int lastWholeNumber = 0;
+            var lastWholeNumber = 0;
 
             object varMassList = null;
             object varPeakFlags = null;
-            int nArraySize = 0;
+            var nArraySize = 0;
 
-            string bstr = "";
+            var bstr = "";
             double peak_width = 0;
 
-            int scanN = scan_num;
+            var scanN = scan_num;
 
-            int centroidFlag = 0;
+            var centroidFlag = 0;
             if (centroid)
                 centroidFlag = 1;
 
@@ -728,10 +728,10 @@ namespace Engine.Readers
 
                     for (var i = 0; i <= nArraySize - 1; i++)
                     {
-                        massList[0, i] = massIntensityLabels[0, i];
                         // m/z
-                        massList[1, i] = massIntensityLabels[1, i];
+                        massList[0, i] = massIntensityLabels[0, i];
                         // Intensity
+                        massList[1, i] = massIntensityLabels[1, i];
                     }
                 }
                 else
@@ -754,7 +754,7 @@ namespace Engine.Readers
                     ref nArraySize); // size of mass list array
             }
 
-            int num_packets = 0;
+            var num_packets = 0;
             double start_time = 0;
             double low_mass = 0;
             double high_mass = 0;
@@ -762,15 +762,16 @@ namespace Engine.Readers
             double base_peak = 0;
             double base_intensity = 0;
             double frequency = 0;
-            int unif_time = 0;
-            int num_channels = 0;
+            var unif_time = 0;
+            var num_channels = 0;
 
             m_xraw2_class.GetScanHeaderInfoForScanNum(scanN, ref num_packets, ref start_time, ref low_mass,
                 ref high_mass, ref tic, ref base_peak, ref base_intensity, ref num_channels, ref unif_time, ref frequency);
             mdbl_last_scan_time = start_time;
+
             if (nArraySize > 0)
             {
-                double[,] peaks = (double[,]) varMassList;
+                var peaks = (double[,]) varMassList;
 
                 if (nArraySize < (int) intensities.Capacity)
                 {
@@ -778,8 +779,9 @@ namespace Engine.Readers
                     mzs.Capacity = nArraySize;
                 }
 
-                double min_intensity = double.MaxValue;
-                double max_intensity = double.MinValue;
+                var min_intensity = double.MaxValue;
+                var max_intensity = double.MinValue;
+                double lastMz = 0;
 
                 for (long j = 0; j < nArraySize; j++)
                 {
@@ -787,14 +789,25 @@ namespace Engine.Readers
                     {
                         break;
                     }
-                    double intensity = peaks[1, j];
+                    var intensity = peaks[1, j];
                     if (intensity > max_intensity)
                         max_intensity = intensity;
                     if (intensity < min_intensity)
                         min_intensity = intensity;
 
-                    mzs.Add(peaks[0, j]);
-                    intensities.Add(intensity);
+                    if (Math.Abs(peaks[0, j] - lastMz) < double.Epsilon)
+                    {
+                        // Duplicate m/z value; this is very rare
+                        // Occurs in scan 3535 in QC_Shew_16_01-500ng-start-1_28Apr17_Merry_16-11-25.raw, mass 669.4859
+                        // Use the higher intensity
+                        intensities[intensities.Count-1] = Math.Max(intensities[intensities.Count - 1], intensity);
+                    }
+                    else
+                    {
+                        mzs.Add(peaks[0, j]);
+                        intensities.Add(intensity);
+                        lastMz = peaks[0, j];
+                    }
                 }
 
                 mdbl_signal_range = (max_intensity - min_intensity);
@@ -809,7 +822,7 @@ namespace Engine.Readers
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
-            int num_packets = 0;
+            var num_packets = 0;
             double start_time = 0;
             double low_mass = 0;
             double high_mass = 0;
@@ -817,12 +830,12 @@ namespace Engine.Readers
             double base_peak = 0;
             double base_intensity = 0;
             double frequency = 0;
-            int unif_time = 0;
-            int num_channels = 0;
+            var unif_time = 0;
+            var num_channels = 0;
             intensities = new List<double>();
             scan_times = new List<double>();
 
-            for (int scan_num = mlong_spectra_num_first; scan_num <= mlong_spectra_num_last; scan_num++)
+            for (var scan_num = mlong_spectra_num_first; scan_num <= mlong_spectra_num_last; scan_num++)
             {
                 m_xraw2_class.GetScanHeaderInfoForScanNum(scan_num, ref num_packets, ref start_time, ref low_mass,
                     ref high_mass, ref tic, ref base_peak,

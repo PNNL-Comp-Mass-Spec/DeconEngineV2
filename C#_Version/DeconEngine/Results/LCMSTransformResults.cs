@@ -192,10 +192,9 @@ namespace Engine.Results
             return new LcmsPeak(_peaksList[peakNum]);
         }
 
-        public IsotopeFitRecord GetIsoPattern(int isoNum)
+        public clsHornTransformResults GetIsoPattern(int isoNum)
         {
-            //return mdeque_transforms.GetPoint(iso_num);
-            return new IsotopeFitRecord(_transforms[isoNum]);
+            return _transforms[isoNum];
         }
 
         ~LCMSTransformResults()
@@ -326,9 +325,11 @@ namespace Engine.Results
                     _scanPeakIndicesDict.Add(scan, _numPeaksStored);
                 }
                 _numPeaksStored += numPeaks;
+                
                 // Create LCMSPeaks.
-                var lcPeaks = new List<LcmsPeak>();
-                lcPeaks.Capacity = peaks.Count;
+                var lcPeaks = new List<LcmsPeak> {
+                    Capacity = peaks.Count
+                };
                 lcPeaks.AddRange(peaks.Select(x => new LcmsPeak
                 {
                     Mz = x.Mz,
@@ -358,17 +359,18 @@ namespace Engine.Results
                 }
                 _peaksList.AddRange(lcPeaks);
             }
-            catch (OutOfMemoryException e)
+            catch (OutOfMemoryException)
             {
                 _peaksList.Clear();
                 _transforms.Clear();
                 _dataInMemoryIsIncomplete = true;
 #if DEBUG
-                throw e;
+                throw;
 #endif
             }
         }
 
+        [Obsolete("Appears unused")]
         public void AddTransforms(List<clsHornTransformResults> fitResults)
         {
             try
@@ -384,6 +386,9 @@ namespace Engine.Results
                     {
                         foreach (var record in fitResults)
                         {
+                            var result = new clsHornTransformResults(record);
+                            // result.WriteToBinaryStream(bWriter);
+
                             new IsotopeFitRecord(record).WriteToBinaryStream(bWriter);
                         }
                     }

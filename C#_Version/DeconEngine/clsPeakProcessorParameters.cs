@@ -24,44 +24,39 @@ namespace DeconToolsV2.Peaks
         private double mdbl_PeakBackgroundRatio;
         private bool mbln_thresholded_data;
         private PEAK_FIT_TYPE menm_FitType;
-        private bool mbln_writePeaksToTextFile;
 
         public virtual Object Clone()
         {
-            clsPeakProcessorParameters new_params = new clsPeakProcessorParameters(mdbl_SNThreshold,
+            var new_params = new clsPeakProcessorParameters(mdbl_SNThreshold,
                 mdbl_PeakBackgroundRatio, mbln_thresholded_data, menm_FitType);
             return new_params;
         }
 
         public bool ThresholdedData
         {
-            get { return mbln_thresholded_data; }
-            set { mbln_thresholded_data = value; }
+            get => mbln_thresholded_data;
+            set => mbln_thresholded_data = value;
         }
 
         public double PeakBackgroundRatio
         {
-            get { return mdbl_PeakBackgroundRatio; }
-            set { mdbl_PeakBackgroundRatio = value; }
+            get => mdbl_PeakBackgroundRatio;
+            set => mdbl_PeakBackgroundRatio = value;
         }
 
         public double SignalToNoiseThreshold
         {
-            get { return mdbl_SNThreshold; }
-            set { mdbl_SNThreshold = value; }
+            get => mdbl_SNThreshold;
+            set => mdbl_SNThreshold = value;
         }
 
         public PEAK_FIT_TYPE PeakFitType
         {
-            get { return menm_FitType; }
-            set { menm_FitType = value; }
+            get => menm_FitType;
+            set => menm_FitType = value;
         }
 
-        public bool WritePeaksToTextFile
-        {
-            get { return mbln_writePeaksToTextFile; }
-            set { mbln_writePeaksToTextFile = value; }
-        }
+        public bool WritePeaksToTextFile { get; set; }
 
         public clsPeakProcessorParameters()
         {
@@ -147,17 +142,17 @@ namespace DeconToolsV2.Peaks
                                 throw new System.Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
-                            if (rdr.Value.Equals(DeconToolsV2.Peaks.PEAK_FIT_TYPE.QUADRATIC.ToString()))
+                            if (rdr.Value.Equals(PEAK_FIT_TYPE.QUADRATIC.ToString()))
                             {
-                                this.PeakFitType = DeconToolsV2.Peaks.PEAK_FIT_TYPE.QUADRATIC;
+                                this.PeakFitType = PEAK_FIT_TYPE.QUADRATIC;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Peaks.PEAK_FIT_TYPE.LORENTZIAN.ToString()))
+                            else if (rdr.Value.Equals(PEAK_FIT_TYPE.LORENTZIAN.ToString()))
                             {
-                                this.PeakFitType = DeconToolsV2.Peaks.PEAK_FIT_TYPE.LORENTZIAN;
+                                this.PeakFitType = PEAK_FIT_TYPE.LORENTZIAN;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Peaks.PEAK_FIT_TYPE.APEX.ToString()))
+                            else if (rdr.Value.Equals(PEAK_FIT_TYPE.APEX.ToString()))
                             {
-                                this.PeakFitType = DeconToolsV2.Peaks.PEAK_FIT_TYPE.APEX;
+                                this.PeakFitType = PEAK_FIT_TYPE.APEX;
                             }
                         }
                         else if (rdr.Name.Equals("WritePeaksToTextFile"))

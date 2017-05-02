@@ -85,7 +85,7 @@ namespace Engine.Readers
             else
             {
                 // assuming an acqu file was selected.. go back to the name of the folder.
-                string dirName = Path.GetDirectoryName(ser_file_name);
+                var dirName = Path.GetDirectoryName(ser_file_name);
                 marr_headerName = dirName + "\\acqus";
                 marr_serName = dirName + "\\ser";
             }
@@ -116,14 +116,14 @@ namespace Engine.Readers
         {
             string line;
             string sub;
-            int pos = 0;
+            var pos = 0;
             double ML1 = 0;
             double ML2 = 0;
             double SW_h = 0;
             double FR_low = 0;
-            int byte_order = 0;
-            int TD = 0;
-            int NF = 0;
+            var byte_order = 0;
+            var TD = 0;
+            var NF = 0;
 
             if (!File.Exists(marr_headerName))
             {
@@ -131,7 +131,7 @@ namespace Engine.Readers
             }
             // Open header
             using (
-                StreamReader acqusHeader =
+                var acqusHeader =
                     new StreamReader(new FileStream(marr_headerName, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 // Read first line
@@ -189,7 +189,7 @@ namespace Engine.Readers
             if (SW_h > FR_low)
                 FR_low = 0.0;
 
-            Calibrations.Calibrator calib = new Calibrations.Calibrator(CalibrationType.A_OVER_F_PLUS_B);
+            var calib = new Calibrations.Calibrator(CalibrationType.A_OVER_F_PLUS_B);
 
             SetDataSize(TD);
             calib.NumPointsInScan = TD;
@@ -228,7 +228,7 @@ namespace Engine.Readers
             long startOffset;
             long pos;
             int blockSizeInBytes;
-            int num_read = 0;
+            var num_read = 0;
             // Prepare for data read
             blockSizeInBytes = sizeof (int) * mint_num_points_in_scan;
             startOffset = ((long) spectra_num) * ((long) blockSizeInBytes);
@@ -239,7 +239,7 @@ namespace Engine.Readers
             }
             catch (System.Exception e)
             {
-                System.Console.Error.WriteLine(" Could not open " + marr_serName + " perhaps it does not exist. Exiting");
+                Console.Error.WriteLine(" Could not open " + marr_serName + " perhaps it does not exist. Exiting");
 #if DEBUG
                 throw e;
 #endif
@@ -252,11 +252,11 @@ namespace Engine.Readers
 
                 if (pos == -1)
                 {
-                    System.Console.Error.WriteLine("Could not read data for scan = " + spectra_num + " at location " +
+                    Console.Error.WriteLine("Could not read data for scan = " + spectra_num + " at location " +
                                                    startOffset);
                     System.Environment.Exit(1);
                 }
-                byte[] buffer = new byte[blockSizeInBytes];
+                var buffer = new byte[blockSizeInBytes];
                 num_read = fh.Read(buffer, 0, blockSizeInBytes);
                 Buffer.BlockCopy(buffer, 0, marr_data_block, 0, blockSizeInBytes);
             }
@@ -271,7 +271,7 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid)
         {
-            int num_pts = mint_num_points_in_scan;
+            var num_pts = mint_num_points_in_scan;
             return GetRawData(out mzs, out intensities, scan_num, centroid, num_pts);
         }
 
@@ -329,7 +329,7 @@ namespace Engine.Readers
             const int int_size = sizeof (int);
             if (mint_last_scan_num != scan_num)
             {
-                int num_read = ReadSpectraFloats(scan_num);
+                var num_read = ReadSpectraFloats(scan_num);
                 mint_last_scan_num = scan_num;
                 if (num_read <= 0)
                     return false;
@@ -340,9 +340,9 @@ namespace Engine.Readers
                 Buffer.BlockCopy(marr_data_block_copy, 0, marr_data_block, 0, num_pts * int_size);
             }
 
-            double min_intensity = double.MaxValue;
-            double max_intensity = double.MinValue;
-            for (int i = 0; i < num_pts; i++)
+            var min_intensity = double.MaxValue;
+            var max_intensity = double.MinValue;
+            for (var i = 0; i < num_pts; i++)
             {
                 marr_temp_data_block[i] = (float) marr_data_block[i];
                 if (marr_data_block[i] < min_intensity)
@@ -351,7 +351,7 @@ namespace Engine.Readers
                     max_intensity = marr_data_block[i];
             }
             mdbl_signal_range = max_intensity - min_intensity;
-            int n = mobj_calibrator.GetRawPointsApplyFFT(ref marr_temp_data_block, out mzs, out intensities, num_pts);
+            var n = mobj_calibrator.GetRawPointsApplyFFT(ref marr_temp_data_block, out mzs, out intensities, num_pts);
             // lets only take points whose mz is less than MAX_MZ.
             // these are going to be sorted so just start at the right end.
 
@@ -379,11 +379,11 @@ namespace Engine.Readers
 
         private double GetBasePeakIntensity(List<double> mzs, List<double> intensities)
         {
-            int num_pts = intensities.Count;
+            var num_pts = intensities.Count;
             if (num_pts == 0)
                 return 0;
-            double max_intensity = -1 * double.MaxValue;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            var max_intensity = -1 * double.MaxValue;
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (intensities[pt_num] > max_intensity && mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
@@ -395,24 +395,24 @@ namespace Engine.Readers
 
         private double GetTotalIonCount(List<double> mzs, List<double> intensities)
         {
-            int num_pts = intensities.Count;
+            var num_pts = intensities.Count;
             if (num_pts == 0)
                 return 0;
 
             double intensity_sum = 0;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
                     intensity_sum += intensities[pt_num];
                 }
             }
-            double bg_intensity = intensity_sum / num_pts;
+            var bg_intensity = intensity_sum / num_pts;
 
-            double min_intensity = bg_intensity * BACKGROUND_RATIO_FOR_TIC;
+            var min_intensity = bg_intensity * BACKGROUND_RATIO_FOR_TIC;
 
             intensity_sum = 0;
-            for (int pt_num = 0; pt_num < num_pts; pt_num++)
+            for (var pt_num = 0; pt_num < num_pts; pt_num++)
             {
                 if (intensities[pt_num] > min_intensity && mzs[pt_num] >= MIN_MZ && mzs[pt_num] <= MAX_MZ)
                 {
@@ -431,25 +431,25 @@ namespace Engine.Readers
             List<double> scan_mzs;
             List<double> scan_intensities;
 
-            bool centroid = false;
+            var centroid = false;
 
-            for (int scan_num = 1; scan_num < mint_num_spectra; scan_num++)
+            for (var scan_num = 1; scan_num < mint_num_spectra; scan_num++)
             {
                 // its time to read in that scan.
-                bool got_data = GetRawData(out scan_mzs, out scan_intensities, scan_num, centroid);
+                var got_data = GetRawData(out scan_mzs, out scan_intensities, scan_num, centroid);
                 if (!got_data)
                     continue;
 
                 scan_times.Add(scan_num);
                 if (base_peak_tic)
                 {
-                    double bp_intensity = GetBasePeakIntensity(scan_mzs, scan_intensities);
+                    var bp_intensity = GetBasePeakIntensity(scan_mzs, scan_intensities);
 
                     intensities.Add(bp_intensity);
                 }
                 else
                 {
-                    double tic_intensity = GetTotalIonCount(scan_mzs, scan_intensities);
+                    var tic_intensity = GetTotalIonCount(scan_mzs, scan_intensities);
                     intensities.Add(tic_intensity);
                 }
             }
@@ -457,21 +457,21 @@ namespace Engine.Readers
 
         private int GetNumSpectraFromFileSizeInfo()
         {
-            int numSpectra = 0;
+            var numSpectra = 0;
 
             if (mint_num_points_in_scan == 0) return 0; // prevent divide by 0
 
-            string fName = marr_serName;
+            var fName = marr_serName;
             if (!File.Exists(fName))
             {
                 // try using the fid extention instead of the .ser business.
                 fName = Path.ChangeExtension(fName, "fid");
             }
-            using (FileStream fh = new FileStream(fName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var fh = new FileStream(fName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 /* Get the total number of bytes in the file. */
-                long pos64 = fh.Length;
-                long blockSizeInBytes = (long) (sizeof (int) * mint_num_points_in_scan);
+                var pos64 = fh.Length;
+                var blockSizeInBytes = (long) (sizeof (int) * mint_num_points_in_scan);
                 numSpectra = (int) ((pos64 + 2) / blockSizeInBytes);
                     // add 2 just in case we have an exact multiple - 1.
             }

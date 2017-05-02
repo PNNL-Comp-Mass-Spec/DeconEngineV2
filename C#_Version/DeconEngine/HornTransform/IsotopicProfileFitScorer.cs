@@ -22,8 +22,10 @@ namespace Engine.HornTransform
         private bool _lastValueWasCached;
 
         protected clsAveragine AveragineObj = new clsAveragine();
+
         // mass of the charge carrier.
         protected double ChargeCarrierMass;
+
         // flag to make the fit function look at all possible isotopes to thrash to. If this is set to false, thrashing stops as soon as we reach a missing isotopic peak.
         protected bool CompleteFitThrash;
 
@@ -74,7 +76,7 @@ namespace Engine.HornTransform
         protected bool UseThrash;
 
         // default constructor.
-        public IsotopicProfileFitScorer()
+        protected IsotopicProfileFitScorer()
         {
             ChargeCarrierMass = 1.00727638;
             UseThrash = false;
@@ -84,7 +86,7 @@ namespace Engine.HornTransform
             AveragineObj.SetElementalIsotopeComposition(IsotopeDistribution.ElementalIsotopeComposition);
         }
 
-        public IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
+        protected IsotopicProfileFitScorer(IsotopicProfileFitScorer fit)
         {
             // only copies settings not variables.
             CompleteFitThrash = fit.CompleteFitThrash;
@@ -102,7 +104,7 @@ namespace Engine.HornTransform
         /// </summary>
         public clsElementIsotopes ElementalIsotopeComposition
         {
-            get { return IsotopeDistribution.ElementalIsotopeComposition; }
+            get => IsotopeDistribution.ElementalIsotopeComposition;
             set
             {
                 IsotopeDistribution.SetElementalIsotopeComposition(value);
@@ -378,7 +380,7 @@ namespace Engine.HornTransform
             return false;
         }
 
-        /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that 
+        /*[gord]  the following is currently unused. The idea was to give weighting to the algorithm so that
           the user could favor certain fitting parameters (i.e. space between isotopomers) over others
         public double FindIsotopicDist(PeakProcessing.PeakData peakData, int cs, PeakProcessing.Peak peak,
             IsotopeFitRecord isoRecord, double deleteIntensityThreshold, double spacingWeight, double spacingVar,
@@ -531,7 +533,7 @@ namespace Engine.HornTransform
             var delta = peak.Mz - IsotopeDistribution.MaxPeakMz;
 
             //if(debug)
-            //  System.Console.WriteLine("Going for first fit");
+            //  Console.WriteLine("Going for first fit");
             var fit = FitScore(peakData, chargeState, peak, delta, minTheoreticalIntensityForScore, out pointsUsed,
                 debug);
 
@@ -583,18 +585,22 @@ namespace Engine.HornTransform
                         out nextPeak);
                 }
 
+                //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
                 if (mzLeft > 0 && nextPeak.Mz > 0)
-                    //if there is a theoreticalPeak to the RIGHT of theoreticalMaxPeak AND there is an experimentalPeak to the LEFT of experimentalMaxPeak...
                 {
-                    delta = peak.Mz - mzLeft;
                     // essentially, this shifts the theoretical over to the left and gets the delta; then check the fit
-                    var currentPeakCopy = new clsPeak(peak); // in c++ this copy is created by value;
-                    currentPeakCopy.Intensity = nextPeak.Intensity;
+                    delta = peak.Mz - mzLeft;
+
+                    // in c++ this copy is created by value;
+                    var currentPeakCopy = new clsPeak(peak) {
+                        Intensity = nextPeak.Intensity
+                    };
+
                     fit = FitScore(peakData, chargeState, currentPeakCopy, delta, minTheoreticalIntensityForScore,
                         out fitCountBasis, debug);
                     if (debug)
                     {
-                        //System.Console.WriteLine(" isotopes. Fit =" + fit + " Charge = " + cs + " Intensity = " + nxt_peak.mdbl_intensity + " delta = " + delta);
+                        //Console.WriteLine(" isotopes. Fit =" + fit + " Charge = " + cs + " Intensity = " + nxt_peak.mdbl_intensity + " delta = " + delta);
                         Console.WriteLine("LEFT\t" + nextPeak.PeakIndex + "\t" + nextPeak.Mz + "\t" +
                                           nextPeak.Intensity + "\t" + nextPeak.SignalToNoise + "\t" + nextPeak.FWHM +
                                           "\t" + fit + "\t" + delta);
@@ -608,7 +614,7 @@ namespace Engine.HornTransform
                     fit = bestFit + 1000; // make the fit terrible
                 }
                 // TODO: Currently, if fit score is less than best_fit, iteration stops.  Future versions should continue attempted fitting if fit was within a specified range of the best fit
-                // 26th February 2007 Deep Jaitly 
+                // 26th February 2007 Deep Jaitly
                 /*if (fit <= bestFit)
                 {
                     if (nextPeak.mdbl_intensity > peak.mdbl_intensity)
@@ -637,7 +643,7 @@ namespace Engine.HornTransform
             }
 
             //if (debug)
-            //      System.Console.WriteLine("\n---------------- Sliding to the RIGHT -------------------------";
+            //      Console.WriteLine("\n---------------- Sliding to the RIGHT -------------------------";
             for (var dd = 1.003 / chargeState; dd <= 10.03 / chargeState; dd += 1.003 / chargeState)
             {
                 double mzRight;
@@ -657,14 +663,17 @@ namespace Engine.HornTransform
                 if (mzRight > 0 && nextPeak.Mz > 0)
                 {
                     delta = peak.Mz - mzRight;
-                    var currentPeakCopy = new clsPeak(peak);
-                    currentPeakCopy.Intensity = nextPeak.Intensity;
+                    var currentPeakCopy = new clsPeak(peak) {
+                        Intensity = nextPeak.Intensity
+                    };
+
                     fit = FitScore(peakData, chargeState, currentPeakCopy, delta, minTheoreticalIntensityForScore,
                         out fitCountBasis, debug);
+
                     //fit = FitScore(pk_data, cs, nxt_peak.mdbl_intensity, delta);
                     if (debug)
                     {
-                        //System.Console.WriteLine(" isotopes. Fit =" + fit + " Charge = " + chargeState + " Intensity = " + nextPeak.mdbl_intensity + " delta = " + delta);
+                        //Console.WriteLine(" isotopes. Fit =" + fit + " Charge = " + chargeState + " Intensity = " + nextPeak.mdbl_intensity + " delta = " + delta);
                         Console.WriteLine("RIGHT\t" + nextPeak.PeakIndex + "\t" + nextPeak.Mz + "\t" +
                                           nextPeak.Intensity + "\t" + nextPeak.SignalToNoise + "\t" + nextPeak.FWHM +
                                           "\t" + fit + "\t" + delta);
@@ -675,7 +684,7 @@ namespace Engine.HornTransform
                     fit = bestFit + 1000; //force it to be a bad fit
                     if (debug)
                     {
-                        //  System.Console.WriteLine("No peak found");
+                        //  Console.WriteLine("No peak found");
                         Console.WriteLine("RIGHT\t" + -1 + "\t" + -1 + "\t" + -1 + "\t" + -1 + "\t" + -1 + "\t" + -1 +
                                           "\t" + -1);
                     }
@@ -937,14 +946,16 @@ namespace Engine.HornTransform
             }
         }
 
-#if !Disable_Obsolete
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <summary>
+        /// Set the charge carrier mass
+        /// </summary>
+        /// <param name="mass"></param>
+        /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
         public void SetChargeCarrierMass(double mass)
         {
             ChargeCarrierMass = mass;
             _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
-#endif
 
         /// <summary>
         ///     will calculate the delta mz (referenced to the theor) based on several of the observed peaks

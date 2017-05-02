@@ -110,8 +110,8 @@ namespace DeconToolsV2.Peaks
         [Obsolete("Use Mz", false)]
         public double mdbl_mz
         {
-            get { return Mz; }
-            set { Mz = value; }
+            get => Mz;
+            set => Mz = value;
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace DeconToolsV2.Peaks
         [Obsolete("Use Intensity", false)]
         public double mdbl_intensity
         {
-            get { return Intensity; }
-            set { Intensity = value; }
+            get => Intensity;
+            set => Intensity = value;
         }
 
         /// <summary>
@@ -130,8 +130,8 @@ namespace DeconToolsV2.Peaks
         [Obsolete("Use SignalToNoise", false)]
         public double mdbl_SN
         {
-            get { return SignalToNoise; }
-            set { SignalToNoise = value; }
+            get => SignalToNoise;
+            set => SignalToNoise = value;
         }
 
         /// <summary>
@@ -140,8 +140,8 @@ namespace DeconToolsV2.Peaks
         [Obsolete("Use PeakIndex", false)]
         public int mint_peak_index
         {
-            get { return PeakIndex; }
-            set { PeakIndex = value; }
+            get => PeakIndex;
+            set => PeakIndex = value;
         }
 
         /// <summary>
@@ -151,8 +151,8 @@ namespace DeconToolsV2.Peaks
         [Obsolete("Use DataIndex", false)]
         public int mint_data_index
         {
-            get { return DataIndex; }
-            set { DataIndex = value; }
+            get => DataIndex;
+            set => DataIndex = value;
         }
 
         /// <summary>
@@ -161,8 +161,8 @@ namespace DeconToolsV2.Peaks
         [Obsolete("Use FwHm", false)]
         public double mdbl_FWHM
         {
-            get { return FWHM; }
-            set { FWHM = value; }
+            get => FWHM;
+            set => FWHM = value;
         }
 #endif
 

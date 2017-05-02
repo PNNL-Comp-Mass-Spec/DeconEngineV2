@@ -13,21 +13,21 @@ namespace DeconToolsV2
             short charge, ref float[] sumMZs, ref float[] sumIntensities, ref float[] mzs,
             ref float[] intensities)
         {
-            List<int> vectIndicesToConsider = new List<int>();
+            var vectIndicesToConsider = new List<int>();
             // go through all the transforms and find which ones have most abundant mass between current value and
             // x Daltons
-            int numResults = marr_transformResults.Length;
+            var numResults = marr_transformResults.Length;
             short maxCharge = 0;
             double massRange = 0;
 
-            for (int transformNum = 0; transformNum < numResults; transformNum++)
+            for (var transformNum = 0; transformNum < numResults; transformNum++)
             {
-                DeconToolsV2.HornTransform.clsHornTransformResults result = marr_transformResults[transformNum];
-                double massDiff = System.Math.Abs((result.MostIntenseMw - mostAbundantMW) / 1.003);
-                double massDiffRound = (double) ((int) (massDiff + 0.5));
+                var result = marr_transformResults[transformNum];
+                var massDiff = System.Math.Abs((result.MostIntenseMw - mostAbundantMW) / 1.003);
+                var massDiffRound = (double) ((int) (massDiff + 0.5));
                 if (massDiffRound > 3)
                     continue;
-                double toleranceDiff = System.Math.Abs(massDiff - massDiffRound * 1.003);
+                var toleranceDiff = System.Math.Abs(massDiff - massDiffRound * 1.003);
                 if (toleranceDiff < System.Math.Max(0.2, result.FWHM * 5))
                 {
                     // consider this peak for addition.
@@ -50,25 +50,25 @@ namespace DeconToolsV2
                 massRange = 16;
             }
 
-            double minMZForOut = (mostAbundantMW - massRange / 2) / charge + 1.00727638;
-            double maxMZForOut = (mostAbundantMW + massRange / 2) / charge + 1.00727638;
+            var minMZForOut = (mostAbundantMW - massRange / 2) / charge + 1.00727638;
+            var maxMZForOut = (mostAbundantMW + massRange / 2) / charge + 1.00727638;
             const int numPointsForOut = 4 * 1024;
-            double currentMZ = minMZForOut;
-            double mzInterval = (maxMZForOut - minMZForOut) / numPointsForOut;
+            var currentMZ = minMZForOut;
+            var mzInterval = (maxMZForOut - minMZForOut) / numPointsForOut;
             sumMZs = new float[numPointsForOut];
             sumIntensities = new float[numPointsForOut];
-            for (int ptNum = 0; ptNum < numPointsForOut; ptNum++)
+            for (var ptNum = 0; ptNum < numPointsForOut; ptNum++)
             {
                 sumMZs[ptNum] = (float) currentMZ;
                 sumIntensities[ptNum] = 0;
                 currentMZ += mzInterval;
             }
 
-            Engine.Utilities.Interpolation interp = new Interpolation();
-            List<double> vectMz = new List<double>();
-            List<double> vectIntensity = new List<double>();
-            int numPts = mzs.Length;
-            for (int ptNum = 0; ptNum < numPts; ptNum++)
+            var interp = new Interpolation();
+            var vectMz = new List<double>();
+            var vectIntensity = new List<double>();
+            var numPts = mzs.Length;
+            for (var ptNum = 0; ptNum < numPts; ptNum++)
             {
                 double mz = mzs[ptNum];
                 vectMz.Add(mz);
@@ -77,12 +77,12 @@ namespace DeconToolsV2
             }
 
             interp.Spline(vectMz, vectIntensity, 0, 0);
-            for (int index = 0; index < (int) vectIndicesToConsider.Count; index++)
+            for (var index = 0; index < (int) vectIndicesToConsider.Count; index++)
             {
-                DeconToolsV2.HornTransform.clsHornTransformResults result =
+                var result =
                     marr_transformResults[vectIndicesToConsider[index]];
                 currentMZ = ((minMZForOut - 1.00727638) * charge) / result.ChargeState + 1.00727638;
-                for (int ptNum = 0; ptNum < numPointsForOut; ptNum++)
+                for (var ptNum = 0; ptNum < numPointsForOut; ptNum++)
                 {
                     sumIntensities[ptNum] += (float) interp.Splint(vectMz, vectIntensity, currentMZ);
                     currentMZ += (mzInterval * charge) / result.ChargeState;
