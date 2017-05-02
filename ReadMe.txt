@@ -1,5 +1,10 @@
 The DeconEngine includes routines for deconvoluting (deisotoping) observed isotopic signatures in mass spectrometry data to detect features.
 
+This repository also has the C# version of DeconMsn in the C#_Version folder
+
+See the Readme for DeconMSn at:
+https://github.com/PNNL-Comp-Mass-Spec/DeconEngineV2/tree/master/C%23_Version/DeconMSn
+
 -------------------------------------------------------------------------------
 Originally written by Deep Jaitly for the Department of Energy (PNNL, Richland, WA)
 
