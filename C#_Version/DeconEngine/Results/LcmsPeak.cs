@@ -36,6 +36,20 @@ namespace Engine.Results
             Intensity = a.Intensity;
         }
 
+        public LcmsPeak(int scan, float mz, float inten)
+        {
+            ScanNum = scan;
+            Mz = mz;
+            Intensity = inten;
+        }
+
+        public LcmsPeak(int scan, double mz, double inten)
+        {
+            ScanNum = scan;
+            Mz = mz;
+            Intensity = inten;
+        }
+
         public virtual void WriteToBinaryStream(BinaryWriter stream)
         {
             stream.Write(ScanNum);
@@ -45,10 +59,12 @@ namespace Engine.Results
 
         public static LcmsPeak ReadFromBinaryStream(BinaryReader stream)
         {
-            var peak = new LcmsPeak();
-            peak.ScanNum = stream.ReadInt32();
-            peak.Mz = stream.ReadDouble();
-            peak.Intensity = stream.ReadDouble();
+            var peak = new LcmsPeak
+            {
+                ScanNum = stream.ReadInt32(),
+                Mz = stream.ReadDouble(),
+                Intensity = stream.ReadDouble()
+            };
             return peak;
         }
     }
