@@ -1,5 +1,4 @@
-﻿#if !Disable_Obsolete
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -8,7 +7,10 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Engine.ChargeDetermination
 {
-    [Obsolete("Only used by Decon2LS.UI", false)]
+    /// <summary>
+    /// SVM Charge determination
+    /// </summary>
+    /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
     internal class SVMChargeDetermine
     {
         private const int num_features = 19;
@@ -1564,4 +1566,3 @@ namespace Engine.ChargeDetermination
         }
     }
 }
-#endif

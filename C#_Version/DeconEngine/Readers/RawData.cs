@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,10 @@ using Engine.Utilities;
 
 namespace Engine.Readers
 {
-    [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+    /// <summary>
+    /// RawData
+    /// </summary>
+    /// <remarks>Used by DeconTools for ICR2LSRun and DeconMSn</remarks>
     internal abstract class RawData
     {
         public const int MAX_FNAME_LEN = 512;
@@ -667,4 +669,3 @@ namespace Engine.Readers
         }
     }
 }
-#endif

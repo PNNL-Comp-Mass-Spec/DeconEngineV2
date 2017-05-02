@@ -1,10 +1,11 @@
-#if !Disable_Obsolete
-using System;
 using DeconToolsV2.Readers;
 
 namespace Engine.Readers
 {
-    [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+    /// <summary>
+    /// Reader Factory
+    /// </summary>
+    /// <remarks>Used by DeconMSn</remarks>
     internal class ReaderFactory
     {
         public static RawData GetMSDataReader(FileType file_type)
@@ -252,4 +253,3 @@ namespace Engine.Readers
         }
     }
 }
-#endif

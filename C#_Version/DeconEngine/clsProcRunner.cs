@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +18,9 @@ namespace DeconToolsV2
         ERROR
     };
 
-    [Obsolete("Only used by Decon2LS.UI", false)]
+    /// <summary>
+    /// Used by DeconMSn
+    /// </summary>
     public class clsProcRunner
     {
         private int mint_percent_done;
@@ -1212,4 +1213,3 @@ namespace DeconToolsV2
         }
     }
 }
-#endif

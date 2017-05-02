@@ -1,11 +1,13 @@
-#if !Disable_Obsolete
 using System;
 using System.IO;
 
 namespace Engine.Results
 {
-    [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files) - only valid use is with the Peak class", false)]
-    internal class LcmsPeak
+    /// <summary>
+    /// Lcms peak
+    /// </summary>
+    /// <remarks>Used by Decon2LS.UI (maybe) and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
+    public class LcmsPeak
     {
         /// <summary>
         ///     intensity of the peak.
@@ -51,4 +53,3 @@ namespace Engine.Results
         }
     }
 }
-#endif

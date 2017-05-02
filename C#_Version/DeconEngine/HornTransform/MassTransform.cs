@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconToolsV2;
@@ -10,7 +9,11 @@ using Engine.TheoreticalProfile;
 
 namespace Engine.HornTransform
 {
-    [Obsolete("All functionality has been merged into clsHornTransform, Only used for Decon2LS.UI", false)]
+    /// <summary>
+    /// Mass transform
+    /// (note that all functionality in this class has been merged into clsHornTransform)
+    /// </summary>
+    /// <remarks>Used by used for Decon2LS.UI and DeconMSn</remarks>
     internal class MassTransform
     {
         private const int MaxIsotopes = 16;
@@ -187,7 +190,21 @@ namespace Engine.HornTransform
         }
 
 #if !Disable_Obsolete
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <summary>
+        /// Get options
+        /// </summary>
+        /// <param name="maxCharge"></param>
+        /// <param name="maxMw"></param>
+        /// <param name="maxFit"></param>
+        /// <param name="minSignalToNoise"></param>
+        /// <param name="chargeCarrierMass"></param>
+        /// <param name="deleteThresholdIntensity"></param>
+        /// <param name="minTheoreticalIntensityForScore"></param>
+        /// <param name="numPeaksForShoulder"></param>
+        /// <param name="checkFitAgainstCharge1"></param>
+        /// <param name="useMercuryCaching"></param>
+        /// <param name="isLabelledMedia"></param>
+        /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
         public void GetOptions(out short maxCharge, out double maxMw, out double maxFit, out double minSignalToNoise,
             out double chargeCarrierMass, out double deleteThresholdIntensity,
             out double minTheoreticalIntensityForScore, out short numPeaksForShoulder, out bool checkFitAgainstCharge1,
@@ -213,7 +230,21 @@ namespace Engine.HornTransform
             _isotopeFitter.GetOptions(out averagineFormula, out tagFormula, out useThrash, out completeFitThrash);
         }
 
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <summary>
+        /// Set options
+        /// </summary>
+        /// <param name="maxCharge"></param>
+        /// <param name="maxMw"></param>
+        /// <param name="maxFit"></param>
+        /// <param name="minSignalToNoise"></param>
+        /// <param name="chargeCarrierMass"></param>
+        /// <param name="deleteIntensityThreshold"></param>
+        /// <param name="minTheoreticalIntensityForScore"></param>
+        /// <param name="numPeaksForShoulder"></param>
+        /// <param name="checkFitAgainstCharge1"></param>
+        /// <param name="useMercuryCaching"></param>
+        /// <param name="o16O18Media"></param>
+        /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
         public void SetOptions(short maxCharge, double maxMw, double maxFit, double minSignalToNoise,
             double chargeCarrierMass, double deleteIntensityThreshold, double minTheoreticalIntensityForScore,
             short numPeaksForShoulder, bool checkFitAgainstCharge1, bool useMercuryCaching, bool o16O18Media)
@@ -232,8 +263,10 @@ namespace Engine.HornTransform
             _checkAgainstCharge1 = checkFitAgainstCharge1;
         }
 
-        //gord added
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <summary>
+        /// Set options
+        /// </summary>
+        /// <remarks>Used by DeconMSn</remarks>
         public void SetOptions(short maxCharge, double maxMw, double maxFit, double minSignalToNoise,
             double chargeCarrierMass, double deleteIntensityThreshold, double minTheoreticalIntensityForScore,
             short numPeaksForShoulder, bool checkFitAgainstCharge1, bool useMercuryCaching, bool o16O18Media,
@@ -248,7 +281,14 @@ namespace Engine.HornTransform
                 o16O18Media);
         }
 
-        [Obsolete("Only used by Decon2LS.UI", false)]
+        /// <summary>
+        /// Set isotope fit options
+        /// </summary>
+        /// <param name="averagineFormula"></param>
+        /// <param name="tagFormula"></param>
+        /// <param name="useThrash"></param>
+        /// <param name="completeFitThrash"></param>
+        /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
         public void SetIsotopeFitOptions(string averagineFormula, string tagFormula, bool useThrash,
             bool completeFitThrash)
         {
@@ -598,4 +638,3 @@ namespace Engine.HornTransform
         }
     }
 }
-#endif

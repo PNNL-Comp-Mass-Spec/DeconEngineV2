@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Xml;
 
@@ -40,7 +39,10 @@ namespace DeconToolsV2.Readers
         UNDEFINED
     }
 
-    [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+    /// <summary>
+    /// Raw preprocessor options
+    /// </summary>
+    /// <remarks>Used by  DeconTools for ICR2LSRun and IMFRun; also used by DeconMSn</remarks>
     public class clsRawDataPreprocessOptions
     {
         private ApodizationType menmApodizationType;
@@ -409,4 +411,3 @@ namespace DeconToolsV2.Readers
         }
     }
 }
-#endif

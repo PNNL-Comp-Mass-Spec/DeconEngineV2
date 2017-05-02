@@ -1,10 +1,11 @@
-﻿#if !Disable_Obsolete
-using System;
+﻿using System;
 
 namespace Engine.DTAProcessing
 {
-    // class to store information that logs into the log file of DeconMSn
-    [Obsolete("Only used by Decon2LS.UI", false)]
+    /// <summary>
+    /// Class to store information that logs into the log file of DeconMSn
+    /// </summary>
+    /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
     internal class MSnInformationRecord
     {
         public const int MAX_ISOTOPES = 16;
@@ -54,4 +55,3 @@ namespace Engine.DTAProcessing
         }
     }
 }
-#endif

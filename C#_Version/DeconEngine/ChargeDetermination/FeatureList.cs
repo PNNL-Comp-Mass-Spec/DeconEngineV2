@@ -1,10 +1,12 @@
-﻿#if !Disable_Obsolete
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Engine.ChargeDetermination
 {
-    [Obsolete("Only used by Decon2LS.UI", false)]
+    /// <summary>
+    /// Feature list
+    /// </summary>
+    /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
     internal class FeatureList
     {
         private const int _numFeatures = 19;
@@ -43,4 +45,3 @@ namespace Engine.ChargeDetermination
         }
     }
 }
-#endif

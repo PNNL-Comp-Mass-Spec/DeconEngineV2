@@ -1,14 +1,17 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 
 namespace Engine.Utilities
 {
-    [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+    /// <summary>
+    /// Savitzky-golay smoother
+    /// </summary>
+    /// <remarks>Used by DeconTools for ICR2LSRun and IMFRun; also used by GenerateDTAZoomScans in DeconMSn</remarks>
     internal class SavGolSmoother
     {
         // number of points to the left while applying Savitzky Golay filter.
         private int mint_Nleft_golay;
+
         // the order of the Savitzky Golay smoothing filter.
         private int mint_golay_order;
         // the number of points to the right while applying Savitzky Golay filter.
@@ -300,4 +303,3 @@ namespace Engine.Utilities
         }
     }
 }
-#endif

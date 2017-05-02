@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Xml;
 
@@ -7,7 +6,7 @@ namespace DeconToolsV2.Peaks
     /// <summary>
     /// enumeration for type of fit.
     /// </summary>
-    [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
+    /// <remarks>Used by DeconMSn and OldDecon2LSParameters</remarks>
     public enum PEAK_FIT_TYPE
     {
         APEX = 0,
@@ -15,7 +14,10 @@ namespace DeconToolsV2.Peaks
         LORENTZIAN
     };
 
-    [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
+    /// <summary>
+    /// Peak processor parameters
+    /// </summary>
+    /// <remarks>Used by DeconMSn and OldDecon2LSParameters</remarks>
     public class clsPeakProcessorParameters : System.ICloneable
     {
         private double mdbl_SNThreshold;
@@ -185,4 +187,3 @@ namespace DeconToolsV2.Peaks
         }
     }
 }
-#endif

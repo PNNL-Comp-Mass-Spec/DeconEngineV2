@@ -1,11 +1,10 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Xml;
 
 namespace DeconToolsV2.DTAGeneration
 {
-    [Obsolete("Only used by Decon2LS.UI", false)]
+
     public enum OUTPUT_TYPE
     {
         DTA = 0,
@@ -15,7 +14,6 @@ namespace DeconToolsV2.DTAGeneration
         MZXML
     };
 
-    [Obsolete("Only used by Decon2LS.UI", false)]
     public enum SPECTRA_TYPE
     {
         ALL = 0,
@@ -24,8 +22,11 @@ namespace DeconToolsV2.DTAGeneration
         HCD
     };
 
-    [Obsolete("Only used by Decon2LS.UI", false)]
-    public class clsDTAGenerationParameters : System.ICloneable
+    /// <summary>
+    /// DTA Generation parameters
+    /// </summary>
+    /// <remarks>Used by DeconMSn</remarks>
+    public class clsDTAGenerationParameters : ICloneable
     {
         private int mint_min_ion_count;
         private int mint_min_scan;
@@ -577,4 +578,3 @@ namespace DeconToolsV2.DTAGeneration
         }
     }
 }
-#endif

@@ -1,11 +1,13 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Engine.Utilities
 {
-    [Obsolete("Was used by AutoCorrelationChargeDetermination, now not used except by other code only used by Decon2LS.UI")]
+    /// <summary>
+    /// Interpolation
+    /// </summary>
+    /// <remarks>Was used by AutoCorrelationChargeDetermination, now by Decon2LS.UI and DeconMSn</remarks>
     internal class Interpolation
     {
         // List to store the second derivatives at the knot points of the spline.
@@ -441,4 +443,3 @@ namespace Engine.Utilities
         }
     }
 }
-#endif

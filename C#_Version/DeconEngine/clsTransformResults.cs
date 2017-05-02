@@ -1,11 +1,14 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using Engine.Results;
 
 namespace DeconToolsV2.Results
 {
-    [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
+
+    /// <summary>
+    /// Transform results
+    /// </summary>
+    /// <remarks>Used by Decon2LS.UI and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
     public class clsTransformResults
     {
         private int mint_percent_done;
@@ -230,4 +233,3 @@ namespace DeconToolsV2.Results
         }
     }
 }
-#endif

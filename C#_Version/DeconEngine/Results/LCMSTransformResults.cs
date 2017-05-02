@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +18,7 @@ namespace Engine.Results
     ///     Peaks can be fetched from the entire dataset or for a given range of scans and mz.
     ///     Deisotoped results are also stored and can be accessed for particular scans and mz ranges.
     /// </remarks>
-    [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
+    /// <remarks>Used by Decon2LS.UI (maybe) and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
     internal class LCMSTransformResults
     {
         // Stores all the peaks found in the lc ms experiment in memory blocks of size PEAK_BLOCK_SIZE. This allows large amount of data to be kept in memory without necessarily requiring them to be in contiguous memory spaces, which can often result in memory allocation being unsuccessful. In addition the peaks are written out to temporary files each time AddPeaksForScan function is called. If memory allocation is unsuccessful, all the peaks stored thus far are cleared. And flag is set indicating not all data is stored in memory.
@@ -786,5 +785,3 @@ namespace Engine.Results
         }
     }
 }
-
-#endif

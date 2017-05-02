@@ -1,12 +1,14 @@
-﻿#if !Disable_Obsolete
-using System;
+﻿using System;
 using System.Collections.Generic;
 using DeconToolsV2.Readers;
 using Engine.Utilities;
 
 namespace Engine.Calibrations
 {
-    [Obsolete("Only used by RawData Readers, which are mostly obsolete", false)]
+    /// <summary>
+    /// Calibrator
+    /// </summary>
+    /// <remarks>Used by RawData Readers, which are mostly obsolete</remarks>
     internal class Calibrator
     {
         private const double MaxMass = 10000000;
@@ -578,4 +580,3 @@ namespace Engine.Calibrations
         }
     }
 }
-#endif

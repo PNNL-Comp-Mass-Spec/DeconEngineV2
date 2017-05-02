@@ -1,4 +1,3 @@
-#if !Disable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,6 @@ using DeconToolsV2.Readers;
 
 namespace Engine.Readers
 {
-    [Obsolete("Only used by Icr2lsRawData, which has fallen out of use", false)]
     internal enum Icr2lsFileType
     {
         ICR2LS_TIME = 1,
@@ -16,7 +14,6 @@ namespace Engine.Readers
         ICR2LS_MASS
     };
 
-    [Obsolete("Only used by Icr2lsRawData, which has fallen out of use", false)]
     internal enum Icr2lsDataType
     {
         ICR2LS_INT_NO_HEADER = 1,
@@ -24,7 +21,10 @@ namespace Engine.Readers
         ICR2LS_HEADER
     };
 
-    [Obsolete("Used only rarely by DeconTools for ICR2LS data files, which are rarely used.", false)]
+    /// <summary>
+    /// Used by DeconTools for ICR2LS data files, which are rarely used
+    /// </summary>
+    /// <remarks>Used by DeconMSn</remarks>
     internal class Icr2lsRawData : RawData
     {
         private Icr2lsFileType menm_file_type;
@@ -728,4 +728,3 @@ namespace Engine.Readers
         }
     }
 }
-#endif
