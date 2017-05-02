@@ -95,7 +95,7 @@ namespace Engine.HornTransform
         public override double FitScore(PeakData peakData, int chargeState, double intensityNormalizer, double mzDelta,
             double minIntensityForScore, bool debug = false)
         {
-            throw new System.Exception("Don't Ever come into this FitScore overload in PeakFit");
+            throw new Exception("Don't Ever come into this FitScore overload in PeakFit");
 
             /*
             var numPoints = TheoreticalDistMzs.Count;

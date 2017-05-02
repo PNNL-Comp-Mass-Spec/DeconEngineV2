@@ -76,10 +76,7 @@ namespace DeconToolsV2.DTAGeneration
 
         public bool CreateLogFileOnly { get; set; }
 
-        public bool CreateCompositeDTA
-        {
-            get { return OutputType == OUTPUT_TYPE.CDTA; }
-        }
+        public bool CreateCompositeDTA => OutputType == OUTPUT_TYPE.CDTA;
 
         public int NumMSnLevelsToIgnore { get; set; }
 

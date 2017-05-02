@@ -374,7 +374,7 @@ namespace Engine.PeakProcessing
                 }
 
             }
-            catch (System.Exception)
+            catch (Exception)
             {
             }
 
@@ -412,12 +412,12 @@ namespace Engine.PeakProcessing
                     }
                 }
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
                 peak.Mz = 0.0;
                 peak.Intensity = 0.0;
 #if DEBUG
-                throw e;
+                throw;
 #endif
             }
 

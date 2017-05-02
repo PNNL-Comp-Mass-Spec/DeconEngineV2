@@ -7,7 +7,7 @@ using Engine.Utilities;
 namespace Engine.TheoreticalProfile
 {
     [Obsolete("Usages removed", true)]
-    internal class MolecularFormulaError : System.Exception
+    internal class MolecularFormulaError : Exception
     {
         public string mstr_location;
         public string mstr_message;
@@ -135,7 +135,7 @@ namespace Engine.TheoreticalProfile
                 {
                     var errorStr = "Molecular Formula specified was incorrect at position: " + (stopIndex + 1) +
                                    ". Should have element symbol there";
-                    throw new System.Exception(errorStr);
+                    throw new Exception(errorStr);
                 }
 
                 while ((symbolChar >= 'A' && symbolChar <= 'Z') || (symbolChar >= 'a' && symbolChar <= 'z'))
@@ -171,7 +171,7 @@ namespace Engine.TheoreticalProfile
                             // theres an error. two decimals.
                             var errorStr = "Molecular Formula specified was incorrect at position: " +
                                            (stopIndex + 1) + ". Two decimal points present";
-                            throw new System.Exception(errorStr);
+                            throw new Exception(errorStr);
                         }
                         decimalFound = true;
                     }
@@ -196,7 +196,7 @@ namespace Engine.TheoreticalProfile
                     var errorStr =
                         "Molecular Formula specified was incorrect. Symbol in formula was not recognize from elements provided: ";
                     errorStr += atomicSymbol;
-                    throw new System.Exception(errorStr);
+                    throw new Exception(errorStr);
                 }
                 var currentAtom = new AtomicCount(elementIndex, count);
                 ElementalComposition.Add(currentAtom);

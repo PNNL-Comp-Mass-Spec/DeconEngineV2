@@ -184,7 +184,7 @@ namespace DeconToolsV2
 
                 if (rawData == null)
                 {
-                    throw new System.Exception(string.Concat("Could not open raw file: ", fileName));
+                    throw new Exception(string.Concat("Could not open raw file: ", fileName));
                 }
 
                 var lcmsResults = new Engine.Results.LCMSTransformResults();

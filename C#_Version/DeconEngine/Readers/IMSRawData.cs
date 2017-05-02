@@ -145,7 +145,7 @@ namespace Engine.Readers
 
             if (!File.Exists(marr_filename))
             {
-                throw new System.Exception(" Could not open " + marr_filename + " perhaps it does not exist.");
+                throw new Exception(" Could not open " + marr_filename + " perhaps it does not exist.");
             }
             using (
                 var pFile =
@@ -325,10 +325,10 @@ namespace Engine.Readers
                                 mint_max_scan_size = rec.tof_bin;
                         }
                     }
-                    catch (System.Exception e)
+                    catch (Exception)
                     {
 #if DEBUG
-                        throw e;
+                        throw;
 #endif
                         Console.Error.WriteLine(e.Message);
                     }

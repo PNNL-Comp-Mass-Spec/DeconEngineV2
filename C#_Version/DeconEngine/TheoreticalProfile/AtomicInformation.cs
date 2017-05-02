@@ -2169,7 +2169,7 @@ namespace Engine.TheoreticalProfile
             rdr.MoveToContent();
             if (rdr.Name != XmlElementTag)
             {
-                throw new System.Exception("Bad tag! Reading Isotopes XML file");
+                throw new Exception("Bad tag! Reading Isotopes XML file");
             }
             rdr.ReadStartElement(); // Read the element tag, to get to the contents
             while (rdr.NodeType != XmlNodeType.EndElement)

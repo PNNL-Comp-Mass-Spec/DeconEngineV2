@@ -714,7 +714,7 @@ namespace Engine.Readers
         {
             if (mmap_files_names.Count == 0)
             {
-                throw new System.Exception("No Scans loaded.");
+                throw new Exception("No Scans loaded.");
             }
             return mmap_files_names.First().Key;
         }
@@ -723,7 +723,7 @@ namespace Engine.Readers
         {
             if (mmap_files_names.Count == 0)
             {
-                throw new System.Exception("No Scans loaded.");
+                throw new Exception("No Scans loaded.");
             }
             return mmap_files_names.Last().Key;
         }

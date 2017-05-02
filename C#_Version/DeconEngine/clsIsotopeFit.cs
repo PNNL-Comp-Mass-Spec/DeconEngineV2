@@ -77,7 +77,7 @@ namespace DeconToolsV2
 
             if (mzs.Length == 0)
             {
-                throw new System.Exception("No data provided for the observed spectrum to match to");
+                throw new Exception("No data provided for the observed spectrum to match to");
             }
 
             // mzs should be in sorted order

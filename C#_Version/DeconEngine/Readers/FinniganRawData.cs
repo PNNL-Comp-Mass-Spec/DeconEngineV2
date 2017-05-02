@@ -221,15 +221,15 @@ namespace Engine.Readers
                 m_xraw2_class.GetErrorCode(ref err);
                 if (err != 0)
                 {
-                    throw new System.Exception("Unable to open XCalibur file: " + marr_rawfileName);
+                    throw new Exception("Unable to open XCalibur file: " + marr_rawfileName);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
 #if DEBUG
-                throw e;
+                throw;
 #endif
-                throw new System.Exception("Unable to open XCalibur file: " + marr_rawfileName);
+                throw new Exception("Unable to open XCalibur file: " + marr_rawfileName);
             }
 
             // Get the number of spectra
@@ -242,7 +242,7 @@ namespace Engine.Readers
 
             if (err != 0)
             {
-                throw new System.Exception("Unable to get number of spectra from " + marr_rawfileName);
+                throw new Exception("Unable to get number of spectra from " + marr_rawfileName);
                 //return 1;
             }
 

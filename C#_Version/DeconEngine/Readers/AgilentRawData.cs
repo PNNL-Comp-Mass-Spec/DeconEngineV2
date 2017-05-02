@@ -227,7 +227,7 @@ namespace Engine.Readers
                 if (err != null)
                     Console.Error.WriteLine("Close error with Agilent");
             }
-            catch (System.NullReferenceException *err)
+            catch (NullReferenceException *err)
             {
                 Console.Error.WriteLine("Here");
             }

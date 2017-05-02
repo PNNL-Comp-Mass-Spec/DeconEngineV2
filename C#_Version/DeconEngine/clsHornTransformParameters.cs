@@ -95,7 +95,7 @@ namespace DeconToolsV2.HornTransform
 
         public bool UseMercuryCaching
         {
-            get { return _useMercuryCaching; }
+            get => _useMercuryCaching;
             set
             {
                 _useMercuryCaching = value;
@@ -157,7 +157,7 @@ namespace DeconToolsV2.HornTransform
         /// </summary>
         public double CCMass
         {
-            get { return _ccMass; }
+            get => _ccMass;
             set
             {
                 _ccMass = value;
@@ -191,7 +191,7 @@ namespace DeconToolsV2.HornTransform
 
         public string AveragineFormula
         {
-            get { return _averagineFormula; }
+            get => _averagineFormula;
             set
             {
                 _averagineFormula = value;
@@ -204,7 +204,7 @@ namespace DeconToolsV2.HornTransform
 
         public string TagFormula
         {
-            get { return _tagFormula; }
+            get => _tagFormula;
             set
             {
                 _tagFormula = value;
@@ -216,7 +216,7 @@ namespace DeconToolsV2.HornTransform
         }
         public bool ThrashOrNot
         {
-            get { return _thrashOrNot; }
+            get => _thrashOrNot;
             set
             {
                 _thrashOrNot = value;
@@ -228,7 +228,7 @@ namespace DeconToolsV2.HornTransform
         }
         public bool CompleteFit
         {
-            get { return _completeFit; }
+            get => _completeFit;
             set
             {
                 _completeFit = value;
@@ -265,7 +265,7 @@ namespace DeconToolsV2.HornTransform
 
         public enmIsotopeFitType IsotopeFitType
         {
-            get { return _isotopeFitType; }
+            get => _isotopeFitType;
             set
             {
                 if (_isotopeFitType != value)

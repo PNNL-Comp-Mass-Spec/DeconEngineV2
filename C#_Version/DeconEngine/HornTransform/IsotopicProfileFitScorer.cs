@@ -130,14 +130,14 @@ namespace Engine.HornTransform
 
         public string AveragineFormula
         {
-            get { return AveragineObj.AveragineFormula; }
-            set { AveragineObj.AveragineFormula = value; }
+            get => AveragineObj.AveragineFormula;
+            set => AveragineObj.AveragineFormula = value;
         }
 
         public string TagFormula
         {
-            get { return AveragineObj.TagFormula; }
-            set { AveragineObj.TagFormula = value; }
+            get => AveragineObj.TagFormula;
+            set => AveragineObj.TagFormula = value;
         }
 
         public void SetChargeCarrierMass(double mass)

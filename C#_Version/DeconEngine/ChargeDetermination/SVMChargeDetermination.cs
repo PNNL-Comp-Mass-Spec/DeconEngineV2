@@ -991,7 +991,7 @@ namespace Engine.ChargeDetermination
                 {
                     writer.Write(fileReader.ReadToEnd());
                 }
-                catch (System.Exception)
+                catch (Exception)
                 {
                     // Swallow it, it doesn't matter
                 }

@@ -376,9 +376,9 @@ namespace DeconToolsV2.Readers
         public double GetFTICRSamplingRate()
         {
             if (FileType != FileType.ICR2LSRAWDATA)
-                throw new System.Exception("FileType is not FTICR or Transient information is not available");
+                throw new Exception("FileType is not FTICR or Transient information is not available");
             if (mobj_raw_data == null)
-                throw new System.Exception("RawData not instantiated");
+                throw new Exception("RawData not instantiated");
 
             var icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
             return icrRawData.GetSampleRate();
@@ -387,9 +387,9 @@ namespace DeconToolsV2.Readers
         public void GetFTICRTransient(ref float[] intensities)
         {
             if (FileType != FileType.ICR2LSRAWDATA)
-                throw new System.Exception("FileType is not FTICR or Transient information is not available");
+                throw new Exception("FileType is not FTICR or Transient information is not available");
             if (mobj_raw_data == null)
-                throw new System.Exception("RawData not instantiated");
+                throw new Exception("RawData not instantiated");
 
             var icrRawData = (Engine.Readers.Icr2lsRawData) mobj_raw_data;
             var vect_intensities = new List<float>();
@@ -407,9 +407,9 @@ namespace DeconToolsV2.Readers
         /*  public double GetDriftTime(int scanNum)
         {
         if (get_FileType() != FileType.PNNL_UIMF)
-            throw new System.Exception("FileType is not UIMF");
+            throw new Exception("FileType is not UIMF");
         if (mobj_raw_data == null)
-            throw new System.Exception("RawData not instantiated");
+            throw new Exception("RawData not instantiated");
 
         Engine.Readers.UIMFRawData *uimfRawData = (Engine.Readers.UIMFRawData *) mobj_raw_data;
         return uimfRawData.GetDriftTime(scanNum);
@@ -418,9 +418,9 @@ namespace DeconToolsV2.Readers
         /*  public double GetFramePressure(int frameNum)
         {
             if (get_FileType() != FileType.PNNL_UIMF)
-                throw new System.Exception("FileType is not UIMF");
+                throw new Exception("FileType is not UIMF");
             if (mobj_raw_data == null)
-                throw new System.Exception("RawData not instantiated");
+                throw new Exception("RawData not instantiated");
 
             Engine.Readers.UIMFRawData *uimfRawData = (Engine.Readers.UIMFRawData *) mobj_raw_data;
             return uimfRawData.GetFramePressure(frameNum);
@@ -429,9 +429,9 @@ namespace DeconToolsV2.Readers
         /*public int GetNumOfFrames()
         {
             if (get_FileType() != FileType.PNNL_UIMF)
-                throw new System.Exception("FileType is not UIMF");
+                throw new Exception("FileType is not UIMF");
             if (mobj_raw_data == null)
-                throw new System.Exception("RawData not instantiated");
+                throw new Exception("RawData not instantiated");
 
             Engine.Readers.UIMFRawData *uimfRawData = (Engine.Readers.UIMFRawData *) mobj_raw_data;
             return uimfRawData.GetNumOfFrames();
@@ -441,9 +441,9 @@ namespace DeconToolsV2.Readers
             int startFrame, int endFrame, double min_mz, double max_mz, int imsScanNum)
         {
             if (get_FileType() != FileType.PNNL_UIMF)
-                throw new System.Exception("FileType is not UIMF");
+                throw new Exception("FileType is not UIMF");
             if (mobj_raw_data == null)
-                throw new System.Exception("RawData not instantiated");
+                throw new Exception("RawData not instantiated");
 
             Engine.Readers.UIMFRawData *uimfRawData = (Engine.Readers.UIMFRawData *) mobj_raw_data;
 
@@ -469,7 +469,7 @@ namespace DeconToolsV2.Readers
             catch (char *mesg)
             {
                 string exception_msg = new string (mesg);
-                throw new System.Exception(exception_msg);
+                throw new Exception(exception_msg);
             }
         }*/
 
@@ -478,9 +478,9 @@ namespace DeconToolsV2.Readers
             int ims_end_scan, double min_mz, double max_mz, int numBins )
         {
             if (get_FileType() != FileType.PNNL_UIMF)
-                throw new System.Exception("FileType is not UIMF");
+                throw new Exception("FileType is not UIMF");
             if (mobj_raw_data == null)
-                throw new System.Exception("RawData not instantiated");
+                throw new Exception("RawData not instantiated");
 
             string data_type;
 
@@ -509,7 +509,7 @@ namespace DeconToolsV2.Readers
             catch (char *mesg)
             {
                 string exception_msg = new string (mesg);
-                throw new System.Exception(exception_msg);
+                throw new Exception(exception_msg);
             }
         }*/
     }

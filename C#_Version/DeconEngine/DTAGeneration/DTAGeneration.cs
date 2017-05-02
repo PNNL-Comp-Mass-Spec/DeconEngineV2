@@ -73,7 +73,7 @@ namespace Engine.DTAProcessing
         public Readers.RawData RawDataDTA { get; set; }
         public FileType DatasetType { get; set; }
 
-        private SortedDictionary<int, int> _msNScanToParentMapping = new SortedDictionary<int, int>();
+        private readonly SortedDictionary<int, int> _msNScanToParentMapping = new SortedDictionary<int, int>();
 
         public string LogFilename { get; set; }
         public string ProgressFilename { get; set; }
@@ -117,10 +117,7 @@ namespace Engine.DTAProcessing
         [Obsolete("Only used by Decon2LS.UI", false)]
         ~DTAProcessor()
         {
-            if (RawDataDTA != null)
-            {
-                RawDataDTA.Close();
-            }
+            RawDataDTA?.Close();
         }
 
 #if Enable_Obsolete
@@ -194,7 +191,7 @@ namespace Engine.DTAProcessing
 
         public clsDTAGenerationParameters DtaOptions
         {
-            get { return _dtaOptions; }
+            get => _dtaOptions;
             set
             {
                 _dtaOptions = value;
@@ -245,8 +242,8 @@ namespace Engine.DTAProcessing
 
         public clsHornTransformParameters MassTransformOptions
         {
-            get { return _massTransform.TransformParameters; }
-            set { _massTransform.TransformParameters = value; }
+            get => _massTransform.TransformParameters;
+            set => _massTransform.TransformParameters = value;
         }
 
 #if Enable_Obsolete
@@ -360,10 +357,10 @@ namespace Engine.DTAProcessing
                     }
                 }
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
 #if DEBUG
-                throw e;
+                throw;
 #else
                 return false;
 #endif
@@ -409,7 +406,7 @@ namespace Engine.DTAProcessing
             {
                 RawDataDTA.GetSummedSpectra(out fullMzList, out fullIntensityList, parentScanNumber, 2, minMZ, maxMZ);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -593,10 +590,10 @@ namespace Engine.DTAProcessing
 
                 return false;
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
 #if DEBUG
-                throw e;
+                throw;
 #else
                 return false;
 #endif
@@ -1175,10 +1172,10 @@ namespace Engine.DTAProcessing
                     MGFFileWriter.WriteLine();
                 //}
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
 #if DEBUG
-                throw e;
+                throw;
 #else
                 System.Console.Error.WriteLine("Error in creating .MGF");
 #endif
@@ -1303,7 +1300,7 @@ namespace Engine.DTAProcessing
                     stream.WriteLine("Dataset: {0}", DatasetName);
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 System.Console.Error.WriteLine("Exception writing progress to {0}: {1}", ProgressFilename, e.Message);
             }
@@ -1316,7 +1313,7 @@ namespace Engine.DTAProcessing
             var numTransforms = _transformRecords.Count;
 
             if (ConsiderMultiplePrecursors)
-                throw new System.Exception(
+                throw new Exception(
                     "Can only consider multiple precursors for MGF creation. Change param value to false. ");
 
             //check size, else has failed params
@@ -1414,12 +1411,12 @@ namespace Engine.DTAProcessing
                         {
                             CombinedDTAFileWriter.WriteLine("{0:F5} {1:F2}", mz, intensity);
                         }
-                        catch (System.Exception e)
+                        catch (Exception)
                         {
 #if DEBUG
-                            throw e;
+                            throw;
 #else
-                            throw new System.Exception("Trouble with writing out Peaks in CDTA");
+                            throw new Exception("Trouble with writing out Peaks in CDTA");
 #endif
                         }
                     }

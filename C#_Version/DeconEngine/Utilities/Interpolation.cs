@@ -213,13 +213,13 @@ namespace Engine.Utilities
             var tempY = new List<float>();
             if (x.Count != y.Count)
             {
-                throw new System.Exception("x and y need to be of the same size in ZeroFillMissing");
+                throw new Exception("x and y need to be of the same size in ZeroFillMissing");
             }
 
             var numPts = x.Count;
             if (numPts <= 1)
             {
-                //throw new System.Exception("x is empty in ZeroFillMissing");
+                //throw new Exception("x is empty in ZeroFillMissing");
                 return 0;
             }
             tempX.Capacity = numPts * 2;
@@ -325,14 +325,14 @@ namespace Engine.Utilities
             var tempY = new List<double>();
             if (x.Count != y.Count)
             {
-                //throw new System.Exception("x and y need to be of the same size in ZeroFillMissing");
+                //throw new Exception("x and y need to be of the same size in ZeroFillMissing");
                 return 0;
             }
 
             var numPts = x.Count;
             if (numPts <= 1)
             {
-                //throw new System.Exception("x size is 1 or less in ZeroFillMissing Overloaded");
+                //throw new Exception("x size is 1 or less in ZeroFillMissing Overloaded");
                 return 0;
             }
 
@@ -433,10 +433,10 @@ namespace Engine.Utilities
                 y.AddRange(tempY);
                 return numPtsAdded;
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
 #if DEBUG
-                throw e;
+                throw;
 #else
                 return 0;
 #endif

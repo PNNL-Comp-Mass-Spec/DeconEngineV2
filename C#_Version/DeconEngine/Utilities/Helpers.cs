@@ -141,7 +141,7 @@ namespace Engine.Utilities
             var bytesRead = 0;
             if (size > int.MaxValue)
             {
-                throw new System.Exception("Very large contiguous reads from a file not currently supported");
+                throw new Exception("Very large contiguous reads from a file not currently supported");
             }
             bytesRead = file.Read(bytes, 0, (int) size);
             using (var stream = new StreamReader(new MemoryStream(bytes), Encoding.ASCII))

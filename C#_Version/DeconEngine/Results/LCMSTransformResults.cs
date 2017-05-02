@@ -403,7 +403,7 @@ namespace Engine.Results
                 }
                 _transforms.AddRange(fitResults);
             }
-            catch (OutOfMemoryException e)
+            catch (OutOfMemoryException)
             {
                 if (_saveStructsInMemory)
                 {
@@ -412,7 +412,7 @@ namespace Engine.Results
                 }
                 _dataInMemoryIsIncomplete = true;
 #if DEBUG
-                throw e;
+                throw;
 #endif
             }
         }

@@ -127,7 +127,7 @@ namespace DeconToolsV2.Peaks
                             }
                             if (rdr.NodeType != XmlNodeType.Text)
                             {
-                                throw new System.Exception(
+                                throw new Exception(
                                     "Missing information for PeakBackgroundRatio in parameter file");
                             }
                             this.PeakBackgroundRatio = double.Parse(rdr.Value);
@@ -142,7 +142,7 @@ namespace DeconToolsV2.Peaks
                             }
                             if (rdr.NodeType != XmlNodeType.Text)
                             {
-                                throw new System.Exception(
+                                throw new Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
                             this.SignalToNoiseThreshold = double.Parse(rdr.Value);
@@ -157,7 +157,7 @@ namespace DeconToolsV2.Peaks
                             }
                             if (rdr.NodeType != XmlNodeType.Text)
                             {
-                                throw new System.Exception(
+                                throw new Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
                             if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Quadratic.ToString().ToUpper()))
@@ -183,7 +183,7 @@ namespace DeconToolsV2.Peaks
                             }
                             if (rdr.NodeType != XmlNodeType.Text)
                             {
-                                throw new System.Exception(
+                                throw new Exception(
                                     "Missing information for 'WritePeaksToTextFile' parameter in parameter file");
                             }
                             this.WritePeaksToTextFile = bool.Parse(rdr.Value);

@@ -200,7 +200,7 @@ namespace DeconToolsV2.Readers
                             }
                             if (rdr.NodeType != XmlNodeType.Text)
                             {
-                                throw new System.Exception("Missing information for ApodizationType in parameter file");
+                                throw new Exception("Missing information for ApodizationType in parameter file");
                             }
                             if (rdr.Value.Equals(DeconToolsV2.Readers.ApodizationType.HANNING.ToString()))
                             {

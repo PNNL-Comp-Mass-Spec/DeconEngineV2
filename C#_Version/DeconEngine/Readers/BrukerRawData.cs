@@ -237,11 +237,11 @@ namespace Engine.Readers
             {
                 fh = new FileStream(marr_serName, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
-            catch (System.Exception e)
+            catch (Exception)
             {
                 Console.Error.WriteLine(" Could not open " + marr_serName + " perhaps it does not exist. Exiting");
 #if DEBUG
-                throw e;
+                throw;
 #endif
                 System.Environment.Exit(1);
             }

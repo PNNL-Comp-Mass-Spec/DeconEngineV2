@@ -4,7 +4,7 @@ using System;
 namespace Engine.Exception
 {
     [Obsolete("Not used anywhere", true)]
-    internal class InterpolationException : System.Exception
+    internal class InterpolationException : Exception
     {
         public InterpolationException(string mesg)
             : base(mesg)

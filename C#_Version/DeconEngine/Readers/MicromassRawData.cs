@@ -238,7 +238,7 @@ namespace Engine.Readers
             {
                 // should end in .dat or .raw
                 var message = "Invalid Masslynx 4 file name: " + file + " Should have a .raw in the path name";
-                throw new System.Exception(message);
+                throw new Exception(message);
             }
             var ext = Path.GetExtension(file);
             if (ext.ToLower() == ".raw")
@@ -253,7 +253,7 @@ namespace Engine.Readers
                 {
                     // should end in .dat or .raw
                     var message = "Invalid Masslynx 4 file name: " + file + " Should have a .raw in the path name";
-                    throw new System.Exception(message);
+                    throw new Exception(message);
                 }
                 marr_filename = file.Substring(ptr + 4);
             }

@@ -365,7 +365,7 @@ namespace Engine.Calibrations
                 case CalibrationType.BRUKER_CALMET:
                     return Mass2Freq9(mass);
                 default:
-                    throw new System.Exception("Calibration Type not Supported");
+                    throw new Exception("Calibration Type not Supported");
             }
         }
 
@@ -392,7 +392,7 @@ namespace Engine.Calibrations
                 case CalibrationType.BRUKER_CALMET:
                     return GetMassFromFreq9(freq);
                 default:
-                    throw new System.Exception("Calibration Type not Supported");
+                    throw new Exception("Calibration Type not Supported");
             }
         }
 

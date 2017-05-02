@@ -18,7 +18,6 @@ namespace Engine.Readers
         public static int BACKGROUND_RATIO_FOR_TIC = 3;
         public static double MIN_MZ = 400;
         public static double MAX_MZ = 2000;
-        private FileType menm_file_type;
 
 #if Enable_Obsolete
         protected Calibrations.Calibrator mobj_calibrator;
@@ -147,7 +146,7 @@ namespace Engine.Readers
             double min_mz, double max_mz, bool centroid)
         {
             if (max_mz <= min_mz)
-                throw new System.Exception("max_mz should be greater than min_mz");
+                throw new Exception("max_mz should be greater than min_mz");
 
             vectMZs = new List<double>();
             vectIntensities = new List<double>();
@@ -158,7 +157,7 @@ namespace Engine.Readers
             if (numPts <= 1)
             {
                 Console.Error.WriteLine(scan);
-                throw new System.Exception("mz_vector empty in GetRawData in RawData.cpp");
+                throw new Exception("mz_vector empty in GetRawData in RawData.cpp");
             }
             var startIndex = PeakIndex.GetNearestBinary(allMZs, min_mz, 0, numPts - 1);
             var stopIndex = PeakIndex.GetNearestBinary(allMZs, max_mz, 0, numPts - 1);
@@ -464,12 +463,12 @@ namespace Engine.Readers
                         GetSummedSpectra(out mzs, out intensities, scan_num, scan_range, minMZ, maxMZ, mzBin);
                     }
                 }
-                catch (System.NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     mzs.Clear();
                     intensities.Clear();
 #if DEBUG
-                    throw e;
+                    throw;
 #endif
                     return;
                 }
@@ -518,12 +517,12 @@ namespace Engine.Readers
                         GetSummedSpectra(out mzs, out intensities, scan, scan_range, min_mz, max_mz, mzBin);
                     }
                 }
-                catch (System.NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     mzs.Clear();
                     intensities.Clear();
 #if DEBUG
-                    throw e;
+                    throw;
 #endif
                     return;
                 }
@@ -538,9 +537,6 @@ namespace Engine.Readers
             intensities = new List<double>();
             var minDatasetScan = GetFirstScanNum();
             var maxDatasetScan = GetLastScanNum();
-
-            var scan_mzs = new List<double>();
-            var scan_intensities = new List<double>();
 
             if (max_mz <= min_mz)
             {
@@ -558,12 +554,12 @@ namespace Engine.Readers
                     mz += mz_bin;
                 }
             }
-            catch (System.NullReferenceException e)
+            catch (NullReferenceException)
             {
                 mzs.Clear();
                 intensities.Clear();
 #if DEBUG
-                throw e;
+                throw;
 #endif
                 return;
             }
@@ -578,6 +574,8 @@ namespace Engine.Readers
                 // numScansSummed needs to be 1 + the scan range because we are summing the first
                 // scan here.
                 List<double> interpolatedIntensities;
+                List<double> scan_mzs;
+                List<double> scan_intensities;
                 while (currentScan >= minDatasetScan && numScansSummed < scan_range + 1)
                 {
                     if (!IsMSScan(currentScan))
@@ -676,12 +674,12 @@ namespace Engine.Readers
                     numScansSummed++;
                 }
             }
-            catch (System.NullReferenceException e)
+            catch (NullReferenceException)
             {
                 mzs.Clear();
                 intensities.Clear();
 #if DEBUG
-                throw e;
+                throw;
 #else
                 return;
 #endif

@@ -214,7 +214,7 @@ namespace Engine.Readers
             if (scan_num > mint_num_scans)
             {
                 var mesg = "File only has " + mint_num_scans + " scans. Cannot read to scan number: " + scan_num;
-                throw new System.Exception(mesg);
+                throw new Exception(mesg);
             }
 
             mint_current_scan = scan_num;
