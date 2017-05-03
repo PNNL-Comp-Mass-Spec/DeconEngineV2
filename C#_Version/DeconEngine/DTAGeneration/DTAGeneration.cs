@@ -1236,7 +1236,7 @@ namespace Engine.DTAProcessing
                 {
                     fout.WriteLine("{0}\t{1}\t{2:F4}\t{3}", profileRecord.MSnScanNum,
                         profileRecord.ParentScanNum, profileRecord.AgcTime,
-                                   PRISM.StringUtilities.ValueToString(profileRecord.TotalIonCurrent, 4, 1e10));
+                        PRISM.StringUtilities.ValueToString(profileRecord.TotalIonCurrent, 7, 1e10));
                 }
             }
         }
