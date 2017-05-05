@@ -380,7 +380,6 @@ namespace DeconEngine
             }
             return num_pts_new;
         }
-    }
 
 #if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe)", true)]
@@ -423,6 +422,6 @@ namespace DeconEngine
             for (var i = 0; i < intensities.Length; i++)
                 intensities[i] = arrIntensities[i];
         }
-    }
 #endif
+    }
 }

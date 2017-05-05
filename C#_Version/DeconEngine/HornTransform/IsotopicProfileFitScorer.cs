@@ -209,7 +209,6 @@ namespace Engine.HornTransform
             return scorer;
         }
 
-#if !Disable_Obsolete
         /// <summary>
         ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
         /// </summary>
@@ -257,7 +256,6 @@ namespace Engine.HornTransform
             ChargeCarrierMass = chargeCarrierMass;
             _mercuryCache.MercurySize = IsotopeDistribution.MercurySize;
         }
-#endif
 
         /// <summary>
         ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
@@ -982,6 +980,7 @@ namespace Engine.HornTransform
             }
         }
 
+#if Enable_Obsolete
         /// <summary>
         ///     will calculate the delta mz (referenced to the theor) based on several of the observed peaks
         /// </summary>
@@ -1063,6 +1062,7 @@ namespace Engine.HornTransform
 
             return weightedDelta;
         }
+#endif
     }
 
 }
