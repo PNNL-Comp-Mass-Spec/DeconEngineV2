@@ -160,6 +160,7 @@ namespace Engine.HornTransform
             set => _isotopeFitter.ElementalIsotopeComposition = value;
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public clsHornTransformParameters TransformParameters
         {
             get => _transformParameters;
@@ -286,6 +287,7 @@ namespace Engine.HornTransform
         /// <param name="useThrash"></param>
         /// <param name="completeFitThrash"></param>
         /// <remarks>Used by Decon2LS.UI and DeconMSn</remarks>
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetIsotopeFitOptions(string averagineFormula, string tagFormula, bool useThrash,
             bool completeFitThrash)
         {

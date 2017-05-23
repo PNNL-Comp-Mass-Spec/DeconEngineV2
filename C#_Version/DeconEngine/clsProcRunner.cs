@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using DeconToolsV2.HornTransform;
 using DeconToolsV2.Peaks;
+using Engine.HornTransform;
+using Engine.PeakProcessing;
 #if Enable_Obsolete
-using DeconToolsV2.HornTransform;
-using DeconToolsV2.Peaks;
 using DeconToolsV2.Readers;
 using Engine.DTAProcessing;
 using Engine.Utilities;
@@ -105,8 +105,10 @@ namespace DeconToolsV2
         {
             _percentDone = 0;
 #if Enable_Obsolete
+#pragma warning disable 618
             ProcessState = enmProcessState.IDLE;
             HornTransformResults = null;
+#pragma warning restore 618
 #endif
             FileName = null;
             OutputPathForDTACreation = null;
@@ -116,6 +118,7 @@ namespace DeconToolsV2
         }
 
 #if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         private Results.clsTransformResults CreateTransformResults(string fileName, FileType fileType,
             clsPeakProcessorParameters peakParameters, clsHornTransformParameters transformParameters,
             clsRawDataPreprocessOptions fticrPreprocessParameters, bool savePeaks, bool transform)
@@ -143,16 +146,16 @@ namespace DeconToolsV2
             SavGolSmoother sgSmoother = null;
 
             //      Engine.ResultChecker.LCMSCheckResults *lcms_checker = null;
-            var transform_results = new Results.clsTransformResults();
+            var transformResults = new Results.clsTransformResults();
 
             try
             {
-                var vect_transform_records = new List<clsHornTransformResults>();
+                var transformRecords = new List<clsHornTransformResults>();
                 // while the thresholded parameter is already set in the clsPeakProcessParameters, we would
                 // like to override that here if the data type is Finnigan because that data is threshold.
                 bool thresholded;
-                if (file_type == FileType.FINNIGAN ||
-                    file_type == FileType.MZXMLRAWDATA)
+                if (fileType == FileType.FINNIGAN ||
+                    fileType == FileType.MZXMLRAWDATA)
                     thresholded = true;
                 else
                     thresholded = peakParameters.ThresholdedData;
@@ -161,7 +164,7 @@ namespace DeconToolsV2
                 ProcessState = enmProcessState.RUNNING;
 
                 // Create a RawData object and read through each scan and discover peaks.
-                var file_name_ch = file_name;
+                var file_name_ch = fileName;
 
                 // enumerations of file type are the same in Readers namespace and
                 // DeconWrapperManaged namespace.
@@ -245,7 +248,6 @@ namespace DeconToolsV2
                 if (transformParameters.UseScanRange && transformParameters.MaxScan < maxScan)
                     maxScan = transformParameters.MaxScan;
 
-                SavGolSmoother sgSmoother = null;
                 //Interpolation interpolator = null;
                 //if (transformParameters.ZeroFill)
                 //{
@@ -292,8 +294,6 @@ namespace DeconToolsV2
                     short scanMsLevel = 1;
                     var centroid = false;
                     //Check if it needs to be processed
-                    short scan_ms_level;
-                    bool centroid;
                     if (rawData.IsMSScan(scanNum))
                     {
                         scanMsLevel = 1;
@@ -327,7 +327,7 @@ namespace DeconToolsV2
                         }
                         else
                         {
-                            var num_mzs_this_scan = vect_mzs.Count;
+                            var num_mzs_this_scan = mzs.Count;
                             minMz = mzs[0];
                             maxMz = mzs[mzs.Count - 1];
                         }
@@ -379,7 +379,6 @@ namespace DeconToolsV2
                         rawData.GetSummedSpectra(out mzs, out intensities, scanNum, scanRange);
                     }
 
-                   
                     var scanTime = rawData.GetScanTime(scanNum);
                     //var driftTime = 0d;
                     //if (fileType == DeconToolsV2.Readers.PNNL_UIMF)
@@ -418,11 +417,9 @@ namespace DeconToolsV2
                     var minMZ = mzs[0];
                     var maxMZ = mzs[mzs.Count - 1];
 
-                  
                     var thres = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
                     var backgroundIntensity = DeconEngine.Utils.GetAverage(intensities, (float) (5 * thres));
 
-                 
                     // currentTime = DateTime.Now;
 
                     var ticIntensity = 0d;
@@ -441,20 +438,16 @@ namespace DeconToolsV2
                             (float) (backgroundIntensity * peakParameters.PeakBackgroundRatio), ref bpi, ref bpMz);
                     }
 
-                  
                     peakProcessor.SetPeakIntensityThreshold(backgroundIntensity * peakParameters.PeakBackgroundRatio);
                     var numPeaks = 0;
                     if (HornTransformParameters.UseMZRange)
                     {
-                       
                         numPeaks = peakProcessor.DiscoverPeaks(mzs, intensities,
                             HornTransformParameters.MinMZ, HornTransformParameters.MaxMZ);
-
-                       
                     }
                     else
                     {
-                                              numPeaks = peakProcessor.DiscoverPeaks(mzs, intensities);                       
+                        numPeaks = peakProcessor.DiscoverPeaks(mzs, intensities);
                     }
 
                     if (savePeaks)
@@ -555,7 +548,7 @@ namespace DeconToolsV2
                                 throw;
 #else
                                 Console.WriteLine("Error in CreateTransformResults: " + ex.Message);
-                                Console.WriteLine("Scan {0}, peak {1}", scan_num, currentPeak.PeakIndex);
+                                Console.WriteLine("Scan {0}, peak {1}", scanNum, currentPeak.PeakIndex);
                                 Console.WriteLine(PRISM.clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
 #endif
                             }
@@ -646,12 +639,14 @@ namespace DeconToolsV2
             }
 
 #if Enable_Obsolete
+#pragma warning disable 618
             if (ProcessState == enmProcessState.RUNNING)
             {
                 throw new Exception(
                     "Process already running in clsProcRunner. Cannot run two processes with same object");
             }
             ProcessState = enmProcessState.RUNNING;
+#pragma warning restore 618
 #endif
 
             _percentDone = 0;
@@ -1030,11 +1025,14 @@ namespace DeconToolsV2
 
             //Done
 #if Enable_Obsolete
+#pragma warning disable 618
             ProcessState = enmProcessState.COMPLETE;
+#pragma warning restore 618
 #endif
         }
 
 #if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithPeaksOnly()
         {
             if (FileName == null)
@@ -1049,6 +1047,7 @@ namespace DeconToolsV2
                 HornTransformParameters, FTICRPreprocessOptions, true, false);
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithNoPeaks()
         {
             if (FileName == null)
@@ -1067,6 +1066,7 @@ namespace DeconToolsV2
                 HornTransformParameters, FTICRPreprocessOptions, false, true);
         }
 
+        [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResults()
         {
             if (FileName == null)

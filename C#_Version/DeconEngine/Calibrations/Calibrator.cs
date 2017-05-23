@@ -152,6 +152,7 @@ namespace Engine.Calibrations
             return mass;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double Mass2Freq0(double mass)
         {
             // Reverse the Freq2Mass equation and solve for frequency.
@@ -162,6 +163,7 @@ namespace Engine.Calibrations
             return GetFrequencyFromCubicEquation0(p, q, r, mass);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double Mass2Freq1(double mass)
         {
             // Reverse the Freq2Mass equation and solve for frequency.
@@ -171,6 +173,7 @@ namespace Engine.Calibrations
             return GetFrequencyFromQuadraticEquation1(b, c, mass);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double Mass2Freq2(double mass)
         {
             // Reverse the Freq2Mass equation and solve for frequency.
@@ -179,6 +182,7 @@ namespace Engine.Calibrations
                 -1 * (CalibConstB + CalibConstC * IntensityNormalizer) / mass, mass);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double Mass2Freq3(double mass)
         {
             // Reverse the Freq2Mass equation and solve for frequency.
@@ -222,6 +226,7 @@ namespace Engine.Calibrations
             return mass;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromCubicEquation0(double p, double q, double r, double mass)
         {
             // Solves the equation F^3 + p F^2 + q F + r = 0  and chooses root that
@@ -246,6 +251,7 @@ namespace Engine.Calibrations
             return roots[best];
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromQuadraticEquation1(double b, double c, double mass)
         {
             double[] roots;
@@ -269,6 +275,7 @@ namespace Engine.Calibrations
             return roots[1];
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromQuadraticEquation2(double b, double c, double mass)
         {
             double[] roots;
@@ -294,6 +301,7 @@ namespace Engine.Calibrations
             return roots[1];
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromQuadraticEquation3(double b, double c, double mass)
         {
             double[] roots;
@@ -342,6 +350,7 @@ namespace Engine.Calibrations
             return numPtsUsed;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public double Mass2Freq(double mass)
         {
             switch (CalibType)
@@ -429,11 +438,13 @@ namespace Engine.Calibrations
             return index / SampleRate;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public int GetRawPointsApplyFFT(ref float[] dataArray, out List<double> mzs, out List<double> intensities)
         {
             return GetRawPointsApplyFFT(ref dataArray, out mzs, out intensities, NumPointsInScan);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public int GetRawPointsApplyFFT(ref float[] dataArray, out List<double> mzs, out List<double> intensities,
             int numPtsUsed)
         {
@@ -554,6 +565,7 @@ namespace Engine.Calibrations
             return NumPointsInScan / 2;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public int FindIndexByMass(double val)
         {
             int index;

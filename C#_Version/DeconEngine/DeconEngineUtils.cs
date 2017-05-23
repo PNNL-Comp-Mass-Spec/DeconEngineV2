@@ -53,6 +53,7 @@ namespace DeconEngine
             return average;
         }
 
+        [Obsolete("Not accessed within DeconTools solution except through tests", false)]
         public static double GetBackgroundLevel(float[] intensities, float maxIntensity)
         {
             var numPts = intensities.Length;

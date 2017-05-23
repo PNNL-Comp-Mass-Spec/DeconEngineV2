@@ -64,11 +64,13 @@ namespace Engine.Readers
             return mdbl_k0 * mdbl_k0 * (t - mdbl_t0) * (t - mdbl_t0);
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.PNNL_IMS;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return GetNumScans();
@@ -325,7 +327,7 @@ namespace Engine.Readers
                                 mint_max_scan_size = rec.tof_bin;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
 #if DEBUG
                         throw;
@@ -399,6 +401,7 @@ namespace Engine.Readers
             return scan_num * mdbl_scan_interval;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return marr_filename;
@@ -533,6 +536,7 @@ namespace Engine.Readers
             return true;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return mint_max_scan_size;
@@ -543,11 +547,13 @@ namespace Engine.Readers
             return mint_num_scans;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {

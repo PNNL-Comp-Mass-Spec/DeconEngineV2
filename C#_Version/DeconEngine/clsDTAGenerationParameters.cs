@@ -228,7 +228,7 @@ namespace DeconToolsV2.DTAGeneration
                 var numLevels = NumMSnLevelsToIgnore;
                 for (var levelNum = 0; levelNum < numLevels; levelNum++)
                 {
-                    int level = mvect_msn_levels_to_ignore[levelNum];
+                    int level = _msnLevelsToIgnore[levelNum];
                     xwriter.WriteWhitespace("\n\t\t");
                     xwriter.WriteElementString("MSnLevelToIgnore", level.ToString());
                 }

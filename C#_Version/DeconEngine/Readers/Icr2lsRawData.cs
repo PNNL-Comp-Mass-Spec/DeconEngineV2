@@ -66,6 +66,7 @@ namespace Engine.Readers
 
         SortedDictionary<int, string> mmap_files_names = new SortedDictionary<int, string>();
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.ICR2LSRAWDATA;
@@ -76,6 +77,7 @@ namespace Engine.Readers
             return mdbl_sample_rate;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return GetNumScans();
@@ -126,6 +128,7 @@ namespace Engine.Readers
             mshort_num_zeros = num_zeros;
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void GetFTICRTransient(ref List<float> vect_intensities)
         {
             // first reload current data.
@@ -144,6 +147,7 @@ namespace Engine.Readers
             }
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         private bool LoadFile(string f_name, int scan_num)
         {
             const int flt_size = sizeof (float);
@@ -443,6 +447,7 @@ namespace Engine.Readers
             return true;
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         private bool LoadFile(int scan_num)
         {
             string file_name;
@@ -477,6 +482,7 @@ namespace Engine.Readers
             return scan_num;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
@@ -485,6 +491,7 @@ namespace Engine.Readers
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
@@ -520,7 +527,9 @@ namespace Engine.Readers
             if (scan_num != mint_last_scan_num)
             {
                 mint_last_scan_num = scan_num;
+#pragma warning disable 618
                 var loaded = LoadFile(file_name, scan_num);
+#pragma warning restore 618
                 if (num_pts <= 0 || num_pts > mint_num_points_in_scan * (1 << mshort_num_zeros))
                     num_pts = mint_num_points_in_scan * (1 << mshort_num_zeros);
                 if (!loaded)
@@ -535,7 +544,9 @@ namespace Engine.Readers
                 Buffer.BlockCopy(mptr_data_copy, 0, mptr_data, 0, num_pts);
             }
 
+#pragma warning disable 618
             mobj_calibrator.GetRawPointsApplyFFT(ref mptr_data, out mzs, out intensities, num_pts);
+#pragma warning restore 618
             return true;
         }
 
@@ -679,6 +690,7 @@ namespace Engine.Readers
             mbln_use_specified_calibration = false;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetScanDescription(int scan, out string description)
         {
             description = "Scan #" + scan;
@@ -688,11 +700,13 @@ namespace Engine.Readers
         {
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return marr_file_name;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return this.mint_num_points_in_scan;
@@ -705,6 +719,7 @@ namespace Engine.Readers
             return mmap_files_names.Last().Key;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNextScanNum(int current_scan_num)
         {
             return mmap_files_names.Select(x => x.Key).Where(x => x > current_scan_num).DefaultIfEmpty(-1).First();

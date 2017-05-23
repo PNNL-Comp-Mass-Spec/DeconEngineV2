@@ -51,6 +51,7 @@ namespace Engine.Readers
         private DACSERVERLib.IDACFunctionInfo *mptr_dac_func_info;
 #endif
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.MICROMASSRAWDATA;
@@ -71,6 +72,7 @@ namespace Engine.Readers
             return GetNumScans() - 1;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return GetNumScans();
@@ -227,6 +229,7 @@ namespace Engine.Readers
         {
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return null;
@@ -441,10 +444,8 @@ namespace Engine.Readers
             {
                 case enmMassLynxVersion.V_3:
                     return GetRawDataV3(out mzs, out intensities, scan_num, centroid);
-                    break;
                 case enmMassLynxVersion.V_4:
                     return GetRawDataV4(out mzs, out intensities, scan_num, centroid);
-                    break;
                 default:
                     break;
             }
@@ -459,10 +460,8 @@ namespace Engine.Readers
             {
                 case enmMassLynxVersion.V_3:
                     return GetRawDataV3(out mzs, out intensities, scan_num, centroid, num_pts);
-                    break;
                 case enmMassLynxVersion.V_4:
                     return GetRawDataV4(out mzs, out intensities, scan_num, centroid, num_pts);
-                    break;
                 default:
                     break;
             }
@@ -494,16 +493,15 @@ namespace Engine.Readers
             {
                 case enmMassLynxVersion.V_3:
                     return GetScanTimeV3(scan_num);
-                    break;
                 case enmMassLynxVersion.V_4:
                     return GetScanTimeV4(scan_num);
-                    break;
                 default:
                     break;
             }
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return mint_num_points;
@@ -514,6 +512,7 @@ namespace Engine.Readers
             return (int) mvectScanInfo.Count;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             return 0;
@@ -620,6 +619,7 @@ namespace Engine.Readers
             return;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
@@ -627,11 +627,9 @@ namespace Engine.Readers
             {
                 case enmMassLynxVersion.V_3:
                     GetTicFromFileV3(out intensities, out scan_times, base_peak_tic);
-                    return;
                     break;
                 case enmMassLynxVersion.V_4:
                     GetTicFromFileV4(out intensities, out scan_times, base_peak_tic);
-                    return;
                     break;
                 default:
                     intensities = new List<double>();

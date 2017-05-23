@@ -1,4 +1,4 @@
-#if Enable_Obsolete
+#if Enable_Obsolete && false
 using System;
 
 namespace Engine.Exception

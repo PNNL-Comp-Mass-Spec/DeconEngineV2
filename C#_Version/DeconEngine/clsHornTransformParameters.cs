@@ -74,7 +74,9 @@ namespace DeconToolsV2.HornTransform
             UseRAPIDDeconvolution = false;
             ReplaceRAPIDScoreWithHornFitScore = false;
 #if Enable_Obsolete
+#pragma warning disable 618
             ExportFileType = enmExportFileType.TEXT;
+#pragma warning restore 618
 #endif
             NumPeaksUsedInAbundance = 1;
             DetectPeaksOnlyWithNoDeconvolution = false;
@@ -360,7 +362,9 @@ namespace DeconToolsV2.HornTransform
                 UseRAPIDDeconvolution = UseRAPIDDeconvolution,
                 ReplaceRAPIDScoreWithHornFitScore = ReplaceRAPIDScoreWithHornFitScore,
 #if Enable_Obsolete
+#pragma warning disable 618
                 ExportFileType = ExportFileType,
+#pragma warning restore 618
 #endif
                 NumPeaksUsedInAbundance = NumPeaksUsedInAbundance,
                 NumScansToAdvance = NumScansToAdvance,

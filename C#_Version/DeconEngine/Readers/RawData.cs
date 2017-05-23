@@ -30,7 +30,11 @@ namespace Engine.Readers
 #endif
 
         public const int MAX_SCAN_SIZE = 4 * 1024 * 1024;
+
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract string GetFileName();
+
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract FileType GetFileType();
 
         public abstract bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid);
@@ -43,8 +47,11 @@ namespace Engine.Readers
 
         public abstract int GetNumScans();
         public abstract double GetScanTime(int scan_num);
+
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract int GetScanSize();
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetNumScansLoaded()
         {
             return GetNumScans();
@@ -55,17 +62,22 @@ namespace Engine.Readers
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual void GetScanDescription(int scan, out string description)
         {
             description = "Scan #" + scan;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract double GetSignalRange(int scan_num, bool centroid);
+
         public abstract bool IsZoomScan(int scan_num);
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public abstract void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic);
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetNextScanNum(int current_scan_num)
         {
             return current_scan_num + 1;
@@ -93,11 +105,13 @@ namespace Engine.Readers
             return false;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual double GetMonoMZFromHeader(int scan_num)
         {
             return 0;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual short GetMonoChargeFromHeader(int scan_num)
         {
             return 0;
@@ -136,6 +150,7 @@ namespace Engine.Readers
             mobj_calibrator = calib;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public virtual int GetMassIndex(double mz)
         {
             return mobj_calibrator.FindIndexByMass(mz);

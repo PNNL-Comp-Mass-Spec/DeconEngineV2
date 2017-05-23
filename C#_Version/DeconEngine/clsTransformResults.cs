@@ -220,6 +220,7 @@ namespace DeconToolsV2.Results
             return mobj_lcms_results.GetNumPeaks();
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void ReadResults(string fileName)
         {
             if (mobj_lcms_results == null)
@@ -230,6 +231,7 @@ namespace DeconToolsV2.Results
             mobj_lcms_results.LoadResults(fileName);
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void WriteResults(string fileName, bool save_signal_range)
         {
             mobj_lcms_results.SaveResults(fileName, save_signal_range);
@@ -237,7 +239,9 @@ namespace DeconToolsV2.Results
 
         public void WriteScanResults(string fileName)
         {
+#pragma warning disable 618
             if (menmFileType != Readers.FileType.ICR2LSRAWDATA)
+#pragma warning restore 618
                 mobj_lcms_results.SaveScanResults(fileName, false);
             else
                 mobj_lcms_results.SaveScanResults(fileName, true);

@@ -46,8 +46,10 @@ namespace DeconToolsV2.Peaks
     public class clsPeakProcessorParameters
     {
 #if Enable_Obsolete
-    /// <summary>
-    /// Peak processor parameters
+        /// <summary>
+        /// Peak processor parameters
+        /// </summary>
+        [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public clsPeakProcessorParameters Clone()
         {
             var newParams = new clsPeakProcessorParameters

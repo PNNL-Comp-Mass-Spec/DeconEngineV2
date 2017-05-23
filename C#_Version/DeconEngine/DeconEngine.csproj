@@ -93,6 +93,33 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All_Enabled|AnyCPU'">
+    <OutputPath>bin\All_Enabled\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED Enable_Obsolete</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All_Enabled|x64'">
+    <OutputPath>bin\x64\All_Enabled\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED Enable_Obsolete</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'All_Enabled|x86'">
+    <OutputPath>bin\x86\All_Enabled\</OutputPath>
+    <DefineConstants>TRACE;XCALIBUR_INSTALLED Enable_Obsolete</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MSDataFileReader">
       <HintPath>..\lib\MSDataFileReader.dll</HintPath>

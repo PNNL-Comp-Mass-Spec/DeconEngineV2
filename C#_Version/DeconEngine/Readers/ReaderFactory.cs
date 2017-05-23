@@ -1,3 +1,6 @@
+#if Enable_Obsolete
+using System;
+#endif
 using DeconToolsV2.Readers;
 
 namespace Engine.Readers
@@ -34,6 +37,7 @@ namespace Engine.Readers
             switch (fileType)
             {
 #if Enable_Obsolete
+#pragma warning disable 618
                 case FileType.BRUKER:
                     rawData = new BrukerRawData();
                     rawData.Load(fileName);
@@ -60,6 +64,7 @@ namespace Engine.Readers
                     rawData = new Icr2lsRawData();
                     rawData.Load(fileName);
                     break;
+#pragma warning restore 618
 #endif
                 case FileType.FINNIGAN:
 #if XCALIBUR_INSTALLED
@@ -68,22 +73,26 @@ namespace Engine.Readers
 #endif
                     break;
 #if Enable_Obsolete
+#pragma warning disable 618
                 case FileType.MICROMASSRAWDATA:
 #if MASSLYNX_4_INSTALLED
                     rawData = new MicromassRawData();
                     rawData.Load(fileName);
 #endif
                     break;
+#pragma warning restore 618
 #endif
                 case FileType.MZXMLRAWDATA:
                     rawData = new MZXmlRawData();
                     rawData.Load(fileName);
                     break;
 #if Enable_Obsolete
+#pragma warning disable 618
                 case FileType.PNNL_IMS:
                     rawData = new IMSRawData();
                     rawData.Load(fileName);
                     break;
+#pragma warning restore 618
 #endif
                 //case FileType.PNNL_UIMF:
                 //    rawData = new UIMFRawData();

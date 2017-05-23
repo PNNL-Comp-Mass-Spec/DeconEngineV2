@@ -326,7 +326,7 @@ namespace Engine.Results
                     _scanPeakIndicesDict.Add(scan, _numPeaksStored);
                 }
                 _numPeaksStored += numPeaks;
-                
+
                 // Create LCMSPeaks.
                 var lcPeaks = new List<LcmsPeak> {
                     Capacity = peaks.Count
@@ -372,6 +372,7 @@ namespace Engine.Results
         }
 
 #if Enable_Obsolete
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void AddTransforms(List<clsHornTransformResults> fitResults)
         {
             try
@@ -433,6 +434,7 @@ namespace Engine.Results
             return _deisotoped;
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         private void SaveResultsV1Iso(string isoFileName)
         {
             using (
@@ -571,6 +573,7 @@ namespace Engine.Results
         //  double mdbl_mz;
         //  double mdbl_intensity;
         //};
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         private void LoadResultsV1Data(string dataFileName)
         {
             _saveStructsInMemory = true;
@@ -632,6 +635,7 @@ namespace Engine.Results
             CreateIndexesOnData();
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         private void SaveResultsV1(string fileName, bool saveSignalRange)
         {
             //need to save three types of files:
@@ -648,11 +652,13 @@ namespace Engine.Results
             SaveResultsV1Data(dataFileName);
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void SaveResults(string fileName, bool saveSignalRange)
         {
             SaveResultsV1(fileName, saveSignalRange);
         }
 
+        [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void LoadResults(string fileName)
         {
             LoadResultsV1Data(fileName);

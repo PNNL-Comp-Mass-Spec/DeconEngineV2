@@ -51,7 +51,6 @@ namespace DeconToolsV2
                         break;
                     default:
                         return;
-                        break;
                 }
 
                 if (mobj_fit != null)
