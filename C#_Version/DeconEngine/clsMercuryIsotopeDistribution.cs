@@ -8,7 +8,7 @@ using Engine.TheoreticalProfile;
 
 namespace DeconToolsV2
 {
-    [Obsolete("Usage unknown - no path to usage exists within the DeconTools solution")]
+    [Obsolete("Only used by Decon2LS.UI", false)]
     public class clsMercuryIsotopeDistribution
     {
         private int mChargeState;

@@ -91,9 +91,7 @@ namespace Engine.Readers
         {
             var filterString = GetScanFilterString(scan_num);
 
-            double parentIon;
-            var collisionMode = "";
-            if (!ExtractParentIonMZFromFilterText(filterString, out parentIon, out collisionMode) || string.IsNullOrWhiteSpace(collisionMode))
+            if (!ExtractParentIonMZFromFilterText(filterString, out _, out var collisionMode) || string.IsNullOrWhiteSpace(collisionMode))
             {
                 return 0;
             }
@@ -152,8 +150,7 @@ namespace Engine.Readers
         ~FinniganRawData()
         {
             // Let the COM object go
-            if (m_xraw2_class != null)
-                m_xraw2_class.Close();
+            m_xraw2_class?.Close();
         }
 
         public FinniganRawData()
@@ -185,27 +182,27 @@ namespace Engine.Readers
 
         public override int GetNumScans()
         {
-            return (int) mlong_num_spectra;
+            return mlong_num_spectra;
         }
 
         public override int GetFirstScanNum()
         {
-            return (int) mlong_spectra_num_first;
+            return mlong_spectra_num_first;
         }
 
         public override int GetLastScanNum()
         {
-            return (int) mlong_spectra_num_last;
+            return mlong_spectra_num_last;
         }
 
         public int FirstSpectraNumber()
         {
-            return (int) mlong_spectra_num_first;
+            return mlong_spectra_num_first;
         }
 
         public int LastSpectraNumber()
         {
-            return (int)mlong_spectra_num_last;
+            return mlong_spectra_num_last;
         }
 
         public int Open(string raw_file_name)
@@ -213,6 +210,9 @@ namespace Engine.Readers
             marr_rawfileName = raw_file_name;
             MSFileReader_XRawfile temp = new MSFileReader_XRawfileClass();
             m_xraw2_class = (IXRawfile3)temp;
+
+            if (m_xraw2_class == null)
+                throw new Exception("Could not load MSFileReader_XRawfileClass");
 
             var err = 0;
             try
@@ -265,7 +265,6 @@ namespace Engine.Readers
             if (scan_num == mint_last_scan_num)
                 return mdbl_signal_range;
 
-            int lastWholeNumber = 0;
             double signal_range = 0;
             object varMassList = null;
             object varPeakFlags = null;
@@ -391,10 +390,7 @@ namespace Engine.Readers
         {
             var is_profile_scan = 0;
             m_xraw2_class.IsProfileScanForScanNum(scan_num, ref is_profile_scan);
-            if (is_profile_scan == 1)
-                return true;
-            else
-                return false;
+            return is_profile_scan == 1;
         }
 
         public override bool IsZoomScan(int scan_num)
@@ -422,10 +418,10 @@ namespace Engine.Readers
             object var_value = null;
             m_xraw2_class.GetTrailerExtraValueForScanNum(scan_num, "Ion Injection Time (ms):", ref var_value);
             var time = 0.0;
-            if (var_value is double)
-                time = (double) var_value;
-            else if (var_value is float)
-                time = (float) var_value;
+            if (var_value is double doubleVal)
+                time = doubleVal;
+            else if (var_value is float floatVal)
+                time = floatVal;
             return time;
         }
 
@@ -451,14 +447,12 @@ namespace Engine.Readers
 
         public override int GetMSLevel(int scan_num)
         {
-            var ms_level = 1;
-
             //gets the filter string
             var filterString = GetScanFilterString(scan_num);
 
             //var intMatchTextLength = 0;
 
-            ms_level = 1;
+            var ms_level = 1;
             //var charIndex = 0;
 
             var reMatchMS = mFindMS.Match(filterString);
@@ -485,7 +479,7 @@ namespace Engine.Readers
                         chNum = chNum + 2;
                         char ch = filterString[chNum];
                         char ch1 = filterString[chNum + 1];
-                        int ms = (int) ch;
+                        int ms = ch;
                         switch (ch)
                         {
                             case '2':
@@ -598,40 +592,40 @@ namespace Engine.Readers
 
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetMonoMZFromHeader(int scan_num)
         {
-            double mono_mz = 0;
             object var_value = null;
             m_xraw2_class.GetTrailerExtraValueForScanNum(scan_num, "Monoisotopic M/Z:", ref var_value);
-            mono_mz = (double) var_value;
+            var mono_mz = (double) var_value;
             return mono_mz;
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override short GetMonoChargeFromHeader(int scan_num)
         {
-            short cs = 0;
             object var_value = null;
             m_xraw2_class.GetTrailerExtraValueForScanNum(scan_num, "Charge State:", ref var_value);
-            cs = (short) var_value;
+            var cs = (short) var_value;
             return cs;
         }
 
+        /// <summary>
+        /// Return the parent m/z of the particular msN scan
+        /// </summary>
+        /// <param name="scan_num"></param>
+        /// <returns></returns>
         public override double GetParentMz(int scan_num)
         {
-            //Return the parent m/z of the particular msN scan
-            double parent_mz = 0;
 
             //gets the filter string
             var bstr_filter = GetScanFilterString(scan_num);
-            string collisionMode;
 
-            if (ExtractParentIonMZFromFilterText(bstr_filter, out parent_mz, out collisionMode))
+            if (ExtractParentIonMZFromFilterText(bstr_filter, out var parent_mz, out _))
             {
                 return parent_mz;
             }
@@ -648,12 +642,10 @@ namespace Engine.Readers
                     if (bstr_filter[chNum] == '2')
                     {
                         chNum++;
-                        var mzIndex = 0;
                         while (bstr_filter[chNum] != '@')
                         {
                             ch_mz += bstr_filter[chNum];
                             chNum++;
-                            mzIndex++;
                         }
                         break;
                     }
@@ -676,12 +668,10 @@ namespace Engine.Readers
                 while (bstr_filter[chNum] != ' ')
                     chNum ++;
 
-                var mzIndex = 0;
                 while (bstr_filter[chNum] != '@')
                 {
                     ch_mz += bstr_filter[chNum];
                     chNum++;
-                    mzIndex++;
                 }
 
             }
@@ -696,7 +686,6 @@ namespace Engine.Readers
             intensities = new List<double>();
             mzs = new List<double>();
             mint_last_scan_num = scan_num;
-            int lastWholeNumber = 0;
 
             object varMassList = null;
             object varPeakFlags = null;
@@ -776,7 +765,7 @@ namespace Engine.Readers
             {
                 var peaks = (double[,]) varMassList;
 
-                if (nArraySize < (int) intensities.Capacity)
+                if (nArraySize < intensities.Capacity)
                 {
                     intensities.Capacity = nArraySize;
                     mzs.Capacity = nArraySize;
@@ -816,7 +805,7 @@ namespace Engine.Readers
                 mdbl_signal_range = (max_intensity - min_intensity);
             }
 
-            mint_last_scan_size = (int) mzs.Count;
+            mint_last_scan_size = mzs.Count;
             if (nArraySize == 0)
                 return false;
             return true;
@@ -885,7 +874,7 @@ namespace Engine.Readers
             {
                 collisionMode = "";
                 var collisionMatch = match.Groups["CollisionMode"];
-                if (collisionMatch != null && !string.IsNullOrWhiteSpace(collisionMatch.Value))
+                if (!string.IsNullOrWhiteSpace(collisionMatch?.Value))
                 {
                     collisionMode = collisionMatch.Value;
                 }

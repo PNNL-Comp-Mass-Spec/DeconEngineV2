@@ -16,7 +16,7 @@ namespace DeconToolsV2
 
 namespace DeconToolsV2.Peaks
 {
-    [Obsolete("Not accessed within DeconTools solution except through tests", false)]
+    [Obsolete("Only used by Decon2LS.UI", false)]
     public class clsPeakProcessor
     {
         private readonly PeakProcessor _peakProcessor;
