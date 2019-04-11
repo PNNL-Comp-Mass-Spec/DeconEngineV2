@@ -286,7 +286,7 @@ namespace Engine.TheoreticalProfile
             isotopes = new ElementData();
 
             isotopes.Symbol = "Al";
-            isotopes.Name = "Almunium";
+            isotopes.Name = "Aluminum";
 
             isotopes.AverageMass = 26.981539;
             isotopes.MassVariance = 0.000000;
