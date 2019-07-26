@@ -549,7 +549,7 @@ namespace DeconToolsV2
 #else
                                 Console.WriteLine("Error in CreateTransformResults: " + ex.Message);
                                 Console.WriteLine("Scan {0}, peak {1}", scanNum, currentPeak.PeakIndex);
-                                Console.WriteLine(PRISM.clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                                Console.WriteLine(PRISM.StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
 #endif
                             }
                         }
@@ -998,7 +998,7 @@ namespace DeconToolsV2
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error writing _ScanType.txt file: " + ex.Message);
-                    Console.WriteLine(PRISM.clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                    Console.WriteLine(PRISM.StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 }
                 finally
                 {

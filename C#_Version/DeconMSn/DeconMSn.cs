@@ -288,7 +288,7 @@ namespace DeconMSn
             {
                 Console.WriteLine();
                 Console.WriteLine("Error processing: " + ex.Message);
-                Console.WriteLine(PRISM.clsStackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                Console.WriteLine(PRISM.StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 System.Threading.Thread.Sleep(2000);
                 return -1;
             }
