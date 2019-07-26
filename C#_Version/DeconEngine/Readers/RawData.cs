@@ -165,9 +165,7 @@ namespace Engine.Readers
 
             vectMZs = new List<double>();
             vectIntensities = new List<double>();
-            List<double> allMZs;
-            List<double> allIntensities;
-            GetRawData(out allMZs, out allIntensities, scan, centroid);
+            GetRawData(out var allMZs, out var allIntensities, scan, centroid);
             var numPts = allMZs.Count;
             if (numPts <= 1)
             {

@@ -143,8 +143,7 @@ namespace Engine.Readers
             var scan = scan_num;
             var scanData = new clsSpectrumInfo();
             mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan, out scanData);
-            string xmlText;
-            mobj_MzXmlFile.GetSourceXMLByScanNumber(scan_num, out xmlText);
+            mobj_MzXmlFile.GetSourceXMLByScanNumber(scan_num, out var xmlText);
             // TODO: Validate this solution
             if (xmlText.Contains("FTMS"))
             {
@@ -176,15 +175,13 @@ namespace Engine.Readers
 
         public override int GetMSLevel(int scan_num)
         {
-            clsSpectrumInfo scanData;
-            mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan_num, out scanData);
+            mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan_num, out var scanData);
             return scanData.MSLevel;
         }
 
         public override double GetParentMz(int scan_num)
         {
-            clsSpectrumInfo scanData;
-            mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan_num, out scanData);
+            mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan_num, out var scanData);
             return scanData.ParentIonMZ;
         }
 

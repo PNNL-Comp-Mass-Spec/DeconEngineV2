@@ -334,8 +334,7 @@ namespace Engine.HornTransform
                     // move back by 4 Da and see if there is a peak.
                     var minMz = peak.Mz - 4.0 / chargeState - peak.FWHM;
                     var maxMz = peak.Mz - 4.0 / chargeState + peak.FWHM;
-                    clsPeak o16Peak;
-                    var found = peakData.GetPeak(minMz, maxMz, out o16Peak);
+                    var found = peakData.GetPeak(minMz, maxMz, out var o16Peak);
                     if (found && !o16Peak.Mz.Equals(peak.Mz))
                     {
                         // put back the current into the to be processed list of peaks.
@@ -359,33 +358,26 @@ namespace Engine.HornTransform
             //if (backgroundIntensity ==0 || deleteThreshold > _deleteIntensityThreshold)
             //  deleteThreshold = _deleteIntensityThreshold;
             var deleteThreshold = _deleteIntensityThreshold;
-            int fitCountBasis;
             var bestFit = _isotopeFitter.GetFitScore(peakData, chargeState, ref peak, out record, deleteThreshold,
-                _minTheoreticalIntensityForScore, _leftFitStringencyFactor, _rightFitStringencyFactor, out fitCountBasis,
+                _minTheoreticalIntensityForScore, _leftFitStringencyFactor, _rightFitStringencyFactor, out var fitCountBasis,
                 DebugFlag);
 
             // When deleting an isotopic profile, this value is set to the first m/z to perform deletion at.
-            double zeroingStartMz;
             // When deleting an isotopic profile, this value is set to the last m/z to perform deletion at.
-            double zeroingStopMz;
-            _isotopeFitter.GetZeroingMassRange(out zeroingStartMz, out zeroingStopMz, record.DeltaMz, deleteThreshold,
+            _isotopeFitter.GetZeroingMassRange(out var zeroingStartMz, out var zeroingStopMz, record.DeltaMz, deleteThreshold,
                 DebugFlag);
             //bestFit = _isotopeFitter.GetFitScore(peakData, chargeState, peak, record, _deleteIntensityThreshold, _minTheoreticalIntensityForScore, DebugFlag);
             //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
 
             if (_checkAgainstCharge1 && chargeState != 1)
             {
-                clsHornTransformResults recordCharge1;
-                int fitCountBasisCharge1;
-                var bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, ref peakCharge1, out recordCharge1,
+                var bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, ref peakCharge1, out var recordCharge1,
                     deleteThreshold, _minTheoreticalIntensityForScore, _leftFitStringencyFactor,
-                    _rightFitStringencyFactor, out fitCountBasisCharge1, DebugFlag);
+                    _rightFitStringencyFactor, out var fitCountBasisCharge1, DebugFlag);
 
                 //double bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, peakCharge1, recordCharge1, _deleteIntensityThreshold, _minTheoreticalIntensityForScore, DebugFlag);
                 //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
-                double startMz1;
-                double stopMz1;
-                _isotopeFitter.GetZeroingMassRange(out startMz1, out stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
+                _isotopeFitter.GetZeroingMassRange(out var startMz1, out var stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
                 if (bestFit > _maxFit && bestFitCharge1 < _maxFit)
                 {
                     bestFit = bestFitCharge1;
@@ -418,15 +410,13 @@ namespace Engine.HornTransform
             record.Abundance = peak.Intensity;
             record.ChargeState = chargeState;
 
-            clsPeak monoPeak;
             var monoMz = record.MonoMw / record.ChargeState + _chargeCarrierMass;
 
             // used when _reportO18Plus2Da is true.
-            clsPeak m3Peak;
             var monoPlus2Mz = record.MonoMw / record.ChargeState + 2.0 / record.ChargeState + _chargeCarrierMass;
 
-            peakData.FindPeak(monoMz - peak.FWHM, monoMz + peak.FWHM, out monoPeak);
-            peakData.FindPeak(monoPlus2Mz - peak.FWHM, monoPlus2Mz + peak.FWHM, out m3Peak);
+            peakData.FindPeak(monoMz - peak.FWHM, monoMz + peak.FWHM, out var monoPeak);
+            peakData.FindPeak(monoPlus2Mz - peak.FWHM, monoPlus2Mz + peak.FWHM, out var m3Peak);
 
             record.MonoIntensity = (int) monoPeak.Intensity;
             record.MonoPlus2Intensity = (int) m3Peak.Intensity;
@@ -496,8 +486,8 @@ namespace Engine.HornTransform
                     Console.Error.WriteLine("\tFinding next peak top from " + (peakMz - 2 * peak.FWHM) + " to " +
                                             (peakMz + 2 * peak.FWHM) + " pk = " + peakMz + " FWHM = " + peak.FWHM);
                 }
-                clsPeak nextPeak;
-                peakData.GetPeakFromAll(peakMz - 2 * peak.FWHM, peakMz + 2 * peak.FWHM, out nextPeak);
+
+                peakData.GetPeakFromAll(peakMz - 2 * peak.FWHM, peakMz + 2 * peak.FWHM, out var nextPeak);
 
                 if (nextPeak.Mz.Equals(0))
                 {
@@ -530,8 +520,8 @@ namespace Engine.HornTransform
                     Console.Error.WriteLine("\tFinding previous peak top from " + (peakMz - 2 * peak.FWHM) + " to " +
                                             (peakMz + 2 * peak.FWHM) + " pk = " + peakMz + " FWHM = " + peak.FWHM);
                 }
-                clsPeak nextPeak;
-                peakData.GetPeakFromAll(peakMz - 2 * peak.FWHM, peakMz + 2 * peak.FWHM, out nextPeak);
+
+                peakData.GetPeakFromAll(peakMz - 2 * peak.FWHM, peakMz + 2 * peak.FWHM, out var nextPeak);
                 if (nextPeak.Mz.Equals(0))
                 {
                     if (debug)

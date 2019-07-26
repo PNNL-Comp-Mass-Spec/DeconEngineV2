@@ -9,7 +9,7 @@ using Engine.TheoreticalProfile;
 namespace Engine.HornTransform
 {
     /// <summary>
-    ///     Base class for calculating isotope fit values between theoretical distrbution and observed one.
+    ///     Base class for calculating isotope fit values between theoretical distribution and observed one.
     /// </summary>
     /// <remarks>
     ///     This class is the base class for the isotope fitting. There are three types of fits:
@@ -283,7 +283,7 @@ namespace Engine.HornTransform
         /// </param>
         /// <param name="mzDelta">
         ///     specifies the mass delta between theoretical and observed m/z. The we are looking to score
-        ///     against the feature in the observed data at theoeretical m/z + mz_delta
+        ///     against the feature in the observed data at theoretical m/z + mz_delta
         /// </param>
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="debug">prints debugging information if this is set to true.</param>
@@ -542,8 +542,7 @@ namespace Engine.HornTransform
 
             for (var i = 0; i < numpeaks; i++)
             {
-                clsPeak peak;
-                processor.PeakData.GetPeak(i, out peak);
+                processor.PeakData.GetPeak(i, out var peak);
                 peakList.AddPeak(peak);
             }
 
@@ -605,8 +604,7 @@ namespace Engine.HornTransform
                 Console.WriteLine("Theoretical peak\t" + "Index\t" + "MZ\t" + "Intensity\t" + "FWHM\t" + "SigNoise");
                 for (var i = 0; i < numpeaks; i++)
                 {
-                    clsPeak theorpeak;
-                    theorPeakData.GetPeak(i, out theorpeak);
+                    theorPeakData.GetPeak(i, out var theorpeak);
                     Console.WriteLine("Theoretical peak\t" + i + "\t" + theorpeak.Mz + "\t" +
                                       theorpeak.Intensity + "\t" + theorpeak.FWHM + "\t" + theorpeak.SignalToNoise);
                 }
@@ -657,12 +655,9 @@ namespace Engine.HornTransform
             //------------- Slide to the LEFT --------------------------------------------------
             for (var dd = 1.003 / chargeState; dd <= 10.03 / chargeState; dd += 1.003 / chargeState)
             {
-                double mzLeft;
-                double intensityLeft;
-
                 //check for theoretical peak to the right of TheoreticalMaxPeak; store mz and intensity
-                var foundPeak = FindPeak(mPeak + dd - 0.2 / chargeState, mPeak + dd + 0.2 / chargeState, out mzLeft,
-                    out intensityLeft,
+                var foundPeak = FindPeak(mPeak + dd - 0.2 / chargeState, mPeak + dd + 0.2 / chargeState, out var mzLeft,
+                    out var intensityLeft,
                     debug);
 
                 // if the above theoretical peak was found,  look one peak to the LEFT in the Experimental peaklist
@@ -729,11 +724,9 @@ namespace Engine.HornTransform
             //      Console.WriteLine("\n---------------- Sliding to the RIGHT -------------------------";
             for (var dd = 1.003 / chargeState; dd <= 10.03 / chargeState; dd += 1.003 / chargeState)
             {
-                double mzRight;
-                double intensityRight;
                 ////check for theoretical peak to the LEFT of TheoreticalMaxPeak; store mz and intensity
-                var foundPeak = FindPeak(mPeak - dd - 0.2 / chargeState, mPeak - dd + 0.2 / chargeState, out mzRight,
-                    out intensityRight,
+                var foundPeak = FindPeak(mPeak - dd - 0.2 / chargeState, mPeak - dd + 0.2 / chargeState, out var mzRight,
+                    out var intensityRight,
                     debug);
 
                 // if the above theoretical peak was found,  look one peak to the RIGHT in the Experimental peaklist
@@ -863,8 +856,7 @@ namespace Engine.HornTransform
             if (debug)
                 Console.WriteLine("Going for first fit");
 
-            int pointsUsed;
-            return FitScore(peakData, chargeState, peak, delta, minTheoreticalIntensityForScore, out pointsUsed,
+            return FitScore(peakData, chargeState, peak, delta, minTheoreticalIntensityForScore, out var pointsUsed,
                 debug);
         }
 

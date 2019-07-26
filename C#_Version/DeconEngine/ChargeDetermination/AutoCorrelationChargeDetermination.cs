@@ -124,10 +124,8 @@ namespace Engine.ChargeDetermination
                 minN++;
 
             // Determine the highest CS peak
-            double bestAcScore;
-            int bestChargeState;
-            var success = HighestChargeStatePeak(minMz, maxMz, minN, autocorrelationScores, MaxCharge, out bestAcScore,
-                out bestChargeState);
+            var success = HighestChargeStatePeak(minMz, maxMz, minN, autocorrelationScores, MaxCharge, out var bestAcScore,
+                out var bestChargeState);
 
             if (!success)
                 return -1; // Didn't find anything
@@ -161,8 +159,7 @@ namespace Engine.ChargeDetermination
                 {
                     var peakA = peak.Mz + 1.0 / tempChargeState;
                     var found = true;
-                    clsPeak isoPeak;
-                    found = peakData.GetPeakFromAllOriginalIntensity(peakA - fwhm, peakA + fwhm, out isoPeak);
+                    found = peakData.GetPeakFromAllOriginalIntensity(peakA - fwhm, peakA + fwhm, out var isoPeak);
                     if (found)
                     {
                         returnChargeStateVal = tempChargeState;

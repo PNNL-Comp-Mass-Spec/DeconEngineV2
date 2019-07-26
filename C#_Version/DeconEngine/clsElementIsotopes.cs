@@ -374,8 +374,7 @@ namespace DeconToolsV2
             //        return elementNum;
             //    }
             //}
-            int index;
-            if (_elementIndexDict.TryGetValue(symbol, out index))
+            if (_elementIndexDict.TryGetValue(symbol, out var index))
             {
                 return index;
             }

@@ -300,9 +300,8 @@ namespace Engine.DTAProcessing
                 {
                     //Look back first
                     var prevMz = _parentMz - CCMass / cs;
-                    clsPeak prevPeak;
                     _parentPeakProcessor.PeakData.FindPeakAbsolute(prevMz - fwhm / cs, prevMz + fwhm / cs,
-                        out prevPeak);
+                        out var prevPeak);
                     if (prevPeak.Mz > 0 && prevPeak.Intensity > maxIntensity / 8)
                     {
                         while (prevPeak.Mz > 0 && prevPeak.Intensity > maxIntensity / 8)
@@ -337,9 +336,8 @@ namespace Engine.DTAProcessing
                     }
                     // Look ahead
                     var nextMz = _parentMz + 1.003 / cs;
-                    clsPeak nextPeak;
                     _parentPeakProcessor.PeakData.FindPeakAbsolute(nextMz - fwhm / cs, nextMz + fwhm / cs,
-                        out nextPeak);
+                        out var nextPeak);
                     if (nextPeak.Mz > 0 && nextPeak.Intensity > maxIntensity / 8)
                     {
                         //this is the first isotope
@@ -519,11 +517,10 @@ namespace Engine.DTAProcessing
                 mtParams.CheckAllPatternsAgainstCharge1 = false;
 
                 // now start THRASH all over again
-                clsPeak currentPeak;
                 clsHornTransformResults transformRecord;
                 var transformRecords = new List<clsHornTransformResults>();
 
-                var foundPeak = _summedPeakProcessor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                var foundPeak = _summedPeakProcessor.PeakData.GetNextPeak(minMZ, maxMZ, out var currentPeak);
                 var numDeisotoped = 0;
 
                 while (foundPeak)
@@ -564,9 +561,8 @@ namespace Engine.DTAProcessing
                 {
                     // set mono intensity to replace the one that summes spectra would return
                     int monoOrigIntensity;
-                    clsPeak tempPeak;
                     var monoMatch = _parentPeakProcessor.GetClosestPeakMz(transformRecord2.Mz,
-                        out tempPeak);
+                        out var tempPeak);
                     if (tempPeak.Intensity > MinPeptideIntensity)
                     {
                         monoOrigIntensity = (int) tempPeak.Intensity;
@@ -706,11 +702,10 @@ namespace Engine.DTAProcessing
                 var minMZ = parentMzMatch - WindowSize;
                 var maxMZ = parentMzMatch + WindowSize;
 
-                clsPeak currentPeak;
                 clsHornTransformResults transformRecord;
                 var transformRecords = new List<clsHornTransformResults>();
 
-                var foundPeak = _parentPeakProcessor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                var foundPeak = _parentPeakProcessor.PeakData.GetNextPeak(minMZ, maxMZ, out var currentPeak);
                 var numDeisotoped = 0;
 
                 while (foundPeak)
@@ -837,8 +832,7 @@ namespace Engine.DTAProcessing
             else
             {
                 // to set parent intensity find the parent that is closest to the reported parent mz
-                clsPeak tempPeak;
-                _parentPeakProcessor.PeakData.FindPeak(parentMz - 0.02, parentMz + 0.02, out tempPeak);
+                _parentPeakProcessor.PeakData.FindPeak(parentMz - 0.02, parentMz + 0.02, out var tempPeak);
                 if (tempPeak.Intensity > 0)
                 {
                     _parentMz = tempPeak.Mz;
@@ -923,8 +917,7 @@ namespace Engine.DTAProcessing
             if (_parentPeak.Intensity < MinPeptideIntensity)
             {
                 _parentMz = parentMz;
-                clsPeak tempPeak;
-                _parentPeakProcessor.PeakData.FindPeak(parentMz - 0.1, parentMz + 0.1, out tempPeak);
+                _parentPeakProcessor.PeakData.FindPeak(parentMz - 0.1, parentMz + 0.1, out var tempPeak);
                 if (tempPeak.Intensity > 0)
                     _parentIntensity = tempPeak.Intensity;
                 else
@@ -1453,8 +1446,7 @@ namespace Engine.DTAProcessing
                 GetMsNSpectra(msNScan, PeakBackgroundRatio, PeptideMinBackgroundRatio);
                 var parentMz = RawDataDTA.GetParentMz(msNScan);
                 GetParentScanSpectra(parentScan, PeakBackgroundRatio, PeptideMinBackgroundRatio);
-                clsPeak parentPeak;
-                var parentMzMatch = _parentPeakProcessor.GetClosestPeakMz(parentMz, out parentPeak);
+                var parentMzMatch = _parentPeakProcessor.GetClosestPeakMz(parentMz, out var parentPeak);
 
                 var classVal = _svmChargeDetermination.GetClassAtScanIndex(msNScanIndex);
 
@@ -1522,8 +1514,7 @@ namespace Engine.DTAProcessing
                 if (_parentPeak.Intensity < MinPeptideIntensity)
                 {
                     _parentMz = parentMz;
-                    clsPeak tempPeak;
-                    _parentPeakProcessor.PeakData.FindPeak(parentMz - 0.1, parentMz + 0.1, out tempPeak);
+                    _parentPeakProcessor.PeakData.FindPeak(parentMz - 0.1, parentMz + 0.1, out var tempPeak);
                     if (tempPeak.Intensity > 0)
                         _parentIntensity = tempPeak.Intensity;
                     else

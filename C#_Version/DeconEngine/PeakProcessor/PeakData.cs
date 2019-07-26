@@ -656,10 +656,9 @@ namespace Engine.PeakProcessing
 
             foreach (var peakTop in PeakTops)
             {
-                clsPeak nextPeak;
                 // look for a peak behind.
                 var mz = peakTop.Mz;
-                var inback = GetPeak(mz - tolerance, mz - 0.00001, out nextPeak);
+                var inback = GetPeak(mz - tolerance, mz - 0.00001, out var nextPeak);
                 var infront = GetPeak(mz + 0.00001, mz + tolerance, out nextPeak);
 
                 if (inback || infront)

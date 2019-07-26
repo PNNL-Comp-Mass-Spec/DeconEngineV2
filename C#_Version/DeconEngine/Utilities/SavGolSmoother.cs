@@ -277,8 +277,8 @@ namespace Engine.Utilities
                     a[(ipj + imj) / 2, (ipj - imj) / 2] = sum;
                 }
             }
-            float d;
-            var retVal = ludcmp(a, m + 1, indx, out d);
+
+            var retVal = ludcmp(a, m + 1, indx, out var d);
             if (retVal == -1)
             {
                 for (var kk = 1; kk <= np; kk++)

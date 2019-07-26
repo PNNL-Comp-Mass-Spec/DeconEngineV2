@@ -93,7 +93,6 @@ namespace Engine.ChargeDetermination
         {
             var numPeaks = mzs.Count;
             var parentMz = parentPeak.Mz;
-            double temp1, temp2, temp3, temp4;
 
             //Get input spectra
             InitVectors();
@@ -103,7 +102,7 @@ namespace Engine.ChargeDetermination
                 _mzs.Add(mzs[i]);
             }
 
-            CalculatePeakProbabilities(parentMz, out temp1, out temp2, out temp3, out temp4);
+            CalculatePeakProbabilities(parentMz, out var temp1, out var temp2, out var temp3, out var temp4);
 
             // If all frag peaks lie in first bin [0 - parent_Mz]
             if (_peakDistribution[0] > 0.9 * numPeaks)
@@ -148,23 +147,7 @@ namespace Engine.ChargeDetermination
         public void GetFeaturesForSpectra(List<double> mzs, List<double> intensities, clsPeak parentPeak,
             int msNscan)
         {
-            double xscore2,
-                xscore3,
-                xscore_ratio,
-                bscore2,
-                bscore3,
-                pk1_prob,
-                pk2_prob,
-                pk3_prob,
-                pk4_prob,
-                fscore2,
-                fscore3,
-                xscore2_CO,
-                xscore3_CO,
-                xscore2_H2O,
-                xscore3_H2O,
-                xscore2_NH3,
-                xscore3_NH3;
+            double xscore_ratio;
 
             var numPeaks = mzs.Count;
 
@@ -180,18 +163,18 @@ namespace Engine.ChargeDetermination
             }
 
             //Start with feature detection
-            CalculatePeakProbabilities(parentMz, out pk1_prob, out pk2_prob, out pk3_prob, out pk4_prob);
-            GetFisherScores(out fscore2, out fscore3);
+            CalculatePeakProbabilities(parentMz, out var pk1_prob, out var pk2_prob, out var pk3_prob, out var pk4_prob);
+            GetFisherScores(out var fscore2, out var fscore3);
             NormalizeSpectra();
-            GetXScores(parentMz, out xscore2, out xscore3, noLoss);
+            GetXScores(parentMz, out var xscore2, out var xscore3, noLoss);
             if (!xscore2.Equals(0))
                 xscore_ratio = xscore3 / xscore2;
             else
                 xscore_ratio = 0;
-            GetBScores(parentMz, out bscore2, out bscore3);
-            GetXScores(parentMz, out xscore2_CO, out xscore3_CO, MassCO);
-            GetXScores(parentMz, out xscore2_H2O, out xscore3_H2O, MassH2O);
-            GetXScores(parentMz, out xscore2_NH3, out xscore3_NH3, MassNH3);
+            GetBScores(parentMz, out var bscore2, out var bscore3);
+            GetXScores(parentMz, out var xscore2_CO, out var xscore3_CO, MassCO);
+            GetXScores(parentMz, out var xscore2_H2O, out var xscore3_H2O, MassH2O);
+            GetXScores(parentMz, out var xscore2_NH3, out var xscore3_NH3, MassNH3);
 
             ReadValues(msNscan, parentMz, xscore2, xscore3, xscore_ratio, bscore2, bscore3, pk1_prob,
                 pk2_prob, pk3_prob, pk4_prob, fscore2, fscore3, xscore2_CO, xscore3_CO, xscore2_H2O,
@@ -932,8 +915,7 @@ namespace Engine.ChargeDetermination
                     switch (rdr.Name)
                     {
                         case XmlXsupTag:
-                            FeatureList supportFeatures;
-                            ReadXmlSupportVectorFeatures(rdr.ReadSubtree(), out supportFeatures);
+                            ReadXmlSupportVectorFeatures(rdr.ReadSubtree(), out var supportFeatures);
                             rdr.ReadEndElement();
                             _supportVectors.Add(supportFeatures);
                             break;
