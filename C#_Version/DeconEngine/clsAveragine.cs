@@ -1,5 +1,7 @@
 using System;
+// ReSharper disable once RedundantUsingDirective
 using System.Text;
+
 #if Enable_Obsolete
 //using Engine.TheoreticalProfile;
 #endif
@@ -27,8 +29,8 @@ namespace DeconToolsV2.HornTransform
         private double _tagMass;
 
         /// <summary>
-        ///     If a chemical labelling tag is applied to the molecular formula, it needs to be necessarily added to the molecular
-        ///     formula (after substraction by its mass).
+        ///     If a chemical labeling tag is applied to the molecular formula, it needs to be necessarily added to the molecular
+        ///     formula (after subtraction by its mass).
         /// </summary>
         private bool _useTag;
 
@@ -174,7 +176,7 @@ namespace DeconToolsV2.HornTransform
                 }
             }
 
-            // now whatever's left over in mass, is assigned to hydrogen because it is not expected to cause
+            // now whatever is left over in mass, is assigned to hydrogen because it is not expected to cause
             // much of a distortion in the isotope profile.
             var remainderMass = mw - averageMass;
             if (_useTag)
