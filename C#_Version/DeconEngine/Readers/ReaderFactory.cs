@@ -1,7 +1,6 @@
 #if Enable_Obsolete
 using System;
 #endif
-using DeconEngine.Readers;
 using DeconToolsV2.Readers;
 
 namespace Engine.Readers

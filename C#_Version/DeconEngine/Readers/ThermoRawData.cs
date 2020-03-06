@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeconToolsV2.Readers;
-using Engine.Readers;
 using ThermoRawFileReader;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -12,9 +11,9 @@ using ThermoRawFileReader;
 //
 //////////////////////////////////////////////////////////////////////////////
 
-namespace DeconEngine.Readers
+namespace Engine.Readers
 {
-    class ThermoRawData : RawData
+    internal class ThermoRawData : RawData
     {
         private string mRawFilePath;
 
