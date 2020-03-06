@@ -133,6 +133,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="ThermoFisher.CommonCore.BackgroundSubtraction">
+      <HintPath>..\lib\ThermoFisher.CommonCore.BackgroundSubtraction.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoFisher.CommonCore.Data">
+      <HintPath>..\lib\ThermoFisher.CommonCore.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoFisher.CommonCore.MassPrecisionEstimator">
+      <HintPath>..\lib\ThermoFisher.CommonCore.MassPrecisionEstimator.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoFisher.CommonCore.RawFileReader">
+      <HintPath>..\lib\ThermoFisher.CommonCore.RawFileReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoRawFileReader">
+      <HintPath>..\lib\ThermoRawFileReader.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApodizationType.cs" />
@@ -194,6 +209,7 @@
     <Compile Include="Readers\RawData.cs" />
     <Compile Include="Readers\ReaderFactory.cs" />
     <Compile Include="Readers\SunExtrelRawData.cs" />
+    <Compile Include="Readers\ThermoRawData.cs" />
     <Compile Include="Results\LcmsPeak.cs" />
     <Compile Include="Results\LCMSPeakIndex.cs" />
     <Compile Include="Results\LCMSTransformResults.cs" />

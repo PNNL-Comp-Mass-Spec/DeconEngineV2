@@ -1,6 +1,7 @@
 #if Enable_Obsolete
 using System;
 #endif
+using DeconEngine.Readers;
 using DeconToolsV2.Readers;
 
 namespace Engine.Readers
@@ -67,11 +68,10 @@ namespace Engine.Readers
 #pragma warning restore 618
 #endif
                 case FileType.FINNIGAN:
-#if XCALIBUR_INSTALLED
-                    rawData = new FinniganRawData();
+                    rawData = new ThermoRawData();
                     rawData.Load(fileName);
-#endif
                     break;
+
 #if Enable_Obsolete
 #pragma warning disable 618
                 case FileType.MICROMASSRAWDATA:
