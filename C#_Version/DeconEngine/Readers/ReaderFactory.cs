@@ -123,9 +123,7 @@ namespace Engine.Readers
 #endif
                     break;
                 case FileType.FINNIGAN:
-#if XCALIBUR_INSTALLED
-                    rawData = new FinniganRawData();
-#endif
+                    rawData = new ThermoRawData();
                     break;
                 case FileType.SUNEXTREL:
                     rawData = new SunExtrelRawData();
@@ -176,9 +174,7 @@ namespace Engine.Readers
 #endif
                     break;
                 case FileType.FINNIGAN:
-#if XCALIBUR_INSTALLED
-                    rawData = new FinniganRawData();
-#endif
+                    rawData = new ThermoRawData();
                     break;
                 case FileType.SUNEXTREL:
                     rawData = new SunExtrelRawData();
