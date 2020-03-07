@@ -62,7 +62,7 @@ namespace Engine.Readers
                     rawData.Load(fileName);
                     break;
 #pragma warning restore 618
-                case FileType.FINNIGAN:
+                case FileType.THERMORAW:
                     rawData = new ThermoRawData();
                     rawData.Load(fileName);
                     break;
@@ -117,7 +117,7 @@ namespace Engine.Readers
                     rawData = new AgilentRawData();
 #endif
                     break;
-                case FileType.FINNIGAN:
+                case FileType.THERMORAW:
                     rawData = new ThermoRawData();
                     break;
                 case FileType.SUNEXTREL:
@@ -168,7 +168,7 @@ namespace Engine.Readers
                     rawData = new AgilentRawData();
 #endif
                     break;
-                case FileType.FINNIGAN:
+                case FileType.THERMORAW:
                     rawData = new ThermoRawData();
                     break;
                 case FileType.SUNEXTREL:

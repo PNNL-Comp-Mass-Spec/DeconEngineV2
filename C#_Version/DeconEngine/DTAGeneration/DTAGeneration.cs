@@ -108,7 +108,7 @@ namespace Engine.DTAProcessing
             IsolationWindowSize = 3;
             ConsiderMultiplePrecursors = false;
             DoCentroidMSn = false;
-            DatasetType = FileType.FINNIGAN;
+            DatasetType = FileType.THERMORAW;
             IsProfileDataForMzXML = false;
             _firstScanWritten = false;
         }
@@ -1016,7 +1016,7 @@ namespace Engine.DTAProcessing
 
         public bool IsZoomScan(int parentScan)
         {
-            if (DatasetType == FileType.FINNIGAN)
+            if (DatasetType == FileType.THERMORAW)
                 return RawDataDTA.IsZoomScan(parentScan);
 
             return false;
@@ -1029,7 +1029,7 @@ namespace Engine.DTAProcessing
 
         public bool IsFTData(int parentScan)
         {
-            if (DatasetType == FileType.FINNIGAN)
+            if (DatasetType == FileType.THERMORAW)
                 return RawDataDTA.IsFTScan(parentScan);
             else if (DatasetType == FileType.MZXMLRAWDATA)
             {

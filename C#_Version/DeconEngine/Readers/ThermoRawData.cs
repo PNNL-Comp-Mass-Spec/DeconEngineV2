@@ -35,7 +35,7 @@ namespace Engine.Readers
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
-            return FileType.FINNIGAN;
+            return FileType.THERMORAW;
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]

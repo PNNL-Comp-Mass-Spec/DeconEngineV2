@@ -139,7 +139,7 @@ namespace DeconToolsV2
                 // while the thresholded parameter is already set in the clsPeakProcessParameters, we would
                 // like to override that here if the data type is Finnigan because that data is threshold.
                 bool thresholded;
-                if (fileType == FileType.FINNIGAN ||
+                if (fileType == FileType.THERMORAW ||
                     fileType == FileType.MZXMLRAWDATA)
                     thresholded = true;
                 else
@@ -656,7 +656,7 @@ namespace DeconToolsV2
             var dotIndex = FileName.IndexOf('.');
             var inputFileFormat = FileName.Remove(0, dotIndex + 1);
             if ((inputFileFormat.ToLower() == "raw"))
-                FileType = DeconToolsV2.Readers.FileType.FINNIGAN;
+                FileType = DeconToolsV2.Readers.FileType.THERMORAW;
             else if (inputFileFormat.ToLower() == "mzxml")
                 FileType = DeconToolsV2.Readers.FileType.MZXMLRAWDATA;
             else
@@ -680,7 +680,7 @@ namespace DeconToolsV2
 
             var thresholded = true;
             /*
-            if (FileType == DeconToolsV2.Readers.FileType.FINNIGAN ||
+            if (FileType == DeconToolsV2.Readers.FileType.THERMORAW ||
                 FileType == DeconToolsV2.Readers.FileType.MZXMLRAWDATA)
                 thresholded = true;
             else
