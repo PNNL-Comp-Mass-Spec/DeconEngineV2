@@ -205,7 +205,7 @@ namespace Engine.Readers
             //fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
             //if (fh ==  ENOENT || fh == -1 )
             //{
-            //  // try using the fid extention instead of the .ser business.
+            //  // try using the fid extension instead of the .ser business.
             //  int len = strlen(marr_serName);
             //  marr_serName[len-3] = 'f';
             //  marr_serName[len-2] = 'i';
@@ -463,7 +463,7 @@ namespace Engine.Readers
             var fName = marr_serName;
             if (!File.Exists(fName))
             {
-                // try using the fid extention instead of the .ser business.
+                // try using the fid extension instead of the .ser business.
                 fName = Path.ChangeExtension(fName, "fid");
             }
             using (var fh = new FileStream(fName, FileMode.Open, FileAccess.Read, FileShare.Read))
