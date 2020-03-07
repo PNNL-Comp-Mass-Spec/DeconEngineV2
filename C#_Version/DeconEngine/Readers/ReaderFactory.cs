@@ -1,6 +1,4 @@
-#if Enable_Obsolete
 using System;
-#endif
 using DeconToolsV2.Readers;
 
 namespace Engine.Readers
@@ -11,7 +9,7 @@ namespace Engine.Readers
     /// <remarks>Used by DeconMSn</remarks>
     internal class ReaderFactory
     {
-#if Enable_Obsolete
+
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static RawData GetMSDataReader(FileType fileType)
         {
@@ -29,14 +27,13 @@ namespace Engine.Readers
         {
             GetRawData(out rawData, fileType);
         }
-#endif
 
         public static RawData GetRawData(FileType fileType, string fileName)
         {
             RawData rawData = null;
             switch (fileType)
             {
-#if Enable_Obsolete
+
 #pragma warning disable 618
                 case FileType.BRUKER:
                     rawData = new BrukerRawData();
@@ -65,19 +62,18 @@ namespace Engine.Readers
                     rawData.Load(fileName);
                     break;
 #pragma warning restore 618
-#endif
                 case FileType.FINNIGAN:
                     rawData = new ThermoRawData();
                     rawData.Load(fileName);
                     break;
 
-#if Enable_Obsolete
+
 #pragma warning disable 618
                 case FileType.MICROMASSRAWDATA:
 #if MASSLYNX_4_INSTALLED
                     rawData = new MicromassRawData();
                     rawData.Load(fileName);
-#endif
+
                     break;
 #pragma warning restore 618
 #endif
@@ -85,14 +81,13 @@ namespace Engine.Readers
                     rawData = new MZXmlRawData();
                     rawData.Load(fileName);
                     break;
-#if Enable_Obsolete
+
 #pragma warning disable 618
                 case FileType.PNNL_IMS:
                     rawData = new IMSRawData();
                     rawData.Load(fileName);
                     break;
 #pragma warning restore 618
-#endif
                 //case FileType.PNNL_UIMF:
                 //    rawData = new UIMFRawData();
                 //    rawData.Load(file_name);
@@ -107,7 +102,7 @@ namespace Engine.Readers
             return rawData;
         }
 
-#if Enable_Obsolete
+
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static void GetRawData(out RawData rawData, FileType fileType)
         {
@@ -210,6 +205,5 @@ namespace Engine.Readers
             }
             return rawData;
         }
-#endif
     }
 }

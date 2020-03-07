@@ -103,7 +103,6 @@ namespace DeconToolsV2.Peaks
         }
 #endif
 
-#if Enable_Obsolete
         /// <summary>
         ///     mz of the peak.
         /// </summary>
@@ -164,7 +163,6 @@ namespace DeconToolsV2.Peaks
             get => FWHM;
             set => FWHM = value;
         }
-#endif
 
         /// <summary>
         ///     Compare 2 peaks, for sorting by intensity. Follow Sort() call with a Reverse() call to get sorted by descending

@@ -30,7 +30,6 @@ namespace DeconToolsV2.DTAGeneration
     {
         private readonly List<int> _msnLevelsToIgnore = new List<int>();
 
-#if Enable_Obsolete
         public virtual Object Clone()
         {
             var newParams = new clsDTAGenerationParameters
@@ -59,7 +58,6 @@ namespace DeconToolsV2.DTAGeneration
 
             return newParams;
         }
-#endif
 
         public int get_MSnLevelToIgnore(int index)
         {
@@ -168,7 +166,7 @@ namespace DeconToolsV2.DTAGeneration
             }
         }*/
 
-#if Enable_Obsolete
+
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SaveV1DTAGenerationParameters(XmlTextWriter xwriter)
         {
@@ -236,7 +234,6 @@ namespace DeconToolsV2.DTAGeneration
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
         }
-#endif
 
         public void LoadV1DTAGenerationParameters(XmlReader rdr)
         {

@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.IO;
 using DeconToolsV2.HornTransform;
@@ -247,4 +246,3 @@ namespace Engine.HornTransform
         }
     }
 }
-#endif

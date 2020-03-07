@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -148,5 +147,3 @@ namespace DeconToolsV2
         }
     }
 }
-
-#endif

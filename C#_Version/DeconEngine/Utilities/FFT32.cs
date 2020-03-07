@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 
@@ -243,4 +242,3 @@ namespace Engine
         }
     }
 }
-#endif

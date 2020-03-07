@@ -61,11 +61,11 @@ namespace DeconToolsV2.Peaks
             newParams.ThresholdedData = ThresholdedData;
             return newParams;
         }
+#endif
 
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public bool ThresholdedData { get; set; }
-#endif
-
+        
         public double PeakBackgroundRatio { get; set; }
 
         public double SignalToNoiseThreshold { get; set; }
@@ -90,6 +90,7 @@ namespace DeconToolsV2.Peaks
             PeakFitType = fit_type;
             ThresholdedData = thresholded_data;
         }
+#endif
 
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public void SaveV1PeakParameters(System.Xml.XmlTextWriter xwriter)
@@ -109,7 +110,6 @@ namespace DeconToolsV2.Peaks
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
         }
-#endif
 
         public void LoadV1PeakParameters(XmlReader rdr)
         {

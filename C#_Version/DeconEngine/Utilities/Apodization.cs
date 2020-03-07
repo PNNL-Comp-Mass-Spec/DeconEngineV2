@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using DeconToolsV2.Readers;
 
@@ -249,4 +248,3 @@ namespace Engine.Utilities
         }
     }
 }
-#endif

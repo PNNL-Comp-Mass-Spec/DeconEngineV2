@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using Engine.Results;
@@ -263,4 +262,3 @@ namespace DeconToolsV2.Results
 
     }
 }
-#endif

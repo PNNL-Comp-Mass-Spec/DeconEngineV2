@@ -7,7 +7,8 @@ namespace DeconToolsV2.Readers
     {
         [Obsolete("Only used by Decon2LS.UI", false)]
         BRUKER = 0,
-        FINNIGAN,
+        THERMORAW = 1,
+        FINNIGAN = THERMORAW,
         [Obsolete("Only used by Decon2LS.UI", false)]
         MICROMASSRAWDATA,
         [Obsolete("Only used by Decon2LS.UI", false)]
@@ -30,7 +31,6 @@ namespace DeconToolsV2.Readers
         UNDEFINED
     }
 
-#if Enable_Obsolete
     [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     public class clsRawData
     {
@@ -513,5 +513,5 @@ namespace DeconToolsV2.Readers
             }
         }*/
     }
-#endif
+
 }

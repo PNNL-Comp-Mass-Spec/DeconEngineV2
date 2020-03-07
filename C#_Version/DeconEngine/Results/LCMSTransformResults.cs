@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -371,7 +370,6 @@ namespace Engine.Results
             }
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public void AddTransforms(List<clsHornTransformResults> fitResults)
         {
@@ -417,7 +415,6 @@ namespace Engine.Results
 #endif
             }
         }
-#endif
 
         public int GetMinScan()
         {
@@ -798,4 +795,3 @@ namespace Engine.Results
         }
     }
 }
-#endif

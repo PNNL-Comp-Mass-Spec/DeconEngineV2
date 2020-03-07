@@ -114,14 +114,12 @@ namespace DeconToolsV2.HornTransform
             NeedMultipleIsotopes = false;
         }
 
-#if Enable_Obsolete
         [Obsolete("Use clsHornTransformResults instead", false)]
         internal clsHornTransformResults(IsotopeFitRecord fitRecord)
         {
             PeakIndex = fitRecord.PeakIndex;
             ScanNum = fitRecord.ScanNum;
             ChargeState = fitRecord.ChargeState;
-            //AbundanceInt = fitRecord.AbundanceInt;
             Abundance = fitRecord.Abundance;
             Mz = fitRecord.Mz;
             Fit = fitRecord.Fit;
@@ -139,7 +137,6 @@ namespace DeconToolsV2.HornTransform
                 IsotopePeakIndices.Add(fitRecord.IsotopePeakIndices[i]);
             }
         }
-#endif
 
         public clsHornTransformResults(clsHornTransformResults a)
         {
@@ -189,7 +186,6 @@ namespace DeconToolsV2.HornTransform
                 DeltaMz = DeltaMz,
                 IsotopePeakIndices = new List<int>(IsotopePeakIndices)
             };
-            //result.AbundanceInt = this.AbundanceInt;
             return result;
         }
 

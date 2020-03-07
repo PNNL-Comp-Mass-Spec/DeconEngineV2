@@ -401,6 +401,7 @@ namespace DeconEngine
         public static void UnApodize(ref float[] intensities, ApodizationType type)
         {
         }
+#endif
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static void FourierTransform(ref float[] intensities)
@@ -423,6 +424,6 @@ namespace DeconEngine
             for (var i = 0; i < intensities.Length; i++)
                 intensities[i] = arrIntensities[i];
         }
-#endif
+
     }
 }

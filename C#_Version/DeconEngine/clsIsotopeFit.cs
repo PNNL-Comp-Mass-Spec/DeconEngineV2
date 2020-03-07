@@ -1,10 +1,8 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
-using Engine.TheoreticalProfile;
 
 namespace DeconToolsV2
 {
@@ -102,4 +100,3 @@ namespace DeconToolsV2
         }
     }
 }
-#endif

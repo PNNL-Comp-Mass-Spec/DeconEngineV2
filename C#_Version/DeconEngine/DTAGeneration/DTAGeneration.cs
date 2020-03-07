@@ -120,7 +120,6 @@ namespace Engine.DTAProcessing
             RawDataDTA?.Close();
         }
 
-#if Enable_Obsolete
         /// <summary>
         /// Set options
         /// </summary>
@@ -187,7 +186,6 @@ namespace Engine.DTAProcessing
             IsProfileDataForMzXML = isProfileDataForMzXML;
             _firstScanWritten = false;
         }
-#endif
 
         public clsDTAGenerationParameters DtaOptions
         {
@@ -211,13 +209,11 @@ namespace Engine.DTAProcessing
             }
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetPeakParameters(double pkBkgRatio, double peptideMinBkgRatio)
         {
             SetPeakParametersLowResolution(pkBkgRatio, peptideMinBkgRatio);
         }
-#endif
 
         public void SetPeakParametersLowResolution(double pkBkgRatio, double peptideMinBkgRatio)
         {
@@ -246,7 +242,6 @@ namespace Engine.DTAProcessing
             set => _massTransform.TransformParameters = value;
         }
 
-#if Enable_Obsolete
         [Obsolete("Use MassTransformOptions instead")]
         public void SetMassTransformOptions(short maxCharge, double maxMw, double maxFit, double minS2n,
             double ccMass, double deleteThresholdIntensity, double minTheoreticalIntensityForScore,
@@ -278,7 +273,6 @@ namespace Engine.DTAProcessing
 
             _massTransform.TransformParameters = mtParams;
         }
-#endif
 
         public bool FindPrecursorForChargeStates()
         {

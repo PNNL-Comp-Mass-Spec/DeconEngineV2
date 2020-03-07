@@ -20,7 +20,6 @@ namespace Engine.Utilities
             return 0;
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static bool GetInt16(string option_str, string search_str, int start, out short val)
         {
@@ -239,6 +238,5 @@ namespace Engine.Utilities
 
             return background_intensity / num_pts_used;
         }
-#endif
     }
 }

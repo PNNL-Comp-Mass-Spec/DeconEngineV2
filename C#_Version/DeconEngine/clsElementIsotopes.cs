@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
-#if Enable_Obsolete
 using Engine.TheoreticalProfile;
-#endif
 
 namespace DeconToolsV2
 {
@@ -12,17 +10,14 @@ namespace DeconToolsV2
     {
         private readonly Dictionary<string, int> _elementIndexDict = new Dictionary<string, int>();
 
-#if Enable_Obsolete
+
         //[Obsolete("Not needed after combining AtomicInformation into clsElementIsotopes", true)]
         //internal AtomicInformation AtomicInfo;
-#endif
+
         public readonly List<ElementData> ElementalIsotopesList = new List<ElementData>();
 
         public clsElementIsotopes()
         {
-#if Enable_Obsolete
-            //AtomicInfo = new AtomicInformation();
-#endif
             SetDefaultIsotopeDistribution();
         }
 
@@ -30,26 +25,13 @@ namespace DeconToolsV2
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public clsElementIsotopes(string fileName)
         {
-            //AtomicInfo = new AtomicInformation();
             Load(fileName);
         }
-#endif
-
-#if Enable_Obsolete
-        //[Obsolete("Not needed after combining AtomicInformation into clsElementIsotopes", true)]
-        //internal AtomicInformation ElementalIsotopeComposition
-        //{
-        //    get { return AtomicInfo; }
-        //    set { AtomicInfo = value; }
-        //}
 #endif
 
         public clsElementIsotopes Clone()
         {
             var elemIsotopes = new clsElementIsotopes();
-#if Enable_Obsolete
-            //elemIsotopes.AtomicInfo = new AtomicInformation(ElementalIsotopeComposition);
-#endif
             elemIsotopes.ElementalIsotopesList.AddRange(ElementalIsotopesList);
             return elemIsotopes;
         }
@@ -61,17 +43,13 @@ namespace DeconToolsV2
             //AtomicInfo = new AtomicInformation(otherOne.ElementalIsotopeComposition);
             return this;
         }
-#endif
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void Load(string fileName)
         {
             //AtomicInfo.LoadData(fileName);
         }
-#endif
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         public void Write(string fileName)
         {
@@ -82,9 +60,6 @@ namespace DeconToolsV2
         public int GetNumberOfElements()
         {
             return ElementalIsotopesList.Count;
-#if Enable_Obsolete
-            //return AtomicInfo.ElementalIsotopesList.Count;
-#endif
         }
 
         public void GetElementalIsotope(int index, ref int atomicity, ref int numIsotopes, ref string elementName,
@@ -115,24 +90,6 @@ namespace DeconToolsV2
                 isotopeMass[isotopeNum] = (float) isotopeData.Mass;
                 isotopeProb[isotopeNum] = (float) isotopeData.Probability;
             }
-            return;
-#if Enable_Obsolete
-            //var elementIsotopes = AtomicInfo.ElementalIsotopesList[index];
-            //atomicity = elementIsotopes.Atomicity;
-            //numIsotopes = elementIsotopes.NumberOfIsotopes;
-            //elementName = elementIsotopes.Name;
-            //elementSymbol = elementIsotopes.Symbol;
-            //averageMass = (float) elementIsotopes.AverageMass;
-            //massVariance = (float) elementIsotopes.MassVariance;
-            //
-            //isotopeMass = new float[numIsotopes];
-            //isotopeProb = new float[numIsotopes];
-            //for (var isotopeNum = 0; isotopeNum < numIsotopes; isotopeNum++)
-            //{
-            //    isotopeMass[isotopeNum] = (float) elementIsotopes.IsotopeMasses[isotopeNum];
-            //    isotopeProb[isotopeNum] = (float) elementIsotopes.IsotopeProbabilities[isotopeNum];
-            //}
-#endif
         }
 
 #if Enable_Obsolete
@@ -154,7 +111,6 @@ namespace DeconToolsV2
         }
 #endif
 
-#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void SaveV1ElementIsotopes(XmlTextWriter xwriter)
         {
@@ -208,9 +164,7 @@ namespace DeconToolsV2
             xwriter.WriteEndElement();
             xwriter.WriteWhitespace("\n");
         }
-#endif
 
-#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void LoadV1ElementIsotopes(XmlReader rdr)
         {
@@ -338,8 +292,9 @@ namespace DeconToolsV2
                     case XmlNodeType.EndElement:
                         if (rdr.Name.Equals("Isotope"))
                         {
-                            UpdateElementalIsotope(elementNum, ref atomicity, ref isotopeNum, ref name, ref symbol,
-                                ref isotopeMass, ref isotopeProbability);
+                            // Skip this item since unused
+                            // UpdateElementalIsotope(elementNum, ref atomicity, ref isotopeNum, ref name, ref symbol,
+                            //    ref isotopeMass, ref isotopeProbability);
                             isotopeNum++;
                         }
                         else if (rdr.Name.Equals("Element"))
@@ -359,7 +314,6 @@ namespace DeconToolsV2
                 }
             }
         }
-#endif
 
         public int GetElementIndex(string symbol)
         {

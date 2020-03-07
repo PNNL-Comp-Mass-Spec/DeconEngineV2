@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 using System.Collections.Generic;
 using DeconEngine;
@@ -78,5 +77,3 @@ namespace DeconToolsV2.Peaks
         }
     }
 }
-
-#endif

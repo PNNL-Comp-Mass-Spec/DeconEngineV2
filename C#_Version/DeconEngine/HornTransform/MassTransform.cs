@@ -396,16 +396,6 @@ namespace Engine.HornTransform
             if (DebugFlag)
                 Console.Error.WriteLine("\tBack with fit = " + record.Fit);
 
-#if Enable_Obsolete
-            // Abundance has always been reported as a 32-bit integer
-            // Added field Abundance in 2015 to allow tracking it as a double
-            // For backwards compatibility, if the peak intensity is too large for a 32-bit integer, AbundanceInt will be 2147483648
-            if (peak.Intensity < int.MaxValue)
-                record.Abundance = (int) peak.Intensity;
-            else
-                record.Abundance = int.MaxValue;
-#endif
-
             // Applications using this DLL should use Abundance instead of AbundanceInt
             record.Abundance = peak.Intensity;
             record.ChargeState = chargeState;

@@ -4,14 +4,12 @@ using Engine.HornTransform;
 
 namespace DeconToolsV2.HornTransform
 {
-#if Enable_Obsolete
     [Obsolete("Only used by OldDeconToolsParameters", false)]
     public enum enmExportFileType
     {
         TEXT = 0,
         SQLITE
     }
-#endif
 
     public class clsHornTransformParameters
     {
@@ -73,11 +71,11 @@ namespace DeconToolsV2.HornTransform
             RightFitStringencyFactor = 1;
             UseRAPIDDeconvolution = false;
             ReplaceRAPIDScoreWithHornFitScore = false;
-#if Enable_Obsolete
+
 #pragma warning disable 618
             ExportFileType = enmExportFileType.TEXT;
 #pragma warning restore 618
-#endif
+
             NumPeaksUsedInAbundance = 1;
             DetectPeaksOnlyWithNoDeconvolution = false;
             ProcessMS = true;
@@ -296,10 +294,9 @@ namespace DeconToolsV2.HornTransform
         public bool UseRAPIDDeconvolution { get; set; }
         public bool ReplaceRAPIDScoreWithHornFitScore { get; set; }
 
-#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public enmExportFileType ExportFileType { get; set; }
-#endif
+
         /// <summary>
         /// when abundance for an IsosResult is reported... this is how many peaks are summed. Typically the most abundant peak's abundance is reported.
         /// </summary>
@@ -376,7 +373,6 @@ namespace DeconToolsV2.HornTransform
             return newParams;
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void SaveV1HornTransformParameters(XmlTextWriter xwriter)
         {
@@ -463,9 +459,7 @@ namespace DeconToolsV2.HornTransform
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
         }
-#endif
 
-#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void SaveV1MiscellaneousParameters(XmlTextWriter xwriter)
         {
@@ -522,7 +516,6 @@ namespace DeconToolsV2.HornTransform
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
         }
-#endif
 
         public void LoadV1HornTransformParameters(XmlReader rdr)
         {
@@ -1075,7 +1068,6 @@ namespace DeconToolsV2.HornTransform
             }
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by OldDeconToolsParameters", false)]
         public void LoadV1MiscellaneousParameters(XmlReader rdr)
         {
@@ -1364,6 +1356,5 @@ namespace DeconToolsV2.HornTransform
                 }
             }
         }
-#endif
     }
 }

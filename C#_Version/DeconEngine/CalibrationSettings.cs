@@ -1,4 +1,3 @@
-#if Enable_Obsolete
 using System;
 
 namespace DeconToolsV2
@@ -25,4 +24,3 @@ namespace DeconToolsV2
         }
     }
 }
-#endif

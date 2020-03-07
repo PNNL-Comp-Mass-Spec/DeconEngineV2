@@ -1,5 +1,4 @@
-﻿#if Enable_Obsolete
-using System;
+﻿using System;
 using System.Collections.Generic;
 using DeconToolsV2.Readers;
 using Engine.Utilities;
@@ -593,4 +592,3 @@ namespace Engine.Calibrations
         }
     }
 }
-#endif

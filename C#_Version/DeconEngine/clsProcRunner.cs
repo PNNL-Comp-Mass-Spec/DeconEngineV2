@@ -5,15 +5,13 @@ using DeconToolsV2.HornTransform;
 using DeconToolsV2.Peaks;
 using Engine.HornTransform;
 using Engine.PeakProcessing;
-#if Enable_Obsolete
 using DeconToolsV2.Readers;
 using Engine.DTAProcessing;
 using Engine.Utilities;
-#endif
 
 namespace DeconToolsV2
 {
-#if Enable_Obsolete
+
     [Obsolete("Only used by Decon2LS.UI", false)]
     public enum enmProcessState
     {
@@ -22,21 +20,17 @@ namespace DeconToolsV2
         COMPLETE,
         ERROR
     };
-#endif
+
     /// <summary>
     /// Used by DeconMSn
     /// </summary>
     public class clsProcRunner
     {
         private int _percentDone;
-
-#if Enable_Obsolete
         private int _currentScan;
-#endif
 
         //public void OutfileNames(char* fileName, char* iso_file_name, char* scan_file_name, char* data_file_name);
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void Reset()
         {
@@ -72,7 +66,6 @@ namespace DeconToolsV2
 
         [Obsolete("Only used by Decon2LS.UI", false)]
         public enmProcessState ProcessState { get; private set; }
-#endif
 
         public string FileName { get; set; }
 
@@ -80,36 +73,29 @@ namespace DeconToolsV2
 
         public string OutputPathForDTACreation { get; set; }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public int trial => 1;
-#endif
 
         public clsPeakProcessorParameters PeakProcessorParameters { get; set; }
 
         public clsHornTransformParameters HornTransformParameters { get; set; }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public Results.clsTransformResults HornTransformResults { get; private set; }
-#endif
 
         public DTAGeneration.clsDTAGenerationParameters DTAGenerationParameters { get; set; }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public clsRawDataPreprocessOptions FTICRPreprocessOptions { get; set; }
-#endif
 
         public clsProcRunner()
         {
             _percentDone = 0;
-#if Enable_Obsolete
+
 #pragma warning disable 618
             ProcessState = enmProcessState.IDLE;
             HornTransformResults = null;
 #pragma warning restore 618
-#endif
             FileName = null;
             OutputPathForDTACreation = null;
             PeakProcessorParameters = new DeconToolsV2.Peaks.clsPeakProcessorParameters();
@@ -117,7 +103,6 @@ namespace DeconToolsV2
             DTAGenerationParameters = new DeconToolsV2.DTAGeneration.clsDTAGenerationParameters();
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         private Results.clsTransformResults CreateTransformResults(string fileName, FileType fileType,
             clsPeakProcessorParameters peakParameters, clsHornTransformParameters transformParameters,
@@ -618,7 +603,6 @@ namespace DeconToolsV2
             ProcessState = enmProcessState.COMPLETE;
             return transformResults;
         }
-#endif
 
         public void CreateDTAFile()
         {
@@ -638,7 +622,6 @@ namespace DeconToolsV2
                 throw new Exception("DTA Generation parameters not set.");
             }
 
-#if Enable_Obsolete
 #pragma warning disable 618
             if (ProcessState == enmProcessState.RUNNING)
             {
@@ -647,7 +630,6 @@ namespace DeconToolsV2
             }
             ProcessState = enmProcessState.RUNNING;
 #pragma warning restore 618
-#endif
 
             _percentDone = 0;
 
@@ -1024,14 +1006,11 @@ namespace DeconToolsV2
                 dtaProcessor.MGFFileWriter.Close();
 
             //Done
-#if Enable_Obsolete
 #pragma warning disable 618
             ProcessState = enmProcessState.COMPLETE;
 #pragma warning restore 618
-#endif
         }
 
-#if Enable_Obsolete
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithPeaksOnly()
         {
@@ -1118,6 +1097,5 @@ namespace DeconToolsV2
             mvect_peaks.Capacity = 2 * how_many;
             std.cerr << "Blah" << std.endl;*/
         }
-#endif
     }
 }
