@@ -36,7 +36,7 @@ namespace DeconToolsV2.DTAGeneration
                 CCMass = CCMass,
                 ConsiderChargeValue = ConsiderChargeValue,
                 MaxMass = MaxMass,
-                MaxScan = (int)MaxScan,
+                MaxScan = MaxScan,
                 MinMass = MinMass,
                 MinScan = (int)MinMass,
                 WindowSizeToCheck = WindowSizeToCheck,

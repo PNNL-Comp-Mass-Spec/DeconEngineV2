@@ -75,8 +75,6 @@ namespace DeconMSn
                                         dtaGenParameters.LoadV1DTAGenerationParameters(rdr);
                                     }
                                     break;
-                                default:
-                                    break;
                             }
                         }
 
