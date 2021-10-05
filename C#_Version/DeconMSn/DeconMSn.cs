@@ -19,9 +19,8 @@ namespace DeconMSn
         {
             try
             {
-
-                var strAppFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                var strSVMParamFilePath = Path.Combine(strAppFolder, "svm_params.xml");
+                var appDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                var svmParamFilePath = Path.Combine(appDirectory ?? ".", "svm_params.xml");
 
                 if (args.Length == 0)
                 {
@@ -35,7 +34,7 @@ namespace DeconMSn
                 var peakParameters = new clsPeakProcessorParameters();
 
                 var error = false;
-                dtaGenParameters.SVMParamFile = strSVMParamFilePath;
+                dtaGenParameters.SVMParamFile = svmParamFilePath;
                 dtaGenParameters.CentroidMSn = false;
 
                 var sw = new Stopwatch();
@@ -46,7 +45,7 @@ namespace DeconMSn
                 {
                     foreach (var currentArg in args)
                     {
-                        if (!currentArg.StartsWith("-P") || currentArg.ToLower().StartsWith("-progress"))
+                        if (currentArg == null || !currentArg.StartsWith("-P") || currentArg.StartsWith("-progress", StringComparison.OrdinalIgnoreCase))
                             continue;
 
                         var stringParamFile = currentArg.Substring(2);
