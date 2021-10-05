@@ -1228,21 +1228,19 @@ namespace Engine.DTAProcessing
             }
         }
 
-        public void WriteLogFile()
+        public void WriteLogFile(string deconMSnVersion)
         {
             using (
                 var writer =
                     new StreamWriter(new FileStream(LogFilename, FileMode.Create, FileAccess.ReadWrite,
                         FileShare.None)))
             {
-                //TODO: Version number is hardcoded and needs to be read off assembly file
-                fout.WriteLine("DeconMSn Version:" + "2.3.1.4");
-                fout.WriteLine("Dataset:" + DatasetName);
-                fout.WriteLine("Number of MSn scans processed:" + NumMSnScansProcessed);
-                fout.WriteLine("Number of DTAs generated:" + NumDTARecords);
-                fout.WriteLine("Date/Time:\t" + DateTime.Now.ToString("g", CultureInfo.InvariantCulture));
-                fout.WriteLine("-----------------------------------------------------------\n\n");
-
+                writer.WriteLine("{0,-21} {1}", "DeconMSn Version:", deconMSnVersion);
+                writer.WriteLine("{0,-21} {1}", "Dataset:", DatasetName);
+                writer.WriteLine("{0,-21} {1}", "MSn scans processed:", NumMSnScansProcessed);
+                writer.WriteLine("{0,-21} {1}", "DTAs written:", NumDTARecords);
+                writer.WriteLine("{0,-21} {1}", "Date/Time:", DateTime.Now.ToString("g", CultureInfo.InvariantCulture));
+                writer.WriteLine("-----------------------------------------------------------\n\n");
 
                 writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}", "MSn_Scan", "MSn_Level",
                     "Parent_Scan", "Parent_Scan_Level", "Parent_Mz", "Mono_Mz", "Charge_State", "Monoisotopic_Mass",

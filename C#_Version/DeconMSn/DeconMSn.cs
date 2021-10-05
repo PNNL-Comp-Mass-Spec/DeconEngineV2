@@ -13,6 +13,8 @@ namespace DeconMSn
     {
         // Ignore Spelling: Bryson, Anoop Mayampurath, Navdeep Jaitly
 
+        public const string PROGRAM_DATE = "2021-10-05";
+
         public int RunDeconMSn(string[] args)
         {
             try
@@ -245,9 +247,10 @@ namespace DeconMSn
                     return -1;
                 }
 
-                var filenameToProcess = procRunner.FileName;
+                var inputFile = new FileInfo(procRunner.FileName);
 
-                Console.WriteLine("Processing File {0}", filenameToProcess);
+                Console.WriteLine("DeconMSn Version: {0}", GetExeVersion());
+                Console.WriteLine("Processing File:  {0}", PRISM.PathUtils.CompactPathString(inputFile.FullName, 120));
                 Console.WriteLine();
 
                 // Display the settings
@@ -255,18 +258,22 @@ namespace DeconMSn
                 Console.WriteLine("Minimum Number of ions for valid MSn scan: {0}", dtaGenParameters.MinIonCount);
 
                 Console.WriteLine("Scan Start: {0}", dtaGenParameters.MinScan);
-                Console.WriteLine("Scan End: {0}", dtaGenParameters.MaxScan);
+                Console.WriteLine("Scan End:   {0}", dtaGenParameters.MaxScan);
 
-                Console.WriteLine("m/z Start: {0}", dtaGenParameters.MinMass);
-                Console.WriteLine("m/z End: {0}", dtaGenParameters.MaxMass);
+                Console.WriteLine("m/z Start:  {0}", dtaGenParameters.MinMass);
+                Console.WriteLine("m/z End:    {0}", dtaGenParameters.MaxMass);
+                Console.WriteLine();
 
                 if (dtaGenParameters.ConsiderChargeValue > 0)
+                {
                     Console.WriteLine("-C enabled with {0}", dtaGenParameters.ConsiderChargeValue);
+                    Console.WriteLine();
+                }
 
-                Console.WriteLine("Spectra to process: {0}", stringSpectraFormat);
+                Console.WriteLine("Spectra to process:   {0}", stringSpectraFormat);
 
                 var outputTypeName = dtaGenParameters.OutputTypeName;
-                Console.WriteLine("Output format: {0}", outputTypeName);
+                Console.WriteLine("Output format:        {0}", outputTypeName);
 
                 Console.WriteLine("Create progress file: {0}", dtaGenParameters.WriteProgressFile);
                 Console.WriteLine("Centroid profile mode MSn spectra: {0}", dtaGenParameters.CentroidMSn.ToString());
@@ -276,7 +283,8 @@ namespace DeconMSn
                 procRunner.PeakProcessorParameters = peakParameters;
                 procRunner.DTAGenerationParameters = dtaGenParameters;
 
-                procRunner.CreateDTAFile();
+                var deconMSnVersion = GetExeVersion();
+                procRunner.CreateDTAFile(deconMSnVersion);
 
                 sw.Stop();
 
@@ -309,8 +317,12 @@ namespace DeconMSn
 
         private string GetExeName()
         {
-            var exeName = Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            return exeName;
+            return Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
+        }
+
+        public static string GetExeVersion()
+        {
+            return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
         }
 
         private bool GetParamDbl(string currentArg, string argName, out double argValue)
@@ -343,9 +355,10 @@ namespace DeconMSn
 
         private void PrintUsage()
         {
-
             Console.WriteLine();
-            Console.WriteLine("DeconMSn usage : " + GetExeName() + " [options] filename");
+            Console.WriteLine("DeconMSn Version: " + GetExeVersion());
+            Console.WriteLine();
+            Console.WriteLine("Syntax: " + GetExeName() + " [options] filename");
             Console.WriteLine();
             Console.WriteLine("[options] are");
             Console.WriteLine();

@@ -614,7 +614,7 @@ namespace DeconToolsV2
             return transformResults;
         }
 
-        public void CreateDTAFile()
+        public void CreateDTAFile(string deconMSnVersion)
         {
             //Main function to create DTA files
 
@@ -1002,7 +1002,7 @@ namespace DeconToolsV2
             dtaProcessor.WriteProgressFile(scanNum - scanStart, numScans - scanStart + 1, _percentDone);
 
             // Write out log file
-            dtaProcessor.WriteLogFile();
+            dtaProcessor.WriteLogFile(deconMSnVersion);
 
             // Write out profile
             dtaProcessor.WriteProfileFile();
