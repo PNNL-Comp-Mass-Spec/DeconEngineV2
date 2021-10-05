@@ -13,7 +13,7 @@ namespace DeconEngineTests
         [Test]
         public void TestParseFormula()
         {
-            string formula = "C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
+            var formula = "C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
             var elements = new clsElementIsotopes();
             var molecule = new MolecularFormula(formula, elements);
 
@@ -38,7 +38,7 @@ namespace DeconEngineTests
         [Test]
         public void TestParseFormulaNew()
         {
-            string formula = "C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
+            var formula = "C4.9384 H7.7583 N1.3577 O1.4773 S0.0417";
             //string formula = "Ct H7.7583 N1.3577 O1.4773 S0.0417";
             var elements = new clsElementIsotopes();
             //var molecule = new MolecularFormula(formula, elements);

@@ -277,7 +277,7 @@ namespace Engine.ChargeDetermination
                 var mzReverseBegin = (parentMz - i) - 0.5;
                 var mzReverseEnd = (parentMz - i) + 0.5;
 
-                for (int j = 0; j < (int) _mzs.Count; j++)
+                for (var j = 0; j < (int) _mzs.Count; j++)
                 {
                     var mz = _mzs[j];
                     if (mz >= mzForwardBeginCS2 && mz <= mzForwardEndCS2)

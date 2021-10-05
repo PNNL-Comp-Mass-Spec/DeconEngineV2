@@ -254,7 +254,7 @@ namespace Engine.Utilities
             var a = new float[m + 1, m + 1];
             for (var j = 0; j < m + 1; j++)
             {
-                for (int i = 0; i < m + 1; i++)
+                for (var i = 0; i < m + 1; i++)
                 {
                     a[j, i] = 0;
                 }

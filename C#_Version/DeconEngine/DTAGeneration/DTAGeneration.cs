@@ -385,7 +385,7 @@ namespace Engine.DTAProcessing
             List<double> fullIntensityList;
 
             //Settting to see if found_precursor worked
-            //bool foundPrecursor = false;
+            //var foundPrecursor = false;
             //if (_transformRecords.Count > 0)
             //    foundPrecursor = true;
 
@@ -430,7 +430,7 @@ namespace Engine.DTAProcessing
 
                 for (var i = 0; i < numPoints; i++)
                 {
-                    bool addPeak = true;
+                    var addPeak = true;
 
                     if (i > 0 && i < numPoints - 1)
                     {
@@ -604,7 +604,7 @@ namespace Engine.DTAProcessing
 
             //mobj_parent_peak_processor->ApplyMovingAverageFilter(&mvect_mzs_parent, &mvect_intensities_parent, 3) ;
 
-            int numPeaks = _parentPeakProcessor.DiscoverPeaks(_parentScanMzs, _parentScanIntensities);
+            var numPeaks = _parentPeakProcessor.DiscoverPeaks(_parentScanMzs, _parentScanIntensities);
 
             if (numPeaks > 0)
             {
@@ -1031,7 +1031,7 @@ namespace Engine.DTAProcessing
                 return RawDataDTA.IsFTScan(parentScan);
             else if (DatasetType == FileType.MZXMLRAWDATA)
             {
-                bool set_FT = false;
+                var set_FT = false;
                 set_FT = RawDataDTA.IsFTScan(parentScan);
                 if (set_FT)
                     return set_FT;
@@ -1081,8 +1081,8 @@ namespace Engine.DTAProcessing
         public void WriteToMGF(int msNScanNum, int parentScanNum)
         {
             //second line
-            //double massplusH = 0;
-            int numTransforms = _transformRecords.Count;
+            //double massPlusH = 0;
+            var numTransforms = _transformRecords.Count;
 
             //check size, else has failed params
             if (numTransforms == 0)
@@ -1249,7 +1249,7 @@ namespace Engine.DTAProcessing
                 // sort all records wrt scan
                 _msnRecords.Sort((x, y) =>
                 {
-                    int result = x.MSnScanNum.CompareTo(y.MSnScanNum);
+                    var result = x.MSnScanNum.CompareTo(y.MSnScanNum);
                     if (result == 0)
                     {
                         return x.Charge.CompareTo(y.Charge);
@@ -1307,7 +1307,7 @@ namespace Engine.DTAProcessing
                 return;
 
             // now there can only be two Entries - one through findPeak @[0] and other through THRASH @[1]
-            for (int transformNum = 0; transformNum < numTransforms; transformNum++)
+            for (var transformNum = 0; transformNum < numTransforms; transformNum++)
             {
                 var transformRecord = _transformRecords[transformNum];
                 if (numTransforms > 1)
@@ -1340,8 +1340,8 @@ namespace Engine.DTAProcessing
 
                 System.Console.WriteLine(msNScanNum + "." + msNScanNum + "." + transformRecord.ChargeState);
 
-                int msNScanLevel = RawDataDTA.GetMSLevel(msNScanNum);
-                int parentScanLevel = RawDataDTA.GetMSLevel(parentScanNum);
+                var msNScanLevel = RawDataDTA.GetMSLevel(msNScanNum);
+                var parentScanLevel = RawDataDTA.GetMSLevel(parentScanNum);
                 CreateMSnRecord(transformRecord, msNScanNum, msNScanLevel, parentScanNum, parentScanLevel);
                 CreateProfileRecord(msNScanNum, parentScanNum);
 

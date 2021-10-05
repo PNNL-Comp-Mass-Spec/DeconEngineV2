@@ -52,7 +52,7 @@ namespace Engine.Readers
 
         private clsScanInfo GetScanInfo(int scanNum)
         {
-            mThermoRawFileReader.GetScanInfo(scanNum, out clsScanInfo scanInfo);
+            mThermoRawFileReader.GetScanInfo(scanNum, out var scanInfo);
             return scanInfo;
         }
 
