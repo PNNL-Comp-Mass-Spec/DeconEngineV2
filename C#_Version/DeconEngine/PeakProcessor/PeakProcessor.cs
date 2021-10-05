@@ -271,8 +271,6 @@ namespace Engine.PeakProcessing
 
                                     if (deltaPPM <= PeakMergeTolerancePPM)
                                     {
-
-
                                         // Compare this peak's intensity to the previous peak
                                         if (currentIntensity > previousPeakIntensity)
                                         {
@@ -283,7 +281,6 @@ namespace Engine.PeakProcessing
                                         {
                                             addPeak = false;
                                         }
-
                                     }
                                 }
 
@@ -310,6 +307,7 @@ namespace Engine.PeakProcessing
                     }
                 }
             }
+
             PeakData.MzList = mzList;
             PeakData.IntensityList = intensityList;
 

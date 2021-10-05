@@ -513,5 +513,4 @@ namespace DeconToolsV2.Readers
             }
         }*/
     }
-
 }

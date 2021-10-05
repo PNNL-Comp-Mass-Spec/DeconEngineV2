@@ -136,7 +136,6 @@ namespace Engine.Readers
 
         protected RawData()
         {
-
             mobj_calibrator = null;
         }
 

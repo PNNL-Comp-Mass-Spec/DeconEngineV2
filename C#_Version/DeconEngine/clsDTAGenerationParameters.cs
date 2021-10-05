@@ -4,7 +4,6 @@ using System.Xml;
 
 namespace DeconToolsV2.DTAGeneration
 {
-
     public enum OUTPUT_TYPE
     {
         DTA = 0,
@@ -54,7 +53,6 @@ namespace DeconToolsV2.DTAGeneration
                 NumMSnLevelsToIgnore = NumMSnLevelsToIgnore,
                 CreateLogFileOnly = CreateLogFileOnly
             };
-
 
             return newParams;
         }
@@ -165,7 +163,6 @@ namespace DeconToolsV2.DTAGeneration
                 msnLevelsToIgnore[levelNum] = level;
             }
         }*/
-
 
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SaveV1DTAGenerationParameters(XmlTextWriter xwriter)

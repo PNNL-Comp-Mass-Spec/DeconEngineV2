@@ -10,7 +10,6 @@ namespace DeconToolsV2
     {
         private readonly Dictionary<string, int> _elementIndexDict = new Dictionary<string, int>();
 
-
         //[Obsolete("Not needed after combining AtomicInformation into clsElementIsotopes", true)]
         //internal AtomicInformation AtomicInfo;
 

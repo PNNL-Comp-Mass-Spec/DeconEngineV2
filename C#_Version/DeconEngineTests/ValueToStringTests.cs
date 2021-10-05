@@ -63,7 +63,6 @@ namespace DeconEngineTests
             Console.WriteLine("{0} with {1} digits -> {2}", value, digitsOfPrecision, result);
 
             Assert.AreEqual(expectedResult, result);
-
         }
     }
 }

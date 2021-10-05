@@ -934,7 +934,6 @@ namespace DeconToolsV2.HornTransform
                             }
                             IsActualMonoMZUsed = bool.Parse(rdr.Value);
                         }
-
                         else if (rdr.Name.Equals("LeftFitStringencyFactor"))
                         {
                             if (rdr.IsEmptyElement)
@@ -957,7 +956,6 @@ namespace DeconToolsV2.HornTransform
                             }
                             LeftFitStringencyFactor = double.Parse(rdr.Value);
                         }
-
                         else if (rdr.Name.Equals("RightFitStringencyFactor"))
                         {
                             if (rdr.IsEmptyElement)
@@ -1002,7 +1000,6 @@ namespace DeconToolsV2.HornTransform
                             }
                             UseRAPIDDeconvolution = bool.Parse(rdr.Value);
                         }
-
                         else if (rdr.Name.Equals("ReplaceRAPIDScoreWithHornFitScore"))
                         {
                             if (rdr.IsEmptyElement)
@@ -1040,7 +1037,6 @@ namespace DeconToolsV2.HornTransform
                             }
                             NumPeaksUsedInAbundance = short.Parse(rdr.Value);
                         }
-
                         else if (rdr.Name.Equals("NumberOfScansToAdvance"))
                         {
                             rdr.Read();

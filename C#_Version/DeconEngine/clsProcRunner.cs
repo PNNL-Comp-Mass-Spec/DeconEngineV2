@@ -11,7 +11,6 @@ using Engine.Utilities;
 
 namespace DeconToolsV2
 {
-
     [Obsolete("Only used by Decon2LS.UI", false)]
     public enum enmProcessState
     {
@@ -265,7 +264,6 @@ namespace DeconToolsV2
                     scanNum <= maxScan && scanNum != -1;
                     scanNum = rawData.GetNextScanNum(scanNum))
                 {
-
                     peakProcessor.Clear();
                     originalPeakProcessor.Clear();
                     _currentScan = scanNum;
@@ -474,7 +472,6 @@ namespace DeconToolsV2
 
                                 foundTransform = massTransform.FindTransform(peakProcessor.PeakData,
                                     ref currentPeak, out transformRecord, backgroundIntensity);
-
 
                                 // AM (anoop?): if summing over a window, reinsert the original intensity     // [gord]  why?
                                 if (foundTransform && transformRecord.ChargeState <= transformParameters.MaxCharge

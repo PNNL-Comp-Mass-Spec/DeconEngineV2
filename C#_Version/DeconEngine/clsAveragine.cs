@@ -58,7 +58,6 @@ namespace DeconToolsV2.HornTransform
         //    }
         //}
 
-
         public double MonoMass => 0;
 
         public double AverageMass => 0;

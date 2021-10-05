@@ -438,7 +438,6 @@ namespace Engine.DTAProcessing
                             (fullIntensityList[i] < epsilon && fullIntensityList[i - 1] > epsilon) ||
                             (fullIntensityList[i] < epsilon && fullIntensityList[i + 1] > epsilon))
                         {
-
                             if (previousMZ > -1)
                             {
                                 var deltaMZ = fullMzList[i] - previousMZ;
@@ -472,7 +471,6 @@ namespace Engine.DTAProcessing
                         previousMZ = mzs[mzs.Count - 1];
                         previousIntensity = intensities[intensities.Count - 1];
                     }
-
                 }
             }
 

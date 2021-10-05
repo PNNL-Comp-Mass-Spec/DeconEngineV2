@@ -8,7 +8,6 @@ namespace DeconEngineTests
         [Test]
         public void TestThermoRaw()
         {
-
             // Note: We can only read Thermo .raw file data when compiled as x64
 
             var thermoReader = new Engine.Readers.ThermoRawData();
@@ -35,8 +34,6 @@ namespace DeconEngineTests
             Assert.AreEqual(2, chargeState);
             Assert.AreEqual(7.523, agcTime, 0.01);
             Assert.AreEqual(694.379, monoisotopicMz, 0.01);
-
-
         }
     }
 }

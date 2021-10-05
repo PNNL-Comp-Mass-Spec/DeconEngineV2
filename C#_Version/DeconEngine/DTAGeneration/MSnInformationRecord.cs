@@ -83,7 +83,6 @@
             Charge = -1;
             FitScore = 1;
             MonoMw = 0;
-
         }
     }
 }

@@ -9,7 +9,6 @@ namespace Engine.Readers
     /// <remarks>Used by DeconMSn</remarks>
     internal class ReaderFactory
     {
-
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static RawData GetMSDataReader(FileType fileType)
         {
@@ -33,7 +32,6 @@ namespace Engine.Readers
             RawData rawData = null;
             switch (fileType)
             {
-
 #pragma warning disable 618
                 case FileType.BRUKER:
                     rawData = new BrukerRawData();
@@ -66,7 +64,6 @@ namespace Engine.Readers
                     rawData = new ThermoRawData();
                     rawData.Load(fileName);
                     break;
-
 
 #pragma warning disable 618
                 case FileType.MICROMASSRAWDATA:
@@ -101,7 +98,6 @@ namespace Engine.Readers
             }
             return rawData;
         }
-
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static void GetRawData(out RawData rawData, FileType fileType)

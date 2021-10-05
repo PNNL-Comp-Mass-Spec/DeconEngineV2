@@ -4,7 +4,6 @@ using Engine.Results;
 
 namespace DeconToolsV2.Results
 {
-
     /// <summary>
     /// Transform results
     /// </summary>
@@ -13,7 +12,6 @@ namespace DeconToolsV2.Results
     {
         private Readers.FileType menmFileType = Readers.FileType.UNDEFINED;
         internal LCMSTransformResults mobj_lcms_results;
-
 
         public string FileName => mobj_lcms_results.GetFileName();
 

@@ -292,12 +292,10 @@ namespace DeconMSn
                 System.Threading.Thread.Sleep(2000);
                 return -1;
             }
-
         }
 
         private string GetCommandLineArg(string currentArg)
         {
-
             if (currentArg.StartsWith("/"))
             {
                 // DeconMSn arguments start with a dash; auto-switch
@@ -305,7 +303,6 @@ namespace DeconMSn
             }
 
             return currentArg;
-
         }
 
         private string GetExeName()

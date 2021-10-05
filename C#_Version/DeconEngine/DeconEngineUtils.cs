@@ -88,8 +88,6 @@ namespace DeconEngine
             return average;
         }
 
-
-
         // function calculating standard deviation
         public static double GetStandardDev(List<double> intensities, float maxIntensity)
         {
@@ -424,6 +422,5 @@ namespace DeconEngine
             for (var i = 0; i < intensities.Length; i++)
                 intensities[i] = arrIntensities[i];
         }
-
     }
 }

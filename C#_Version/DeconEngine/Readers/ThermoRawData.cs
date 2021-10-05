@@ -72,7 +72,6 @@ namespace Engine.Readers
                 return 3;
 
             return 0;
-
         }
 
         /// <summary>
@@ -186,7 +185,6 @@ namespace Engine.Readers
 
             var signalRange = maxIntensity - minIntensity;
             return signalRange;
-
         }
 
         public override double GetScanTime(int scanNum)
@@ -378,7 +376,6 @@ namespace Engine.Readers
             return mLastScanMzCount > 0;
         }
 
-
         /// <summary>
         /// Get TIC or BPI
         /// </summary>
@@ -420,6 +417,5 @@ namespace Engine.Readers
 
             return success;
         }
-
     }
 }
