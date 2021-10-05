@@ -1,0 +1,5 @@
+Percent complete:              100%
+Date/Time:                     10/05/2021 15:44
+Number of MSn scans processed: 501
+Total scans:                   501
+Dataset: QC_Shew_19_01_top3_500ng-run1_11Apr19_Brandi_Thermo-10408462
