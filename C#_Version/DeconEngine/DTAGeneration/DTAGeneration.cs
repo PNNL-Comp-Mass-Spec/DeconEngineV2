@@ -476,10 +476,10 @@ namespace Engine.DTAProcessing
 
             //discover peaks
             //computes the average of all points in the spectrum (all points below FLT_MAX)
-            var thres = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
+            var averageIntensity = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
 
             //compute the average of all points below that are below 5 times the average of all points in the spectrum
-            var backgroundIntensity = DeconEngine.Utils.GetAverage(intensities, (float) (5 * thres));
+            var backgroundIntensity = DeconEngine.Utils.GetAverage(intensities, (float) (5 * averageIntensity));
 
             //ARS added the correct calculation for noise floor level from a DeconToolsV2 presentation
             //double calcBackgroundIntensity = DeconEngine.Utils.GetBackgroundLevel(intensities, float.MaxValue);
@@ -1052,8 +1052,8 @@ namespace Engine.DTAProcessing
 
             RawDataDTA.GetRawData(out _msNScanMzs, out _msNScanIntensities, msNScanNumber, DoCentroidMSn);
 
-            var thres = DeconEngine.Utils.GetAverage(_msNScanIntensities, float.MaxValue);
-            var backgroundIntensity = DeconEngine.Utils.GetAverage(_msNScanIntensities, (float) (5 * thres));
+            var averageIntensity = DeconEngine.Utils.GetAverage(_msNScanIntensities, float.MaxValue);
+            var backgroundIntensity = DeconEngine.Utils.GetAverage(_msNScanIntensities, (float) (5 * averageIntensity));
             _msNPeakProcessor.SetPeakIntensityThreshold(backgroundIntensity * peakBkgRatio);
             _msNPeakProcessor.SetPeaksProfileType(!DoCentroidMSn && RawDataDTA.IsProfileScan(msNScanNumber));
 
@@ -1068,8 +1068,8 @@ namespace Engine.DTAProcessing
 
             RawDataDTA.GetRawData(out _parentScanMzs, out _parentScanIntensities, parentScanNumber, false);
 
-            var thres = DeconEngine.Utils.GetAverage(_parentScanIntensities, float.MaxValue);
-            var backgroundIntensity = DeconEngine.Utils.GetAverage(_parentScanIntensities, (float) (5 * thres));
+            var averageIntensity = DeconEngine.Utils.GetAverage(_parentScanIntensities, float.MaxValue);
+            var backgroundIntensity = DeconEngine.Utils.GetAverage(_parentScanIntensities, (float) (5 * averageIntensity));
             _parentPeakProcessor.SetPeakIntensityThreshold(backgroundIntensity * peakBkgRatio);
             _parentPeakProcessor.SetPeaksProfileType(RawDataDTA.IsProfileScan(parentScanNumber));
 
@@ -1207,19 +1207,19 @@ namespace Engine.DTAProcessing
         public void WriteProfileFile()
         {
             using (
-                var fout =
+                var writer =
                     new StreamWriter(new FileStream(ProfileFilename, FileMode.Create, FileAccess.ReadWrite,
                         FileShare.None)))
             {
-                fout.WriteLine("{0}\t{1}\t{2}\t{3}", "MSn_Scan", "Parent_Scan", "AGC_accumulation_time", "TIC");
+                writer.WriteLine("{0}\t{1}\t{2}\t{3}", "MSn_Scan", "Parent_Scan", "AGC_accumulation_time", "TIC");
 
-                // sort all records wrt scan
+                // sort all records by scan
                 _profileRecords.Sort((x, y) => x.MSnScanNum.CompareTo(y.MSnScanNum));
 
                 // now sorted output all
                 foreach (var profileRecord in _profileRecords)
                 {
-                    fout.WriteLine("{0}\t{1}\t{2:F4}\t{3}", profileRecord.MSnScanNum,
+                    writer.WriteLine("{0}\t{1}\t{2:F4}\t{3}", profileRecord.MSnScanNum,
                         profileRecord.ParentScanNum, profileRecord.AgcTime,
                         PRISM.StringUtilities.ValueToString(profileRecord.TotalIonCurrent, 7, 1e10));
                 }
@@ -1229,7 +1229,7 @@ namespace Engine.DTAProcessing
         public void WriteLogFile()
         {
             using (
-                var fout =
+                var writer =
                     new StreamWriter(new FileStream(LogFilename, FileMode.Create, FileAccess.ReadWrite,
                         FileShare.None)))
             {
@@ -1241,7 +1241,8 @@ namespace Engine.DTAProcessing
                 fout.WriteLine("Date/Time:\t" + DateTime.Now.ToString("g", CultureInfo.InvariantCulture));
                 fout.WriteLine("-----------------------------------------------------------\n\n");
 
-                fout.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}", "MSn_Scan", "MSn_Level",
+
+                writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}", "MSn_Scan", "MSn_Level",
                     "Parent_Scan", "Parent_Scan_Level", "Parent_Mz", "Mono_Mz", "Charge_State", "Monoisotopic_Mass",
                     "Isotopic_Fit", "Parent_Intensity", "Mono_Intensity");
 
@@ -1259,7 +1260,7 @@ namespace Engine.DTAProcessing
                 // now sorted output all
                 foreach (var msnRecord in _msnRecords)
                 {
-                    fout.WriteLine("{0}\t{1}\t{2}\t{3}\t{4:F4}\t{5:F4}\t{6}\t{7:F4}\t{8:F4}\t{9}\t{10}",
+                    writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4:F4}\t{5:F4}\t{6}\t{7:F4}\t{8:F4}\t{9}\t{10}",
                         msnRecord.MSnScanNum, msnRecord.MSnScanLevel,
                         msnRecord.ParentScanNum, msnRecord.ParentScanLevel,
                         msnRecord.ParentMz, msnRecord.MonoMz, msnRecord.Charge,
@@ -1411,17 +1412,17 @@ namespace Engine.DTAProcessing
                 }
 
                 using (
-                    var fout =
+                    var writer =
                         new StreamWriter(new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                     )
                 {
-                    fout.WriteLine("{0:F12} {1}", massPlusH, transformRecord.ChargeState);
+                    writer.WriteLine("{0:F12} {1}", massPlusH, transformRecord.ChargeState);
 
                     for (var i = 0; i < _msNScanMzs.Count; i++)
                     {
                         var mz = _msNScanMzs[i];
                         var intensity = _msNScanIntensities[i];
-                        fout.WriteLine("{0:F5} {1:F2}", mz, intensity);
+                        writer.WriteLine("{0:F5} {1:F2}", mz, intensity);
                     }
                 }
             }

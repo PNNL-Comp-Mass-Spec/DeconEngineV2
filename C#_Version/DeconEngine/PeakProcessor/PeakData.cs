@@ -658,10 +658,10 @@ namespace Engine.PeakProcessing
             {
                 // look for a peak behind.
                 var mz = peakTop.Mz;
-                var inback = GetPeak(mz - tolerance, mz - 0.00001, out var nextPeak);
-                var infront = GetPeak(mz + 0.00001, mz + tolerance, out nextPeak);
+                var inBack = GetPeak(mz - tolerance, mz - 0.00001, out var nextPeak1);
+                var inFront = GetPeak(mz + 0.00001, mz + tolerance, out var nextPeak2);
 
-                if (inback || infront)
+                if (inBack || inFront)
                     tempPeakTops.Add(peakTop);
             }
             PeakTops.Clear();

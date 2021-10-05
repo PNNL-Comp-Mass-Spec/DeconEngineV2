@@ -219,9 +219,9 @@ namespace Engine.Readers
 
                 const int INT_SIZE = sizeof (int);
                 const int FLT_SIZE = sizeof (float);
-                const int SHRT_SIZE = sizeof (short);
+                const int SHORT_SIZE = sizeof (short);
 
-                //Get TOF size based on data ype
+                //Get TOF size based on data yype
                 // Standard IMS - short
                 // Multiplexed IMS - float
                 // AGC IMS - int
@@ -232,7 +232,7 @@ namespace Engine.Readers
                 else if (mbln_is_adc_data)
                     tof_rec_size = 2 * INT_SIZE;
                 else
-                    tof_rec_size = SHRT_SIZE + INT_SIZE;
+                    tof_rec_size = SHORT_SIZE + INT_SIZE;
 
                 //Read in number of IMS scans
                 //int num_read = _read(fh, &mint_num_scans, INT_SIZE);

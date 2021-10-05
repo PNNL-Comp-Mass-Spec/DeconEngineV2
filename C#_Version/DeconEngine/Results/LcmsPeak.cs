@@ -36,18 +36,31 @@ namespace Engine.Results
             Intensity = a.Intensity;
         }
 
-        public LcmsPeak(int scan, float mz, float inten)
+        /// <summary>
+        /// Constructor that takes scan, float m/z and intensity
+        /// </summary>
+        /// <param name="scan"></param>
+        /// <param name="mz"></param>
+        /// <param name="intensity"></param>
+        // ReSharper disable once UnusedMember.Global
+        public LcmsPeak(int scan, float mz, float intensity)
         {
             ScanNum = scan;
             Mz = mz;
-            Intensity = inten;
+            Intensity = intensity;
         }
 
-        public LcmsPeak(int scan, double mz, double inten)
+        /// <summary>
+        /// Constructor that takes scan, double m/z and intensity
+        /// </summary>
+        /// <param name="scan"></param>
+        /// <param name="mz"></param>
+        /// <param name="intensity"></param>
+        public LcmsPeak(int scan, double mz, double intensity)
         {
             ScanNum = scan;
             Mz = mz;
-            Intensity = inten;
+            Intensity = intensity;
         }
 
         public virtual void WriteToBinaryStream(BinaryWriter stream)

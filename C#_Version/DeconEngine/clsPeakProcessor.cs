@@ -34,9 +34,8 @@ namespace DeconToolsV2.Peaks
 
         public double GetBackgroundIntensity(ref float[] intensities)
         {
-            var thres = Utils.GetAverage(intensities, float.MaxValue);
-            thres = Utils.GetAverage(intensities, (float) (5 * thres));
-            return thres;
+            var averageIntensity = Utils.GetAverage(intensities, float.MaxValue);
+            return Utils.GetAverage(intensities, (float) (5 * averageIntensity));
         }
 
         public void DiscoverPeaks(ref float[] mzs, ref float[] intensities, ref clsPeak[] peaks, float startMz,

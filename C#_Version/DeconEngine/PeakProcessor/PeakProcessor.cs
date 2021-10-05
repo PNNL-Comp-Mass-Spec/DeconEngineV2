@@ -233,11 +233,11 @@ namespace Engine.PeakProcessing
                             fwhm = PeakStatistician.FindFwhm(mzList, intensityList, index, signalToNoise);
                             if (fwhm > 0 && fwhm < 0.5)
                             {
-                                var ilow = PeakIndex.GetNearestBinary(mzList, currentMz - fwhm, 0, index);
-                                var ihigh = PeakIndex.GetNearestBinary(mzList, currentMz + fwhm, index, stopIndex);
+                                var indexLow = PeakIndex.GetNearestBinary(mzList, currentMz - fwhm, 0, index);
+                                var indexHigh = PeakIndex.GetNearestBinary(mzList, currentMz + fwhm, index, stopIndex);
 
-                                var lowIntensity = intensityList[ilow];
-                                var highIntensity = intensityList[ihigh];
+                                var lowIntensity = intensityList[indexLow];
+                                var highIntensity = intensityList[indexHigh];
 
                                 var sumIntensity = lowIntensity + highIntensity;
                                 if (sumIntensity > 0)

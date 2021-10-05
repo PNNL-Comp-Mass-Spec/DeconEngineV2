@@ -165,71 +165,71 @@ namespace DeconToolsV2.DTAGeneration
         }*/
 
         [Obsolete("Only used by Decon2LS.UI", false)]
-        public void SaveV1DTAGenerationParameters(XmlTextWriter xwriter)
+        public void SaveV1DTAGenerationParameters(XmlTextWriter writer)
         {
-            xwriter.WriteWhitespace("\n\t");
-            xwriter.WriteStartElement("DTAGenerationParameters");
-            xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MinScan", MinScan.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MaxScan", MaxScan.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MinMass", MinMass.ToString("0.0000"));
-            xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("MaxMass", MaxMass.ToString("0.0000"));
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteWhitespace("\n\t");
+            writer.WriteStartElement("DTAGenerationParameters");
+            writer.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("MinScan", MinScan.ToString());
+            writer.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("MaxScan", MaxScan.ToString());
+            writer.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("MinMass", MinMass.ToString("0.0000"));
+            writer.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("MaxMass", MaxMass.ToString("0.0000"));
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("MinIonCount", MinIonCount.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("MinIonCount", MinIonCount.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
             if (ConsiderChargeValue > 0)
             {
-                xwriter.WriteElementString("ConsiderCharge", "true");
-                xwriter.WriteWhitespace("\n\t\t");
+                writer.WriteElementString("ConsiderCharge", "true");
+                writer.WriteWhitespace("\n\t\t");
             }
             else
             {
-                xwriter.WriteElementString("ConsiderCharge", "false");
-                xwriter.WriteWhitespace("\n\t\t");
+                writer.WriteElementString("ConsiderCharge", "false");
+                writer.WriteWhitespace("\n\t\t");
             }
-            xwriter.WriteElementString("ChargeValueToConsider", ConsiderChargeValue.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("ChargeValueToConsider", ConsiderChargeValue.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("CCMass", CCMass.ToString("0.0000"));
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("CCMass", CCMass.ToString("0.0000"));
+            writer.WriteWhitespace("\n\t\t");
 
             writer.WriteElementString("WindowSizeToCheck", WindowSizeToCheck.ToString("0.0000"));
             writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("ConsiderMultiplePrecursors", ConsiderMultiplePrecursors.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("ConsiderMultiplePrecursors", ConsiderMultiplePrecursors.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("IsolationWindowSize", IsolationWindowSize.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("IsolationWindowSize", IsolationWindowSize.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("OutputType", OutputType.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("OutputType", OutputType.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("IsProfileDataForMzXML", IsProfileDataForMzXML.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("IsProfileDataForMzXML", IsProfileDataForMzXML.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("WriteProgressFile", WriteProgressFile.ToString());
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("WriteProgressFile", WriteProgressFile.ToString());
+            writer.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("IgnoreMSnScans", IgnoreMSnScans.ToString());
+            writer.WriteElementString("IgnoreMSnScans", IgnoreMSnScans.ToString());
 
             if (IgnoreMSnScans)
             {
                 var numLevels = NumMSnLevelsToIgnore;
                 for (var levelNum = 0; levelNum < numLevels; levelNum++)
                 {
-                    int level = _msnLevelsToIgnore[levelNum];
-                    xwriter.WriteWhitespace("\n\t\t");
-                    xwriter.WriteElementString("MSnLevelToIgnore", level.ToString());
+                    var level = _msnLevelsToIgnore[levelNum];
+                    writer.WriteWhitespace("\n\t\t");
+                    writer.WriteElementString("MSnLevelToIgnore", level.ToString());
                 }
             }
-            xwriter.WriteWhitespace("\n\t");
-            xwriter.WriteEndElement();
+            writer.WriteWhitespace("\n\t");
+            writer.WriteEndElement();
         }
 
         public void LoadV1DTAGenerationParameters(XmlReader rdr)

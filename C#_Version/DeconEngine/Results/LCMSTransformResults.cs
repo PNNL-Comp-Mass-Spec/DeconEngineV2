@@ -122,11 +122,11 @@ namespace Engine.Results
                     for (iter = iter_first; iter != iter_last; iter++)
                     {
                         Engine.HornTransform.IsotopeFitRecord record = *iter;
-                        fout.precision(2);
+                        writer.precision(2);
                         ptr_fstream.write(record.mdbl_sn,<<",";
-                        fout.precision(4);
-                        fout<<record.mint_mono_intensity<<",";
-                        fout<<record.mint_iplus2_intensity<<"\n";
+                        writer.precision(4);
+                        writer<<record.mint_mono_intensity<<",";
+                        writer<<record.mint_iplus2_intensity<<"\n";
                     }*/
             }
             else
@@ -435,12 +435,12 @@ namespace Engine.Results
         private void SaveResultsV1Iso(string isoFileName)
         {
             using (
-                var fout =
+                var writer =
                     new StreamWriter(new FileStream(isoFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 )
             {
                 //Preserve column headers for VIPER to load it in
-                fout.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", "scan_num", "charge", "abundance",
+                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", "scan_num", "charge", "abundance",
                     "mz", "fit", "average_mw", "monoisotopic_mw", "mostabundant_mw", "fwhm", "signal_noise",
                     "mono_abundance", "mono_plus2_abundance");
 
@@ -449,7 +449,7 @@ namespace Engine.Results
                     // write from stored data in _transforms
                     foreach (var record in _transforms)
                     {
-                        fout.WriteLine("{0},{1},{2:F0},{3:F4},{4:F4},{5:F4},{6:F4},{7:F4},{8:F4},{9:F2},{10},{11}",
+                        writer.WriteLine("{0},{1},{2:F0},{3:F4},{4:F4},{5:F4},{6:F4},{7:F4},{8:F4},{9:F2},{10},{11}",
                             record.ScanNum, record.ChargeState, record.Abundance, record.Mz, record.Fit,
                             record.AverageMw, record.MonoMw, record.MostIntenseMw, record.FWHM, record.SignalToNoise,
                             record.MonoIntensity, record.MonoPlus2Intensity);
@@ -473,7 +473,7 @@ namespace Engine.Results
                         while (_isoFile.Position < _isoFile.Length)
                         {
                             var record = IsotopeFitRecord.ReadFromBinaryStream(bReader);
-                            fout.WriteLine("{0},{1},{2},{3:F4},{4:F4},{5:F4},{6:F4},{7:F4},{8:F4},{9:F2},{10},{11}",
+                            writer.WriteLine("{0},{1},{2},{3:F4},{4:F4},{5:F4},{6:F4},{7:F4},{8:F4},{9:F2},{10},{11}",
                                 record.ScanNum, record.ChargeState, record.AbundanceInt, record.Mz, record.Fit,
                                 record.AverageMw, record.MonoMw, record.MostIntenseMw, record.FWHM, record.SignalToNoise,
                                 record.MonoIntensity, record.MonoPlus2Intensity);
@@ -487,7 +487,7 @@ namespace Engine.Results
         private void SaveResultsV1Scan(string scanFileName, bool saveSignalRange)
         {
             using (
-                var fout =
+                var writer =
                     new StreamWriter(new FileStream(scanFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 )
             {
@@ -499,28 +499,28 @@ namespace Engine.Results
                 }
 
                 //if (mbln_save_ims)
-                //    fout << "scan_num,scan_time,drift_time,type,bpi,bpi_mz,tic,num_peaks,num_deisotoped\n";
+                //    writer << "scan_num,scan_time,drift_time,type,bpi,bpi_mz,tic,num_peaks,num_deisotoped\n";
                 //else
-                //    fout << "scan_num,scan_time,type,bpi,bpi_mz,tic,num_peaks,num_deisotoped";
-                fout.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7}{8}", "scan_num", "scan_time", "type", "bpi", "bpi_mz",
+                //    writer << "scan_num,scan_time,type,bpi,bpi_mz,tic,num_peaks,num_deisotoped";
+                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7}{8}", "scan_num", "scan_time", "type", "bpi", "bpi_mz",
                     "tic", "num_peaks", "num_deisotoped", saveSignalHead);
 
                 foreach (var item in ScanDataDict)
                 {
                     //if (mbln_save_ims)
-                    //    fout << scan_num << "," << mmap_scan_time[scan_num] << "," << mmap_scan_num_drift_time[scan_num] << "," << mmap_scan_num_mslevel[scan_num] << "," << mmap_scan_bp_intensity[scan_num] << "," << mmap_scan_bp_mz[scan_num] << ",";
+                    //    writer << scan_num << "," << mmap_scan_time[scan_num] << "," << mmap_scan_num_drift_time[scan_num] << "," << mmap_scan_num_mslevel[scan_num] << "," << mmap_scan_bp_intensity[scan_num] << "," << mmap_scan_bp_mz[scan_num] << ",";
                     //else
-                    //    fout << scan_num << "," << mmap_scan_time[scan_num] << "," << mmap_scan_num_mslevel[scan_num] << "," << mmap_scan_bp_intensity[scan_num] << "," << mmap_scan_bp_mz[scan_num] << ",";
+                    //    writer << scan_num << "," << mmap_scan_time[scan_num] << "," << mmap_scan_num_mslevel[scan_num] << "," << mmap_scan_bp_intensity[scan_num] << "," << mmap_scan_bp_mz[scan_num] << ",";
                     var data = item.Value;
                     if (saveSignalRange)
                     {
-                        fout.WriteLine("{0},{1:F4},{2},{3:F4},{4:F4},{5:F4},{6},{7},{8:F4}", data.ScanNum, data.ScanTime,
+                        writer.WriteLine("{0},{1:F4},{2},{3:F4},{4:F4},{5:F4},{6},{7},{8:F4}", data.ScanNum, data.ScanTime,
                             data.ScanNumMsLevel, data.ScanBpIntensity, data.ScanBpMz, data.ScanTic, data.ScanNumPeaks,
                             data.ScanNumDeisotoped, data.ScanSignalRange);
                     }
                     else
                     {
-                        fout.WriteLine("{0},{1:F4},{2},{3:F4},{4:F4},{5:F4},{6},{7}", data.ScanNum, data.ScanTime,
+                        writer.WriteLine("{0},{1:F4},{2},{3:F4},{4:F4},{5:F4},{6},{7}", data.ScanNum, data.ScanTime,
                             data.ScanNumMsLevel, data.ScanBpIntensity, data.ScanBpMz, data.ScanTic, data.ScanNumPeaks,
                             data.ScanNumDeisotoped);
                     }
@@ -531,22 +531,22 @@ namespace Engine.Results
         private void SaveResultsV1Data(string dataFileName)
         {
             using (
-                var fout =
+                var writer =
                     new BinaryWriter(new FileStream(dataFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 )
             {
-                //fout.Write(filename_len); // Write(string) auto-prefixes the length
-                fout.Write(dataFileName);
-                fout.Write("Version: 1.0");
+                //writer.Write(filename_len); // Write(string) auto-prefixes the length
+                writer.Write(dataFileName);
+                writer.Write("Version: 1.0");
 
                 // now to write the peaks. Write out the number of peaks so that reading program knows how many to read
-                fout.Write(_numPeaksStored);
-                WriteTempPeaksToFile(fout);
+                writer.Write(_numPeaksStored);
+                WriteTempPeaksToFile(writer);
 
                 // write out number of isotopic signatures detected.
-                fout.Write(_numIsoStored);
-                fout.Flush();
-                WriteTempIsosToFile(fout);
+                writer.Write(_numIsoStored);
+                writer.Flush();
+                WriteTempIsosToFile(writer);
             }
 
             _isoFile.Close();

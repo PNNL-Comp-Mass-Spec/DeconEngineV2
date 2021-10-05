@@ -127,26 +127,26 @@ namespace Engine.PeakProcessing
             if (index == mzs.Count)
                 return mzs[index];
 
-            var lstart = PeakIndex.GetNearest(mzs, vo + fwhm, index) + 1;
-            var lstop = PeakIndex.GetNearest(mzs, vo - fwhm, index) - 1;
+            var indexStart = PeakIndex.GetNearest(mzs, vo + fwhm, index) + 1;
+            var indexStop = PeakIndex.GetNearest(mzs, vo - fwhm, index) - 1;
 
-            var currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, lstart, lstop);
+            var currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, indexStart, indexStop);
             for (var i = 0; i < 50; i++)
             {
                 var lastE = currentE;
                 vo = vo + e;
-                currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, lstart, lstop);
+                currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, indexStart, indexStop);
                 if (currentE > lastE)
                     break;
             }
 
             vo = vo - e;
-            currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, lstart, lstop);
+            currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, indexStart, indexStop);
             for (var i = 0; i < 50; i++)
             {
                 var lastE = currentE;
                 vo = vo - e;
-                currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, lstart, lstop);
+                currentE = LorentzianLS(mzs, intensities, a, fwhm, vo, indexStart, indexStop);
                 if (currentE > lastE)
                     break;
             }
