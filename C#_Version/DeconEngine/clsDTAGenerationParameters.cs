@@ -39,7 +39,7 @@ namespace DeconToolsV2.DTAGeneration
                 MaxScan = (int)MaxScan,
                 MinMass = MinMass,
                 MinScan = (int)MinMass,
-                WindowSizetoCheck = WindowSizetoCheck,
+                WindowSizeToCheck = WindowSizeToCheck,
                 MinIonCount = MinIonCount,
                 OutputType = OutputType,
                 SpectraType = SpectraType,
@@ -100,7 +100,7 @@ namespace DeconToolsV2.DTAGeneration
 
         public double CCMass { get; set; }
 
-        public int WindowSizetoCheck { get; set; }
+        public int WindowSizeToCheck { get; set; }
 
         public bool WriteProgressFile { get; set; }
 
@@ -136,7 +136,7 @@ namespace DeconToolsV2.DTAGeneration
             MinScan = 1;
             MaxScan = 1000000;
             ConsiderChargeValue = 0;
-            WindowSizetoCheck = 5;
+            WindowSizeToCheck = 5;
             MinMass = 200;
             MaxMass = 5000;
             CCMass = 1.00727638;
@@ -198,8 +198,8 @@ namespace DeconToolsV2.DTAGeneration
             xwriter.WriteElementString("CCMass", CCMass.ToString("0.0000"));
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("WindowSizeToCheck", WindowSizetoCheck.ToString("0.0000"));
-            xwriter.WriteWhitespace("\n\t\t");
+            writer.WriteElementString("WindowSizeToCheck", WindowSizeToCheck.ToString("0.0000"));
+            writer.WriteWhitespace("\n\t\t");
 
             xwriter.WriteElementString("ConsiderMultiplePrecursors", ConsiderMultiplePrecursors.ToString());
             xwriter.WriteWhitespace("\n\t\t");
@@ -435,7 +435,7 @@ namespace DeconToolsV2.DTAGeneration
                             {
                                 rdr.Read();
                             }
-                            WindowSizetoCheck = short.Parse(rdr.Value);
+                            WindowSizeToCheck = short.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("OutputType"))
                         {

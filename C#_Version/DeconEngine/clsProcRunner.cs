@@ -66,7 +66,20 @@ namespace DeconToolsV2
         [Obsolete("Only used by Decon2LS.UI", false)]
         public enmProcessState ProcessState { get; private set; }
 
-        public string FileName { get; set; }
+        /// <summary>
+        /// Path to the input file (full or partial path)
+        /// </summary>
+        public string InputFilePath { get; set; }
+
+        /// <summary>
+        /// Path to the input file (full or partial path)
+        /// </summary>
+        [Obsolete("Use InputFilePath")]
+        public string FileName
+        {
+            get => InputFilePath;
+            set => InputFilePath = value;
+        }
 
         public DeconToolsV2.Readers.FileType FileType { get; set; }
 
@@ -95,7 +108,7 @@ namespace DeconToolsV2
             ProcessState = enmProcessState.IDLE;
             HornTransformResults = null;
 #pragma warning restore 618
-            FileName = null;
+            InputFilePath = null;
             OutputPathForDTACreation = null;
             PeakProcessorParameters = new DeconToolsV2.Peaks.clsPeakProcessorParameters();
             HornTransformParameters = new DeconToolsV2.HornTransform.clsHornTransformParameters();
@@ -1019,7 +1032,7 @@ namespace DeconToolsV2
             {
                 throw new Exception("Peak parameters not set.");
             }
-            HornTransformResults = CreateTransformResults(FileName, FileType, PeakProcessorParameters,
+            HornTransformResults = CreateTransformResults(InputFilePath, FileType, PeakProcessorParameters,
                 HornTransformParameters, FTICRPreprocessOptions, true, false);
         }
 
@@ -1038,7 +1051,7 @@ namespace DeconToolsV2
             {
                 throw new Exception("Horn Transform parameters not set.");
             }
-            HornTransformResults = CreateTransformResults(FileName, FileType, PeakProcessorParameters,
+            HornTransformResults = CreateTransformResults(InputFilePath, FileType, PeakProcessorParameters,
                 HornTransformParameters, FTICRPreprocessOptions, false, true);
         }
 
@@ -1057,7 +1070,7 @@ namespace DeconToolsV2
             {
                 throw new Exception("Horn Transform parameters not set.");
             }
-            HornTransformResults = CreateTransformResults(FileName, FileType, PeakProcessorParameters,
+            HornTransformResults = CreateTransformResults(InputFilePath, FileType, PeakProcessorParameters,
                 HornTransformParameters, FTICRPreprocessOptions, true, true);
         }
 
