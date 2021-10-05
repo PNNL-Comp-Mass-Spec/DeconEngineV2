@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DeconToolsV2.Readers;
-using Engine.Calibrations;
 using Engine.Utilities;
 
 namespace Engine.Readers

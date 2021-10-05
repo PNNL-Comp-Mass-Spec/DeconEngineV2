@@ -6,7 +6,6 @@ using System.Text;
 using DeconToolsV2.HornTransform;
 using DeconToolsV2.Peaks;
 using Engine.HornTransform;
-using Engine.PeakProcessing;
 
 namespace Engine.Results
 {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DeconToolsV2.Peaks;
 using Engine.ChargeDetermination;
-using Engine.HornTransform;
 using Engine.PeakProcessing;
 
 namespace DeconToolsV2.HornTransform

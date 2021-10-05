@@ -6,7 +6,6 @@ using DeconToolsV2.Peaks;
 using Engine.HornTransform;
 using Engine.PeakProcessing;
 using DeconToolsV2.Readers;
-using Engine.DTAProcessing;
 using Engine.Utilities;
 
 namespace DeconToolsV2

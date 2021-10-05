@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DeconToolsV2;
 using Engine;
-using Engine.TheoreticalProfile;
 using Engine.Utilities;
 using DeconToolsV2.Peaks;
 using Engine.PeakProcessing;
-using ApodizationType = DeconToolsV2.Readers.ApodizationType;
 
 namespace DeconEngine
 {
