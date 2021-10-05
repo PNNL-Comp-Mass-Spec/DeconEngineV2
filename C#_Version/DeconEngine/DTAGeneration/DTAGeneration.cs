@@ -19,6 +19,8 @@ namespace Engine.DTAProcessing
     /// </summary>
     internal class DTAProcessor
     {
+        // Ignore Spelling: deconvolute, Savitzky Golay
+
         public int MinIonCount { get; set; }
         public int MinScan { get; set; }
         public int MaxScan { get; set; }
@@ -384,7 +386,7 @@ namespace Engine.DTAProcessing
             List<double> fullMzList;
             List<double> fullIntensityList;
 
-            //Settting to see if found_precursor worked
+            //Setting to see if found_precursor worked
             //var foundPrecursor = false;
             //if (_transformRecords.Count > 0)
             //    foundPrecursor = true;
@@ -531,7 +533,7 @@ namespace Engine.DTAProcessing
                 mtParams.CheckAllPatternsAgainstCharge1 = chkcharge1;
 
                 // not ejecting precursor record here as the indices are going to be off
-                // also algo is changed to use only THRASH if both cs are equal
+                // also algorithm is changed to use only THRASH if both cs are equal
                 var foundTransformRecord = false;
                 var transformRecord2 = new clsHornTransformResults();
                 for (var recordNum = 0; recordNum < numDeisotoped; recordNum++)
@@ -551,7 +553,7 @@ namespace Engine.DTAProcessing
                 }
                 if (foundTransformRecord)
                 {
-                    // set mono intensity to replace the one that summes spectra would return
+                    // set mono intensity to replace the one that summed spectra would return
                     int monoOrigIntensity;
                     var monoMatch = _parentPeakProcessor.GetClosestPeakMz(transformRecord2.Mz,
                         out var tempPeak);
@@ -745,7 +747,7 @@ namespace Engine.DTAProcessing
                     if (!ConsiderMultiplePrecursors)
                     {
                         // more than one and consider only one precursor, so might be co-eluting peptides
-                        // see if we mave a match first
+                        // see if we have a match first
                         foundTransformRecord = false;
                         for (var transformNum = 0;
                             transformNum < transformRecords.Count && !foundTransformRecord;
@@ -805,7 +807,7 @@ namespace Engine.DTAProcessing
                     }
                     else
                     {
-                        //consider multiple precursors in on, so spit dtas for all precursors with IsolationWindowSize from parent peak
+                        //consider multiple precursors in on, so split DTAs for all precursors with IsolationWindowSize from parent peak
                         for (var transformNum = 0; transformNum < transformRecords.Count; transformNum++)
                         {
                             transformRecord = new clsHornTransformResults(transformRecords[transformNum]);
@@ -880,7 +882,7 @@ namespace Engine.DTAProcessing
 
         public bool GenerateDTALowRes(int msNScanNumber, int parentScanNumber, int msNScanIndex)
         {
-            //Apply a heavy smoothing using savitsky golay filter
+            //Apply a heavy smoothing using Savitzky Golay filter
             var smoother = new SavGolSmoother();
             smoother.SetOptions(16, 16, 4);
             smoother.Smooth(ref _parentScanMzs, ref _parentScanIntensities);
@@ -900,7 +902,7 @@ namespace Engine.DTAProcessing
             if (numPeaks < MinIonCount)
                 return false;
 
-            // Get the parent m/z for that msn scan
+            // Get the parent m/z for that MSn scan
             var parentMz = RawDataDTA.GetParentMz(msNScanNumber);
 
             // Now start
@@ -1162,7 +1164,7 @@ namespace Engine.DTAProcessing
 #if DEBUG
                 throw;
 #else
-                System.Console.Error.WriteLine("Error in creating .MGF");
+                System.Console.Error.WriteLine("Error in WriteToMGF");
 #endif
             }
         }
@@ -1246,7 +1248,7 @@ namespace Engine.DTAProcessing
                     "Parent_Scan", "Parent_Scan_Level", "Parent_Mz", "Mono_Mz", "Charge_State", "Monoisotopic_Mass",
                     "Isotopic_Fit", "Parent_Intensity", "Mono_Intensity");
 
-                // sort all records wrt scan
+                // sort all records by scan
                 _msnRecords.Sort((x, y) =>
                 {
                     var result = x.MSnScanNum.CompareTo(y.MSnScanNum);
@@ -1359,7 +1361,7 @@ namespace Engine.DTAProcessing
                 var fileName = string.Format("{0}.{1}.{2}.{3}.dta", OutputFile + metz_mod, msNScanNum, msNScanNum, transformRecord.ChargeState);
                 */
 
-                // for composite dta
+                // for composite DTA
                 if (CreateCompositeDTA)
                 {
                     if (!_firstScanWritten)

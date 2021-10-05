@@ -11,6 +11,8 @@ namespace DeconMSn
 {
     public class DeconMSn
     {
+        // Ignore Spelling: Bryson, Anoop Mayampurath, Navdeep Jaitly
+
         public int RunDeconMSn(string[] args)
         {
             try
@@ -367,7 +369,7 @@ namespace DeconMSn
             Console.WriteLine("\t \t DTA  : Creates .dta files along with a log file (_log.txt) and profile file (_profile.txt)");
             Console.WriteLine("\t \t LOG  : Creates only the log file (_log.txt) and profile file (_profile.txt)");
             Console.WriteLine("\t \t MGF  : Creates a .mgf file along with the log file and profile file");
-            Console.WriteLine("\t \t CDTA : Creates a concatenated dta file (_dta.txt), a log file, and a profile file [default option]");
+            Console.WriteLine("\t \t CDTA : Creates a concatenated DTA file (_dta.txt), a log file, and a profile file [default option]");
             Console.WriteLine("filename : input file [mzXML or RAW]");
             Console.WriteLine();
             Console.WriteLine("Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy");
