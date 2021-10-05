@@ -374,9 +374,9 @@ namespace DeconMSn
             Console.WriteLine("filename : input file [mzXML or RAW]");
             Console.WriteLine();
             Console.WriteLine("Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy");
-            Console.WriteLine("Maintained by Matthew Monroe");
-            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or samuel.payne@pnnl.gov");
-            Console.WriteLine("Website: http://omics.pnl.gov or http://panomics.pnnl.gov");
+            Console.WriteLine("Maintained by Bryson Gibbons and Matthew Monroe");
+            Console.WriteLine("E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov");
+            Console.WriteLine("Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics");
 
             System.Threading.Thread.Sleep(2500);
         }

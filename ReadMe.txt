@@ -9,7 +9,7 @@ https://github.com/PNNL-Comp-Mass-Spec/DeconEngineV2/tree/master/C%23_Version/De
 Originally written by Deep Jaitly for the Department of Energy (PNNL, Richland, WA)
 
 E-mail: matthew.monroe@pnnl.gov or samuel.payne@pnnl.gov
-Website: http://panomics.pnnl.gov/ or http://omics.pnl.gov
+Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics
 -------------------------------------------------------------------------------
 
 Licensed under the Apache License, Version 2.0; you may not use this file except 
