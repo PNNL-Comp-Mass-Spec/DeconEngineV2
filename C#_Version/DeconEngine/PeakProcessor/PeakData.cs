@@ -25,6 +25,7 @@ namespace Engine.PeakProcessing
     /// </remarks>
     public class PeakData
     {
+        // Ignore Spelling: deisotopes
 
         /// <summary>
         /// Multi map of indices of all peaks in <see cref="PeakTops" /> sorted in ascending m/z. This helps fast retrieval when

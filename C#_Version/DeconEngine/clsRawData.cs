@@ -34,6 +34,8 @@ namespace DeconToolsV2.Readers
     [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
     public class clsRawData
     {
+        // Ignore Spelling: namespace
+
         private Engine.Readers.RawData mobj_raw_data;
         private clsRawDataPreprocessOptions mobj_preprocess_options;
 

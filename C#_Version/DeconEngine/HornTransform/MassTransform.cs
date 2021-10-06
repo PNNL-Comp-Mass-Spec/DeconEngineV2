@@ -15,6 +15,8 @@ namespace Engine.HornTransform
     /// <remarks>Used by used for Decon2LS.UI and DeconMSn</remarks>
     internal class MassTransform
     {
+        // Ignore Spelling: Da, deisotoped, deisotoping, isotopically, monoisotope
+
         private const int MaxIsotopes = 16;
 
         /// <summary>

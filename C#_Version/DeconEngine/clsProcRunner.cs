@@ -24,6 +24,8 @@ namespace DeconToolsV2
     /// </summary>
     public class clsProcRunner
     {
+        // Ignore Spelling: namespace, interpolator
+
         private int _percentDone;
         private int _currentScan;
 

@@ -45,6 +45,9 @@ namespace DeconToolsV2.Readers
     /// <remarks>Used by  DeconTools for ICR2LSRun and IMFRun; also used by DeconMSn</remarks>
     public class clsRawDataPreprocessOptions
     {
+        // ReSharper disable once CommentTypo
+        // Ignore Spelling: Apodization, Bruker, calmet
+
         private ApodizationType menmApodizationType;
         private CalibrationType menmCalibrationType;
         private int mintApodizationPercent;

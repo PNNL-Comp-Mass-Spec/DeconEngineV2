@@ -9,6 +9,8 @@ namespace DeconToolsV2.HornTransform
 {
     public class clsHornTransform
     {
+        // Ignore Spelling: Da, Deisotoping, isotopically
+
         private const int MaxIsotopes = 16;
 
         /*

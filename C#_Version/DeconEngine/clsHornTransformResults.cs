@@ -9,6 +9,8 @@ namespace DeconToolsV2.HornTransform
     /// </summary>
     public class clsHornTransformResults
     {
+        // Ignore Spelling: Averagine
+
         private const int MaxIsotopes = 16;
 
         /// <summary>

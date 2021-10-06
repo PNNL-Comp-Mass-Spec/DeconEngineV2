@@ -12,6 +12,8 @@ namespace DeconEngine
 {
     public static class Utils
     {
+        // Ignore Spelling: Linq
+
         //calculates the background noise level on the intensities using the following algorithm:
         //Step 1: Calculate average of all intensities and number of points used
         //Step 2: Calculate standard deviation of all intensities and the number of points used

@@ -9,6 +9,8 @@ namespace Engine.Utilities
     /// <remarks>Used by DeconTools for ICR2LSRun and IMFRun; also used by GenerateDTAZoomScans in DeconMSn</remarks>
     internal class SavGolSmoother
     {
+        // Ignore Spelling: Savitzky Golay
+
         /// <summary>
         /// number of points to the left while applying Savitzky Golay filter.
         /// </summary>

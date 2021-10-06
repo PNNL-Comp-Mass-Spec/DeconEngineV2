@@ -9,6 +9,7 @@ namespace Engine.PeakProcessing
     /// </summary>
     internal class PeakProcessor
     {
+        // Ignore Spelling: centroided, peptidicity
 
         /// <summary>
         /// This variable helps find the m/z value of a peak using the specified fit function.
