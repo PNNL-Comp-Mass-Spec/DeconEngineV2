@@ -67,7 +67,7 @@ namespace Engine.Readers
             return marr_serName;
         }
 
-        public override void SetCalibrator(Engine.Calibrations.Calibrator calib)
+        public override void SetCalibrator(Calibrations.Calibrator calib)
         {
             mobj_calibrator = calib;
             SetDataSize(mobj_calibrator.NumPointsInScan);
@@ -242,7 +242,7 @@ namespace Engine.Readers
 #if DEBUG
                 throw;
 #endif
-                System.Environment.Exit(1);
+                Environment.Exit(1);
             }
             using (fh)
             {
@@ -253,7 +253,7 @@ namespace Engine.Readers
                 {
                     Console.Error.WriteLine("Could not read data for scan = " + spectra_num + " at location " +
                                                    startOffset);
-                    System.Environment.Exit(1);
+                    Environment.Exit(1);
                 }
                 var buffer = new byte[blockSizeInBytes];
                 num_read = fh.Read(buffer, 0, blockSizeInBytes);

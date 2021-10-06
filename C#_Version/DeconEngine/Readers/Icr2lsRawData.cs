@@ -218,7 +218,7 @@ namespace Engine.Readers
                 menm_calibration_type = (CalibrationType) 5;
 
             if (menmApodizationType != ApodizationType.NOAPODIZATION)
-                Engine.Utilities.Apodization.Apodize(mdbl_apodization_min_x, mdbl_apodization_max_x,
+                Utilities.Apodization.Apodize(mdbl_apodization_min_x, mdbl_apodization_max_x,
                     mdbl_sample_rate, false, menmApodizationType, mptr_data, mint_num_points_in_scan,
                     mint_apodization_apex_percent);
 
@@ -702,7 +702,7 @@ namespace Engine.Readers
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
-            return this.mint_num_points_in_scan;
+            return mint_num_points_in_scan;
         }
 
         public override int GetNumScans()

@@ -37,17 +37,17 @@ namespace DeconToolsV2.Readers
         private Engine.Readers.RawData mobj_raw_data;
         private clsRawDataPreprocessOptions mobj_preprocess_options;
 
-        public DeconToolsV2.Readers.FileType FileType
+        public FileType FileType
         {
             get
             {
                 if (mobj_raw_data == null)
-                    return DeconToolsV2.Readers.FileType.UNDEFINED;
-                return (DeconToolsV2.Readers.FileType) mobj_raw_data.GetFileType();
+                    return FileType.UNDEFINED;
+                return (FileType) mobj_raw_data.GetFileType();
             }
         }
 
-        public DeconToolsV2.Readers.clsRawDataPreprocessOptions FTICRRawPreprocessOptions
+        public clsRawDataPreprocessOptions FTICRRawPreprocessOptions
         {
             get => mobj_preprocess_options;
             set
@@ -112,8 +112,8 @@ namespace DeconToolsV2.Readers
                     return "";
                 var current_scan = mobj_raw_data.GetNumScansLoaded();
                 var num_scans = mobj_raw_data.GetNumScans();
-                return string.Concat("Processed :", System.Convert.ToString(current_scan), " of ",
-                    System.Convert.ToString(num_scans), " scans");
+                return string.Concat("Processed :", Convert.ToString(current_scan), " of ",
+                    Convert.ToString(num_scans), " scans");
             }
         }
 
@@ -128,7 +128,7 @@ namespace DeconToolsV2.Readers
             mobj_preprocess_options = new clsRawDataPreprocessOptions();
         }
 
-        public clsRawData(string file_name, DeconToolsV2.Readers.FileType file_type)
+        public clsRawData(string file_name, FileType file_type)
         {
             LoadFile(file_name, file_type);
         }
@@ -153,7 +153,7 @@ namespace DeconToolsV2.Readers
             return;
         }
 
-        public void LoadFile(string file_name, DeconToolsV2.Readers.FileType file_type)
+        public void LoadFile(string file_name, FileType file_type)
         {
             // enumerations of file type are the same in Readers namespace and
             // DeconWrapperManaged namespace.
@@ -185,7 +185,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("Cannot close file because no file has been opened.");
+                throw new ApplicationException("Cannot close file because no file has been opened.");
             }
             mobj_raw_data.Close();
         }
@@ -194,7 +194,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("Cannot get number of scans because no file has been opened");
+                throw new ApplicationException("Cannot get number of scans because no file has been opened");
             }
             return mobj_raw_data.GetNumScans();
         }
@@ -203,7 +203,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("Cannot get MS level because no file has been opened");
+                throw new ApplicationException("Cannot get MS level because no file has been opened");
             }
             return mobj_raw_data.GetMSLevel(scan_num);
         }
@@ -212,7 +212,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("Cannot get scan time because no file has been opened");
+                throw new ApplicationException("Cannot get scan time because no file has been opened");
             }
             return mobj_raw_data.GetScanTime(scan_num);
         }
@@ -221,7 +221,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
             return mobj_raw_data.GetScanSize();
         }
@@ -230,7 +230,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
             return mobj_raw_data.GetSpectrumType(scan_num);
         }
@@ -239,7 +239,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
 
             mobj_raw_data.GetTicFromFile(out var vect_intensities, out var vect_scan_times, base_peak_tic);
@@ -260,7 +260,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
             return (int) (mobj_raw_data.GetTICForScan(scan_num));
         }
@@ -270,7 +270,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
 
             mobj_raw_data.GetSummedSpectra(out var vect_mzs, out var vect_intensities, start_scan, stop_scan, min_mz, max_mz);
@@ -289,7 +289,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
 
             var vect_mzs = new List<double>();
@@ -310,7 +310,7 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
             {
-                throw new System.ApplicationException("No file has been opened");
+                throw new ApplicationException("No file has been opened");
             }
             var vect_mzs = new List<double>();
             var vect_intensities = new List<double>();

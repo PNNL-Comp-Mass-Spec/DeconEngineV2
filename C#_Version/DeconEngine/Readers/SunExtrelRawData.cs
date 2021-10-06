@@ -152,9 +152,9 @@ namespace Engine.Readers
 
             ExtractSettings(0, slice_options);
 
-            if (this.mshort_ftype == 2 && this.mbln_zero_fill)
+            if (mshort_ftype == 2 && mbln_zero_fill)
             {
-                this.mint_num_points_in_scan = this.mint_num_points_in_scan * (2 ^ this.mshort_num_zero_fill);
+                mint_num_points_in_scan = mint_num_points_in_scan * (2 ^ mshort_num_zero_fill);
             }
 
             //Determine the sequence total time...
@@ -170,7 +170,7 @@ namespace Engine.Readers
             }
             //     Call LogMess(ps, "Total Sequence Time = " & Format(TotalTime))
 
-            return this.mint_data_section_start;
+            return mint_data_section_start;
         }
 
         private void ExtractSettings(int start_p, string option_str)
@@ -235,7 +235,7 @@ namespace Engine.Readers
 
             var calib = new Calibrations.Calibrator(menm_calibration_type);
 
-            calib.NumPointsInScan = this.mint_num_points_in_scan;
+            calib.NumPointsInScan = mint_num_points_in_scan;
             calib.LowMassFrequency = low_mass_frequency;
             calib.SampleRate = sample_rate;
             calib.SetCalibrationEquationParams(calib_a, calib_b, calib_c);
@@ -353,7 +353,7 @@ namespace Engine.Readers
                         FileShare.Read), Encoding.ASCII))
             {
                 var data_section_start = ReadHeader(sun_extrel_file);
-                long file_pointer = this.mint_data_section_start + scan_num * this.mint_num_points_in_scan * 4;
+                long file_pointer = mint_data_section_start + scan_num * mint_num_points_in_scan * 4;
 
                 if (mint_allocated_size < mint_num_points_in_scan || mptr_data == null)
                 {
@@ -595,7 +595,7 @@ namespace Engine.Readers
 
         public override int GetScanSize()
         {
-            return this.mint_num_points_in_scan;
+            return mint_num_points_in_scan;
         }
 
         public override int GetNumScans()

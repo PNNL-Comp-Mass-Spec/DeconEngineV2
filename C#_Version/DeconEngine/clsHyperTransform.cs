@@ -8,7 +8,7 @@ namespace DeconToolsV2
     public class clsHyperTransform
     {
         public void GetHyperTransformSpectrum(
-            ref DeconToolsV2.HornTransform.clsHornTransformResults[] marr_transformResults, double mostAbundantMW,
+            ref HornTransform.clsHornTransformResults[] marr_transformResults, double mostAbundantMW,
             short charge, ref float[] sumMZs, ref float[] sumIntensities, ref float[] mzs,
             ref float[] intensities)
         {
@@ -22,12 +22,12 @@ namespace DeconToolsV2
             for (var transformNum = 0; transformNum < numResults; transformNum++)
             {
                 var result = marr_transformResults[transformNum];
-                var massDiff = System.Math.Abs((result.MostIntenseMw - mostAbundantMW) / 1.003);
+                var massDiff = Math.Abs((result.MostIntenseMw - mostAbundantMW) / 1.003);
                 var massDiffRound = (double) ((int) (massDiff + 0.5));
                 if (massDiffRound > 3)
                     continue;
-                var toleranceDiff = System.Math.Abs(massDiff - massDiffRound * 1.003);
-                if (toleranceDiff < System.Math.Max(0.2, result.FWHM * 5))
+                var toleranceDiff = Math.Abs(massDiff - massDiffRound * 1.003);
+                if (toleranceDiff < Math.Max(0.2, result.FWHM * 5))
                 {
                     // consider this peak for addition.
                     vectIndicesToConsider.Add(transformNum);

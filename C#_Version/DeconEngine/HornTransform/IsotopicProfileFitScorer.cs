@@ -839,7 +839,7 @@ namespace Engine.HornTransform
         /// <param name="deleteIntensityThreshold">intensity of least isotope to delete.</param>
         /// <param name="minTheoreticalIntensityForScore">minimum intensity of point to consider for scoring purposes.</param>
         /// <param name="debug">if debugging output is enabled</param>
-        public double GetFitScore(PeakData peakData, int chargeState, clsPeak peak, DeconToolsV2.MolecularFormula formula,
+        public double GetFitScore(PeakData peakData, int chargeState, clsPeak peak, MolecularFormula formula,
             double deleteIntensityThreshold, double minTheoreticalIntensityForScore, bool debug = false)
         {
             if (chargeState <= 0)

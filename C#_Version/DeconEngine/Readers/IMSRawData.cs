@@ -509,20 +509,20 @@ namespace Engine.Readers
                 {
                     if (last_intensity != 0)
                     {
-                        mz_val = this.GetMassFromBin(last_bin + 1);
+                        mz_val = GetMassFromBin(last_bin + 1);
                         //mzs.Add(mz_val);
                         //intensities.Add(0);
                         last_bin++;
                     }
                     while (last_bin < item.Key - 1)
                     {
-                        mz_val = this.GetMassFromBin(last_bin + 1);
+                        mz_val = GetMassFromBin(last_bin + 1);
                         //mzs.Add(mz_val);
                         //intensities.Add(0);
                         last_bin++;
                     }
                 }
-                mz_val = this.GetMassFromBin(item.Key);
+                mz_val = GetMassFromBin(item.Key);
                 mzs.Add(mz_val);
 
                 intensities.Add(item.Value);
@@ -655,7 +655,7 @@ namespace Engine.Readers
 
             foreach (var item in bin_intensity_map)
             {
-                mz = this.GetMassFromBin(item.Key);
+                mz = GetMassFromBin(item.Key);
                 if (mz >= min_mz && mz <= max_mz)
                 {
                     mzs.Add(mz);
@@ -838,7 +838,7 @@ namespace Engine.Readers
                 var item in
                     mmap_bin_intensity_map.Where(x => x.Key >= min_mz_bin && x.Key <= max_mz_bin))
             {
-                mz = this.GetMassFromBin(item.Key);
+                mz = GetMassFromBin(item.Key);
                 if (mz >= min_mz && mz <= max_mz)
                 {
                     mzs.Add(mz);
@@ -1036,7 +1036,7 @@ namespace Engine.Readers
 
             foreach (var item in bin_intensity_map)
             {
-                mz = this.GetMassFromBin(item.Key);
+                mz = GetMassFromBin(item.Key);
                 if (mz >= min_mz && mz <= max_mz)
                 {
                     mzs.Add(mz);

@@ -452,19 +452,19 @@ namespace DeconToolsV2.DTAGeneration
                             // TODO: can probably use Enum.TryParse()...
                             if (rdr.Value.Equals(OUTPUT_TYPE.DTA.ToString()))
                             {
-                                this.OutputType = OUTPUT_TYPE.DTA;
+                                OutputType = OUTPUT_TYPE.DTA;
                             }
                             else if (rdr.Value.Equals(OUTPUT_TYPE.LOG.ToString()))
                             {
-                                this.OutputType = OUTPUT_TYPE.LOG;
+                                OutputType = OUTPUT_TYPE.LOG;
                             }
                             else if (rdr.Value.Equals(OUTPUT_TYPE.CDTA.ToString()))
                             {
-                                this.OutputType = OUTPUT_TYPE.CDTA;
+                                OutputType = OUTPUT_TYPE.CDTA;
                             }
                             else if (rdr.Value.Equals(OUTPUT_TYPE.MGF.ToString()))
                             {
-                                this.OutputType = OUTPUT_TYPE.MGF;
+                                OutputType = OUTPUT_TYPE.MGF;
                             }
                         }
                         break;

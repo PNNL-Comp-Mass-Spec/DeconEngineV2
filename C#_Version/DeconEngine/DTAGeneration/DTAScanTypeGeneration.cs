@@ -7,7 +7,7 @@ namespace Engine.DTAProcessing
         public string DTAScanTypeFilename;
         public StreamWriter DTAScanTypeFileWriter;
 
-        public Engine.Readers.RawData RawDataReader;
+        public Readers.RawData RawDataReader;
 
         /// <summary>
         /// default constructor.

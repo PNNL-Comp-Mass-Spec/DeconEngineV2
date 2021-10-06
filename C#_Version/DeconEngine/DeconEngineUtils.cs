@@ -205,16 +205,17 @@ namespace DeconEngine
         [Obsolete("Usage unknown, besides Decon2LS.UI - no path to usage exists within the DeconTools solution")]
         internal static void ConvertElementTableToFormula(
             ref clsElementIsotopes elemental_isotope_composition,
-            Hashtable elementCounts, out DeconToolsV2.MolecularFormula formula)
+            Hashtable elementCounts, out MolecularFormula formula)
         {
             var elements = elementCounts.Keys.GetEnumerator();
 
-            formula = new DeconToolsV2.MolecularFormula();
+            formula = new MolecularFormula();
 
             while (elements.MoveNext())
             {
                 // Get the next element symbol in the table
                 var element = (string)elements.Current;
+
                 // Put it in a character array
                 var count = (int)elementCounts[element];
 
@@ -224,7 +225,7 @@ namespace DeconEngine
                 {
                     throw new ApplicationException(string.Concat("Unknown element ", element));
                 }
-                var atomic_count = new DeconToolsV2.AtomicCount(index, count);
+                var atomic_count = new AtomicCount(index, count);
                 var mono_mass =
                     elemental_isotope_composition.ElementalIsotopesList[index].Isotopes[0].Mass * count;
                 var avg_mass = elemental_isotope_composition.ElementalIsotopesList[index].AverageMass *

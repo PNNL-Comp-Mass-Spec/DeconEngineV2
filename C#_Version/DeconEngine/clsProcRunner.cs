@@ -80,7 +80,7 @@ namespace DeconToolsV2
             set => InputFilePath = value;
         }
 
-        public DeconToolsV2.Readers.FileType FileType { get; set; }
+        public FileType FileType { get; set; }
 
         /// <summary>
         /// Directory where output files should be created
@@ -112,9 +112,9 @@ namespace DeconToolsV2
 #pragma warning restore 618
             InputFilePath = null;
             OutputPathForDTACreation = null;
-            PeakProcessorParameters = new DeconToolsV2.Peaks.clsPeakProcessorParameters();
-            HornTransformParameters = new DeconToolsV2.HornTransform.clsHornTransformParameters();
-            DTAGenerationParameters = new DeconToolsV2.DTAGeneration.clsDTAGenerationParameters();
+            PeakProcessorParameters = new clsPeakProcessorParameters();
+            HornTransformParameters = new clsHornTransformParameters();
+            DTAGenerationParameters = new DTAGeneration.clsDTAGenerationParameters();
         }
 
         [Obsolete("Only used by Decon2LS.UI", false)]
@@ -1000,9 +1000,9 @@ namespace DeconToolsV2
 
             if (lowResolution && DTAGenerationParameters.ConsiderChargeValue == 0)
             {
-                System.Console.WriteLine("Determining charge");
+                Console.WriteLine("Determining charge");
                 dtaProcessor.DetermineChargeForEachScan();
-                System.Console.WriteLine("Generating DTAs for low-resolution data");
+                Console.WriteLine("Generating DTAs for low-resolution data");
                 if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.MGF)
                     dtaProcessor.WriteLowResolutionMGFFile();
                 else

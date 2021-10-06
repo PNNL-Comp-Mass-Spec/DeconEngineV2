@@ -1135,7 +1135,7 @@ namespace Engine.DTAProcessing
 
                     NumDTARecords++;
 
-                    System.Console.WriteLine(msNScanNum + "." + msNScanNum + "." + transformRecord.ChargeState);
+                    Console.WriteLine(msNScanNum + "." + msNScanNum + "." + transformRecord.ChargeState);
 
                     var msNScanLevel = RawDataDTA.GetMSLevel(msNScanNum);
                     var parentScanLevel = RawDataDTA.GetMSLevel(parentScanNum);
@@ -1179,7 +1179,7 @@ namespace Engine.DTAProcessing
 #if DEBUG
                 throw;
 #else
-                System.Console.Error.WriteLine("Error in WriteToMGF");
+                Console.Error.WriteLine("Error in WriteToMGF");
 #endif
             }
         }
@@ -1303,7 +1303,7 @@ namespace Engine.DTAProcessing
             }
             catch (Exception e)
             {
-                System.Console.Error.WriteLine("Exception writing progress to {0}: {1}", ProgressFilename, e.Message);
+                Console.Error.WriteLine("Exception writing progress to {0}: {1}", ProgressFilename, e.Message);
             }
         }
 
@@ -1353,7 +1353,7 @@ namespace Engine.DTAProcessing
                 // to get mono_mass  + H
                 massPlusH = transformRecord.MonoMw + CCMass;
 
-                System.Console.WriteLine(msNScanNum + "." + msNScanNum + "." + transformRecord.ChargeState);
+                Console.WriteLine(msNScanNum + "." + msNScanNum + "." + transformRecord.ChargeState);
 
                 var msNScanLevel = RawDataDTA.GetMSLevel(msNScanNum);
                 var parentScanLevel = RawDataDTA.GetMSLevel(parentScanNum);

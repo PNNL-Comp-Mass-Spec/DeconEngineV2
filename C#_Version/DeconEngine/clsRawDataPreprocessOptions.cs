@@ -68,7 +68,7 @@ namespace DeconToolsV2.Readers
             mdbl_C = 0;
         }
 
-        public DeconToolsV2.Readers.ApodizationType ApodizationType
+        public ApodizationType ApodizationType
         {
             get => menmApodizationType;
             set => menmApodizationType = value;
@@ -103,7 +103,7 @@ namespace DeconToolsV2.Readers
 
         public bool ApplyCalibration => menmCalibrationType != CalibrationType.UNDEFINED;
 
-        public DeconToolsV2.Readers.CalibrationType CalibrationType
+        public CalibrationType CalibrationType
         {
             get => menmCalibrationType;
             set => menmCalibrationType = value;
@@ -127,31 +127,31 @@ namespace DeconToolsV2.Readers
             set => mdbl_C = value;
         }
 
-        public void SaveV1FTICRPreProcessOptions(System.Xml.XmlTextWriter xwriter)
+        public void SaveV1FTICRPreProcessOptions(XmlTextWriter xwriter)
         {
             xwriter.WriteStartElement("FTICRRawPreProcessingOptions");
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("ApodizationType", this.ApodizationType.ToString());
+            xwriter.WriteElementString("ApodizationType", ApodizationType.ToString());
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("ApodizationMinX", Convert.ToString(this.ApodizationMinX));
+            xwriter.WriteElementString("ApodizationMinX", Convert.ToString(ApodizationMinX));
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("ApodizationMaxX", Convert.ToString(this.ApodizationMaxX));
+            xwriter.WriteElementString("ApodizationMaxX", Convert.ToString(ApodizationMaxX));
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("ApodizationPercent", Convert.ToString(this.ApodizationPercent));
+            xwriter.WriteElementString("ApodizationPercent", Convert.ToString(ApodizationPercent));
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("NumZeroFills", Convert.ToString(this.NumZeroFills));
+            xwriter.WriteElementString("NumZeroFills", Convert.ToString(NumZeroFills));
             xwriter.WriteWhitespace("\n\t\t");
             xwriter.WriteStartElement("Calibration");
             xwriter.WriteWhitespace("\n\t\t\t");
-            xwriter.WriteElementString("ApplyCalibration", Convert.ToString(this.ApplyCalibration));
+            xwriter.WriteElementString("ApplyCalibration", Convert.ToString(ApplyCalibration));
             xwriter.WriteWhitespace("\n\t\t\t");
-            xwriter.WriteElementString("CalibrationType", this.CalibrationType.ToString());
+            xwriter.WriteElementString("CalibrationType", CalibrationType.ToString());
             xwriter.WriteWhitespace("\n\t\t\t");
-            xwriter.WriteElementString("A", Convert.ToString(this.A));
+            xwriter.WriteElementString("A", Convert.ToString(A));
             xwriter.WriteWhitespace("\n\t\t\t");
-            xwriter.WriteElementString("B", Convert.ToString(this.B));
+            xwriter.WriteElementString("B", Convert.ToString(B));
             xwriter.WriteWhitespace("\n\t\t\t");
-            xwriter.WriteElementString("C", Convert.ToString(this.C));
+            xwriter.WriteElementString("C", Convert.ToString(C));
             xwriter.WriteWhitespace("\n\t\t");
             xwriter.WriteEndElement();
             xwriter.WriteWhitespace("\n\t");
@@ -162,19 +162,19 @@ namespace DeconToolsV2.Readers
         public Object Clone()
         {
             var new_params = new clsRawDataPreprocessOptions();
-            new_params.ApodizationMaxX = this.ApodizationMaxX;
-            new_params.ApodizationMinX = this.ApodizationMinX;
-            new_params.ApodizationPercent = this.ApodizationPercent;
-            new_params.ApodizationType = this.ApodizationType;
-            new_params.NumZeroFills = this.NumZeroFills;
-            new_params.CalibrationType = this.CalibrationType;
-            new_params.A = this.A;
-            new_params.B = this.B;
-            new_params.C = this.C;
+            new_params.ApodizationMaxX = ApodizationMaxX;
+            new_params.ApodizationMinX = ApodizationMinX;
+            new_params.ApodizationPercent = ApodizationPercent;
+            new_params.ApodizationType = ApodizationType;
+            new_params.NumZeroFills = NumZeroFills;
+            new_params.CalibrationType = CalibrationType;
+            new_params.A = A;
+            new_params.B = B;
+            new_params.C = C;
             return new_params;
         }
 
-        public void LoadV1FTICRPreProcessOptions(System.Xml.XmlReader rdr)
+        public void LoadV1FTICRPreProcessOptions(XmlReader rdr)
         {
             //Add code to handle empty nodes.
             var readingCalibrations = false;
@@ -183,12 +183,12 @@ namespace DeconToolsV2.Readers
             {
                 switch (rdr.NodeType)
                 {
-                    case System.Xml.XmlNodeType.Element:
+                    case XmlNodeType.Element:
                         if (rdr.Name.Equals("ApodizationType"))
                         {
                             if (rdr.IsEmptyElement)
                             {
-                                this.ApodizationType = ApodizationType.NOAPODIZATION;
+                                ApodizationType = ApodizationType.NOAPODIZATION;
                                 continue;
                             }
 
@@ -202,29 +202,29 @@ namespace DeconToolsV2.Readers
                             {
                                 throw new Exception("Missing information for ApodizationType in parameter file");
                             }
-                            if (rdr.Value.Equals(DeconToolsV2.Readers.ApodizationType.HANNING.ToString()))
+                            if (rdr.Value.Equals(ApodizationType.HANNING.ToString()))
                             {
-                                this.ApodizationType = DeconToolsV2.Readers.ApodizationType.HANNING;
+                                ApodizationType = ApodizationType.HANNING;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Readers.ApodizationType.PARZEN.ToString()))
+                            else if (rdr.Value.Equals(ApodizationType.PARZEN.ToString()))
                             {
-                                this.ApodizationType = DeconToolsV2.Readers.ApodizationType.PARZEN;
+                                ApodizationType = ApodizationType.PARZEN;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Readers.ApodizationType.SQUARE.ToString()))
+                            else if (rdr.Value.Equals(ApodizationType.SQUARE.ToString()))
                             {
-                                this.ApodizationType = DeconToolsV2.Readers.ApodizationType.SQUARE;
+                                ApodizationType = ApodizationType.SQUARE;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Readers.ApodizationType.TRIANGLE.ToString()))
+                            else if (rdr.Value.Equals(ApodizationType.TRIANGLE.ToString()))
                             {
-                                this.ApodizationType = DeconToolsV2.Readers.ApodizationType.TRIANGLE;
+                                ApodizationType = ApodizationType.TRIANGLE;
                             }
-                            else if (rdr.Value.Equals(DeconToolsV2.Readers.ApodizationType.WELCH.ToString()))
+                            else if (rdr.Value.Equals(ApodizationType.WELCH.ToString()))
                             {
-                                this.ApodizationType = DeconToolsV2.Readers.ApodizationType.WELCH;
+                                ApodizationType = ApodizationType.WELCH;
                             }
                             else
                             {
-                                this.ApodizationType = DeconToolsV2.Readers.ApodizationType.NOAPODIZATION;
+                                ApodizationType = ApodizationType.NOAPODIZATION;
                             }
                         }
                         else if (rdr.Name.Equals("ApodizationMinX"))
@@ -241,7 +241,7 @@ namespace DeconToolsV2.Readers
                             }
                             else
                             {
-                                this.ApodizationMinX = double.Parse(rdr.Value);
+                                ApodizationMinX = double.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("ApodizationMaxX"))
@@ -258,7 +258,7 @@ namespace DeconToolsV2.Readers
                             }
                             else
                             {
-                                this.ApodizationMaxX = double.Parse(rdr.Value);
+                                ApodizationMaxX = double.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("ApodizationPercent"))
@@ -275,7 +275,7 @@ namespace DeconToolsV2.Readers
                             }
                             else
                             {
-                                this.ApodizationPercent = int.Parse(rdr.Value);
+                                ApodizationPercent = int.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("NumZeroFills"))
@@ -292,7 +292,7 @@ namespace DeconToolsV2.Readers
                             }
                             else
                             {
-                                this.NumZeroFills = short.Parse(rdr.Value);
+                                NumZeroFills = short.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("A"))
@@ -309,11 +309,11 @@ namespace DeconToolsV2.Readers
                             }
                             if (rdr.NodeType != XmlNodeType.Text)
                             {
-                                throw new Exception("No value for calibration constant Awas specified in parameter file");
+                                throw new Exception("No value for calibration constant A was specified in parameter file");
                             }
                             else
                             {
-                                this.A = double.Parse(rdr.Value);
+                                A = double.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("B"))
@@ -335,7 +335,7 @@ namespace DeconToolsV2.Readers
                             }
                             else
                             {
-                                this.B = double.Parse(rdr.Value);
+                                B = double.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("C"))
@@ -357,7 +357,7 @@ namespace DeconToolsV2.Readers
                             }
                             else
                             {
-                                this.C = double.Parse(rdr.Value);
+                                C = double.Parse(rdr.Value);
                             }
                         }
                         else if (rdr.Name.Equals("CalibrationType"))
@@ -373,18 +373,18 @@ namespace DeconToolsV2.Readers
                                 rdr.Read();
                             }
 
-                            var type = typeof (DeconToolsV2.Readers.CalibrationType);
+                            var type = typeof (CalibrationType);
                             //System.Type.GetType("DeconToolsV2.Readers.CalibrationType");
                             var calibrationType =
-                                (DeconToolsV2.Readers.CalibrationType) Enum.Parse(type, rdr.Value);
-                            this.CalibrationType = calibrationType;
+                                (CalibrationType) Enum.Parse(type, rdr.Value);
+                            CalibrationType = calibrationType;
                         }
                         else if (rdr.Name.Equals("Calibration"))
                         {
                             readingCalibrations = true;
                         }
                         break;
-                    case System.Xml.XmlNodeType.EndElement:
+                    case XmlNodeType.EndElement:
                         if (rdr.Name.Equals("HornTransformParameters"))
                             return;
                         if (!rdr.Name.Equals("Calibration"))

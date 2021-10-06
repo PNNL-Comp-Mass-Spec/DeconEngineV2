@@ -64,7 +64,7 @@ namespace DeconToolsV2
             IsotopeFitType = enmIsotopeFitType.AREA;
         }
 
-        public double GetFitScore(ref float[] mzs, ref float[] intensities, ref DeconToolsV2.Peaks.clsPeak[] peaks,
+        public double GetFitScore(ref float[] mzs, ref float[] intensities, ref clsPeak[] peaks,
             short charge, int peak_index, double delete_intensity_threshold, double min_intensity_for_score,
             System.Collections.Hashtable elementCounts)
         {

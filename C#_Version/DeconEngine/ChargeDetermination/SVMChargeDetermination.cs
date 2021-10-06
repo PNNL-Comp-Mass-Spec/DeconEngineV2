@@ -19,10 +19,10 @@ namespace Engine.ChargeDetermination
         private Matrix<double> _vote;
         private Matrix<double> _discriminantScores;
 
-        private readonly List<Engine.ChargeDetermination.FeatureList> _supportVectors = new List<FeatureList>();
+        private readonly List<FeatureList> _supportVectors = new List<FeatureList>();
 
         //Test and result
-        private readonly List<Engine.ChargeDetermination.FeatureList> _testVector = new List<FeatureList>();
+        private readonly List<FeatureList> _testVector = new List<FeatureList>();
 
         private readonly List<double> _predictedY = new List<double>();
         private readonly double[] _minValues = new double[NumFeatures];
@@ -976,7 +976,7 @@ namespace Engine.ChargeDetermination
 
         public void LoadDefaultSVM()
         {
-            System.Console.WriteLine("Could not find svm param file \"{0}\"; Loading embedded defaults.", SVMParamXmlPath);
+            Console.WriteLine("Could not find svm param file \"{0}\"; Loading embedded defaults.", SVMParamXmlPath);
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             ReadXmlFromStream(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml"));
             using (var fileReader = new StreamReader(assembly.GetManifestResourceStream("DeconEngine.svm_params.xml")))

@@ -105,7 +105,7 @@ namespace Engine.TheoreticalProfile
         /// <param name="isotopeMzs">peak top mz's for the peaks of the isotopic profile</param>
         /// <param name="isotopeIntensities">peak top intensities's for the peaks of the isotopic profile</param>
         /// <param name="debug"></param>
-        public void CalculateDistribution(int charge, double resolution, DeconToolsV2.MolecularFormula formula, out List<double> x,
+        public void CalculateDistribution(int charge, double resolution, MolecularFormula formula, out List<double> x,
             out List<double> y, double threshold, out List<double> isotopeMzs, out List<double> isotopeIntensities,
             bool debug = false)
         {
@@ -199,7 +199,7 @@ namespace Engine.TheoreticalProfile
         }
 #endif
 
-        public void CalculateMasses(DeconToolsV2.MolecularFormula formula)
+        public void CalculateMasses(MolecularFormula formula)
         {
             MonoMw = 0;
             AverageMw = 0;
@@ -219,7 +219,7 @@ namespace Engine.TheoreticalProfile
             }
         }
 
-        private void CalcVariancesAndMassRange(int charge, DeconToolsV2.MolecularFormula formula)
+        private void CalcVariancesAndMassRange(int charge, MolecularFormula formula)
         {
             MassVariance = 0;
             var numElementsFound = formula.NumElements;
@@ -522,7 +522,7 @@ namespace Engine.TheoreticalProfile
             return true;
         }
 
-        private void CalcFrequencies(int charge, int numPoints, DeconToolsV2.MolecularFormula formula)
+        private void CalcFrequencies(int charge, int numPoints, MolecularFormula formula)
         {
             int i;
             int j, k;

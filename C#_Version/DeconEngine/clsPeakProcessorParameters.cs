@@ -93,19 +93,19 @@ namespace DeconToolsV2.Peaks
 #endif
 
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
-        public void SaveV1PeakParameters(System.Xml.XmlTextWriter xwriter)
+        public void SaveV1PeakParameters(XmlTextWriter xwriter)
         {
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteStartElement("PeakParameters");
             xwriter.WriteWhitespace("\n\t\t");
 
-            xwriter.WriteElementString("PeakBackgroundRatio", System.Convert.ToString(this.PeakBackgroundRatio));
+            xwriter.WriteElementString("PeakBackgroundRatio", Convert.ToString(PeakBackgroundRatio));
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("SignalToNoiseThreshold", this.SignalToNoiseThreshold.ToString());
+            xwriter.WriteElementString("SignalToNoiseThreshold", SignalToNoiseThreshold.ToString());
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("PeakFitType", this.PeakFitType.ToString());
+            xwriter.WriteElementString("PeakFitType", PeakFitType.ToString());
             xwriter.WriteWhitespace("\n\t\t");
-            xwriter.WriteElementString("WritePeaksToTextFile", this.WritePeaksToTextFile.ToString());
+            xwriter.WriteElementString("WritePeaksToTextFile", WritePeaksToTextFile.ToString());
 
             xwriter.WriteWhitespace("\n\t");
             xwriter.WriteEndElement();
@@ -132,7 +132,7 @@ namespace DeconToolsV2.Peaks
                                 throw new Exception(
                                     "Missing information for PeakBackgroundRatio in parameter file");
                             }
-                            this.PeakBackgroundRatio = double.Parse(rdr.Value);
+                            PeakBackgroundRatio = double.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("SignalToNoiseThreshold"))
                         {
@@ -147,7 +147,7 @@ namespace DeconToolsV2.Peaks
                                 throw new Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
-                            this.SignalToNoiseThreshold = double.Parse(rdr.Value);
+                            SignalToNoiseThreshold = double.Parse(rdr.Value);
                         }
                         else if (rdr.Name.Equals("PeakFitType"))
                         {
@@ -162,17 +162,17 @@ namespace DeconToolsV2.Peaks
                                 throw new Exception(
                                     "Missing information for SignalToNoiseThreshold in parameter file");
                             }
-                            if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Quadratic.ToString().ToUpper()))
+                            if (rdr.Value.Equals(PEAK_FIT_TYPE.Quadratic.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                this.PeakFitType = PEAK_FIT_TYPE.Quadratic;
+                                PeakFitType = PEAK_FIT_TYPE.Quadratic;
                             }
-                            else if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Lorentzian.ToString().ToUpper()))
+                            else if (rdr.Value.Equals(PEAK_FIT_TYPE.Lorentzian.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                this.PeakFitType = PEAK_FIT_TYPE.Lorentzian;
+                                PeakFitType = PEAK_FIT_TYPE.Lorentzian;
                             }
-                            else if (rdr.Value.ToUpper().Equals(PEAK_FIT_TYPE.Apex.ToString().ToUpper()))
+                            else if (rdr.Value.Equals(PEAK_FIT_TYPE.Apex.ToString(), StringComparison.OrdinalIgnoreCase))
                             {
-                                this.PeakFitType = PEAK_FIT_TYPE.Apex;
+                                PeakFitType = PEAK_FIT_TYPE.Apex;
                             }
                         }
                         else if (rdr.Name.Equals("WritePeaksToTextFile"))
@@ -188,7 +188,7 @@ namespace DeconToolsV2.Peaks
                                 throw new Exception(
                                     "Missing information for 'WritePeaksToTextFile' parameter in parameter file");
                             }
-                            this.WritePeaksToTextFile = bool.Parse(rdr.Value);
+                            WritePeaksToTextFile = bool.Parse(rdr.Value);
                         }
                         break;
                     case XmlNodeType.EndElement:
