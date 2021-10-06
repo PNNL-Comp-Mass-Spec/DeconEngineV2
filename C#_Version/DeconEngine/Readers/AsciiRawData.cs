@@ -8,7 +8,7 @@ using Engine.Utilities;
 namespace Engine.Readers
 {
     [Obsolete("Only used by Decon2LS.UI", false)]
-   internal class AsciiRawData : RawData
+    internal class AsciiRawData : RawData
     {
         private string marr_file_name;
         private int mint_num_spectra;
@@ -24,10 +24,10 @@ namespace Engine.Readers
         private char mchar_delimiter;
         private int mint_percent_done;
 
-       public int GetPercentDone()
-       {
-           return mint_percent_done;
-       }
+        public int GetPercentDone()
+        {
+            return mint_percent_done;
+        }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
@@ -35,10 +35,10 @@ namespace Engine.Readers
             return FileType.ASCII;
         }
 
-       public override int GetLastScanNum()
-       {
-           return GetNumScans() - 1;
-       }
+        public override int GetLastScanNum()
+        {
+            return GetNumScans() - 1;
+        }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
@@ -46,7 +46,7 @@ namespace Engine.Readers
             return mint_num_spectra;
         }
 
-       public override int GetParentScan(int scan_num)
+        public override int GetParentScan(int scan_num)
         {
             //future work
             return 0;
@@ -113,12 +113,12 @@ namespace Engine.Readers
 
         public override double GetScanTime(int scan_num)
         {
-            if ((int) mvect_scan_time.Count <= scan_num)
-                return mvect_scan_time[scan_num-1];
+            if ((int)mvect_scan_time.Count <= scan_num)
+                return mvect_scan_time[scan_num - 1];
             return 0;
         }
 
-       public override void Load(string file_n)
+        public override void Load(string file_n)
         {
             Clear();
             marr_file_name = file_n;
@@ -129,13 +129,12 @@ namespace Engine.Readers
 
             long pos = 0;
 
-            var mint_last_scan = -1;
             var leftover_length = 0;
 
             float scan_time = 0;
             var last_scan_time = -1 * float.MaxValue;
 
-            double mz=0, intensity = 0;
+            double mz = 0, intensity = 0;
             var temp_buffer = new char[MAX_SCAN_SIZE];
             var vect_mz = new List<double>();
             var vect_intensity = new List<double>();
@@ -146,7 +145,7 @@ namespace Engine.Readers
             var first_line = true;
 
             var temp_copy_length = 511;
-            var temp_copy = new char [temp_copy_length+1];
+            var temp_copy = new char[temp_copy_length + 1];
 
             while (mint_file_handle.BaseStream.Position < mint_file_handle.BaseStream.Length)
             {
@@ -160,7 +159,7 @@ namespace Engine.Readers
                             // look for mchar_delimiter..
                             first_line = false;
                             var pt_index = 0;
-                            while(pt_index < current_index)
+                            while (pt_index < current_index)
                             {
                                 if (temp_buffer[pt_index] != '.' &&
                                         (temp_buffer[pt_index] < '0' || temp_buffer[pt_index] > '9'))
@@ -171,13 +170,13 @@ namespace Engine.Readers
                                 pt_index++;
                             }
                         }
-                        mint_percent_done = (int) ((100.0 * ((pos + current_index)*1.0)) / (end_pos+1.0));
+                        mint_percent_done = (int)((100.0 * ((pos + current_index) * 1.0)) / (end_pos + 1.0));
 
                         var current_len = current_index - line_start_index;
                         if (current_len > temp_copy_length)
                         {
                             temp_copy_length = current_len;
-                            temp_copy = new char [temp_copy_length+1];
+                            temp_copy = new char[temp_copy_length + 1];
                         }
                         Buffer.BlockCopy(temp_buffer, line_start_index, temp_copy, 0, current_len);
                         temp_copy[current_len] = '\0';
@@ -185,13 +184,19 @@ namespace Engine.Readers
                         var temp_str = new string(temp_copy, 0, current_len);
                         mz = Helpers.atof(new string(temp_copy));
                         var next_val_index = 1;
-                        while(next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
+                        while (next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
+                        {
                             next_val_index++;
+                        }
+
                         intensity = Helpers.atof(temp_str.Substring(next_val_index + 1));
 
                         next_val_index++;
-                        while(next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
+                        while (next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
+                        {
                             next_val_index++;
+                        }
+
                         if (next_val_index < current_len)
                             scan_time = (float)Helpers.atof(temp_str.Substring(next_val_index + 1));
                         else
@@ -226,7 +231,7 @@ namespace Engine.Readers
 
                 leftover_length = num_read - line_start_index;
                 var num_copied = 0;
-                while(line_start_index < num_read)
+                while (line_start_index < num_read)
                 {
                     temp_buffer[num_copied++] = temp_buffer[line_start_index++];
                 }
@@ -235,7 +240,7 @@ namespace Engine.Readers
                 {
                     Console.Error.WriteLine("PROBLEMO");
                 }
-                pos+= (num_read-leftover_length);
+                pos += (num_read - leftover_length);
             }
 
             // last line ?
@@ -245,15 +250,21 @@ namespace Engine.Readers
                 var temp_str = new string(temp_buffer, 0, leftover_length);
                 mz = Helpers.atof(temp_str.Substring(line_start_index));
 
-                var next_val_index = line_start_index+1;
+                var next_val_index = line_start_index + 1;
 
-                while(next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
+                while (next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
+                {
                     next_val_index++;
+                }
+
                 intensity = (float)Helpers.atof(temp_str.Substring(next_val_index + 1));
 
                 next_val_index++;
-                while(next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
+                while (next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
+                {
                     next_val_index++;
+                }
+
                 scan_time = (float)Helpers.atof(temp_str.Substring(next_val_index + 1));
 
                 if (last_scan_time != scan_time)
@@ -280,7 +291,7 @@ namespace Engine.Readers
                 vect_mz.Add(mz);
                 vect_intensity.Add(intensity);
             }
-            mvect_scan_start_position.Add(pos+leftover_length);
+            mvect_scan_start_position.Add(pos + leftover_length);
 
             if (last_scan_time == scan_time)
             {
@@ -338,7 +349,7 @@ namespace Engine.Readers
 
             // we already know where to start reading because we tracked it before.
             startOffset = mvect_scan_start_position[scan_num];
-            stopOffset = mvect_scan_start_position[scan_num+1];
+            stopOffset = mvect_scan_start_position[scan_num + 1];
 
             //pos = mint_file_handle.Seek(0, SeekOrigin.Current);
             //pos = mint_file_handle.Seek(startOffset-pos, SeekOrigin.Current);
@@ -346,18 +357,17 @@ namespace Engine.Readers
             pos = mint_file_handle.BaseStream.Seek(startOffset, SeekOrigin.Begin);
 
             // there's an extra carriage return in the end.
-            var temp_buffer = new char[stopOffset - startOffset+1];
+            var temp_buffer = new char[stopOffset - startOffset + 1];
             var num_read = mint_file_handle.Read(temp_buffer, 0, (int)(stopOffset - startOffset));
             temp_buffer[num_read] = '\0';
 
             var pt_num = 0;
 
-            var read_scan_num = 0;
-            double mz=0, intensity = 0;
+            double mz = 0, intensity = 0;
             var line_start_index = 0;
 
             var temp_copy_length = 512;
-            var temp_copy = new char [temp_copy_length+1];
+            var temp_copy = new char[temp_copy_length + 1];
             for (var current_index = 0; current_index < num_read; current_index++)
             {
                 if (temp_buffer[current_index] == '\n')
@@ -366,7 +376,7 @@ namespace Engine.Readers
                     if (current_len > temp_copy_length)
                     {
                         temp_copy_length = current_len;
-                        temp_copy = new char [temp_copy_length+1];
+                        temp_copy = new char[temp_copy_length + 1];
                     }
                     Buffer.BlockCopy(temp_buffer, line_start_index, temp_copy, 0, current_len);
                     temp_copy[current_len] = '\0';
@@ -374,8 +384,11 @@ namespace Engine.Readers
                     var temp_str = new string(temp_copy, 0, current_len);
                     mz = Helpers.atof(temp_str);
                     var next_val_index = 1;
-                    while(next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
+                    while (next_val_index < current_len && temp_copy[next_val_index] != mchar_delimiter)
+                    {
                         next_val_index++;
+                    }
+
                     intensity = Helpers.atof(temp_str.Substring(next_val_index + 1));
 
                     mzs.Add(mz);
@@ -384,15 +397,18 @@ namespace Engine.Readers
                     line_start_index = current_index + 1;
                 }
             }
-            if (line_start_index < (uint) num_read)
+            if (line_start_index < (uint)num_read)
             {
                 var temp_str = new string(temp_buffer);
                 mz = Helpers.atof(temp_str.Substring(line_start_index));
 
-                var next_val_index = line_start_index+1;
+                var next_val_index = line_start_index + 1;
 
-                while(next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
+                while (next_val_index < num_read && temp_buffer[next_val_index] != mchar_delimiter)
+                {
                     next_val_index++;
+                }
+
                 intensity = Helpers.atof(temp_str.Substring(next_val_index + 1));
                 mzs.Add(mz);
                 intensities.Add(intensity);
@@ -469,7 +485,7 @@ namespace Engine.Readers
             intensities = new List<double>();
             scan_times = new List<double>();
 
-            for (var scan_num = 0; scan_num < (int) mvect_scan_tic.Count; scan_num++)
+            for (var scan_num = 0; scan_num < (int)mvect_scan_tic.Count; scan_num++)
             {
                 scan_times.AddRange(mvect_scan_time);
                 if (base_peak_tic)
