@@ -19,8 +19,10 @@ namespace DeconEngineTests
             var msLevel = thermoReader.GetMSLevel(scanNum);
             var parentIonMz = thermoReader.GetParentMz(scanNum);
             var agcTime = thermoReader.GetAGCAccumulationTime(scanNum);
+#pragma warning disable 618
             var chargeState = thermoReader.GetMonoChargeFromHeader(scanNum);
             var monoisotopicMz = thermoReader.GetMonoMZFromHeader(scanNum);
+#pragma warning restore 618
 
             Console.WriteLine("{0,-15} {1}", "Scan number:", scanNum);
             Console.WriteLine("{0,-15} {1:F2}", "Elution time:", elutionTime);
