@@ -1017,6 +1017,7 @@ namespace DeconToolsV2
 
             if (DTAGenerationParameters.CreateCompositeDTA)
             {
+                Console.WriteLine();
                 try
                 {
                     Console.WriteLine("Writing to file " + dtaScanType.DTAScanTypeFilename);
