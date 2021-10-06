@@ -758,7 +758,7 @@ namespace DeconToolsV2
             //if (HornTransformParameters.TagFormula != null)
             //    tagFormula = HornTransformParameters.TagFormula;
 
-            //Check if any dtas have to be ignored
+            //Check if any DTAs have to be ignored
             var msnIgnore = new List<int>();
             if (DTAGenerationParameters.IgnoreMSnScans)
             {
@@ -786,7 +786,8 @@ namespace DeconToolsV2
             var scanNum = DTAGenerationParameters.MinScan;
             var msNScanIndex = 0;
             int numScans;
-            //double parentMz = 0;
+            var scansWritten = 0;
+
             var lowResolution = false;
             var scanStart = scanNum;
             var nextProgressScan = scanStart + 50;
@@ -805,7 +806,8 @@ namespace DeconToolsV2
                     dtaProcessor.GetParentScanSpectra(scanNum, PeakProcessorParameters.PeakBackgroundRatio,
                         HornTransformParameters.PeptideMinBackgroundRatio);
 
-                    var msNScan = scanNum + 1;
+                    int msNScan;
+
                     for (msNScan = scanNum + 1;
                         msNScan < numScans && !dtaProcessor.RawDataDTA.IsMSScan(msNScan);
                         msNScan++)
@@ -833,19 +835,22 @@ namespace DeconToolsV2
                                 continue;
                             }
                         }
-                        //Get msN spectra
+
+                        //Get MSn spectra
                         dtaProcessor.GetMsNSpectra(msNScan, PeakProcessorParameters.PeakBackgroundRatio,
                             HornTransformParameters.PeptideMinBackgroundRatio);
+
                         //Identify which is parent_scan
                         var parentScan = dtaProcessor.RawDataDTA.GetParentScan(msNScan);
-                        // AM Modified to recieve new spectra everytime if (parentScan != scanNum) //MSN data
+
+                        // AM Modified to receive new spectra every time if (parentScan != scanNum) //MSN data
                         dtaProcessor.GetParentScanSpectra(parentScan, PeakProcessorParameters.PeakBackgroundRatio,
                             HornTransformParameters.PeptideMinBackgroundRatio);
 
                         if (DTAGenerationParameters.SpectraType == 0 ||
-                            dtaProcessor.GetSpectraType(msNScan) == (int) DTAGenerationParameters.SpectraType)
+                            dtaProcessor.GetSpectraType(msNScan) == (int)DTAGenerationParameters.SpectraType)
                         {
-                            var dtaSuccess = false;
+                            bool dtaSuccess;
                             if (dtaProcessor.IsFTData(parentScan))
                             {
                                 //Get charge and mono
@@ -861,17 +866,24 @@ namespace DeconToolsV2
                                 lowResolution = true;
                                 dtaSuccess = dtaProcessor.GenerateDTALowRes(msNScan, parentScan, msNScanIndex);
                             }
+
                             if (dtaSuccess)
                             {
-                                //write out dta
-                                if (DTAGenerationParameters.OutputType ==
-                                    DTAGeneration.OUTPUT_TYPE.MGF)
+                                // Write out spectrum
+                                if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.MGF)
+                                {
                                     dtaProcessor.WriteToMGF(msNScan, parentScan);
+                                }
                                 else
+                                {
                                     dtaProcessor.WriteDTAFile(msNScan, parentScan);
+                                }
+
+                                scansWritten++;
                             }
                         }
                     }
+
                     // reinitialize scan_count appropriately
                     scanNum = msNScan - 1;
                 }
@@ -912,7 +924,7 @@ namespace DeconToolsV2
                         HornTransformParameters.PeptideMinBackgroundRatio);
 
                     if (DTAGenerationParameters.SpectraType == 0 ||
-                        dtaProcessor.GetSpectraType(msNScan) == (int) DTAGenerationParameters.SpectraType)
+                        dtaProcessor.GetSpectraType(msNScan) == (int)DTAGenerationParameters.SpectraType)
                     {
                         //Identify which is parentScan
                         var parentScan = dtaProcessor.RawDataDTA.GetParentScan(msNScan);
@@ -920,7 +932,7 @@ namespace DeconToolsV2
                         if (parentScan < 1)
                         {
                             scanNum++;
-                            continue; //no dta is generated
+                            continue; //no DTA is generated
                         }
 
                         // get parent data
@@ -931,14 +943,20 @@ namespace DeconToolsV2
                         {
                             //Get charge and mono
                             var dtaSuccess = dtaProcessor.GenerateDTA(msNScan, parentScan);
+
                             if (dtaSuccess)
                             {
-                                //write out dta
-                                if (DTAGenerationParameters.OutputType ==
-                                    DTAGeneration.OUTPUT_TYPE.MGF)
+                                // Write out spectrum
+                                if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.MGF)
+                                {
                                     dtaProcessor.WriteToMGF(msNScan, parentScan);
+                                }
                                 else
+                                {
                                     dtaProcessor.WriteDTAFile(msNScan, parentScan);
+                                }
+
+                                scansWritten++;
                             }
                         }
                         else
@@ -948,11 +966,16 @@ namespace DeconToolsV2
                             var dtaSuccess = dtaProcessor.GenerateDTALowRes(msNScan, parentScan, msNScanIndex);
                             if (dtaSuccess)
                             {
-                                if (DTAGenerationParameters.OutputType ==
-                                    DTAGeneration.OUTPUT_TYPE.MGF)
+                                if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.MGF)
+                                {
                                     dtaProcessor.WriteToMGF(msNScan, parentScan);
+                                }
                                 else
+                                {
                                     dtaProcessor.WriteDTAFile(msNScan, parentScan);
+                                }
+
+                                scansWritten++;
                             }
                         }
                     }
@@ -965,8 +988,16 @@ namespace DeconToolsV2
 
                     nextProgressScan += 50;
                     while (nextProgressScan <= scanNum - scanStart)
+                    {
                         nextProgressScan += 50;
+                    }
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(outputFilePath))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Wrote {0} spectra to file {1}", scansWritten, PRISM.PathUtils.CompactPathString(outputFilePath, 100));
             }
 
             if (lowResolution && DTAGenerationParameters.ConsiderChargeValue == 0)
