@@ -643,14 +643,16 @@ namespace DeconToolsV2
             var dtaProcessor = new Engine.DTAProcessing.DTAProcessor();
             var dtaScanType = new Engine.DTAProcessing.DTAScanTypeGeneration();
 
-            if (!File.Exists(FileName))
+            var inputFile = new FileInfo(InputFilePath);
+
+            if (!inputFile.Exists)
             {
-                Console.WriteLine("Error: File \"{0}\" does not exist. Please check the command line arguments.", FileName);
+                Console.WriteLine("Error: File \"{0}\" does not exist. Please check the command line arguments.", inputFile.FullName);
                 return;
             }
 
-            //Read the rawfile in
-            using (var fin = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            // Open the input file
+            using (var fin = new FileStream(inputFile.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 if (!fin.CanRead)
                 {
@@ -660,32 +662,30 @@ namespace DeconToolsV2
             }
 
             // Check input format
-            var dotIndex = FileName.IndexOf('.');
-            var inputFileFormat = FileName.Remove(0, dotIndex + 1);
-            if ((inputFileFormat.ToLower() == "raw"))
-                FileType = DeconToolsV2.Readers.FileType.THERMORAW;
-            else if (inputFileFormat.ToLower() == "mzxml")
-                FileType = DeconToolsV2.Readers.FileType.MZXMLRAWDATA;
+
+            if (string.Equals(inputFile.Extension, ".raw", StringComparison.OrdinalIgnoreCase))
+            {
+                FileType = FileType.THERMORAW;
+            }
+            else if (string.Equals(inputFile.Extension, ".mzXml", StringComparison.OrdinalIgnoreCase))
+            {
+                FileType = FileType.MZXMLRAWDATA;
+            }
             else
             {
-                throw new Exception("Invalid input file format.");
+                throw new Exception("Invalid input file format; must be .raw or .mzXML");
             }
 
-            // Set output path and filename
-            string outputFile;
-            if (OutputPathForDTACreation != null)
-            {
-                var slashIndex = FileName.LastIndexOf("\\");
-                var rawNamePlusExtension = FileName.Remove(dotIndex, FileName.Length - dotIndex);
-                var rawName = rawNamePlusExtension.Remove(0, slashIndex);
-                outputFile = Path.Combine(OutputPathForDTACreation, Path.GetFileName(rawName));
-            }
-            else
-            {
-                outputFile = FileName.Remove(dotIndex, FileName.Length - dotIndex);
-            }
+            // Define the base output file path
+
+            var baseName = Path.GetFileNameWithoutExtension(inputFile.Name);
+
+            var baseOutputFilePath = string.IsNullOrWhiteSpace(OutputPathForDTACreation)
+                ? Path.Combine(inputFile.Directory?.FullName ?? ".", baseName)
+                : Path.Combine(OutputPathForDTACreation, baseName);
 
             var thresholded = true;
+
             /*
             if (FileType == DeconToolsV2.Readers.FileType.THERMORAW ||
                 FileType == DeconToolsV2.Readers.FileType.MZXMLRAWDATA)
@@ -695,25 +695,22 @@ namespace DeconToolsV2
             */
 
             //Raw Object
-            dtaProcessor.RawDataDTA =
-                Engine.Readers.ReaderFactory.GetRawData(FileType, FileName);
+            dtaProcessor.RawDataDTA = Engine.Readers.ReaderFactory.GetRawData(FileType, inputFile.FullName);
             dtaProcessor.DatasetType = FileType;
 
-            //File name base for all dtas
-            dtaProcessor.OutputFile = outputFile;
+            // Base path for all output files
+            dtaProcessor.OutputFile = baseOutputFilePath;
 
-            //Datasetname
-            var lastSlashIndex = FileName.LastIndexOf("\\");
-            var dataNamePlusExtension = FileName.Remove(dotIndex, FileName.Length - dotIndex);
-            var dataName = dataNamePlusExtension.Remove(0, lastSlashIndex + 1);
-            dtaProcessor.DatasetName = dataName;
+            //Dataset name
+
+            dtaProcessor.DatasetName = Path.GetFileNameWithoutExtension(inputFile.Name);
 
             // File name for log file
             DTAGenerationParameters.CreateLogFileOnly = false;
-            dtaProcessor.LogFilename = outputFile + "_DeconMSn_log.txt";
+            dtaProcessor.LogFilename = baseOutputFilePath + "_DeconMSn_log.txt";
 
             //File name for profile data
-            dtaProcessor.ProfileFilename = outputFile + "_profile.txt";
+            dtaProcessor.ProfileFilename = baseOutputFilePath + "_profile.txt";
 
             if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.LOG)
             {
@@ -721,32 +718,38 @@ namespace DeconToolsV2
             }
 
             dtaProcessor.DoWriteProgressFile = false;
-            dtaProcessor.ProgressFilename = outputFile + "_DeconMSn_progress.txt";
+            dtaProcessor.ProgressFilename = baseOutputFilePath + "_DeconMSn_progress.txt";
 
             if (DTAGenerationParameters.WriteProgressFile)
             {
                 dtaProcessor.DoWriteProgressFile = true;
             }
 
-            //file name for composite dta file
+            string outputFilePath;
+
             if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.CDTA)
             {
-                dtaProcessor.CombinedDTAFilename = outputFile + "_dta.txt";
-                dtaProcessor.CombinedDTAFileWriter =
-                    new StreamWriter(new FileStream(dtaProcessor.CombinedDTAFilename, FileMode.Create,
-                        FileAccess.ReadWrite, FileShare.Read));
-                dtaScanType.DTAScanTypeFilename = outputFile + "_ScanType.txt";
-                dtaScanType.DTAScanTypeFileWriter = new StreamWriter(new FileStream(dtaScanType.DTAScanTypeFilename, FileMode.Create,
-                    FileAccess.ReadWrite, FileShare.Read));
+                //file name for composite DTA file
+                outputFilePath = baseOutputFilePath + "_dta.txt";
+                dtaProcessor.CombinedDTAFilename = outputFilePath;
+                dtaProcessor.CombinedDTAFileWriter = new StreamWriter(new FileStream(outputFilePath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read));
+
+                dtaScanType.DTAScanTypeFilename = baseOutputFilePath + "_ScanType.txt";
+                dtaScanType.DTAScanTypeFileWriter = new StreamWriter(new FileStream(dtaScanType.DTAScanTypeFilename, FileMode.Create, FileAccess.ReadWrite, FileShare.Read));
                 dtaScanType.RawDataReader = dtaProcessor.RawDataDTA;
             }
-            //file name for .mgf file
-            if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.MGF)
+            else if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.MGF)
             {
-                dtaProcessor.MGFFilename = outputFile = ".mgf";
+                //file name for .mgf file
+                outputFilePath = baseOutputFilePath + ".mgf";
+                dtaProcessor.MGFFilename = outputFilePath;
                 dtaProcessor.MGFFileWriter =
-                    new StreamWriter(new FileStream(dtaProcessor.MGFFilename, FileMode.Create,
+                    new StreamWriter(new FileStream(outputFilePath, FileMode.Create,
                         FileAccess.ReadWrite, FileShare.Read));
+            }
+            else
+            {
+                outputFilePath = string.Empty;
             }
 
             //Settings
