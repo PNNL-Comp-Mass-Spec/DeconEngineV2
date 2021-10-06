@@ -823,9 +823,9 @@ namespace Engine.DTAProcessing
                     else
                     {
                         //consider multiple precursors in on, so split DTAs for all precursors with IsolationWindowSize from parent peak
-                        for (var transformNum = 0; transformNum < transformRecords.Count; transformNum++)
+                        foreach (var item in transformRecords)
                         {
-                            transformRecord = new clsHornTransformResults(transformRecords[transformNum]);
+                            transformRecord = new clsHornTransformResults(item);
                             if (Math.Abs(transformRecord.Mz - parentMzMatch) < IsolationWindowSize)
                             {
                                 _transformRecords.Add(transformRecord);

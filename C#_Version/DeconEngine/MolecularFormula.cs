@@ -66,10 +66,10 @@ namespace DeconToolsV2
         public override string ToString()
         {
             var data = " monomw =" + MonoisotopicMass + " averagemw=" + AverageMass + "\n";
-            for (var elementNum = 0; elementNum < ElementalComposition.Count; elementNum++)
+            foreach (var element in ElementalComposition)
             {
-                data += ElementalComposition[elementNum].Index + " Num Atoms = " +
-                        ElementalComposition[elementNum].NumCopies + "\n";
+                data += element.Index + " Num Atoms = " +
+                        element.NumCopies + "\n";
             }
             return data;
         }
