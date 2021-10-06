@@ -1394,15 +1394,13 @@ namespace Engine.DTAProcessing
                         var mz = _msNScanMzs[i];
                         var intensity = _msNScanIntensities[i];
 
-                        if (intensity.Equals(0))
+                        if (intensity.Equals(0) && i > 0 && _msNScanIntensities[i - 1].Equals(0))
                         {
-                            if (i > 0 && _msNScanIntensities[i - 1].Equals(0))
-                            {
-                                if (i == _msNScanMzs.Count - 1)
-                                    continue;
-                                else if (_msNScanIntensities[i + 1].Equals(0))
-                                    continue;
-                            }
+                            if (i == _msNScanMzs.Count - 1)
+                                continue;
+
+                            if (_msNScanIntensities[i + 1].Equals(0))
+                                continue;
                         }
 
                         try
