@@ -51,7 +51,9 @@ namespace Engine.Utilities
             var golayCoeffs = new float[np + 2];
 
             for (var i = 0; i < np + 2; i++)
+            {
                 golayCoeffs[i] = 0;
+            }
 
             savgol(golayCoeffs, np, _numLeftPoints, _numRightPoints, 0, _golayOrder);
 
@@ -64,7 +66,9 @@ namespace Engine.Utilities
             // unwrap golay coefficients
             _coefficients.Clear();
             for (var i = 0; i < _numLeftPoints + _numRightPoints + 1; i++)
+            {
                 _coefficients.Add(0);
+            }
 
             for (var i = 0; i <= _numLeftPoints; i++)
             {

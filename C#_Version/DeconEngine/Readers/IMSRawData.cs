@@ -288,7 +288,9 @@ namespace Engine.Readers
                     try
                     {
                         while (mvect_scan_start_index[current_scan] < pt_num)
+                        {
                             current_scan++;
+                        }
 
                         // ok Byte alignment issues is a pain. To avoid pain,
                         //TOFRecord *ptr = (TOFRecord *) &temp[pt_num*TOFREC_SIZE];

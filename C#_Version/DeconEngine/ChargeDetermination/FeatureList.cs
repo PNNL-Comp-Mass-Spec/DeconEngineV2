@@ -15,7 +15,9 @@ namespace Engine.ChargeDetermination
         public FeatureList()
         {
             for (var i = 0; i < NumFeatures; i ++)
+            {
                 _features[i] = 0;
+            }
         }
 
         public FeatureList(FeatureList a)
@@ -44,7 +46,9 @@ namespace Engine.ChargeDetermination
         public void InitValues(List<double> features)
         {
             for (var i = 0; i < NumFeatures && i < features.Count; i++)
+            {
                 _features[i] = features[i];
+            }
         }
 
         public double GetValueAt(int index)

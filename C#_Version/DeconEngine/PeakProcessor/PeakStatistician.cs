@@ -171,7 +171,11 @@ namespace Engine.PeakProcessing
                                 mzTempList.Add(mzs[dataIndex - j]);
                                 intensityTempList.Add(intensities[dataIndex - j]);
                             }
-                            for (j = 0; j < points && intensityTempList[0].Equals(intensityTempList[j]); j++) ;
+                            for (j = 0; j < points && intensityTempList[0].Equals(intensityTempList[j]); j++)
+                            {
+                                ;
+                            }
+
                             if (j == points)
                                 return 0.0;
 
@@ -221,7 +225,11 @@ namespace Engine.PeakProcessing
                                 intensityTempList.Add(intensities[index - k]);
                             }
                             int j;
-                            for (j = 0; j < points && intensityTempList[0].Equals(intensityTempList[j]); j++) ;
+                            for (j = 0; j < points && intensityTempList[0].Equals(intensityTempList[j]); j++)
+                            {
+                                ;
+                            }
+
                             if (j == points)
                                 return 0.0;
 

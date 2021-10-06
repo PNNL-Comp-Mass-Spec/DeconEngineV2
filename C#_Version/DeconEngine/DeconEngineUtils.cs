@@ -404,10 +404,15 @@ namespace DeconEngine
         {
             var arrIntensities = new float[intensities.Length];
             for (var i = 0; i < intensities.Length; i++)
+            {
                 arrIntensities[i] = intensities[i];
+            }
+
             FFT.realft(intensities.Length, ref arrIntensities, 1);
             for (var i = 0; i < intensities.Length; i++)
+            {
                 intensities[i] = arrIntensities[i];
+            }
         }
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
@@ -415,10 +420,15 @@ namespace DeconEngine
         {
             var arrIntensities = new float[intensities.Length];
             for (var i = 0; i < intensities.Length; i++)
+            {
                 arrIntensities[i] = intensities[i];
+            }
+
             FFT.realft(intensities.Length, ref arrIntensities, -1);
             for (var i = 0; i < intensities.Length; i++)
+            {
                 intensities[i] = arrIntensities[i];
+            }
         }
     }
 }

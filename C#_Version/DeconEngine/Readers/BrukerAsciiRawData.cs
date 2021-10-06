@@ -236,7 +236,10 @@ namespace Engine.Readers
             {
                 index++;
                 while (index < num_read && marr_buffer[index] != ',')
+                {
                     index++;
+                }
+
                 colNum++;
             }
             if (colNum != 7)
@@ -250,7 +253,10 @@ namespace Engine.Readers
 
             index++;
             while (index < num_read && marr_buffer[index] != ',')
+            {
                 index++;
+            }
+
             index++;
             var startIndex1 = index;
 
@@ -258,7 +264,10 @@ namespace Engine.Readers
             while (pt_num < num_pts_in_scan && index < num_read)
             {
                 while (index < num_read && marr_buffer[index] != ' ')
+                {
                     index++;
+                }
+
                 var startIndex2 = index;
 
                 Buffer.BlockCopy(marr_buffer, startIndex1, temp, 0, startIndex2 - startIndex1);
@@ -266,7 +275,10 @@ namespace Engine.Readers
                 var mz = Helpers.atof(new string(temp, 0, startIndex2 - startIndex1));
 
                 while (index < num_read && marr_buffer[index] != ',')
+                {
                     index++;
+                }
+
                 startIndex1 = index + 1;
                 index++;
 

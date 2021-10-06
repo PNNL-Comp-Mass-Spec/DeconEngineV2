@@ -869,12 +869,17 @@ namespace Engine.PeakProcessing
                     if (MzList[startIndex] > startMz)
                     {
                         while (startIndex > 0 && MzList[startIndex] > startMz)
+                        {
                             startIndex--;
+                        }
                     }
                     else
                     {
                         while (startIndex < numPts && MzList[startIndex] < startMz)
+                        {
                             startIndex++;
+                        }
+
                         startIndex--;
                     }
 

@@ -334,12 +334,17 @@ namespace Engine.HornTransform
                 if (mzs[LastPointIndex] > mz)
                 {
                     while (LastPointIndex > 0 && mzs[LastPointIndex] > mz)
+                    {
                         LastPointIndex--;
+                    }
                 }
                 else
                 {
                     while (LastPointIndex < numpts && mzs[LastPointIndex] < mz)
+                    {
                         LastPointIndex++;
+                    }
+
                     LastPointIndex--;
                 }
 
@@ -377,12 +382,17 @@ namespace Engine.HornTransform
             if (TheoreticalDistMzs[index] > minMz)
             {
                 while (index > 0 && TheoreticalDistMzs[index] > minMz)
+                {
                     index--;
+                }
             }
             else
             {
                 while (index < numPts && TheoreticalDistMzs[index] < minMz)
+                {
                     index++;
+                }
+
                 index--;
             }
 

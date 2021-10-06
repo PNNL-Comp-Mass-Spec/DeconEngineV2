@@ -236,7 +236,10 @@ namespace Engine
                 data[0] = c1 * ((hir = data[0]) + data[0]);
                 data[1] = c1 * (hir - data[1]);
                 four(n, ref data, -1);
-                for (i = 0; i < n * 2; i++) data[i] /= n;
+                for (i = 0; i < n * 2; i++)
+                {
+                    data[i] /= n;
+                }
             }
             return 0;
         }

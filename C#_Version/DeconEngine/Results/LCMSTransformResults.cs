@@ -698,7 +698,10 @@ namespace Engine.Results
             if ((minScan < _minScan && maxScan < _minScan) || (minScan > _maxScan && maxScan > _maxScan))
             {
                 for (var scanNum = minScan; scanNum < maxScan; scanNum++)
+                {
                     intensities.Add(0);
+                }
+
                 return;
             }
 

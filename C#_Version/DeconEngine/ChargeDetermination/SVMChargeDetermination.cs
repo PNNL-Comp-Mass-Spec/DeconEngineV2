@@ -116,7 +116,9 @@ namespace Engine.ChargeDetermination
             var totalPeaks = 0d;
 
             for (var i = 0; i < NumBins; i++)
+            {
                 totalPeaks += _peakDistribution[i];
+            }
 
             var prob = new double[2];
             prob[0] = _peakDistribution[1] / totalPeaks;
@@ -490,7 +492,9 @@ namespace Engine.ChargeDetermination
             //Init metric
             var metric = Matrix<double>.Build.Dense(NumFeatures, NumFeatures, 0);
             for (var i = 0; i < NumFeatures; i++)
+            {
                 metric[i, i] = 1;
+            }
 
             // Get ps
             var m1 = x.Multiply(metric);
@@ -516,7 +520,9 @@ namespace Engine.ChargeDetermination
                 }
                 //This is for ease of matrix addition
                 for (var colNum = 0; colNum < norm_x.ColumnCount; colNum++)
+                {
                     norm_x[rowNum, colNum] = sumX;
+                }
             }
 
             var xsup2 = xsup.PointwiseMultiply(xsup);
@@ -530,7 +536,9 @@ namespace Engine.ChargeDetermination
                 }
 
                 for (var colNum = 0; colNum < norm_xsup.ColumnCount; colNum++)
+                {
                     norm_xsup[rowNum, colNum] = sumXsup;
+                }
             }
 
             var norm_xsup_t = norm_xsup.Transpose();
@@ -567,7 +575,9 @@ namespace Engine.ChargeDetermination
             var cumSum = CalculateCumSum();
 
             for (var row = 0; row < _testVector.Count; row++)
+            {
                 _predictedY.Add(0);
+            }
 
             for (var row = 0; row < _vote.RowCount && _testVector.Count > 0; row++)
             {
@@ -650,7 +660,9 @@ namespace Engine.ChargeDetermination
                     high_ind1_index = stopIndex;
                 ind1.Clear();
                 for (var index = 0; index <= (high_ind1_index - low_ind1_index); index++)
+                {
                     ind1.Add(index + low_ind1_index);
+                }
 
                 //Get support vectors
                 chunk_xsup.Clear();
@@ -670,7 +682,9 @@ namespace Engine.ChargeDetermination
                         high_ind2_index = numTest - 1;
                     ind2.Clear();
                     for (var index2 = 0; index2 <= (high_ind2_index - low_ind2_index); index2++)
+                    {
                         ind2.Add(index2 + low_ind2_index);
+                    }
 
                     //Get X vector
                     chunk_xtest.Clear();

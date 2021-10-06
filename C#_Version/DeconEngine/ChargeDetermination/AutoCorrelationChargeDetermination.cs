@@ -29,7 +29,10 @@ namespace Engine.ChargeDetermination
 
             var ave = 0.0;
             for (j = 0; j < ivN; j++)
+            {
                 ave += iv[j];
+            }
+
             ave = ave / ivN;
             //  for(i=0;i<IvN/2;i++)  GAA 09/27/03
             for (i = 0; i < ivN; i++)
@@ -37,7 +40,9 @@ namespace Engine.ChargeDetermination
                 var sum = 0.0;
                 var topIndex = ivN - i - 1;
                 for (j = 0; j < topIndex; j++)
+                {
                     sum += (iv[j] - ave) * (iv[j + i] - ave);
+                }
 
                 if (j > 0)
                 {
@@ -121,7 +126,9 @@ namespace Engine.ChargeDetermination
 
             var minN = 0;
             while (minN < numL - 1 && autocorrelationScores[minN] > autocorrelationScores[minN + 1])
+            {
                 minN++;
+            }
 
             // Determine the highest CS peak
             var success = HighestChargeStatePeak(minMz, maxMz, minN, autocorrelationScores, MaxCharge, out var bestAcScore,
