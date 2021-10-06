@@ -7,7 +7,7 @@ namespace Engine.Readers
     /// Reader Factory
     /// </summary>
     /// <remarks>Used by DeconMSn</remarks>
-    internal class ReaderFactory
+    internal static class ReaderFactory
     {
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public static RawData GetMSDataReader(FileType fileType)

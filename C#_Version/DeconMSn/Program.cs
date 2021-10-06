@@ -1,6 +1,6 @@
 ﻿namespace DeconMSn
 {
-    public class Program
+    public static class Program
     {
         static int Main(string[] args)
         {

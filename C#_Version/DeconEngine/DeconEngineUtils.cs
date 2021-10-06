@@ -10,7 +10,7 @@ using Engine.PeakProcessing;
 
 namespace DeconEngine
 {
-    public class Utils
+    public static class Utils
     {
         //calculates the background noise level on the intensities using the following algorithm:
         //Step 1: Calculate average of all intensities and number of points used

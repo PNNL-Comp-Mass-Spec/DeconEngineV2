@@ -4,7 +4,7 @@ using DeconToolsV2.Readers;
 namespace Engine.Utilities
 {
     [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
-    internal class Apodization
+    internal static class Apodization
     {
         private static void PerformInvertedTriangleApodization(int startIndex, int stopIndex, float[] vectIntensities)
         {
