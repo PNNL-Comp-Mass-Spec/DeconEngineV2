@@ -166,8 +166,7 @@ namespace Engine.Readers
             double total_time = 0;
             while (true)
             {
-                double this_time;
-                if (!Helpers.GetDouble(options_str, "time:", (int) pos, out this_time))
+                if (!Helpers.GetDouble(options_str, "time:", (int) pos, out var this_time))
                     break;
                 var pos2 = options_str.IndexOf("time:", (int) pos);
                 pos = pos2 + 5;
@@ -180,36 +179,26 @@ namespace Engine.Readers
 
         private void ExtractSettings(int start_p, string option_str)
         {
-            short short_bluff;
-
-            double sample_rate;
-            double anal_trap_voltage;
-            double conductance_lim_voltage, source_trap_voltage;
-            short calibration_type;
-            double low_mass_frequency;
-
-            int temp_int;
-            Helpers.GetInt32(option_str, "dataPoints:", start_p, out temp_int);
+            Helpers.GetInt32(option_str, "dataPoints:", start_p, out var temp_int);
             mint_num_points_in_scan = temp_int;
 
-            Helpers.GetDouble(option_str, "dwell:", start_p, out sample_rate);
+            Helpers.GetDouble(option_str, "dwell:", start_p, out var sample_rate);
 
             if (sample_rate != 0)
                 sample_rate = 1 / sample_rate;
 
-            if (Helpers.GetInt16(option_str, "Zerofill=true", start_p, out short_bluff))
+            if (Helpers.GetInt16(option_str, "Zerofill=true", start_p, out var short_bluff))
             {
                 mbln_zero_fill = true;
             }
 
-            short temp;
-            Helpers.GetInt16(option_str, "ZerofillNumber=", start_p, out temp);
+            Helpers.GetInt16(option_str, "ZerofillNumber=", start_p, out var temp);
             mshort_num_zero_fill = temp;
-            Helpers.GetDouble(option_str, "analyzerTrapVoltage:", start_p, out anal_trap_voltage);
-            Helpers.GetDouble(option_str, "conductanceLimitVoltage:", start_p, out conductance_lim_voltage);
-            Helpers.GetDouble(option_str, "sourceTrapVoltage:", start_p, out source_trap_voltage);
-            Helpers.GetInt16(option_str, "calType:", start_p, out calibration_type);
-            Helpers.GetDouble(option_str, "calReferenceFrequency:", start_p, out low_mass_frequency);
+            Helpers.GetDouble(option_str, "analyzerTrapVoltage:", start_p, out var anal_trap_voltage);
+            Helpers.GetDouble(option_str, "conductanceLimitVoltage:", start_p, out var conductance_lim_voltage);
+            Helpers.GetDouble(option_str, "sourceTrapVoltage:", start_p, out var source_trap_voltage);
+            Helpers.GetInt16(option_str, "calType:", start_p, out var calibration_type);
+            Helpers.GetDouble(option_str, "calReferenceFrequency:", start_p, out var low_mass_frequency);
 
             double calib_a = 0;
             bool found_a;
@@ -282,7 +271,6 @@ namespace Engine.Readers
             const string var_name = "Detect_Slice";
             // Need to stop reading everything one field at a time for
             // these header files.
-            FinniganHeader FH;
 
             long pos;
             long length;
@@ -290,7 +278,7 @@ namespace Engine.Readers
             var count = 0;
             string labels;
 
-            if (ReadFinniganHeader(fStream, out FH) != 0)
+            if (ReadFinniganHeader(fStream, out var FH) != 0)
                 return -1;
 
             pos = FH.SeqSize + FH.DataSize + FH.TrailorRecordsSize + 64;
@@ -322,9 +310,8 @@ namespace Engine.Readers
             long cnt;
             string tag;
             int ln;
-            FinniganHeader FH;
 
-            if (ReadFinniganHeader(fStream, out FH) == -1)
+            if (ReadFinniganHeader(fStream, out var FH) == -1)
                 return null;
 
             cnt = FindTrailorIndex(fStream);
@@ -441,12 +428,11 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
-            string file_name;
             const int flt_size = sizeof (float);
             mzs = new List<double>();
             intensities = new List<double>();
 
-            GetFileName(scan_num, out file_name);
+            GetFileName(scan_num, out var file_name);
             if (string.IsNullOrWhiteSpace(file_name))
                 return false;
 

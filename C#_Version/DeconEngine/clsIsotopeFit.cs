@@ -84,12 +84,11 @@ namespace DeconToolsV2
             vectIntensities = new List<double>(intensities.Select(x => (double) x));
 
             var peakData = new PeakData();
-            clsPeak currentPeak;
 
             peakData.SetPeaks(peaks);
             peakData.MzList = vectMzs;
             peakData.IntensityList = vectIntensities;
-            peakData.GetPeak(peak_index, out currentPeak);
+            peakData.GetPeak(peak_index, out var currentPeak);
 
             var formula = new MolecularFormula();
             DeconEngine.Utils.ConvertElementTableToFormula(

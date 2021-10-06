@@ -112,21 +112,14 @@ namespace DeconToolsV2
         /// <returns></returns>
         public PointF[] CalculateDistribution(Hashtable elementCounts)
         {
-            List<double> x;
-            List<double> y;
-            List<double> xIsotope;
-            List<double> yIsotope;
-            PointF[] points;
-
-            MolecularFormula formula;
             Utils.ConvertElementTableToFormula(
-                ref mMercuryIsotopeDistribution.ElementalIsotopeComposition, elementCounts, out formula);
+                ref mMercuryIsotopeDistribution.ElementalIsotopeComposition, elementCounts, out var formula);
 
-            mMercuryIsotopeDistribution.CalculateDistribution((short) mChargeState, Resolution, formula, out x, out y, 0,
-                out xIsotope, out yIsotope, false);
+            mMercuryIsotopeDistribution.CalculateDistribution((short) mChargeState, Resolution, formula, out var x, out var y, 0,
+                out var xIsotope, out var yIsotope, false);
 
             var numPts = x.Count;
-            points = new PointF[numPts];
+            var points = new PointF[numPts];
 
             for (var i = 0; i < numPts; i++)
             {
@@ -138,9 +131,8 @@ namespace DeconToolsV2
 
         public void CalculateMasses(Hashtable elementCounts)
         {
-            MolecularFormula formula;
             Utils.ConvertElementTableToFormula(
-                ref mMercuryIsotopeDistribution.ElementalIsotopeComposition, elementCounts, out formula);
+                ref mMercuryIsotopeDistribution.ElementalIsotopeComposition, elementCounts, out var formula);
 
             mMercuryIsotopeDistribution.CalculateMasses(formula);
         }

@@ -58,9 +58,8 @@ namespace DeconToolsV2.Peaks
             peaks = new clsPeak[numPeaks];
             for (var pkNum = 0; pkNum < numPeaks; pkNum++)
             {
-                clsPeak pk;
-                _peakProcessor.PeakData.GetPeak(pkNum, out pk);
-                peaks[pkNum] = new clsPeak(pk);
+                _peakProcessor.PeakData.GetPeak(pkNum, out var peak);
+                peaks[pkNum] = new clsPeak(peak);
             }
 
             vectMzs.Clear();

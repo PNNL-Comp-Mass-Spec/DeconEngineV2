@@ -233,8 +233,7 @@ namespace Engine.Calibrations
             if (mass.Equals(0))
                 mass = 1;
 
-            double[] roots;
-            var numRoots = Helpers.CubeRoots(p, q, r, out roots);
+            var numRoots = Helpers.CubeRoots(p, q, r, out var roots);
 
             var best = 0;
             var bestDelta = double.MaxValue;
@@ -253,8 +252,7 @@ namespace Engine.Calibrations
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromQuadraticEquation1(double b, double c, double mass)
         {
-            double[] roots;
-            Helpers.SolveQuadraticEquation(b, c, out roots);
+            Helpers.SolveQuadraticEquation(b, c, out var roots);
             if (roots[0] < 0 && roots[1] < 0)
                 // both are negative frequencies. return MAX_MASS
                 return 0;
@@ -277,9 +275,8 @@ namespace Engine.Calibrations
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromQuadraticEquation2(double b, double c, double mass)
         {
-            double[] roots;
             Helpers.SolveQuadraticEquation(-1 * CalibConstA / mass,
-                -1 * (CalibConstB + CalibConstC * IntensityNormalizer) / mass, out roots);
+                -1 * (CalibConstB + CalibConstC * IntensityNormalizer) / mass, out var roots);
             if (roots[0] < 0 && roots[1] < 0)
                 // both are negative frequencies. return MAX_MASS
                 return 0;
@@ -303,8 +300,7 @@ namespace Engine.Calibrations
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         protected double GetFrequencyFromQuadraticEquation3(double b, double c, double mass)
         {
-            double[] roots;
-            Helpers.SolveQuadraticEquation(b, c, out roots);
+            Helpers.SolveQuadraticEquation(b, c, out var roots);
             if (roots[0] < 0 && roots[1] < 0)
                 // both are negative frequencies. return MAX_MASS
                 return 0;

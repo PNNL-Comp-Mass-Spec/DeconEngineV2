@@ -183,8 +183,7 @@ namespace DeconToolsV2.Results
 
         public void GetSIC(int min_scan, int max_scan, float mz, float mz_tolerance, out float[] peak_intensities)
         {
-            List<double> vect_intensities;
-            mobj_lcms_results.GetSIC(min_scan, max_scan, mz - mz_tolerance, mz + mz_tolerance, out vect_intensities);
+            mobj_lcms_results.GetSIC(min_scan, max_scan, mz - mz_tolerance, mz + mz_tolerance, out var vect_intensities);
             var num_scans = max_scan - min_scan + 1;
             peak_intensities = new float[num_scans];
 
@@ -196,10 +195,7 @@ namespace DeconToolsV2.Results
 
         public void GetScanPeaks(int scan_num, out float[] peak_mzs, out float[] peak_intensities)
         {
-            List<double> vect_mzs;
-            List<double> vect_intensities;
-
-            mobj_lcms_results.GetScanPeaks(scan_num, out vect_mzs, out vect_intensities);
+            mobj_lcms_results.GetScanPeaks(scan_num, out var vect_mzs, out var vect_intensities);
 
             var num_pts = vect_intensities.Count;
             peak_mzs = new float[num_pts];

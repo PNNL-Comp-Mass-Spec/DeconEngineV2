@@ -463,12 +463,11 @@ namespace DeconToolsV2
                                 minPeptideIntensity = transformParameters.AbsolutePeptideIntensity;
                         }
 
-                        clsPeak currentPeak;
                         var originalPeak = new clsPeak();
 
                         peakProcessor.PeakData.InitializeUnprocessedPeakData();
 
-                        var found = peakProcessor.PeakData.GetNextPeak(minMZ, maxMZ, out currentPeak);
+                        var found = peakProcessor.PeakData.GetNextPeak(minMZ, maxMZ, out var currentPeak);
 
                         massTransform.Reset();
                         transformRecords.Clear();
@@ -479,13 +478,10 @@ namespace DeconToolsV2
 
                             try
                             {
-                                var foundTransform = false;
-                                clsHornTransformResults transformRecord;
+                                var foundTransform = massTransform.FindTransform(peakProcessor.PeakData,
+                                    ref currentPeak, out var transformRecord, backgroundIntensity);
 
-                                foundTransform = massTransform.FindTransform(peakProcessor.PeakData,
-                                    ref currentPeak, out transformRecord, backgroundIntensity);
-
-                                // AM (anoop?): if summing over a window, reinsert the original intensity     // [gord]  why?
+                                // AM (anoop?): if summing over a window, re-insert the original intensity     // [gord]  why?
                                 if (foundTransform && transformRecord.ChargeState <= transformParameters.MaxCharge
                                     && transformParameters.SumSpectraAcrossScanRange)
                                 {
@@ -516,8 +512,7 @@ namespace DeconToolsV2
                                     {
                                         //retrieve experimental monoisotopic peak
                                         var monoPeakIndex = transformRecord.IsotopePeakIndices[0];
-                                        clsPeak monoPeak;
-                                        peakProcessor.PeakData.GetPeak(monoPeakIndex, out monoPeak);
+                                        peakProcessor.PeakData.GetPeak(monoPeakIndex, out var monoPeak);
 
                                         //set threshold at 20% less than the expected 'distance' to the next peak
                                         var errorThreshold = 1.003 / transformRecord.ChargeState;

@@ -355,9 +355,6 @@ namespace Engine.Readers
             intensities = new List<double>();
             scan_times = new List<double>();
 
-            List<double> scan_mzs;
-            List<double> scan_intensities;
-
             var centroid = false;
 
             // remember that we are not going to know the number of spectra to begin with at it will update itself each time.
@@ -366,7 +363,7 @@ namespace Engine.Readers
             while (got_data)
             {
                 // its time to read in that scan.
-                got_data = GetRawData(out scan_mzs, out scan_intensities, scan_num, centroid);
+                got_data = GetRawData(out var scan_mzs, out var scan_intensities, scan_num, centroid);
                 if (!got_data)
                     break;
 

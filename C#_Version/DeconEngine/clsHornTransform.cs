@@ -224,9 +224,7 @@ namespace DeconToolsV2.HornTransform
 
                 //double bestFitCharge1 = _isotopeFitter.GetFitScore(peakData, 1, peakCharge1, recordCharge1, _deleteIntensityThreshold, _minTheoreticalIntensityForScore, DebugFlag);
                 //_isotopeFitter.GetZeroingMassRange(_zeroingStartMz, _zeroingStopMz, record.DeltaMz, _deleteIntensityThreshold, DebugFlag);
-                double startMz1 = 0;
-                double stopMz1 = 0;
-                TransformParameters.IsotopeFitScorer.GetZeroingMassRange(out startMz1, out stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
+                TransformParameters.IsotopeFitScorer.GetZeroingMassRange(out var startMz1, out var stopMz1, record.DeltaMz, deleteThreshold, DebugFlag);
                 if (bestFit > TransformParameters.MaxFit && bestFitCharge1 < TransformParameters.MaxFit)
                 {
                     bestFit = bestFitCharge1;

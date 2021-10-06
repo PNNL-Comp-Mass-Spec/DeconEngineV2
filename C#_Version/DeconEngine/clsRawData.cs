@@ -242,9 +242,7 @@ namespace DeconToolsV2.Readers
                 throw new System.ApplicationException("No file has been opened");
             }
 
-            List<double> vect_intensities;
-            List<double> vect_scan_times;
-            mobj_raw_data.GetTicFromFile(out vect_intensities, out vect_scan_times, base_peak_tic);
+            mobj_raw_data.GetTicFromFile(out var vect_intensities, out var vect_scan_times, base_peak_tic);
 
             var num_pts = (int) vect_intensities.Count;
             intensities = new float[num_pts];
@@ -275,9 +273,7 @@ namespace DeconToolsV2.Readers
                 throw new System.ApplicationException("No file has been opened");
             }
 
-            List<double> vect_mzs;
-            List<double> vect_intensities;
-            mobj_raw_data.GetSummedSpectra(out vect_mzs, out vect_intensities, start_scan, stop_scan, min_mz, max_mz);
+            mobj_raw_data.GetSummedSpectra(out var vect_mzs, out var vect_intensities, start_scan, stop_scan, min_mz, max_mz);
             var num_pts = (int) vect_intensities.Count;
             intensities = new double[num_pts];
             mzs = new double[num_pts];
@@ -368,8 +364,8 @@ namespace DeconToolsV2.Readers
         {
             if (mobj_raw_data == null)
                 return "";
-            string description;
-            mobj_raw_data.GetScanDescription(scan_num, out description);
+
+            mobj_raw_data.GetScanDescription(scan_num, out var description);
             return description;
         }
 

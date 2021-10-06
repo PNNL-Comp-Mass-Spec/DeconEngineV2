@@ -131,9 +131,8 @@ namespace Engine.Readers
         public void GetFTICRTransient(ref List<float> vect_intensities)
         {
             // first reload current data.
-            string file_name;
             const int flt_size = sizeof (float);
-            GetFileName(mint_last_scan_num, out file_name);
+            GetFileName(mint_last_scan_num, out var file_name);
             if (string.IsNullOrWhiteSpace(file_name))
                 return;
             var loaded = LoadFile(file_name, mint_last_scan_num);
@@ -449,8 +448,7 @@ namespace Engine.Readers
         [Obsolete("Only used by Decon2LS.UI (maybe)", false)]
         private bool LoadFile(int scan_num)
         {
-            string file_name;
-            GetFileName(scan_num, out file_name);
+            GetFileName(scan_num, out var file_name);
             LoadFile(file_name, scan_num);
             return true;
         }
@@ -497,11 +495,10 @@ namespace Engine.Readers
             intensities = new List<double>();
             scan_times = new List<double>();
             SetIsTic(true); // don't ask why, in fact..forgedd abouddd idddd!!
-            string file_name;
             const int flt_size = sizeof (float);
-            var scan_num = 0; //as the tic is atored as scan 0
+            var scan_num = 0; //as the tic is stored as scan 0
 
-            GetFileName(scan_num, out file_name);
+            GetFileName(scan_num, out var file_name);
             if (string.IsNullOrWhiteSpace(file_name))
                 return;
             mint_last_scan_num = scan_num;
@@ -514,12 +511,11 @@ namespace Engine.Readers
         // Note that Centroid is ignored by this class
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
-            string file_name;
             mzs = new List<double>();
             intensities = new List<double>();
             const int flt_size = sizeof (float);
 
-            GetFileName(scan_num, out file_name);
+            GetFileName(scan_num, out var file_name);
             if (string.IsNullOrWhiteSpace(file_name))
                 return false;
 

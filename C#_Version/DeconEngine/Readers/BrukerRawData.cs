@@ -427,15 +427,12 @@ namespace Engine.Readers
             intensities = new List<double>();
             scan_times = new List<double>();
 
-            List<double> scan_mzs;
-            List<double> scan_intensities;
-
             var centroid = false;
 
             for (var scan_num = 1; scan_num < mint_num_spectra; scan_num++)
             {
                 // its time to read in that scan.
-                var got_data = GetRawData(out scan_mzs, out scan_intensities, scan_num, centroid);
+                var got_data = GetRawData(out var scan_mzs, out var scan_intensities, scan_num, centroid);
                 if (!got_data)
                     continue;
 
