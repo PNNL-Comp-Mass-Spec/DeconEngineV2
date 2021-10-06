@@ -55,7 +55,8 @@ namespace DeconToolsV2
             {
                 if (ProcessState == enmProcessState.IDLE)
                     return 0;
-                else if (ProcessState == enmProcessState.RUNNING)
+
+                if (ProcessState == enmProcessState.RUNNING)
                     return _percentDone;
 
                 return 100;

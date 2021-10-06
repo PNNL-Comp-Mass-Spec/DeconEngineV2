@@ -976,38 +976,36 @@ namespace Engine.DTAProcessing
                 });
                 return true;
             }
-            else
+
+            //get features and add to feature space
+            _svmChargeDetermination.GetFeaturesForSpectra(_msNScanMzs, _msNScanIntensities, parentPeak,
+                msNScanNumber);
+            _msNScanToParentMapping.Add(msNScanNumber, MSnScanIndex);
+            MSnScanIndex++;
+
+            if (IsZoomScan(parentScanNumber))
             {
-                //get features and add to feature space
-                _svmChargeDetermination.GetFeaturesForSpectra(_msNScanMzs, _msNScanIntensities, parentPeak,
-                    msNScanNumber);
-                _msNScanToParentMapping.Add(msNScanNumber, MSnScanIndex);
-                MSnScanIndex++;
-
-                if (IsZoomScan(parentScanNumber))
+                _transformRecords.Add(new clsHornTransformResults
                 {
-                    _transformRecords.Add(new clsHornTransformResults
-                    {
-                        Mz = _parentMz,
-                        ChargeState = 2,
-                        MonoMw = (_parentMz - CCMass) * 2,
-                        Fit = 1,
-                        MonoIntensity = (int)_parentIntensity,
-                    });
+                    Mz = _parentMz,
+                    ChargeState = 2,
+                    MonoMw = (_parentMz - CCMass) * 2,
+                    Fit = 1,
+                    MonoIntensity = (int)_parentIntensity,
+                });
 
-                    _transformRecords.Add(new clsHornTransformResults
-                    {
-                        Mz = _parentMz,
-                        ChargeState = 3,
-                        MonoMw = (_parentMz - CCMass) * 3,
-                        Fit = 1,
-                        MonoIntensity = (int) _parentIntensity,
-                    });
-                    //return true;
-                }
-
-                return false;
+                _transformRecords.Add(new clsHornTransformResults
+                {
+                    Mz = _parentMz,
+                    ChargeState = 3,
+                    MonoMw = (_parentMz - CCMass) * 3,
+                    Fit = 1,
+                    MonoIntensity = (int) _parentIntensity,
+                });
+                //return true;
             }
+
+            return false;
         }
 
         public void DetermineChargeForEachScan()
@@ -1046,17 +1044,15 @@ namespace Engine.DTAProcessing
         {
             if (DatasetType == FileType.THERMORAW)
                 return RawDataDTA.IsFTScan(parentScan);
-            else if (DatasetType == FileType.MZXMLRAWDATA)
+
+            if (DatasetType == FileType.MZXMLRAWDATA)
             {
-                var set_FT = false;
-                set_FT = RawDataDTA.IsFTScan(parentScan);
+                var set_FT = RawDataDTA.IsFTScan(parentScan);
                 if (set_FT)
-                    return set_FT;
-                else
-                {
-                    // return user preference
-                    return IsProfileDataForMzXML;
-                }
+                    return true;
+
+                // return user preference
+                return IsProfileDataForMzXML;
             }
 
             return false;
