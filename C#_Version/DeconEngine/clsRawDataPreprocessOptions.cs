@@ -23,7 +23,7 @@ namespace DeconToolsV2.Readers
         // Type 5: m/z = A/(f+B)
         // Type 6: m/z = A/(f+B+CI)
         // Type 7: t = A*t^2 + B*t + C
-        // Type 9: This is to support bruker calmet 1
+        // Type 9: This is to support Bruker calmet 1
         //         m/z = (-A - SQRT(A^2 - 4(B-f)C))/2(B-f)
         //         f   = A/mz + C/mz^2 +B
         A_OVER_F_PLUS_B_OVER_FSQ_PLUS_C_OVERFCUBE = 0,

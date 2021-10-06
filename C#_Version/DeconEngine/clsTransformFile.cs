@@ -16,7 +16,7 @@ namespace DeconToolsV2
 
         private void WritePeakParameters(TextWriter file, Peaks.clsPeakProcessorParameters peak_parameters)
         {
-            // In a wierd pseudo xml/raw file format, we will write out tags in text
+            // In a weird pseudo xml/raw file format, we will write out tags in text
             // but keep all the data in binary.
             // We will not use a specialized SAX parser because our vocabulary on the XML file
             // will not be increasing to a point where we actually want to go through the effort

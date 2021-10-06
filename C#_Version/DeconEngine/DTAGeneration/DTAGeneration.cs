@@ -78,10 +78,26 @@ namespace Engine.DTAProcessing
 
         public string LogFilename { get; set; }
         public string ProgressFilename { get; set; }
+
+        /// <summary>
+        /// Path to the _dta.txt file
+        /// </summary>
+        /// <remarks>Only populated if DTAGenerationParameters.OutputType is DTAGeneration.OUTPUT_TYPE.CDTA</remarks>
         public string CombinedDTAFilename { get; set; }
+
         public string ProfileFilename { get; set; }
+
+        /// <summary>
+        /// Path to the .mgf file
+        /// </summary>
+        /// <remarks>Only populated if DTAGenerationParameters.OutputType is DTAGeneration.OUTPUT_TYPE.MGF</remarks>
         public string MGFFilename { get; set; }
+
+        /// <summary>
+        /// Base path for all output files
+        /// </summary>
         public string OutputFile { get; set; }
+
         public string DatasetName { get; set; }
 
         [Obsolete("Only used by Decon2LS.UI", false)]
@@ -1347,9 +1363,10 @@ namespace Engine.DTAProcessing
                 if (CreateLogFileOnly)
                     continue;
 
-                var fileName = string.Format("{0}.{1}.{2}.{3}.dta", OutputFile, msNScanNum, msNScanNum,
-                    transformRecord.ChargeState);
-                /*// Purely for TomMetz's data
+                var fileName = string.Format("{0}.{1}.{2}.{3}.dta", OutputFile, msNScanNum, msNScanNum, transformRecord.ChargeState);
+
+                /*
+                // Purely for Tom Metz's data
                 var metz_mod = "";
                 if (RawDataDTA.IsProfileScan(msNScanNum))
                     metz_mod = "_FTMS";

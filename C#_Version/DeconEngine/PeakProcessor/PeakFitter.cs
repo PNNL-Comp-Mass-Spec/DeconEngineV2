@@ -6,23 +6,23 @@ namespace Engine.PeakProcessing
 {
     /*
     /// <summary>
-    ///     enumeration for type of fit.
+    /// enumeration for type of fit.
     /// </summary>
     [Obsolete("Merged into DeconToolsV2.Peaks.PEAK_FIT_TYPE, and all usages changed", true)]
     internal enum PeakFitType
     {
         /// <summary>
-        ///     The peak is the m/z value higher than the points before and after it
+        /// The peak is the m/z value higher than the points before and after it
         /// </summary>
         Apex = 0,
 
         /// <summary>
-        ///     The peak is the m/z value which is a quadratic fit of the three points around the apex
+        /// The peak is the m/z value which is a quadratic fit of the three points around the apex
         /// </summary>
         Quadratic,
 
         /// <summary>
-        ///     The peak is the m/z value which is a lorentzian fit of the three points around the apex
+        /// The peak is the m/z value which is a Lorentzian fit of the three points around the apex
         /// </summary>
         [Obsolete("Not currently used by DeconMSn or others", false)]
         Lorentzian
@@ -30,7 +30,7 @@ namespace Engine.PeakProcessing
     */
 
     /// <summary>
-    ///     Used for detecting peaks in the data.
+    /// Used for detecting peaks in the data.
     /// </summary>
     internal class PeakFitter
     {
@@ -40,7 +40,7 @@ namespace Engine.PeakProcessing
         private PEAK_FIT_TYPE _peakFitType;
 
         /// <summary>
-        ///     Default constructor.
+        /// Default constructor.
         /// </summary>
         /// <remarks>By default uses Quadratic fit.</remarks>
         public PeakFitter()
@@ -49,7 +49,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Sets the type of fit.
+        /// Sets the type of fit.
         /// </summary>
         /// <param name="type">sets the type of fit function that this instance uses.</param>
         public void SetOptions(PEAK_FIT_TYPE type)
@@ -58,10 +58,10 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the peak that fits the point at a given index by the specified peak fit function.
+        /// Gets the peak that fits the point at a given index by the specified peak fit function.
         /// </summary>
         /// <param name="index">index of the point in the m/z vectors which is the apex of the peak.</param>
-        /// <param name="mzs">List of raw data of m\zs.</param>
+        /// <param name="mzs">List of raw data of m/z values.</param>
         /// <param name="intensities">List of raw data of intensities.</param>
         /// <returns>returns the m/z of the peak.</returns>
         public double Fit(int index, List<double> mzs, List<double> intensities)
@@ -81,10 +81,10 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the peak that fits the point at a given index with a quadratic fit.
+        /// Gets the peak that fits the point at a given index with a quadratic fit.
         /// </summary>
         /// <param name="index">index of the point in the m/z vectors which is the apex of the peak.</param>
-        /// <param name="mzs">List of raw data of m\zs.</param>
+        /// <param name="mzs">List of raw data of m/z values.</param>
         /// <param name="intensities">List of raw data of intensities.</param>
         /// <returns>returns the m/z of the peak.</returns>
         private double QuadraticFit(List<double> mzs, List<double> intensities, int index)
@@ -109,10 +109,10 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the peak that fits the point at a given index with a Lorentzian fit.
+        /// Gets the peak that fits the point at a given index with a Lorentzian fit.
         /// </summary>
         /// <param name="index">index of the point in the m/z vectors which is the apex of the peak.</param>
-        /// <param name="mzs">List of raw data of m\zs.</param>
+        /// <param name="mzs">List of raw data of m/z values.</param>
         /// <param name="intensities">List of raw data of intensities.</param>
         /// <param name="fwhm"></param>
         /// <returns>returns the m/z of the peak.</returns>
@@ -155,9 +155,9 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the peak that fits the point at a given index with a Lorentzian least square fit.
+        /// Gets the peak that fits the point at a given index with a Lorentzian least square fit.
         /// </summary>
-        /// <param name="mzs">List of raw data of m\zs.</param>
+        /// <param name="mzs">List of raw data of m/z values.</param>
         /// <param name="intensities">List of raw data of intensities.</param>
         /// <param name="a"></param>
         /// <param name="fwhm"></param>

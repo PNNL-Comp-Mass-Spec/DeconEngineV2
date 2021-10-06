@@ -5,7 +5,7 @@ using DeconToolsV2.HornTransform;
 namespace Engine.HornTransform
 {
     /// <summary>
-    ///     class to store results of isotope fitting.
+    /// class to store results of isotope fitting.
     /// </summary>
     [Obsolete("Use clsHornTransformResults instead", false)]
     internal class IsotopeFitRecord
@@ -14,97 +14,97 @@ namespace Engine.HornTransform
         public const int MaxIdLen = 256;
 
         /// <summary>
-        ///     intensity of feature (as a double)
+        /// intensity of feature (as a double)
         /// </summary>
         public double Abundance;
 
         /// <summary>
-        ///     intensity of feature; maximum value that can be represented is 2147483648
+        /// intensity of feature; maximum value that can be represented is 2147483648
         /// </summary>
         public int AbundanceInt;
 
         /// <summary>
-        ///     average mw for the feature.
+        /// average mw for the feature.
         /// </summary>
         public double AverageMw;
 
         /// <summary>
-        ///     charge state
+        /// charge state
         /// </summary>
         public int ChargeState;
 
         /// <summary>
-        ///     difference between obsered m/z and m/z from theoretical distribution of composition from Averagine
+        /// difference between observed m/z and m/z from theoretical distribution of composition from Averagine
         /// </summary>
         public double DeltaMz;
 
         /// <summary>
-        ///     fit value.
+        /// fit value.
         /// </summary>
         public double Fit;
 
         /// <summary>
-        ///     Number of data points used to compute the fit value
+        /// Number of data points used to compute the fit value
         /// </summary>
         public int FitCountBasis;
 
         /// <summary>
-        ///     full width at half maximum of the peak.
+        /// full width at half maximum of the peak.
         /// </summary>
         public double FWHM;
 
         /// <summary>
-        ///     indices of the peak of the isotopes in the array of peaks discovered.
+        /// indices of the peak of the isotopes in the array of peaks discovered.
         /// </summary>
         public int[] IsotopePeakIndices = new int[MaxIsotopes];
 
         /// <summary>
-        ///     intensity of monoisotopic peak observed.
+        /// intensity of monoisotopic peak observed.
         /// </summary>
         public int MonoIntensity;
 
         /// <summary>
-        ///     monoisotopic mw of feature.
+        /// monoisotopic mw of feature.
         /// </summary>
         public double MonoMw;
 
         /// <summary>
-        ///     intensity of the third isotopic peak observed. Used by other software for processing of O16/O18  data.
+        /// intensity of the third isotopic peak observed. Used by other software for processing of O16/O18  data.
         /// </summary>
         public int MonoPlus2Intensity;
 
         /// <summary>
-        ///     mw at the most intense isotope.
+        /// mw at the most intense isotope.
         /// </summary>
         public double MostIntenseMw;
 
         /// <summary>
-        ///     m/z value of most abundant peak in the feature.
+        /// m/z value of most abundant peak in the feature.
         /// </summary>
         public double Mz;
 
         /// <summary>
-        ///     number of isotopes
+        /// number of isotopes
         /// </summary>
         public int NumIsotopesObserved;
 
         /// <summary>
-        ///     index of the peak in this data.
+        /// index of the peak in this data.
         /// </summary>
         public int PeakIndex;
 
         /// <summary>
-        ///     scan number of peak
+        /// scan number of peak
         /// </summary>
         public int ScanNum;
 
         /// <summary>
-        ///     signal to noise for the most intense isotopic peak.
+        /// signal to noise for the most intense isotopic peak.
         /// </summary>
         public double SignalToNoise;
 
         /// <summary>
-        ///     if it is possible that the record is linked to any other distribution
+        /// if it is possible that the record is linked to any other distribution
         /// </summary>
         //bool FlagIsotopeLink;
 
@@ -178,7 +178,7 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     Write the values of this record to a binary writer
+        /// Write the values of this record to a binary writer
         /// </summary>
         /// <param name="stream"></param>
         [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
@@ -212,7 +212,7 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     Read a record from a binary stream
+        /// Read a record from a binary stream
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>

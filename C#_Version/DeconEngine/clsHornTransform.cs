@@ -13,14 +13,14 @@ namespace DeconToolsV2.HornTransform
 
         /*
         /// <summary>
-        ///     If +2Da pair peaks should be reported for O18 labelling
+        /// If +2Da pair peaks should be reported for O18 labeling
         /// </summary>
         /// <remarks>
-        ///     This is usually set for O16/O18 labelling to get the intensity of the singly isotopically labelled O16 peak.
-        ///     i.e. When a peptide is labelled with O18 media, usually the mass is expected to shift by 4 Da because of
-        ///     replacement of two O16 atoms with two O18 atoms. However, sometimes because of incomplete replacement, only
-        ///     one O16 ends up getting replaced. This results in isotope pairs separated by 2 Da. When this flag is set,
-        ///     the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
+        /// This is usually set for O16/O18 labeling to get the intensity of the singly isotopically labeled O16 peak.
+        /// i.e. When a peptide is labeled with O18 media, usually the mass is expected to shift by 4 Da because of
+        /// replacement of two O16 atoms with two O18 atoms. However, sometimes because of incomplete replacement, only
+        /// one O16 ends up getting replaced. This results in isotope pairs separated by 2 Da. When this flag is set,
+        /// the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
         /// </remarks>
         private bool _reportO18Plus2Da;
         */
@@ -69,7 +69,7 @@ namespace DeconToolsV2.HornTransform
             if (mzs.Length == 0)
                 return;
 
-            // mzs should be in sorted order
+            // m/z values should be in sorted order
             double minMz = mzs[0];
             double maxMz = mzs[numPoints - 1];
             var mzList = new List<double>(mzs.Select(x => (double) x));
@@ -313,7 +313,7 @@ namespace DeconToolsV2.HornTransform
                 return;
             }
 
-            // Delete isotopes of mzs higher than mz of starting isotope
+            // Delete isotopes of m/z values higher than mz of starting isotope
             for (var peakMz = peak.Mz + 1.003 / chargeState;
                 (!TransformParameters.O16O18Media || peakMz <= maxMz) && peakMz <= zeroingStopMz + 2 * peak.FWHM;
                 peakMz += 1.003 / chargeState)
@@ -346,7 +346,7 @@ namespace DeconToolsV2.HornTransform
                 peakMz = nextPeak.Mz;
             }
 
-            // Delete isotopes of mzs lower than mz of starting isotope
+            // Delete isotopes of m/z values lower than mz of starting isotope
             // TODO: Use the delta m/z to make sure to remove 1- peaks from the unprocessed list, but not from the list of peaks?
             for (var peakMz = peak.Mz - 1.003 / chargeState;
                 peakMz > zeroingStartMz - 2 * peak.FWHM;

@@ -203,7 +203,7 @@ namespace Engine.Utilities
         }
 
         /// <summary>
-        ///     Gets the average intensity for points in a scan.
+        /// Gets the average intensity for points in a scan.
         /// </summary>
         /// <param name="mzs">is List of m/z values</param>
         /// <param name="intensities">is List of intensity values.</param>

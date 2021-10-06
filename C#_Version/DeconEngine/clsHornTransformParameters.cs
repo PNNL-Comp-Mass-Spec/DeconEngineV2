@@ -185,7 +185,7 @@ namespace DeconToolsV2.HornTransform
         public double MinIntensityForScore { get; set; }
 
         /// <summary>
-        /// Is the medium a mixture of O16 and O18 labelled peptides.
+        /// Is the medium a mixture of O16 and O18 labeled peptides.
         /// </summary>
         public bool O16O18Media { get; set; }
 

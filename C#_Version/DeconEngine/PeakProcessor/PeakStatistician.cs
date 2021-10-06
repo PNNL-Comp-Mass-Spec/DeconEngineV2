@@ -5,20 +5,22 @@ using MathNet.Numerics.LinearAlgebra;
 namespace Engine.PeakProcessing
 {
     /// <summary>
-    ///     class used to compute FWHM and signal to noise for peaks.
+    /// class used to compute FWHM and signal to noise for peaks.
     /// </summary>
     internal class PeakStatistician
     {
+        // Ignore Spelling: minima
+
         /// <summary>
-        ///     Find signal to noise value at position specified.
+        /// Find signal to noise value at position specified.
         /// </summary>
         /// <param name="yValue">is intensity at specified index.</param>
         /// <param name="intensities">is List of intensities.</param>
         /// <param name="index">is position of point at which we want to calculate signal to noise.</param>
-        /// <returns>returns computed signal to nosie value.</returns>
+        /// <returns>returns computed signal to noise value.</returns>
         /// <remarks>
-        ///     Looks for local minima on the left and the right hand sides and calculates signal to noise of peak relative to
-        ///     the minimum of these shoulders.
+        /// Looks for local minima on the left and the right hand sides and calculates signal to noise of peak relative to
+        /// the minimum of these shoulders.
         /// </remarks>
         public double FindSignalToNoise(double yValue, List<double> intensities, int index)
             // The place in arrDerivative the derivative crossed 0
@@ -104,17 +106,17 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Find full width at half maximum value at position specified.
+        /// Find full width at half maximum value at position specified.
         /// </summary>
-        /// <param name="mzs">is List of mzs.</param>
+        /// <param name="mzs">is List of m/z values</param>
         /// <param name="intensities">is List of intensities.</param>
         /// <param name="dataIndex">is position of point at which we want to calculate FWHM.</param>
         /// <param name="signalToNoise">is option parameter that specifies minimum signal to noise ratio to use.</param>
         /// <returns>returns computed FWHM.</returns>
         /// <remarks>
-        ///     Looks for half height locations at left and right side, and uses twice of that value as the FWHM value. If half
-        ///     height
-        ///     locations cannot be found (because of say an overlapping neighbouring peak), we perform interpolations.
+        /// Looks for half height locations at left and right side, and uses twice of that value as the FWHM value. If half
+        /// height
+        /// locations cannot be found (because of say an overlapping neighboring peak), we perform interpolations.
         /// </remarks>
         public double FindFwhm(List<double> mzs, List<double> intensities, int dataIndex,
             double signalToNoise = 0.0)
@@ -241,7 +243,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Calculate Least Square error mapping y = f(x).  [GORD] This is linear regression - that's it!
+        /// Calculate Least Square error mapping y = f(x).  [GORD] This is linear regression - that's it!
         /// </summary>
         /// <param name="x">List of x values.</param>
         /// <param name="y">List of y values.</param>

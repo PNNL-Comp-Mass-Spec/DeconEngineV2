@@ -12,87 +12,87 @@ namespace DeconToolsV2.HornTransform
         private const int MaxIsotopes = 16;
 
         /// <summary>
-        ///     intensity of feature (as a double)
+        /// intensity of feature (as a double)
         /// </summary>
         public double Abundance;
 
         /// <summary>
-        ///     average mw for the feature.
+        /// average mass for the feature.
         /// </summary>
         public double AverageMw;
 
         /// <summary>
-        ///     charge state
+        /// charge state
         /// </summary>
         public int ChargeState;
 
         /// <summary>
-        ///     difference between observed m/z and m/z from theoretical distribution of composition from Averagine
+        /// difference between observed m/z and m/z from theoretical distribution of composition from Averagine
         /// </summary>
         public double DeltaMz;
 
         /// <summary>
-        ///     fit value.
+        /// fit value.
         /// </summary>
         public double Fit;
 
         /// <summary>
-        ///     Number of data points used to compute the fit value
+        /// Number of data points used to compute the fit value
         /// </summary>
         public int FitCountBasis;
 
         /// <summary>
-        ///     full width at half maximum of the peak.
+        /// full width at half maximum of the peak.
         /// </summary>
         public double FWHM;
 
         /// <summary>
-        ///     list of indices of peak tops
+        /// list of indices of peak tops
         /// </summary>
         public List<int> IsotopePeakIndices = new List<int>(MaxIsotopes);
 
         /// <summary>
-        ///     intensity of monoisotopic peak observed.
+        /// intensity of monoisotopic peak observed.
         /// </summary>
         public int MonoIntensity;
 
         /// <summary>
-        ///     monoisotopic mw of feature.
+        /// monoisotopic mass of feature.
         /// </summary>
         public double MonoMw;
 
         /// <summary>
-        ///     intensity of the third isotopic peak observed. Used by other software for processing of O16/O18  data.
+        /// intensity of the third isotopic peak observed. Used by other software for processing of O16/O18  data.
         /// </summary>
         public int MonoPlus2Intensity;
 
         /// <summary>
-        ///     mw at the most intense isotope.
+        /// Monoisotopic mass at the most intense isotope.
         /// </summary>
         public double MostIntenseMw;
 
         /// <summary>
-        ///     m/z value of most abundant peak in the feature.
+        /// m/z value of most abundant peak in the feature.
         /// </summary>
         public double Mz;
 
         /// <summary>
-        ///     need multiple isotopes to determine charge
+        /// need multiple isotopes to determine charge
         /// </summary>
         public bool NeedMultipleIsotopes;
 
         /// <summary>
-        ///     peak index of the peak.
+        /// peak index of the peak.
         /// </summary>
         public int PeakIndex;
 
         /// <summary>
-        ///     scan number of peak
+        /// scan number of peak
         /// </summary>
         public int ScanNum;
 
         /// <summary>
-        ///     signal to noise for the most intense isotopic peak.
+        /// signal to noise for the most intense isotopic peak.
         /// </summary>
         public double SignalToNoise;
 
@@ -158,7 +158,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     number of isotope peaks
+        /// number of isotope peaks
         /// </summary>
         public int NumIsotopesObserved => IsotopePeakIndices.Count;
 
@@ -189,7 +189,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     intensity of feature; maximum value that can be represented is 2147483648
+        /// intensity of feature; maximum value that can be represented is 2147483648
         /// </summary>
         [Obsolete("Use Abundance (double); sometimes intensity can be greater than 2147483648", false)]
         public int AbundanceInt
@@ -204,7 +204,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     peak index of the peak.
+        /// peak index of the peak.
         /// </summary>
         [Obsolete("Use PeakIndex", false)]
         public int mint_peak_index
@@ -214,7 +214,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     scan number of peak
+        /// scan number of peak
         /// </summary>
         [Obsolete("Use ScanNum", false)]
         public int mint_scan_num
@@ -224,7 +224,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     charge state
+        /// charge state
         /// </summary>
         [Obsolete("Use ChargeState", false)]
         public short mshort_cs
@@ -234,7 +234,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     intensity of feature; maximum value that can be represented is 2147483648
+        /// intensity of feature; maximum value that can be represented is 2147483648
         /// </summary>
         [Obsolete("Use Abundance (double); sometimes intensity can be greater than 2147483648", false)]
         public int mint_abundance
@@ -244,7 +244,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     intensity of feature (as a double)
+        /// intensity of feature (as a double)
         /// </summary>
         [Obsolete("Use Abundance", false)]
         public double mdbl_abundance
@@ -254,7 +254,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     m/z value of most abundant peak in the feature.
+        /// m/z value of most abundant peak in the feature.
         /// </summary>
         [Obsolete("Use Mz", false)]
         public double mdbl_mz
@@ -264,7 +264,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     fit value.
+        /// fit value.
         /// </summary>
         [Obsolete("Use Fit", false)]
         public double mdbl_fit
@@ -274,7 +274,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     Number of data points used to compute the fit value
+        /// Number of data points used to compute the fit value
         /// </summary>
         [Obsolete("Use FitCountBasis", false)]
         public int mint_fit_count_basis
@@ -284,7 +284,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     average mw for the feature.
+        /// average mass for the feature.
         /// </summary>
         [Obsolete("Use AverageMw", false)]
         public double mdbl_average_mw
@@ -294,7 +294,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     monoisotopic mw of feature.
+        /// monoisotopic mass of feature.
         /// </summary>
         [Obsolete("Use MonoMw", false)]
         public double mdbl_mono_mw
@@ -304,7 +304,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     mw at the most intense isotope.
+        /// Monoisotopic mass at the most intense isotope.
         /// </summary>
         [Obsolete("Use MostIntenseMw", false)]
         public double mdbl_most_intense_mw
@@ -314,7 +314,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     full width at half maximum of the peak.
+        /// full width at half maximum of the peak.
         /// </summary>
         [Obsolete("Use FwHm", false)]
         public double mdbl_fwhm
@@ -324,7 +324,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     signal to noise for the most intense isotopic peak.
+        /// signal to noise for the most intense isotopic peak.
         /// </summary>
         [Obsolete("Use SignalToNoise", false)]
         public double mdbl_sn
@@ -334,7 +334,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     intensity of monoisotopic peak observed.
+        /// intensity of monoisotopic peak observed.
         /// </summary>
         [Obsolete("Use MonoIntensity", false)]
         public int mint_mono_intensity
@@ -344,7 +344,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     intensity of the third isotopic peak observed. Used by other software for processing of O16/O18  data.
+        /// intensity of the third isotopic peak observed. Used by other software for processing of O16/O18  data.
         /// </summary>
         [Obsolete("Use MonoPlus2Intensity", false)]
         public int mint_iplus2_intensity
@@ -354,7 +354,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     difference between observed m/z and m/z from theoretical distribution of composition from Averagine
+        /// difference between observed m/z and m/z from theoretical distribution of composition from Averagine
         /// </summary>
         [Obsolete("Use DeltaMz", false)]
         public double mdbl_delta_mz
@@ -364,7 +364,7 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     need multiple isotopes to determine charge
+        /// need multiple isotopes to determine charge
         /// </summary>
         [Obsolete("Use NeedMultipleIsotopes", false)]
         public bool mbln_need_multiple_isotopes
@@ -374,13 +374,13 @@ namespace DeconToolsV2.HornTransform
         }
 
         /// <summary>
-        ///     number of isotope peaks
+        /// number of isotope peaks
         /// </summary>
         [Obsolete("Use NumIsotopesObserved", false)]
         public int mint_num_isotopes_observed => NumIsotopesObserved;
 
         /// <summary>
-        ///     array of indices of peak tops
+        /// array of indices of peak tops
         /// </summary>
         [Obsolete("Use IsotopePeakIndices", false)]
         public int[] marr_isotope_peak_indices

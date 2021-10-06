@@ -7,8 +7,8 @@ namespace Engine.HornTransform
     internal class AreaFitScorer : IsotopicProfileFitScorer
     {
         /// <summary>
-        ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
-        ///     intensity by specified intensity.
+        /// calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
+        /// intensity by specified intensity.
         /// </summary>
         /// <param name="peakData"> variable which stores the data itself</param>
         /// <param name="chargeState"> charge state at which we want to compute the peak.</param>
@@ -62,18 +62,18 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
-        ///     intensity by specified intensity.
+        /// calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
+        /// intensity by specified intensity.
         /// </summary>
         /// <param name="peakData"> variable which stores the data itself</param>
         /// <param name="chargeState"> charge state at which we want to compute the peak.</param>
         /// <param name="intensityNormalizer">
-        ///     intensity to normalize the peaks to. assumes that if peak with intensity = normalizer was
-        ///     present, it would be normalized to 100
+        /// intensity to normalize the peaks to. assumes that if peak with intensity = normalizer was
+        /// present, it would be normalized to 100
         /// </param>
         /// <param name="mzDelta">
-        ///     specifies the mass delta between theoretical and observed m/z. The we are looking to score
-        ///     against the feature in the observed data at theoeretical m/z + mz_delta
+        /// specifies the mass delta between theoretical and observed m/z. The we are looking to score
+        /// against the feature in the observed data at theoretical m/z + mz_delta
         /// </param>
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="debug">prints debugging information if this is set to true.</param>

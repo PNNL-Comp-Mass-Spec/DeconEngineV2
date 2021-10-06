@@ -24,7 +24,7 @@ namespace DeconToolsV2
         public double AverageMass;
 
         /// <summary>
-        ///     Tin has 10 isotopes!!! Don't allocate more, since no other element has more.
+        /// Tin has 10 isotopes!!! Don't allocate more, since no other element has more.
         /// </summary>
         public ElementIsotopeData[] Isotopes = new ElementIsotopeData[10];
 

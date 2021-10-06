@@ -3,31 +3,38 @@ using System.IO;
 namespace Engine.Results
 {
     /// <summary>
-    /// Lcms peak
+    /// LC/MS peak
     /// </summary>
     /// <remarks>Used by Decon2LS.UI (maybe) and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
     public class LcmsPeak
     {
         /// <summary>
-        ///     intensity of the peak.
+        /// intensity of the peak.
         /// </summary>
         public double Intensity;
 
         /// <summary>
-        ///     mz of the peak.
+        /// mz of the peak.
         /// </summary>
         public double Mz;
 
         /// <summary>
-        ///     scan number for scan where peak occurred
+        /// scan number for scan where peak occurred
         /// </summary>
         public int ScanNum;
 
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
         public LcmsPeak()
         {
             ScanNum = 0;
         }
 
+        /// <summary>
+        /// Constructor for cloning a LC/MS peak
+        /// </summary>
+        /// <param name="a"></param>
         public LcmsPeak(LcmsPeak a)
         {
             ScanNum = a.ScanNum;

@@ -316,7 +316,7 @@ namespace Engine.Readers
         public override bool GetRawData(out List<double> mzs, out List<double> intensities, int scan_num, bool centroid, int num_pts)
         {
             // scan_nums are supposed to be 0 indexed for retrieval, but the function is expected to pass in 1 indexed.
-            // hence substract 1 from scan_num.
+            // hence subtract 1 from scan_num.
             mzs = new List<double>();
             intensities = new List<double>();
 

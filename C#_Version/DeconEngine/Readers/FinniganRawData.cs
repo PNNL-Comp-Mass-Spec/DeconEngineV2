@@ -135,7 +135,7 @@ namespace Engine.Readers
             return 0;
             //return 1;
             //      char filter_str [512];
-            ////        BSTR *bstr_filter = new BSTR();
+            ////    BSTR *bstr_filter = new BSTR();
             //      _bstr_t bstr;
             //      m_xraw2_class.GetFilterForScanNum((long)scan_num, &bstr.GetBSTR());
 
@@ -852,7 +852,7 @@ namespace Engine.Readers
         ///  <remarks>
         ///  This was created for use in other programs that only need the parent ion m/z, and no other functions from ThermoRawFileReader.
         ///  Other projects that use this:
-        ///       PHRPReader
+        ///   PHRPReader
         ///
         ///  To copy this, take the code from this function, plus the regex strings <see cref="PARENTION_ONLY_NONMSX_REGEX"/> and <see cref="PARENTION_ONLY_MSX_REGEX"/>,
         ///  with their uses in <see cref="mFindParentIonOnlyNonMsx"/> and <see cref="mFindParentIonOnlyMsx"/>

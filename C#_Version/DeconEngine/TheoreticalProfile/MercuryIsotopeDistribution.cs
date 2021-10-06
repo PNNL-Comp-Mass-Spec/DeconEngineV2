@@ -16,22 +16,22 @@ namespace Engine.TheoreticalProfile
     }*/
 
     /// <summary>
-    ///     Implementation of the MERCURY Isotope Distribution Generator
+    /// Implementation of the MERCURY Isotope Distribution Generator
     /// </summary>
     /// <remarks>
-    ///     MERCURY is an isotope distribution generator based on Fourier transform methods. The calculation is performed by
-    ///     generating the transformed mass (or mu-domain) for the input molecule which is then inverse Fourier transformed
-    ///     into the mass spectrum. The FFT routine is taken from Numerical Recipes in C, 2nd ed. by Press, Teukolsky,
-    ///     Vetterling, and Flannery, Cambridge Univ. Press. This program can be used to swiftly calculate high resolution and
-    ///     ultrahigh resolution (a mass defect spectrum of a single isotopic peak) distributions.   The program outputs an
-    ///     ASCII file of mass intensity pairs. The output file does not account for the electron mass, but the interactive
-    ///     display does. (We'll fix that in a later version.) When running an ultrahigh resolution calculation, do not use
-    ///     zero charge or you will get bogus output. Also, when it asks for the mass shift in ultrahigh resolution mode, it
-    ///     expects you to feed it a negative number. The high resolution calculations are very fast (typically a second on a
-    ///     66 MHz '486), but ultrahigh resolution calculations are rather slow (several  minutes for a single isotope peak.)
-    ///     Overall, the program is good, but could be simplified and also optimized to run several times faster.
-    ///     Algorithm by: Alan L. Rockwood
-    ///     Original Program by: Steven L. Van Orden
+    /// MERCURY is an isotope distribution generator based on Fourier transform methods. The calculation is performed by
+    /// generating the transformed mass (or mu-domain) for the input molecule which is then inverse Fourier transformed
+    /// into the mass spectrum. The FFT routine is taken from Numerical Recipes in C, 2nd ed. by Press, Teukolsky,
+    /// Vetterling, and Flannery, Cambridge Univ. Press. This program can be used to swiftly calculate high resolution and
+    /// ultrahigh resolution (a mass defect spectrum of a single isotopic peak) distributions.   The program outputs an
+    /// ASCII file of mass intensity pairs. The output file does not account for the electron mass, but the interactive
+    /// display does. (We'll fix that in a later version.) When running an ultrahigh resolution calculation, do not use
+    /// zero charge or you will get bogus output. Also, when it asks for the mass shift in ultrahigh resolution mode, it
+    /// expects you to feed it a negative number. The high resolution calculations are very fast (typically a second on a
+    /// 66 MHz '486), but ultrahigh resolution calculations are rather slow (several  minutes for a single isotope peak.)
+    /// Overall, the program is good, but could be simplified and also optimized to run several times faster.
+    /// Algorithm by: Alan L. Rockwood
+    /// Original Program by: Steven L. Van Orden
     /// </remarks>
     internal class MercuryIsotopeDistribution
     {
@@ -46,7 +46,7 @@ namespace Engine.TheoreticalProfile
         public ApodizationType ApType;
 
         /// <summary>
-        ///     average mass calculated for current peptide. It includes the charge specified for the species.
+        /// average mass calculated for current peptide. It includes the charge specified for the species.
         /// </summary>
         public double AverageMw;
 
@@ -57,7 +57,7 @@ namespace Engine.TheoreticalProfile
         public int MercurySize;
 
         /// <summary>
-        ///     monoisotopic mass calculated for current peptide. It includes the charge specified for the species.
+        /// monoisotopic mass calculated for current peptide. It includes the charge specified for the species.
         /// </summary>
         public double MonoMw;
 
@@ -94,7 +94,7 @@ namespace Engine.TheoreticalProfile
         public double MassVariance { get; private set; }
 
         /// <summary>
-        ///     Calculate the isotope distribution
+        /// Calculate the isotope distribution
         /// </summary>
         /// <param name="charge"></param>
         /// <param name="resolution"></param>
@@ -251,16 +251,16 @@ namespace Engine.TheoreticalProfile
         }
 
         /// <summary>
-        ///     Apodize - called by main()
+        /// Apodize - called by main()
         /// </summary>
         /// <param name="numPoints"></param>
         /// <param name="resolution"></param>
         /// <param name="sub"></param>
         /// <remarks>
-        ///     ApType = 1 : Gaussian
-        ///     = 2 : Lorentzian
-        ///     = 3 : ??
-        ///     = -1 : Unapodize Gaussian
+        /// ApType = 1 : Gaussian
+        /// = 2 : Lorentzian
+        /// = 3 : ??
+        /// = -1 : Unapodize Gaussian
         /// </remarks>
         private void Apodize(int numPoints, double resolution, double sub)
         {

@@ -10,17 +10,17 @@ namespace DeconToolsV2.Peaks
     public enum PEAK_FIT_TYPE
     {
         /// <summary>
-        ///     The peak is the m/z value higher than the points before and after it
+        /// The peak is the m/z value higher than the points before and after it
         /// </summary>
         Apex = 0,
 
         /// <summary>
-        ///     The peak is the m/z value which is a quadratic fit of the three points around the apex
+        /// The peak is the m/z value which is a quadratic fit of the three points around the apex
         /// </summary>
         Quadratic,
 
         /// <summary>
-        ///     The peak is the m/z value which is a lorentzian fit of the three points around the apex
+        /// The peak is the m/z value which is a lorentzian fit of the three points around the apex
         /// </summary>
         Lorentzian,
 

@@ -10,12 +10,12 @@ using Engine.HornTransform;
 namespace Engine.Results
 {
     /// <summary>
-    ///     This class stores information about the results from deisotoping an LC-MS dataset.
+    /// This class stores information about the results from deisotoping an LC-MS dataset.
     /// </summary>
     /// <remarks>
-    ///     Peaks found in the scans of the dataset are stored in a vector and sorted by scan, mz.
-    ///     Peaks can be fetched from the entire dataset or for a given range of scans and mz.
-    ///     Deisotoped results are also stored and can be accessed for particular scans and mz ranges.
+    /// Peaks found in the scans of the dataset are stored in a vector and sorted by scan, mz.
+    /// Peaks can be fetched from the entire dataset or for a given range of scans and mz.
+    /// Deisotoped results are also stored and can be accessed for particular scans and mz ranges.
     /// </remarks>
     /// <remarks>Used by Decon2LS.UI (maybe) and by PeakImporter (from peak.dat files); also used by DeconMSn</remarks>
     internal class LCMSTransformResults
@@ -24,14 +24,14 @@ namespace Engine.Results
         private readonly List<LcmsPeak> _peaksList = new List<LcmsPeak>();
 
         /// <summary>
-        ///     Keeps the index of the first peak for a scan in mdeque_peaks
+        /// Keeps the index of the first peak for a scan in mdeque_peaks
         /// </summary>
         /// <remarks>
-        ///     The BlockDeque of peaks is to be kept sorted in scans followed by mzs. This map
-        ///     keeps track of the first peak seen for a scan. thus mmap_scan_peak_indices[123]
-        ///     returns the index of the lowest mz peak for scan 123 in mdeque_peaks.
-        ///     All the peaks in this BlockDeque from index mmap_scan_peak_indices[123] to index
-        ///     mmap_scan_peak_indices[124]-1 are peaks for scan 123.
+        /// The BlockDeque of peaks is to be kept sorted in scans followed by mzs. This map
+        /// keeps track of the first peak seen for a scan. thus mmap_scan_peak_indices[123]
+        /// returns the index of the lowest mz peak for scan 123 in mdeque_peaks.
+        /// All the peaks in this BlockDeque from index mmap_scan_peak_indices[123] to index
+        /// mmap_scan_peak_indices[124]-1 are peaks for scan 123.
         /// </remarks>
         private readonly SortedDictionary<int, int> _scanPeakIndicesDict = new SortedDictionary<int, int>();
 

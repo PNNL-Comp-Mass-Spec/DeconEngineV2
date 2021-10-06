@@ -18,8 +18,8 @@ namespace Engine.TheoreticalProfile
         public double AverageMass;
 
         /// <summary>
-        ///     Tin has 10 isotopes!!! Rather deal with extra fragmented memory than put separate allocations on heap each time.
-        ///     especially because the number of elements is not changing any time soon till the aliens take over.
+        /// Tin has 10 isotopes!!! Rather deal with extra fragmented memory than put separate allocations on heap each time.
+        /// especially because the number of elements is not changing any time soon till the aliens take over.
         /// </summary>
         public double[] IsotopeMasses = new double[10];
 

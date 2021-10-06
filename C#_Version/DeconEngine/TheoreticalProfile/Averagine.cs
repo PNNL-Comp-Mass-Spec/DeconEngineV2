@@ -18,8 +18,8 @@ namespace Engine.TheoreticalProfile
         private double _tagMass;
 
         /// <summary>
-        ///     If a chemical labelling tag is applied to the molecular formula, it needs to be necessarily added to the molecular
-        ///     formula (after substraction by its mass).
+        /// If a chemical labeling tag is applied to the molecular formula, it needs to be necessarily added to the molecular
+        /// formula (after substraction by its mass).
         /// </summary>
         private bool _useTag;
 

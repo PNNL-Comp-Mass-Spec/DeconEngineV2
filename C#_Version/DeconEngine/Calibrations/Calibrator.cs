@@ -42,7 +42,7 @@ namespace Engine.Calibrations
         public int ByteOrder { get; set; }
 
         /// <summary>
-        ///     Normalizer for calibrator type 2.
+        /// Normalizer for calibrator type 2.
         /// </summary>
         public double LowMassFrequency { get; set; }
 

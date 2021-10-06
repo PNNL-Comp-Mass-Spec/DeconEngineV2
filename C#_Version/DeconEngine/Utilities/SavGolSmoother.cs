@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Engine.Utilities
 {
     /// <summary>
-    /// Savitzky-golay smoother
+    /// Savitzky Golay smoother
     /// </summary>
     /// <remarks>Used by DeconTools for ICR2LSRun and IMFRun; also used by GenerateDTAZoomScans in DeconMSn</remarks>
     internal class SavGolSmoother
@@ -61,7 +61,7 @@ namespace Engine.Utilities
                 _numberCoefficients = _numLeftPoints * 2;
             }
 
-            // unwrap golay coeffs
+            // unwrap golay coefficients
             _coefficients.Clear();
             for (var i = 0; i < _numLeftPoints + _numRightPoints + 1; i++)
                 _coefficients.Add(0);
@@ -89,7 +89,7 @@ namespace Engine.Utilities
 
                 if (startIndex < 0 || stopIndex >= size)
                 {
-                    // dont worry about smoothing just push back and forget.
+                    // Don't worry about smoothing just push back and forget.
                     _tempX.Add(mzs[i]);
                     _tempY.Add(intensities[i]);
                     continue;

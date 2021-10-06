@@ -9,11 +9,11 @@ using Engine.TheoreticalProfile;
 namespace Engine.HornTransform
 {
     /// <summary>
-    ///     Base class for calculating isotope fit values between theoretical distribution and observed one.
+    /// Base class for calculating isotope fit values between theoretical distribution and observed one.
     /// </summary>
     /// <remarks>
-    ///     This class is the base class for the isotope fitting. There are three types of fits:
-    ///     Area Fit, Peak Fit, and Chi Sq. Fit.
+    /// This class is the base class for the isotope fitting. There are three types of fits:
+    /// Area Fit, Peak Fit, and Chi Sq. Fit.
     /// </remarks>
     internal abstract class IsotopicProfileFitScorer
     {
@@ -34,15 +34,15 @@ namespace Engine.HornTransform
         public bool CompleteFitThrash { get; set; }
 
         /// <summary>
-        ///     this variable helps keep track of the last intensity value at the lower m/z which we looked at with the function
-        ///     IsotopeFit.GetPointIntensity
+        /// this variable helps keep track of the last intensity value at the lower m/z which we looked at with the function
+        /// IsotopeFit.GetPointIntensity
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Intensity1;
 
         /// <summary>
-        ///     this variable helps keep track of the last intensity value at the higher m/z which we looked at with the function
-        ///     IsotopeFit.GetPointIntensity
+        /// this variable helps keep track of the last intensity value at the higher m/z which we looked at with the function
+        /// IsotopeFit.GetPointIntensity
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Intensity2;
@@ -53,21 +53,21 @@ namespace Engine.HornTransform
         protected List<double> IsotopeMzs = new List<double>();
 
         /// <summary>
-        ///     keeps track of the last index looked at with IsotopeFit.GetPointIntensity
+        /// keeps track of the last index looked at with IsotopeFit.GetPointIntensity
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected int LastPointIndex;
 
         /// <summary>
-        ///     this variable helps keep track of the last min m/z value we looked at with the function
-        ///     IsotopeFit.GetPointIntensity
+        /// this variable helps keep track of the last min m/z value we looked at with the function
+        /// IsotopeFit.GetPointIntensity
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Mz1;
 
         /// <summary>
-        ///     this variable helps keep track of the last max m/z value we looked at with the function
-        ///     IsotopeFit.GetPointIntensity
+        /// this variable helps keep track of the last max m/z value we looked at with the function
+        /// IsotopeFit.GetPointIntensity
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetPointIntensity" />
         protected double Mz2;
@@ -116,7 +116,7 @@ namespace Engine.HornTransform
         public bool UseIsotopeDistributionCaching { get; set; }
 
         /// <summary>
-        ///     Gets or Sets the theoretical isotope composition (AtomicInformation) for all the elements.
+        /// Gets or Sets the theoretical isotope composition (AtomicInformation) for all the elements.
         /// </summary>
         public clsElementIsotopes ElementalIsotopeComposition
         {
@@ -210,16 +210,16 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     get options for the isotope fit. It also gets the options for theoretical isotope generation.
+        /// get options for the isotope fit. It also gets the options for theoretical isotope generation.
         /// </summary>
         /// <param name="averagineFormula">is the averagine molecular formula.</param>
         /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
         /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
         /// <param name="completeFitThrash">
-        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
-        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
-        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
-        ///     keeps increasing. If thrash_or_not is false, none is performed.
+        /// if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
+        /// but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
+        /// better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
+        /// keeps increasing. If thrash_or_not is false, none is performed.
         /// </param>
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void GetOptions(out string averagineFormula, out string tagFormula, out bool useThrash,
@@ -232,17 +232,17 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     set options for the isotope fit. It also sets the options for theoretical isotope generation.
+        /// set options for the isotope fit. It also sets the options for theoretical isotope generation.
         /// </summary>
         /// <param name="averagineFormula">is the averagine molecular formula.</param>
         /// <param name="tagFormula">is the molecular formula of the labeling tag used to label peptide ("" if no tag was used).</param>
         /// <param name="chargeCarrierMass">is the charge carrier mass.</param>
         /// <param name="useThrash">specifies whether or not to do thrashing. See details of THRASH by Horn et. al.</param>
         /// <param name="completeFitThrash">
-        ///     if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
-        ///     but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
-        ///     better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
-        ///     keeps increasing. If thrash_or_not is false, none is performed.
+        /// if thrashing is enable, we may want to thrash not just one or two isotopes (as the score improves)
+        /// but to all possible isotopes. If this value is true, then the thrashing continues to all isotopes looking for
+        /// better scores. If false and thrash_or_not is true, then thrashing only continues as long as the fit score
+        /// keeps increasing. If thrash_or_not is false, none is performed.
         /// </param>
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void SetOptions(string averagineFormula, string tagFormula, double chargeCarrierMass, bool useThrash,
@@ -258,8 +258,8 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
-        ///     intensity by specified intensity.
+        /// calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
+        /// intensity by specified intensity.
         /// </summary>
         /// <param name="peakData"> variable which stores the data itself</param>
         /// <param name="chargeState"> charge state at which we want to compute the peak.</param>
@@ -272,18 +272,18 @@ namespace Engine.HornTransform
             double minIntensityForScore, out int pointsUsed, bool debug = false);
 
         /// <summary>
-        ///     calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
-        ///     intensity by specified intensity.
+        /// calculates the fit score between the theoretical distribution stored and the observed data. Normalizes the observed
+        /// intensity by specified intensity.
         /// </summary>
         /// <param name="peakData"> variable which stores the data itself</param>
         /// <param name="chargeState"> charge state at which we want to compute the peak.</param>
         /// <param name="normalizer">
-        ///     intensity to normalize the peaks to. assumes that if peak with intensity = normalizer was
-        ///     present, it would be normalized to 100
+        /// intensity to normalize the peaks to. assumes that if peak with intensity = normalizer was
+        /// present, it would be normalized to 100
         /// </param>
         /// <param name="mzDelta">
-        ///     specifies the mass delta between theoretical and observed m/z. The we are looking to score
-        ///     against the feature in the observed data at theoretical m/z + mz_delta
+        /// specifies the mass delta between theoretical and observed m/z. The we are looking to score
+        /// against the feature in the observed data at theoretical m/z + mz_delta
         /// </param>
         /// <param name="minIntensityForScore">minimum intensity for score</param>
         /// <param name="debug">prints debugging information if this is set to true.</param>
@@ -291,20 +291,20 @@ namespace Engine.HornTransform
             double minIntensityForScore, bool debug = false);
 
         /// <summary>
-        ///     gets the intensity for a given mz.
+        /// gets the intensity for a given mz.
         /// </summary>
         /// <remarks>
-        ///     We look for the intensity at a given m/z value in the raw data List mzs
-        ///     (the intensities are stored in the corresponding raw data intensity List intensities).
-        ///     If the value does not exist, we interpolate the intensities of points before and after this m/z value.
+        /// We look for the intensity at a given m/z value in the raw data List mzs
+        /// (the intensities are stored in the corresponding raw data intensity List intensities).
+        /// If the value does not exist, we interpolate the intensities of points before and after this m/z value.
         /// </remarks>
         /// <param name="mz">the m/z value for which we want to find the intensity.</param>
         /// <param name="mzs">pointer to List with observed m/z values.</param>
         /// <param name="intensities">pointer to List with observed intensity values.</param>
         /// <returns>
-        ///     returns the intensity of the peak which has the given m/z. If the exact peak is not present,
-        ///     then we interpolate the intensity. If the m/z value is greater than the maximum mz or less,
-        ///     then the minimum m/z, 0 is returned.
+        /// returns the intensity of the peak which has the given m/z. If the exact peak is not present,
+        /// then we interpolate the intensity. If the m/z value is greater than the maximum mz or less,
+        /// then the minimum m/z, 0 is returned.
         /// </returns>
         public double GetPointIntensity(double mz, List<double> mzs, List<double> intensities)
         {
@@ -449,7 +449,7 @@ namespace Engine.HornTransform
 
 #if Enable_Obsolete
         /// <summary>
-        ///     checks if any of the isotopes in the distribution is possibly part of a different distribution
+        /// checks if any of the isotopes in the distribution is possibly part of a different distribution
         /// </summary>
         /// <param name="minThreshold">- threshold for that spectrum</param>
         [Obsolete("Not used anywhere", false)]
@@ -550,7 +550,7 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     calculates the fit score for a peak.
+        /// calculates the fit score for a peak.
         /// </summary>
         /// <param name="peakData"> variable which stores the data itself</param>
         /// <param name="chargeState"> charge state at which we want to compute the peak.</param>
@@ -563,10 +563,10 @@ namespace Engine.HornTransform
         /// <param name="pointsUsed">Number of points used</param>
         /// <param name="debug">enable debugging output</param>
         /// <remarks>
-        ///     This fitter is used by MassTransform.cpp.   It does more than just get a fit score. It first
-        ///     gets a fit score and then slides to the left until the fit score does not improve and then resets
-        ///     to the center point and then slides to the right until the fit score does not improve. Returns the
-        ///     best fit score and fills the isotopic profile (isotopeFitRecord)
+        /// This fitter is used by MassTransform.cpp.   It does more than just get a fit score. It first
+        /// gets a fit score and then slides to the left until the fit score does not improve and then resets
+        /// to the center point and then slides to the right until the fit score does not improve. Returns the
+        /// best fit score and fills the isotopic profile (isotopeFitRecord)
         /// </remarks>
         public double GetFitScore(PeakData peakData, int chargeState, ref clsPeak peak, out clsHornTransformResults isoRecord,
             double deleteIntensityThreshold, double minTheoreticalIntensityForScore, double leftFitStringencyFactor,
@@ -820,7 +820,7 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     calculates the fit score for a peak against a molecular formula.
+        /// calculates the fit score for a peak against a molecular formula.
         /// </summary>
         /// <param name="peakData"> variable which stores the data itself</param>
         /// <param name="chargeState"> charge state at which we want to compute the peak.</param>
@@ -861,8 +861,8 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     specifies the mass range of the theoretical distribution which covers all points that are of intensity greater than
-        ///     specified value.
+        /// specifies the mass range of the theoretical distribution which covers all points that are of intensity greater than
+        /// specified value.
         /// </summary>
         /// <param name="startMz">variable to store the value of the starting m/z</param>
         /// <param name="stopMz">variable to store the value of the ending m/z</param>
@@ -870,8 +870,8 @@ namespace Engine.HornTransform
         /// <param name="thresh">specifies the threshold intensity that the mass range should necessarily cover.</param>
         /// <param name="debug">whether to print debug messages or not. (false by default).</param>
         /// <remarks>
-        ///     This function is used to find out the mass range that should be used to zero out peaks after the deisotoping
-        ///     of that peak is complete. For this we need to know how much of the mass range the peak would cover.
+        /// This function is used to find out the mass range that should be used to zero out peaks after the deisotoping
+        /// of that peak is complete. For this we need to know how much of the mass range the peak would cover.
         /// </remarks>
         public void GetZeroingMassRange(out double startMz, out double stopMz, double delta, double thresh,
             bool debug = false)
@@ -907,11 +907,11 @@ namespace Engine.HornTransform
         }
 
         /// <summary>
-        ///     Gets the isotope distribution for the given most abundance mass and charge with provided resolution.
+        /// Gets the isotope distribution for the given most abundance mass and charge with provided resolution.
         /// </summary>
         /// <param name="mostAbundantMass">
-        ///     Specifies the mass of the observed distribution which is believed to represent the most
-        ///     intense isotope.
+        /// Specifies the mass of the observed distribution which is believed to represent the most
+        /// intense isotope.
         /// </param>
         /// <param name="charge">charge of the species</param>
         /// <param name="resolution">resolution at which the theoretical profile should be generated.</param>
@@ -974,7 +974,7 @@ namespace Engine.HornTransform
 
 #if Enable_Obsolete
         /// <summary>
-        ///     will calculate the delta mz (referenced to the theor) based on several of the observed peaks
+        /// will calculate the delta mz (referenced to the theor) based on several of the observed peaks
         /// </summary>
         /// <param name="startingDelta"></param>
         /// <param name="peakWidth"></param>

@@ -4,17 +4,17 @@ using System.Collections.Generic;
 namespace Engine.PeakProcessing
 {
     /// <summary>
-    ///     Used to search sorted list of points for closest point.
+    /// Used to search sorted list of points for closest point.
     /// </summary>
     /// <remarks>
-    ///     Can look for the closest point either
-    ///     - By looking in a binary search between specified indices
-    ///     - linear search around a given index.
+    /// Can look for the closest point either
+    /// - By looking in a binary search between specified indices
+    /// - linear search around a given index.
     /// </remarks>
     internal static class PeakIndex
     {
         /// <summary>
-        ///     does a search for the given value by doing a linear scan to the left of the given index
+        /// does a search for the given value by doing a linear scan to the left of the given index
         /// </summary>
         /// <param name="vec">is the List of the points.</param>
         /// <param name="mzVal">is the value we are looking for.</param>
@@ -22,7 +22,7 @@ namespace Engine.PeakProcessing
         /// <returns>returns the index of the point that is closest to the specified value.</returns>
         public static int LookLeft(List<double> vec, double mzVal, int startIndex)
         {
-            // mzVal <= vec[start_index] so start moving index further left.
+            // mzVal <= vector[start_index] so start moving index further left.
             var nearestIndex = startIndex;
             var nextIndex = startIndex;
 
@@ -49,7 +49,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     does a search for the given value by doing a linear scan to the right of the given index
+        /// does a search for the given value by doing a linear scan to the right of the given index
         /// </summary>
         /// <param name="vec">is the List of the points.</param>
         /// <param name="mzVal">is the value we are looking for.</param>
@@ -57,7 +57,7 @@ namespace Engine.PeakProcessing
         /// <returns>returns the index of the point that is closest to the specified value.</returns>
         public static int LookRight(List<double> vec, double mzVal, int startIndex)
         {
-            // mzVal >= vec[start_index] so start moving index further right.
+            // mzVal >= vector[start_index] so start moving index further right.
             var nearestIndex = startIndex;
             var nextIndex = startIndex;
             var numPts = vec.Count;
@@ -68,7 +68,7 @@ namespace Engine.PeakProcessing
             var nextVal = vec[nextIndex];
             var bestDistance = Math.Abs(mzVal - nextVal);
 
-            // we've gone back too far, posibly. Move pas the mz_val and return that value.
+            // we've gone back too far, possibly. Move past the mz_val and return that value.
             while (nextVal < mzVal)
             {
                 nextIndex++;
@@ -87,7 +87,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the index of the point nearest to the specified point, between the specified indices.
+        /// Gets the index of the point nearest to the specified point, between the specified indices.
         /// </summary>
         /// <param name="vec">is the List of the points.</param>
         /// <param name="mzVal">is the value we are looking for.</param>
@@ -147,7 +147,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the index of the point nearest to the specified point.
+        /// Gets the index of the point nearest to the specified point.
         /// </summary>
         /// <param name="vec">is the List of the points.</param>
         /// <param name="mzVal">is the value we are looking for.</param>

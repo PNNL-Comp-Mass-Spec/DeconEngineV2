@@ -159,7 +159,7 @@ namespace DeconEngine
         /// </summary>
         /// <param name="intensities"></param>
         /// <param name="maxIntensity"></param>
-        /// <returns>Average value, or 0 if intensities is empty or if it only contains zerooes or values out of range</returns>
+        /// <returns>Average value, or 0 if intensities is empty or if it only contains zeros or values out of range</returns>
         /// <remarks>Used by DeisotopeSummedSpectra in DTAGeneration</remarks>
         public static double GetAverage(List<double> intensities, float maxIntensity)
         {

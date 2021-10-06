@@ -14,8 +14,8 @@ namespace Engine.Utilities
         private readonly List<double> _derivativesY2 = new List<double>();
 
         /// <summary>
-        ///     Cubic Spline interpolation. This function does the actual interpolation at specified point, using provided second
-        ///     derivatives at the knot points.
+        /// Cubic Spline interpolation. This function does the actual interpolation at specified point, using provided second
+        /// derivatives at the knot points.
         /// </summary>
         /// <param name="xa">List of x values.</param>
         /// <param name="ya">List of y values.</param>
@@ -52,8 +52,8 @@ namespace Engine.Utilities
         }
 
         /// <summary>
-        ///     Cubic Spline interpolation. This function does the actual interpolation at specified point, using provided second
-        ///     derivatives at the knot points.
+        /// Cubic Spline interpolation. This function does the actual interpolation at specified point, using provided second
+        /// derivatives at the knot points.
         /// </summary>
         /// <param name="xa">List of x values.</param>
         /// <param name="ya">List of y values.</param>
@@ -115,23 +115,23 @@ namespace Engine.Utilities
         }
 
         /// <summary>
-        ///     Cubic Spline interpolation. This function generates the second derivatives at the knot points.
+        /// Cubic Spline interpolation. This function generates the second derivatives at the knot points.
         /// </summary>
         /// <param name="x">List of x values.</param>
         /// <param name="y">List of y values.</param>
         /// <param name="yp1">second derivative at first point.</param>
         /// <param name="ypn">second derivative at the nth point.</param>
         /// <remarks>
-        ///     These algorithms are from: Numerical Recipes in C by William H. Press, Brian P. Flannery, Saul A. Teukolsky,
-        ///     William T. Vetterling.
+        /// These algorithms are from: Numerical Recipes in C by William H. Press, Brian P. Flannery, Saul A. Teukolsky,
+        /// William T. Vetterling.
         /// </remarks>
         /// <remarks>
-        ///     Given the arrays x[0..n-1] and y[0..n-1] containing the tabulated function, i.e., yi = f(xi),
-        ///     with x0&lt;x1&lt;...&lt;xn-1, and given values yp1 and ypn for the first derivative of the
-        ///     interpolating function at points 0 and n-1, respectively, this routine returns an array y2[1..n]
-        ///     that contains the second derivatives of the interpolating function at the tabulated points xi.
-        ///     If yp1 and/or ypn are equal to 1x10^30 or larger, the routine is signaled to set the corresponding
-        ///     boundary condition for a natural spline, with zero second derivative on that boundary.
+        /// Given the arrays x[0..n-1] and y[0..n-1] containing the tabulated function, i.e., yi = f(xi),
+        /// with x0&lt;x1&lt;...&lt;xn-1, and given values yp1 and ypn for the first derivative of the
+        /// interpolating function at points 0 and n-1, respectively, this routine returns an array y2[1..n]
+        /// that contains the second derivatives of the interpolating function at the tabulated points xi.
+        /// If yp1 and/or ypn are equal to 1x10^30 or larger, the routine is signaled to set the corresponding
+        /// boundary condition for a natural spline, with zero second derivative on that boundary.
         /// </remarks>
         public void Spline(List<double> x, List<double> y, double yp1, double ypn)
         {
@@ -200,7 +200,7 @@ namespace Engine.Utilities
         }
 
         /// <summary>
-        ///     Zero filling imputation. This function takes in data which has missing values and adds in zero values
+        /// Zero filling imputation. This function takes in data which has missing values and adds in zero values
         /// </summary>
         /// <param name="x">List of x values.</param>
         /// <param name="y">List of y values.</param>
@@ -313,7 +313,7 @@ namespace Engine.Utilities
         }
 
         /// <summary>
-        ///     Zero filling imputation. This function takes in data which has missing values and adds in zero values
+        /// Zero filling imputation. This function takes in data which has missing values and adds in zero values
         /// </summary>
         /// <param name="x">List of x values.</param>
         /// <param name="y">List of y values.</param>

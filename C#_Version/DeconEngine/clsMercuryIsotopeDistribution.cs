@@ -23,7 +23,7 @@ namespace DeconToolsV2
         }
 
         /// <summary>
-        ///     Gets or Sets the mercury size. Only accepts multiples of 2.
+        /// Gets or Sets the mercury size. Only accepts multiples of 2.
         /// </summary>
         public int MercurySize
         {
@@ -69,7 +69,7 @@ namespace DeconToolsV2
         public double Resolution { get; set; }
 
         /// <summary>
-        ///     Gets and sets charge state property
+        /// Gets and sets charge state property
         /// </summary>
         public short ChargeState
         {
@@ -79,22 +79,22 @@ namespace DeconToolsV2
         }
 
         /// <summary>
-        ///     Gets average molecular weight of the last call to CalculateDistribution
+        /// Gets average molecular weight of the last call to CalculateDistribution
         /// </summary>
         public double AverageMolecularMass => mMercuryIsotopeDistribution.AverageMw;
 
         /// <summary>
-        ///     Gets the monoisotopic molecular weight of the last call to CalculateDistribution
+        /// Gets the monoisotopic molecular weight of the last call to CalculateDistribution
         /// </summary>
         public double MonoMolecularMass => mMercuryIsotopeDistribution.MonoMw;
 
         /// <summary>
-        ///     Gets the most abundant MZ of the last call to CalculateDistribution
+        /// Gets the most abundant MZ of the last call to CalculateDistribution
         /// </summary>
         public double MostAbundantMZ => mMercuryIsotopeDistribution.MaxPeakMz;
 
         /// <summary>
-        ///     Gets the mass variance of the last call to CalculateDistribution
+        /// Gets the mass variance of the last call to CalculateDistribution
         /// </summary>
         public double MassVariance => mMercuryIsotopeDistribution.MassVariance;
 
@@ -105,8 +105,8 @@ namespace DeconToolsV2
         }
 
         /// <summary>
-        ///     Call the mMercuryIsotopeDistribution method, passing in the currently set resolution and other settings.  Copy the
-        ///     result into an array of PointF.
+        /// Call the mMercuryIsotopeDistribution method, passing in the currently set resolution and other settings.  Copy the
+        /// result into an array of PointF.
         /// </summary>
         /// <param name="elementCounts"></param>
         /// <returns></returns>

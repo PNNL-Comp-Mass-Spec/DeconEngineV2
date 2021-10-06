@@ -147,8 +147,8 @@ namespace DeconToolsV2
             try
             {
                 var transformRecords = new List<clsHornTransformResults>();
-                // while the thresholded parameter is already set in the clsPeakProcessParameters, we would
-                // like to override that here if the data type is Finnigan because that data is threshold.
+                // Although the thresholded parameter is already set in the clsPeakProcessParameters, we would
+                // like to override that here if the data type is Thermo because that data is thresholded.
                 bool thresholded;
                 if (fileType == FileType.THERMORAW ||
                     fileType == FileType.MZXMLRAWDATA)

@@ -25,8 +25,8 @@ namespace DeconToolsV2.HornTransform
         private double _tagMass;
 
         /// <summary>
-        ///     If a chemical labeling tag is applied to the molecular formula, it needs to be necessarily added to the molecular
-        ///     formula (after subtraction by its mass).
+        /// If a chemical labeling tag is applied to the molecular formula, it needs to be necessarily added to the molecular
+        /// formula (after subtraction by its mass).
         /// </summary>
         private bool _useTag;
 

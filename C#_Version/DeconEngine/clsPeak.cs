@@ -8,33 +8,33 @@ namespace DeconToolsV2.Peaks
     public class clsPeak : IComparable, IComparable<clsPeak>
     {
         /// <summary>
-        ///     index in mzs, intensity vectors that were used to create the peaks in
-        ///     <see cref="Engine.PeakProcessing.PeakProcessor.DiscoverPeaks" />.
+        /// index in the m/z and intensity vectors that were used to create the peaks in
+        /// <see cref="Engine.PeakProcessing.PeakProcessor.DiscoverPeaks" />.
         /// </summary>
         public int DataIndex;
 
         /// <summary>
-        ///     Full width at half maximum for peak.
+        /// Full width at half maximum for peak.
         /// </summary>
         public double FWHM;
 
         /// <summary>
-        ///     intensity of peak.
+        /// intensity of peak.
         /// </summary>
         public double Intensity;
 
         /// <summary>
-        ///     mz of the peak.
+        /// mz of the peak.
         /// </summary>
         public double Mz;
 
         /// <summary>
-        ///     index in <see cref="Engine.PeakProcessing.PeakData.PeakTops" /> List.
+        /// index in <see cref="Engine.PeakProcessing.PeakData.PeakTops" /> List.
         /// </summary>
         public int PeakIndex;
 
         /// <summary>
-        ///     Signal to noise ratio
+        /// Signal to noise ratio
         /// </summary>
         public double SignalToNoise;
 
@@ -63,22 +63,22 @@ namespace DeconToolsV2.Peaks
         }
 
         /// <summary>
-        ///     Sets the members of the clsPeak.
+        /// Sets the members of the clsPeak.
         /// </summary>
         /// <param name="mz">m/z of the peak.</param>
         /// <param name="intensity">intensity of the peak</param>
         /// <param name="signalToNoise">signal2noise of the peak look at PeakProcessor.PeakStatistician.FindSignalToNoise</param>
         /// <param name="peakIndex">
-        ///     index of the peak in PeakData.mvect_peak_tops List of the PeakData instance that was used to
-        ///     generate these peaks.
+        /// index of the peak in PeakData.mvect_peak_tops List of the PeakData instance that was used to
+        /// generate these peaks.
         /// </param>
         /// <param name="dataIndex">
-        ///     index of the peak top in the mz, intensity vectors that are the raw data input into
-        ///     PeakData.DiscoverPeaks
+        /// index of the peak top in the mz, intensity vectors that are the raw data input into
+        /// PeakData.DiscoverPeaks
         /// </param>
         /// <param name="fwhm">
-        ///     full width half max of the peak. For details about how this is calculated look at
-        ///     PeakProcessor.PeakStatistician.FindFWHM.
+        /// full width half max of the peak. For details about how this is calculated look at
+        /// PeakProcessor.PeakStatistician.FindFWHM.
         /// </param>
         public clsPeak(double mz, double intensity, double signalToNoise, int peakIndex, int dataIndex, double fwhm)
         {
@@ -164,15 +164,14 @@ namespace DeconToolsV2.Peaks
             set => FWHM = value;
         }
 
-        /// <summary>
-        ///     Compare 2 peaks, for sorting by intensity. Follow Sort() call with a Reverse() call to get sorted by descending
-        ///     intensity
+        /// Compare 2 peaks, for sorting by intensity. Follow Sort() call with a Reverse() call to get sorted by descending
+        /// intensity
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         /// <remarks>
-        ///     Used by the sort algorithms to sort List of peaks in descending order of mdbl_intensity.
-        ///     Function used to sort peaks in a descending order.
+        /// Used by the sort algorithms to sort List of peaks in descending order of intensity.
+        /// Function used to sort peaks in a descending order.
         /// </remarks>
         public int CompareTo(object obj)
         {
@@ -185,14 +184,14 @@ namespace DeconToolsV2.Peaks
         }
 
         /// <summary>
-        ///     Compare 2 peaks, for sorting by intensity. Follow Sort() call with a Reverse() call to get sorted by descending
-        ///     intensity
+        /// Compare 2 peaks, for sorting by intensity. Follow Sort() call with a Reverse() call to get sorted by descending
+        /// intensity
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         /// <remarks>
-        ///     Used by the sort algorithms to sort List of peaks in descending order of mdbl_intensity.
-        ///     Function used to sort peaks in a descending order.
+        /// Used by the sort algorithms to sort List of peaks in descending order of intensity.
+        /// Function used to sort peaks in a descending order.
         /// </remarks>
         public int CompareTo(clsPeak obj)
         {

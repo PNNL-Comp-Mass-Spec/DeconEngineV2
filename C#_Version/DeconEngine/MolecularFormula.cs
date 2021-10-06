@@ -19,12 +19,12 @@ namespace DeconToolsV2
         }
 
         /// <summary>
-        ///     index of this element in list of elements used.
+        /// index of this element in list of elements used.
         /// </summary>
         public int Index { get; private set; }
 
         /// <summary>
-        ///     Number of copies of the above element in compound. we have set this to be a double to allow for normalized values.
+        /// Number of copies of the above element in compound. we have set this to be a double to allow for normalized values.
         /// </summary>
         public double NumCopies { get; set; }
     }
@@ -122,7 +122,7 @@ namespace DeconToolsV2
                 var elementIndex = atomicInformation.GetElementIndex(atomicSymbol);
                 if (elementIndex == -1)
                 {
-                    // theres an error. two decimals.
+                    // there is an error. two decimals.
                     var errorStr =
                         "Molecular Formula specified was incorrect. Symbol in formula was not recognize from elements provided: ";
                     errorStr += atomicSymbol;
@@ -185,7 +185,7 @@ namespace DeconToolsV2
                     {
                         if (decimalFound)
                         {
-                            // theres an error. two decimals.
+                            // there is an error. two decimals.
                             var errorStr = "Molecular Formula specified was incorrect at position: " +
                                            (stopIndex + 1) + ". Two decimal points present";
                             throw new Exception(errorStr);
@@ -210,7 +210,7 @@ namespace DeconToolsV2
                 var elementIndex = atomicInformation.GetElementIndex(atomicSymbol);
                 if (elementIndex == -1)
                 {
-                    // theres an error. two decimals.
+                    // there is an error. two decimals.
                     var errorStr =
                         "Molecular Formula specified was incorrect. Symbol in formula was not recognize from elements provided: ";
                     errorStr += atomicSymbol;

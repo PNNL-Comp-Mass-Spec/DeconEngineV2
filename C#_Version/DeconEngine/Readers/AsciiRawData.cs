@@ -322,7 +322,7 @@ namespace Engine.Readers
             mzs = new List<double>();
             intensities = new List<double>();
             // scan_nums are supposed to be 0 indexed for retrieval, but the function is expected to pass in 1 indexed.
-            // hence substract 1 from scan_num.
+            // hence subtract 1 from scan_num.
             // Do not allow 0 indexed entry.
             if (scan_num == 0)
                 return false;

@@ -18,24 +18,24 @@ namespace Engine.HornTransform
         private const int MaxIsotopes = 16;
 
         /// <summary>
-        ///     mass of charge carrier
+        /// mass of charge carrier
         /// </summary>
         private double _chargeCarrierMass;
 
         /// <summary>
-        ///     Check feature against charge 1.
+        /// Check feature against charge 1.
         /// </summary>
         private bool _checkAgainstCharge1;
 
         /// <summary>
-        ///     Is the medium a mixture of O16 and O18 labelled peptides.
+        /// Is the medium a mixture of O16 and O18 labeled peptides.
         /// </summary>
         private bool _checkO18Pairs;
 
         /// <summary>
-        ///     After deisotoping is done, we delete the isotopic profile.  This threshold sets the value of the minimum
-        ///     intensity of a peak to delete. Note that ths intensity is in the theoretical profile which is scaled to
-        ///     where the maximum peak has an intensity of 100.
+        /// After deisotoping is done, we delete the isotopic profile.  This threshold sets the value of the minimum
+        /// intensity of a peak to delete. Note that this intensity is in the theoretical profile which is scaled to
+        /// where the maximum peak has an intensity of 100.
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetZeroingMassRange" />
         private double _deleteIntensityThreshold;
@@ -45,53 +45,53 @@ namespace Engine.HornTransform
         private double _leftFitStringencyFactor;
 
         /// <summary>
-        ///     maximum charge to check while deisotoping
+        /// maximum charge to check while deisotoping
         /// </summary>
         private short _maxCharge;
 
         /// <summary>
-        ///     maximum fit value to report a deisotoped peak
+        /// maximum fit value to report a deisotoped peak
         /// </summary>
         private double _maxFit;
 
         /// <summary>
-        ///     maximium MW for deisotoping
+        /// Maximum MW for deisotoping
         /// </summary>
         private double _maxMw;
 
         /// <summary>
-        ///     minimum signal to noise for a peak to consider it for deisotoping.
+        /// minimum signal to noise for a peak to consider it for deisotoping.
         /// </summary>
         private double _minSignalToNoise;
 
         /// <summary>
-        ///     minimum intensity of a point in the theoretical profile of a peptide for it to be considered in scoring.
+        /// minimum intensity of a point in the theoretical profile of a peptide for it to be considered in scoring.
         /// </summary>
         /// <seealso cref="IsotopicProfileFitScorer.GetIsotopeDistribution" />
         private double _minTheoreticalIntensityForScore;
 
         /// <summary>
-        ///     Number of peaks from the monoisotope before the shoulder
+        /// Number of peaks from the monoisotope before the shoulder
         /// </summary>
         /// <remarks>
-        ///     After deisotoping is performed, we delete points corresponding to the isotopic profile, To do so, we move
-        ///     to the left and right of each isotope peak and delete points till the shoulder of the peak is reached. To
-        ///     decide if the current point is a shoulder, we check if the next (_numPeaksForShoulder) # of
-        ///     points are of continuously increasing intensity.
+        /// After deisotoping is performed, we delete points corresponding to the isotopic profile, To do so, we move
+        /// to the left and right of each isotope peak and delete points till the shoulder of the peak is reached. To
+        /// decide if the current point is a shoulder, we check if the next (_numPeaksForShoulder) # of
+        /// points are of continuously increasing intensity.
         /// </remarks>
         /// <seealso cref="SetPeakToZero" />
         private short _numPeaksForShoulder;
 
         /*
         /// <summary>
-        ///     If +2Da pair peaks should be reported for O18 labelling
+        /// If +2Da pair peaks should be reported for O18 labeling
         /// </summary>
         /// <remarks>
-        ///     This is usually set for O16/O18 labelling to get the intensity of the singly isotopically labelled O16 peak.
-        ///     i.e. When a peptide is labelled with O18 media, usually the mass is expected to shift by 4 Da because of
-        ///     replacement of two O16 atoms with two O18 atoms. However, sometimes because of incomplete replacement, only
-        ///     one O16 ends up getting replaced. This results in isotope pairs separated by 2 Da. When this flag is set,
-        ///     the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
+        /// This is usually set for O16/O18 labeling to get the intensity of the singly isotopically labeled O16 peak.
+        /// i.e. When a peptide is labeled with O18 media, usually the mass is expected to shift by 4 Da because of
+        /// replacement of two O16 atoms with two O18 atoms. However, sometimes because of incomplete replacement, only
+        /// one O16 ends up getting replaced. This results in isotope pairs separated by 2 Da. When this flag is set,
+        /// the intensity of this +2Da pair peak is reported to adjust intensity of the O18 pair subsequent to analysis.
         /// </remarks>
         private bool _reportO18Plus2Da;
         */
@@ -134,7 +134,8 @@ namespace Engine.HornTransform
                 if (value != _isotopeFitType)
                 {
                     _isotopeFitType = value;
-                    // Untill new options are provided save the current one.
+
+                    // Until new options are provided, save the current one.
                     var oldFit = _isotopeFitter;
                     switch (_isotopeFitType)
                     {
@@ -466,7 +467,7 @@ namespace Engine.HornTransform
                 return;
             }
 
-            // Delete isotopes of mzs higher than mz of starting isotope
+            // Delete isotopes of m/z values higher than m/z of starting isotope
             for (var peakMz = peak.Mz + 1.003 / chargeState;
                 (!_checkO18Pairs || peakMz <= maxMz) && peakMz <= zeroingStopMz + 2 * peak.FWHM;
                 peakMz += 1.003 / chargeState)
@@ -499,7 +500,7 @@ namespace Engine.HornTransform
                 peakMz = nextPeak.Mz;
             }
 
-            // Delete isotopes of mzs lower than mz of starting isotope
+            // Delete isotopes of m/z values lower than m/z of starting isotope
             // TODO: Use the delta m/z to make sure to remove 1- peaks from the unprocessed list, but not from the list of peaks?
             for (var peakMz = peak.Mz - 1.003 / chargeState;
                 peakMz > zeroingStartMz - 2 * peak.FWHM;

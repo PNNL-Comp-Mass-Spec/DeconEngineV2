@@ -77,7 +77,7 @@ namespace DeconToolsV2
                 throw new Exception("No data provided for the observed spectrum to match to");
             }
 
-            // mzs should be in sorted order
+            // m/z values should be in sorted order
             double minMZ = mzs[0];
             double maxMZ = mzs[numPoints - 1];
             vectMzs = new List<double>(mzs.Select(x => (double) x));
