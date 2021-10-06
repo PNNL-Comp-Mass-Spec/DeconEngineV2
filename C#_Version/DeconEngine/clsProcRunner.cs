@@ -82,6 +82,9 @@ namespace DeconToolsV2
 
         public DeconToolsV2.Readers.FileType FileType { get; set; }
 
+        /// <summary>
+        /// Directory where output files should be created
+        /// </summary>
         public string OutputPathForDTACreation { get; set; }
 
         [Obsolete("Only used by Decon2LS.UI", false)]

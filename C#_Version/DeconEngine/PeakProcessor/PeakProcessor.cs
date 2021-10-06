@@ -5,38 +5,39 @@ using DeconToolsV2.Peaks;
 namespace Engine.PeakProcessing
 {
     /// <summary>
-    ///     class that does the processing of peaks.
+    /// class that does the processing of peaks.
     /// </summary>
     internal class PeakProcessor
     {
+
         /// <summary>
-        ///     This variable helps find the m/z value of a peak using the specified fit function.
+        /// This variable helps find the m/z value of a peak using the specified fit function.
         /// </summary>
         private readonly PeakFitter _peakFit = new PeakFitter();
 
         /// <summary>
-        ///     True if peaks are centroided
+        /// True if peaks are centroided
         /// </summary>
         private bool _arePeaksCentroided;
 
         /// <summary>
-        ///     background intensity. When user sets min signal to noise, and min intensity, this value is set as min intensity /
-        ///     min signal to noise.
+        /// background intensity. When user sets min signal to noise, and min intensity, this value is set as min intensity /
+        /// min signal to noise.
         /// </summary>
         private double _backgroundIntensity;
 
         /// <summary>
-        ///     if the data is thresholded, the ratio is taken as the ratio to background intensity.
+        /// if the data is thresholded, the ratio is taken as the ratio to background intensity.
         /// </summary>
         private bool _isDataThresholded;
 
         /// <summary>
-        ///     minimum intensity for a point to be considered a peak.
+        /// minimum intensity for a point to be considered a peak.
         /// </summary>
         private double _peakIntensityThreshold;
 
         /// <summary>
-        ///     signal to noise threshold for a peak to be considered as a peak.
+        /// signal to noise threshold for a peak to be considered as a peak.
         /// </summary>
         private double _signalToNoiseThreshold;
 
@@ -46,18 +47,18 @@ namespace Engine.PeakProcessing
         private const double PeakMergeTolerancePPM = 2;
 
         /// <summary>
-        ///     PeakData instance that stores the peaks found by an instance of this PeakProcessor.
+        /// PeakData instance that stores the peaks found by an instance of this PeakProcessor.
         /// </summary>
         public PeakData PeakData;
 
         /// <summary>
-        ///     PeakStatistician instance that is used to calculate signal to noise and full width at half maximum for the peaks in
-        ///     the raw data.
+        /// PeakStatistician instance that is used to calculate signal to noise and full width at half maximum for the peaks in
+        /// the raw data.
         /// </summary>
         public PeakStatistician PeakStatistician = new PeakStatistician();
 
         /// <summary>
-        ///     default constructor.
+        /// default constructor.
         /// </summary>
         public PeakProcessor()
         {
@@ -75,13 +76,13 @@ namespace Engine.PeakProcessing
 #endif
 
         /// <summary>
-        ///     sets the threshold for signal to noise for a peak to be considered as real.
+        /// sets the threshold for signal to noise for a peak to be considered as real.
         /// </summary>
         /// <param name="signalToNoise">is the signal to noise threshold value.</param>
         /// <remarks>
-        ///     For a peak to be considered real it has to pass two criterias:
-        ///     - Its signal to noise must be greater than the threshold <see cref="_signalToNoiseThreshold" />
-        ///     - Its intensity needs to be greater than the threshold <see cref="_peakIntensityThreshold" />
+        /// For a peak to be considered real it has to pass two criteria:
+        /// - Its signal to noise must be greater than the threshold <see cref="_signalToNoiseThreshold" />
+        /// - Its intensity needs to be greater than the threshold <see cref="_peakIntensityThreshold" />
         /// </remarks>
         public void SetSignalToNoiseThreshold(double signalToNoise)
         {
@@ -96,18 +97,18 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     sets the threshold intensity for a peak to be considered a peak.
+        /// sets the threshold intensity for a peak to be considered a peak.
         /// </summary>
         /// <param name="threshold">is the threshold peak intensity.</param>
         /// <remarks>
-        ///     If threshold is less than zero, then the Math.Abs value of the threshold is used as the cutoff intensity.
-        ///     However, if threshold is greater than equal to zero, otherwise it is proportional to threshold * background
-        ///     intensity in scan.
+        /// If threshold is less than zero, then the Math.Abs value of the threshold is used as the cutoff intensity.
+        /// However, if threshold is greater than equal to zero, otherwise it is proportional to threshold * background
+        /// intensity in scan.
         /// </remarks>
         /// <remarks>
-        ///     For a peak to be considered real it has to pass two criterias:
-        ///     - Its signal to noise must be greater than the threshold (PeakProcessor.mdbl_signal_2_noise_threshold)
-        ///     - Its intensity needs to be greater than the threshold (PeakProcessor.mdbl_peak_intensity_threshold)
+        /// For a peak to be considered real it has to pass two criteria:
+        /// - Its signal to noise must be greater than the threshold (PeakProcessor._signalToNoiseThreshold)
+        /// - Its intensity needs to be greater than the threshold (PeakProcessor.mdbl_peak_intensity_threshold)
         /// </remarks>
         public void SetPeakIntensityThreshold(double threshold)
         {
@@ -124,7 +125,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     sets the type of peak fitting used to find m/z values for peaks.
+        /// sets the type of peak fitting used to find m/z values for peaks.
         /// </summary>
         /// <param name="type">specifies the type of peak fitting.</param>
         public void SetPeakFitType(PEAK_FIT_TYPE type)
@@ -143,7 +144,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     sets the options for this instance.
+        /// sets the options for this instance.
         /// </summary>
         /// <param name="signalToNoise">sets the threshold signal to noise value.</param>
         /// <param name="thresh">sets the peak intensity threshold.</param>
@@ -159,7 +160,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Function discovers peaks in the m/z and intensity vectors supplied within the supplied m/z window.
+        /// Function discovers peaks in the m/z and intensity vectors supplied within the supplied m/z window.
         /// </summary>
         /// <param name="mzList">is the pointer to List of m/z values</param>
         /// <param name="intensityList">is the pointer to List of intensity values</param>
@@ -167,12 +168,12 @@ namespace Engine.PeakProcessing
         /// <param name="stopMz">maximum m/z of the peak.</param>
         /// <returns>returns the number of peaks that were found in the vectors.</returns>
         /// <remarks>
-        ///     The function uses <see cref="Engine.PeakProcessing.PeakStatistician.FindFwhm" />, and
-        ///     <see cref="Engine.PeakProcessing.PeakStatistician.FindSignalToNoise" />
-        ///     to discover the full width at half maximum and signal to noise values for a peak. The signal to noise of a
-        ///     peak is tested against the threshold value before its accepted as a peak. All peaks are used during the process,
-        ///     but once generated only those which are above <see cref="_peakIntensityThreshold" /> are tested for peptidicity by
-        ///     Deconvolution.HornMassTransform
+        /// The function uses <see cref="Engine.PeakProcessing.PeakStatistician.FindFwhm" />, and
+        /// <see cref="Engine.PeakProcessing.PeakStatistician.FindSignalToNoise" />
+        /// to discover the full width at half maximum and signal to noise values for a peak. The signal to noise of a
+        /// peak is tested against the threshold value before its accepted as a peak. All peaks are used during the process,
+        /// but once generated only those which are above <see cref="_peakIntensityThreshold" /> are tested for peptidicity by
+        /// Deconvolution.HornMassTransform
         /// </remarks>
         public int DiscoverPeaks(List<double> mzList, List<double> intensityList, double startMz, double stopMz)
         {
@@ -381,7 +382,7 @@ namespace Engine.PeakProcessing
 #endif
 
         /// <summary>
-        ///     Gets the closest to peakMz among the peak list mzList
+        /// Gets the closest to peakMz among the peak list mzList
         /// </summary>
         /// <param name="peakMz"></param>
         /// <param name="peak"></param>
@@ -423,18 +424,18 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Function discovers peaks in the m/z and intensity vectors supplied.
+        /// Function discovers peaks in the m/z and intensity vectors supplied.
         /// </summary>
         /// <param name="mzList">is the pointer to List of m/z values</param>
         /// <param name="intensityList">is the pointer to List of intensity values</param>
         /// <returns>returns the number of peaks that were found in the vectors.</returns>
         /// <remarks>
-        ///     The function uses <see cref="Engine.PeakProcessing.PeakStatistician.FindFwhm" />, and
-        ///     <see cref="Engine.PeakProcessing.PeakStatistician.FindSignalToNoise" /> functions
-        ///     to discover the full width at half maximum and signal to noise values for a peak. The signal to noise of a
-        ///     peak is tested against the threshold value before its accepted as a peak. All peaks are used during the process,
-        ///     but once generated only those which are above <see cref="_peakIntensityThreshold" /> are tested for peptidicity by
-        ///     Deconvolution.HornMassTransform
+        /// The function uses <see cref="Engine.PeakProcessing.PeakStatistician.FindFwhm" />, and
+        /// <see cref="Engine.PeakProcessing.PeakStatistician.FindSignalToNoise" /> functions
+        /// to discover the full width at half maximum and signal to noise values for a peak. The signal to noise of a
+        /// peak is tested against the threshold value before its accepted as a peak. All peaks are used during the process,
+        /// but once generated only those which are above <see cref="_peakIntensityThreshold" /> are tested for peptidicity by
+        /// Deconvolution.HornMassTransform
         /// </remarks>
         public int DiscoverPeaks(List<double> mzList, List<double> intensityList)
         {
@@ -465,7 +466,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Function discovers the most intense peak in the m/z and intensity vectors supplied within the supplied m/z window.
+        /// Function discovers the most intense peak in the m/z and intensity vectors supplied within the supplied m/z window.
         /// </summary>
         /// <param name="mzList">is the pointer to List of m/z values</param>
         /// <param name="intensityList">is the pointer to List of intensity values</param>
@@ -475,16 +476,16 @@ namespace Engine.PeakProcessing
         /// <param name="findFwhm">specifies whether or not to update the FWHM of the parameter pk</param>
         /// <param name="findSignalToNoise">specifies whether or not to update the signal to noise of the parameter pk</param>
         /// <param name="fitPeak">
-        ///     specifies whether we should just take the raw m/z value as the peak or use the member variable
-        ///     PeakProcessor.mobj_peak_fit to find the peak that fits.
+        /// specifies whether we should just take the raw m/z value as the peak or use the member variable
+        /// PeakProcessor.mobj_peak_fit to find the peak that fits.
         /// </param>
         /// <returns>returns whether or not a peak was found.</returns>
         /// <remarks>
-        ///     The function uses PeakStatistician.FindFWHM, and PeakStatistician.FindSignalToNoise functions
-        ///     to discover the full width at half maximum and signal to noise values for a peak. The signal to noise of a
-        ///     peak is tested against the threshold value before its accepted as a peak. All peaks are used during the process,
-        ///     but once generated only those which are above mdbl_peak_intensity_threshold are tested for peptidicity by
-        ///     Deconvolution.HornMassTransform
+        /// The function uses PeakStatistician.FindFWHM, and PeakStatistician.FindSignalToNoise functions
+        /// to discover the full width at half maximum and signal to noise values for a peak. The signal to noise of a
+        /// peak is tested against the threshold value before its accepted as a peak. All peaks are used during the process,
+        /// but once generated only those which are above mdbl_peak_intensity_threshold are tested for peptidicity by
+        /// Deconvolution.HornMassTransform
         /// </remarks>
         [Obsolete("No uses found within DeconEngine")]
         public bool DiscoverPeak(List<double> mzList, List<double> intensityList, double startMz, double stopMz,
@@ -529,7 +530,7 @@ namespace Engine.PeakProcessing
 #endif
 
         /// <summary>
-        ///     clears the PeakData member variable <see cref="PeakProcessor.PeakData" />
+        /// clears the PeakData member variable <see cref="PeakProcessor.PeakData" />
         /// </summary>
         public void Clear()
         {
@@ -538,9 +539,9 @@ namespace Engine.PeakProcessing
 
 #if Enable_Obsolete
         /// <summary>
-        ///     Removes peaks from unprocessed list that do not have any neighbour peaks within the specified tolerance window.
+        /// Removes peaks from unprocessed list that do not have any neighbor peaks within the specified tolerance window.
         /// </summary>
-        /// <param name="tolerance">the tolerance in looking for neighbouring peaks.</param>
+        /// <param name="tolerance">the tolerance in looking for neighboring peaks.</param>
         [Obsolete("Not used anywhere", false)]
         public void FilterPeakList(double tolerance)
         {
@@ -548,7 +549,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the FWHM for a point.
+        /// Gets the FWHM for a point.
         /// </summary>
         /// <param name="mzList">is List of m/z values.</param>
         /// <param name="intensityList">is List of intensity values.</param>
@@ -563,7 +564,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the FWHM for a point.
+        /// Gets the FWHM for a point.
         /// </summary>
         /// <param name="mzList">is List of m/z values.</param>
         /// <param name="intensityList">is List of intensity values.</param>
@@ -577,7 +578,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the signal to noise for a point.
+        /// Gets the signal to noise for a point.
         /// </summary>
         /// <param name="intensityList">is List of intensity values.</param>
         /// <param name="dataIndex">is the index of the point at which we want to find SN.</param>
@@ -589,7 +590,7 @@ namespace Engine.PeakProcessing
         }
 
         /// <summary>
-        ///     Gets the signal to noise for a point.
+        /// Gets the signal to noise for a point.
         /// </summary>
         /// <param name="mzList">is List of m/z values.</param>
         /// <param name="intensityList">is List of intensity values.</param>
