@@ -87,7 +87,7 @@ namespace Engine.PeakProcessing
         /// <param name="mzs">List of raw data of m/z values.</param>
         /// <param name="intensities">List of raw data of intensities.</param>
         /// <returns>returns the m/z of the peak.</returns>
-        private double QuadraticFit(List<double> mzs, List<double> intensities, int index)
+        private double QuadraticFit(IReadOnlyList<double> mzs, IReadOnlyList<double> intensities, int index)
         {
             if (index < 1)
                 return mzs[0];

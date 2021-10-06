@@ -21,12 +21,12 @@ namespace Engine.Readers
         private string marr_filename;
         private double mdbl_k0;
         private double mdbl_t0;
-        private double mdbl_min_mz;
-        private double mdbl_max_mz;
+        private readonly double mdbl_min_mz;
+        private readonly double mdbl_max_mz;
 
         private int mint_num_scans;
         private int mint_max_scan_size;
-        private double mdbl_scan_interval;
+        private readonly double mdbl_scan_interval;
         private double mdbl_elution_time;
         private double mdbl_drift_time;
         private double mdbl_max_drift_time;
@@ -41,17 +41,16 @@ namespace Engine.Readers
         private bool mbln_is_multiplexed_data;
         private bool mbln_is_adc_data;
 
-        private List<int> mvect_scan_bpi_adc = new List<int>();
-        private List<int> mvect_scan_start_index = new List<int>();
-        private List<float> mvect_scan_bpi_mxed = new List<float>();
-        private List<short> mvect_scan_bpi = new List<short>();
+        private readonly List<int> mvect_scan_bpi_adc = new List<int>();
+        private readonly List<int> mvect_scan_start_index = new List<int>();
+        private readonly List<float> mvect_scan_bpi_mxed = new List<float>();
+        private readonly List<short> mvect_scan_bpi = new List<short>();
 
-        private List<TOFRecord<short>> mvect_data = new List<TOFRecord<short>>();
-        private List<TOFRecord<float>> mvect_mxed_data = new List<TOFRecord<float>>();
-        private List<TOFRecord<int>> mvect_adc_data = new List<TOFRecord<int>>();
+        private readonly List<TOFRecord<short>> mvect_data = new List<TOFRecord<short>>();
+        private readonly List<TOFRecord<float>> mvect_mxed_data = new List<TOFRecord<float>>();
+        private readonly List<TOFRecord<int>> mvect_adc_data = new List<TOFRecord<int>>();
 
-        private SortedDictionary<int, double> mmap_bin_intensity_map = new SortedDictionary<int, double>();
-
+        private readonly SortedDictionary<int, double> mmap_bin_intensity_map = new SortedDictionary<int, double>();
 
         private double GetMassFromBin(int bin)
         {

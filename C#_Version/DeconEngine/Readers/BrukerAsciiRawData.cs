@@ -14,11 +14,11 @@ namespace Engine.Readers
         private int mint_num_spectra;
         private int mint_num_points_in_scan;
         private int mint_last_scan_num;
-        private List<Int64> mvect_scan_start_position = new List<Int64>();
-        private List<double> mvect_scan_time = new List<double>();
+        private readonly List<Int64> mvect_scan_start_position = new List<Int64>();
+        private readonly List<double> mvect_scan_time = new List<double>();
         private BinaryReader mint_file_handle;
-        private double mdbl_signal_range;
-        private char[] marr_buffer = new char[MAX_SCAN_SIZE];
+        private readonly double mdbl_signal_range;
+        private readonly char[] marr_buffer = new char[MAX_SCAN_SIZE];
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()

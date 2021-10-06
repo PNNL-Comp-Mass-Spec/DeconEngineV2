@@ -32,7 +32,7 @@ namespace Engine.Readers
         private float[] mptr_data;
         private float[] mptr_data_copy;
         private int mint_num_points_in_scan;
-        private double mdbl_calib_const_c;
+        private readonly double mdbl_calib_const_c;
 
         private int mint_data_section_start;
         private int mint_allocated_size;
@@ -46,7 +46,7 @@ namespace Engine.Readers
         private int mint_last_scan_num;
         private double mdbl_signal_range;
 
-        private SortedDictionary<int, string> mmap_files_names = new SortedDictionary<int, string>();
+        private readonly SortedDictionary<int, string> mmap_files_names = new SortedDictionary<int, string>();
 
         private CalibrationType menm_calibration_type;
         //      ' FTMS cal types:

@@ -13,12 +13,12 @@ namespace Engine.Readers
         private string marr_file_name;
         private int mint_num_spectra;
         private int mint_num_points_in_scan;
-        private List<Int64> mvect_scan_start_position = new List<long>();
+        private readonly List<Int64> mvect_scan_start_position = new List<long>();
 
-        private List<double> mvect_scan_time = new List<double>();
-        private List<double> mvect_scan_tic = new List<double>();
-        private List<double> mvect_scan_bpi = new List<double>();
-        private List<double> mvect_scan_bpi_mz = new List<double>();
+        private readonly List<double> mvect_scan_time = new List<double>();
+        private readonly List<double> mvect_scan_tic = new List<double>();
+        private readonly List<double> mvect_scan_bpi = new List<double>();
+        private readonly List<double> mvect_scan_bpi_mz = new List<double>();
 
         private BinaryReader mint_file_handle;
         private char mchar_delimiter;

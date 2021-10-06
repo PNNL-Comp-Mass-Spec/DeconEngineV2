@@ -381,7 +381,7 @@ namespace Engine.Readers
             return mint_num_points_in_scan;
         }
 
-        private double GetBasePeakIntensity(List<double> mzs, List<double> intensities)
+        private double GetBasePeakIntensity(IReadOnlyList<double> mzs, IReadOnlyList<double> intensities)
         {
             var num_pts = intensities.Count;
             if (num_pts == 0)

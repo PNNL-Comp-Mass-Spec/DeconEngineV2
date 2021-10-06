@@ -49,7 +49,7 @@ namespace Engine.Readers
         private double mdbl_calib_const_c;
         private double mdbl_intensity_calibration;
 
-        private string marr_file_name;
+        private readonly string marr_file_name;
         private float[] mptr_data;
         private float[] mptr_data_copy;
         private int mint_last_scan_num;
@@ -60,8 +60,7 @@ namespace Engine.Readers
         private bool mbln_tic_file;
 
         private bool mbln_use_specified_calibration;
-
-        SortedDictionary<int, string> mmap_files_names = new SortedDictionary<int, string>();
+        readonly SortedDictionary<int, string> mmap_files_names = new SortedDictionary<int, string>();
 
         [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
