@@ -6,6 +6,7 @@ using DeconToolsV2;
 using DeconToolsV2.DTAGeneration;
 using DeconToolsV2.HornTransform;
 using DeconToolsV2.Peaks;
+using PRISM;
 
 namespace DeconMSn
 {
@@ -119,7 +120,7 @@ namespace DeconMSn
                         // Treat the first non-switch parameter as the dataset to process
                         if (!filenameDefined)
                         {
-                            procRunner.FileName = currentArg;
+                            procRunner.InputFilePath = currentArg;
                             filenameDefined = true;
                         }
                         else
@@ -244,12 +245,19 @@ namespace DeconMSn
                     return -1;
                 }
 
-                var inputFile = new FileInfo(procRunner.FileName);
+                var inputFile = new FileInfo(procRunner.InputFilePath);
 
                 Console.WriteLine("DeconMSn Version: {0}", GetExeVersion());
-                Console.WriteLine("Processing File:  {0}", PRISM.PathUtils.CompactPathString(inputFile.FullName, 120));
-                Console.WriteLine();
 
+                if (!inputFile.Exists)
+                {
+                    ConsoleMsgUtils.ShowWarning("Input file not found: " + inputFile.FullName);
+                    System.Threading.Thread.Sleep(2000);
+                    return -1;
+                }
+
+                Console.WriteLine("Processing File:  {0}", PathUtils.CompactPathString(inputFile.FullName, 100));
+                Console.WriteLine();
                 // Display the settings
 
                 Console.WriteLine("Minimum Number of ions for valid MSn scan: {0}", dtaGenParameters.MinIonCount);
@@ -366,7 +374,7 @@ namespace DeconMSn
             Console.WriteLine("\t -Tstring : string is the maximum setting for Mass Range [5000]");
             Console.WriteLine("\t -Cstring : string is the charge to be considered [NULL]");
             Console.WriteLine("\t -Pstring : string is the parameter XML file name to be used for processing [default options are set]");
-            Console.WriteLine("\t -Dstring : string is the output directory[default - set to same directory as input file]");
+            Console.WriteLine("\t -Dstring : string is the output directory path [default - same directory as input file]");
             Console.WriteLine("\t -Centroid: Enables centroiding MSn data (when acquired as profile data); off by default");
             Console.WriteLine("              since the m/z values reported by the centroiding algorithm are typically off by several hundred ppm");
             Console.WriteLine("\t -Progress: Creates a _progress.txt file with a percent complete value every 50 scans");
