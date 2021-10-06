@@ -1024,7 +1024,7 @@ namespace DeconToolsV2
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithPeaksOnly()
         {
-            if (FileName == null)
+            if (string.IsNullOrWhiteSpace(InputFilePath))
             {
                 throw new Exception("File name is not set.");
             }
@@ -1039,7 +1039,7 @@ namespace DeconToolsV2
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResultWithNoPeaks()
         {
-            if (FileName == null)
+            if (string.IsNullOrWhiteSpace(InputFilePath))
             {
                 throw new Exception("File name is not set.");
             }
@@ -1058,7 +1058,7 @@ namespace DeconToolsV2
         [Obsolete("Only used by Decon2LS.UI", false)]
         public void CreateTransformResults()
         {
-            if (FileName == null)
+            if (string.IsNullOrWhiteSpace(InputFilePath))
             {
                 throw new Exception("File name is not set.");
             }
