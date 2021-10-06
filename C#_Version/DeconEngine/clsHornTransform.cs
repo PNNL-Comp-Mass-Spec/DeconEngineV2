@@ -162,7 +162,7 @@ namespace DeconToolsV2.HornTransform
 
             if (DebugFlag)
             {
-                Console.Error.WriteLine("Deisotoping :" + peak.Mz);
+                Console.Error.WriteLine("Deisotoping:" + peak.Mz);
                 Console.Error.WriteLine("Charge = " + chargeState);
             }
 
