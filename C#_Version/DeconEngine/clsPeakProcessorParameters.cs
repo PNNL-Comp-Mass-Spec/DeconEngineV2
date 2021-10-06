@@ -65,7 +65,7 @@ namespace DeconToolsV2.Peaks
 
         [Obsolete("Not accessed within DeconTools solution except through tests and OldDecon2LSParameters", false)]
         public bool ThresholdedData { get; set; }
-        
+
         public double PeakBackgroundRatio { get; set; }
 
         public double SignalToNoiseThreshold { get; set; }

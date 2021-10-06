@@ -172,7 +172,7 @@ namespace DeconToolsV2
                 var rawData = Engine.Readers.ReaderFactory.GetRawData(fileType, fileName);
                 if (fileType == FileType.ICR2LSRAWDATA && fticrPreprocessParameters != null)
                 {
-                    var icrRawData = (Engine.Readers.Icr2lsRawData) rawData;
+                    var icrRawData = (Engine.Readers.Icr2lsRawData)rawData;
                     icrRawData.SetApodizationZeroFillOptions(
                         fticrPreprocessParameters.ApodizationType,
                         fticrPreprocessParameters.ApodizationMinX, fticrPreprocessParameters.ApodizationMaxX,
