@@ -1160,7 +1160,7 @@ namespace Engine.DTAProcessing
                         MGFFileWriter.WriteLine("CHARGE={0}+", transformRecord.ChargeState);
 
                     //start spectra
-                    for (var i = 0; i < (int) _msNScanMzs.Count; i++)
+                    for (var i = 0; i < _msNScanMzs.Count; i++)
                     {
                         var mz = _msNScanMzs[i];
                         var intensity = _msNScanIntensities[i];

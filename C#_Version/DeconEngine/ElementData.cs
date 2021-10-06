@@ -4,8 +4,8 @@ namespace DeconToolsV2
 {
     public struct ElementIsotopeData
     {
-        public double Mass { get; private set; }
-        public double Probability { get; private set; }
+        public double Mass { get; }
+        public double Probability { get; }
 
         public ElementIsotopeData(double mass, double probability) : this()
         {
