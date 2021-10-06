@@ -8,7 +8,7 @@ http://sjsupport.thermofinnigan.com/public/detail.asp?id=703
 
 DeconMSn also supports the mzXML format.  You can use Proteowizard's MSConvert
 tool to convert most vendor formats into the mzXML format:
-http://proteowizard.sourceforge.net/downloads.shtml
+* https://proteowizard.sourceforge.io/
 
 For datasets with high resolution MS1 spectra, DeconMSn calculates the monoisotopic mass
 of the parent ion for each MSn spectrum by applying a modified THRASH approach 
@@ -21,6 +21,10 @@ Proteowizard's MSConvert tool.
 Results can be saved as .DTA files, .MGF files, or _DTA.txt files.  These files
 can then be used for peptide identifications using search engines such as 
 SEQUEST, X!Tandem, MASCOT, or MSGF+
+
+## Downloads
+
+Download DeconMSn from the DeconMSn Releases page [on GitHub](https://github.com/PNNL-Comp-Mass-Spec/DeconEngineV2/releases)
 
 ## Syntax
 
@@ -39,12 +43,12 @@ DeconMSn usage: `DeconMSn [options] filename`
 | `-Centroid` | Enables centroiding MSn data (when acquired as profile data)   | off by default |
 | `-Progress` | Creates a _progress.txt file with a percent complete value every 50 scans | n/a |
 | `-Stype`    | type is the type of spectra to process, options are ALL, CID, ETD, or HCD     | ALL |
-| `-Xtype`    | type is output file format, options are DTA, LOG, MGF, CDTA  | CDTA |
-| filename    | input file (mzXML or RAW)                                      | n/a |
+| `-Xtype`    | type is output file format, options are DTA, LOG, MGF, CDTA    | CDTA |
+| filename    | input file (mzXML or RAW)                                      | n/a  |
 
 Output file formats:
 
-| Type     | Description    
+| Type     | Description   |
 | ---------|---------------|
 | DTA      | Creates .dta files along with a log file (_log.txt) and profile file (_profile.txt) |
 | LOG      | Creates only log file (_log.txt) and profile file (_profile.txt) |
@@ -72,9 +76,7 @@ Process sample.raw, use processing options specified by parameter file LTQ_FT_No
 
 ## Dependencies
 
-DeconMSN assumes that the user has vendor specific libraries installed on the machine 
-to analyze ThermoFinnigan data.  Alternatively, if the user converts the raw data into 
-the .mzXML format, then DeconMSn can process the data without vendor specific libraries.
+.NET 4.7.2 runtime
 
 -------------------------------------------------------------------------------
 Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy \
@@ -82,8 +84,8 @@ Ported to C# by Bryson Gibbons \
 (PNNL, Richland, WA) in 2006-2007. \
 Copyright 2007, Battelle Memorial Institute.  All Rights Reserved.
 
-E-mail: matthew.monroe@pnnl.gov or samuel.payne@pnnl.gov \
-Website: http://omics.pnl.gov or http://panomics.pnnl.gov
+E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov \
+Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics
 -------------------------------------------------------------------------------
 
 Licensed under the Apache License, Version 2.0; you may not use this file 
