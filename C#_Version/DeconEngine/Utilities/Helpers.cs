@@ -144,9 +144,8 @@ namespace Engine.Utilities
             }
             bytesRead = file.Read(bytes, 0, (int) size);
             using (var stream = new StreamReader(new MemoryStream(bytes), Encoding.ASCII))
-            {
                 result = stream.ReadToEnd();
-            }
+
             return result;
         }
 
