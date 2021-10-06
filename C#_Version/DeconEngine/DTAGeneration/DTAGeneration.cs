@@ -1138,7 +1138,7 @@ namespace Engine.DTAProcessing
                     CreateMSnRecord(transformRecord, msNScanNum, msNScanLevel, parentScanNum, parentScanLevel);
                     CreateProfileRecord(msNScanNum, parentScanNum);
 
-                    if (CreateLogFileOnly)
+                    if (CreateLogFileOnly || MGFFileWriter == null)
                         return;
 
                     //first line
