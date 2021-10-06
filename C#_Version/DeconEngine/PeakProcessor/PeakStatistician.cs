@@ -73,6 +73,7 @@ namespace Engine.PeakProcessing
             return 1.0 * yValue / minIntensityLeft;
         }
 
+        [Obsolete("Unused")]
         public void MovingAverageFilter(ref List<double> vect_mzs, ref List<double> vect_intensities, int num_points)
         {
             var intensities = new List<double>();
