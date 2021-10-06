@@ -215,7 +215,7 @@ namespace Engine.Readers
             //  marr_serName[len-1] = 'd';
             //  fh = _open(marr_serName, _O_RDONLY | _O_BINARY );
             //}
-            ///* Seek the beginning of the file: */
+            // Seek to the beginning of the file:
             //__int64 pos64 = 0;
             //pos64 = _lseeki64(fh, 0, SEEK_END );
             //__int64       blockSizeInBytes = (__int64) (sizeof(int) * mint_num_points_in_scan);

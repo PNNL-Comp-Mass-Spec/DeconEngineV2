@@ -218,7 +218,7 @@ namespace Engine.Readers
                 const int FLT_SIZE = sizeof (float);
                 const int SHORT_SIZE = sizeof (short);
 
-                //Get TOF size based on data yype
+                //Get TOF size based on data type
                 // Standard IMS - short
                 // Multiplexed IMS - float
                 // AGC IMS - int
