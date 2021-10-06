@@ -394,8 +394,11 @@ namespace Engine.PeakProcessing
 
             //looks through the peak list and finds the closest peak to peakMz
             var minScore = 1.00727638; //enough for one charge away
-            peak = new clsPeak();
-            peak.Mz = 0.0;
+
+            peak = new clsPeak
+            {
+                Mz = 0.0
+            };
 
             try
             {

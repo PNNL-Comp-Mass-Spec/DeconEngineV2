@@ -274,8 +274,7 @@ namespace DeconToolsV2.HornTransform
             double zeroingStopMz, double monoMw, int chargeState, bool clearSpectrum, clsHornTransformResults record,
             bool debug = false)
         {
-            var peakIndices = new List<int>();
-            peakIndices.Add(peak.PeakIndex);
+            var peakIndices = new List<int> { peak.PeakIndex };
             var mzDelta = record.DeltaMz;
 
             if (debug)

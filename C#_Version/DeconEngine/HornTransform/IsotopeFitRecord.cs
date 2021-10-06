@@ -219,24 +219,27 @@ namespace Engine.HornTransform
         [Obsolete("Only used by Decon2LS.UI (maybe), and by the PeakImporter (from peak.dat files)", false)]
         public static IsotopeFitRecord ReadFromBinaryStream(BinaryReader stream)
         {
-            var record = new IsotopeFitRecord();
-            record.PeakIndex = stream.ReadInt32();
-            record.ScanNum = stream.ReadInt32();
-            record.ChargeState = stream.ReadInt16();
-            record.AbundanceInt = stream.ReadInt32();
-            record.Abundance = stream.ReadDouble();
-            record.Mz = stream.ReadDouble();
-            record.Fit = stream.ReadDouble();
-            record.FitCountBasis = stream.ReadInt32();
-            record.AverageMw = stream.ReadDouble();
-            record.MonoMw = stream.ReadDouble();
-            record.MostIntenseMw = stream.ReadDouble();
-            record.FWHM = stream.ReadDouble();
-            record.SignalToNoise = stream.ReadDouble();
-            record.MonoIntensity = stream.ReadInt32();
-            record.MonoPlus2Intensity = stream.ReadInt32();
-            record.DeltaMz = stream.ReadDouble();
-            record.IsotopePeakIndices = new int[MaxIsotopes];
+            var record = new IsotopeFitRecord
+            {
+                PeakIndex = stream.ReadInt32(),
+                ScanNum = stream.ReadInt32(),
+                ChargeState = stream.ReadInt16(),
+                AbundanceInt = stream.ReadInt32(),
+                Abundance = stream.ReadDouble(),
+                Mz = stream.ReadDouble(),
+                Fit = stream.ReadDouble(),
+                FitCountBasis = stream.ReadInt32(),
+                AverageMw = stream.ReadDouble(),
+                MonoMw = stream.ReadDouble(),
+                MostIntenseMw = stream.ReadDouble(),
+                FWHM = stream.ReadDouble(),
+                SignalToNoise = stream.ReadDouble(),
+                MonoIntensity = stream.ReadInt32(),
+                MonoPlus2Intensity = stream.ReadInt32(),
+                DeltaMz = stream.ReadDouble(),
+                IsotopePeakIndices = new int[MaxIsotopes]
+            };
+
             for (var i = 0; i < MaxIsotopes; i++)
             {
                 record.IsotopePeakIndices[i] = stream.ReadInt32();

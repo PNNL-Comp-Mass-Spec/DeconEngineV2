@@ -217,9 +217,11 @@ namespace Engine.PeakProcessing
         /// </remarks>
         public bool GetNextPeak(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new clsPeak();
-            peak.Mz = -1;
-            peak.Intensity = -1;
+            peak = new clsPeak
+            {
+                Mz = -1,
+                Intensity = -1
+            };
 
             var found = false;
             foreach (var indexList in _peakIntensityToIndexDict)
@@ -392,8 +394,11 @@ namespace Engine.PeakProcessing
         /// <returns>returns true if a peak was found and false if none was found.</returns>
         public bool GetPeak(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new clsPeak();
-            peak.Intensity = -10;
+            peak = new clsPeak
+            {
+                Intensity = -10
+            };
+
             var found = false;
 
             foreach (var item in _peakMzToIndexDict.Where(x => x.Key >= startMz))
@@ -421,8 +426,11 @@ namespace Engine.PeakProcessing
         /// <remarks>The returned peak can have an intensity of 0 because it was already processed and removed.</remarks>
         public bool GetPeakFromAll(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new clsPeak();
-            peak.Intensity = -10;
+            peak = new clsPeak
+            {
+                Intensity = -10
+            };
+
             var found = false;
 
             foreach (var item in _allPeakMzToIndexDict.Where(x => x.Key >= startMz))
@@ -524,8 +532,11 @@ namespace Engine.PeakProcessing
         /// <remarks>The returned peak has the intensity in the original raw data in <see cref="IntensityList" />.</remarks>
         public bool GetPeakFromAllOriginalIntensity(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new clsPeak();
-            peak.Intensity = -10;
+            peak = new clsPeak
+            {
+                Intensity = -10
+            };
+
             var found = false;
 
             foreach (var item in _allPeakMzToIndexDict.Where(x => x.Key <= stopMz).Reverse())
@@ -754,9 +765,7 @@ namespace Engine.PeakProcessing
         {
             // Anoop : modified from original FindPeak so as to return peaks only
             // and not shoulders, eliminates all the +ve Da DelM regions
-            peak = new clsPeak();
-            peak.Mz = -1;
-            peak.Intensity = 0;
+
             var width = (stopMz - startMz) / 2;
             var foundExistingPeak = GetClosestPeak(startMz + width, width, out peak);
             if (foundExistingPeak)
@@ -812,8 +821,6 @@ namespace Engine.PeakProcessing
         /// <remarks>The function only sets the mz, intensity of the peak, not the other members (SN, FWHM etc).</remarks>
         public void FindPeak(double startMz, double stopMz, out clsPeak peak)
         {
-            peak = new clsPeak();
-            peak.Mz = -1;
             var width = (stopMz - startMz) / 2;
             var foundExistingPeak = GetClosestPeak(startMz + width, width, out peak);
             if (foundExistingPeak)

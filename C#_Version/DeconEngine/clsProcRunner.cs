@@ -203,8 +203,11 @@ namespace DeconToolsV2
                 MassTransform massTransform = null;
                 if (transform)
                 {
-                    massTransform = new MassTransform();
-                    massTransform.ElementalIsotopeComposition = transformParameters.ElementIsotopeComposition;
+                    massTransform = new MassTransform
+                    {
+                        ElementalIsotopeComposition = transformParameters.ElementIsotopeComposition
+                    };
+
                     //massTransform.SetOptions(transformParameters.MaxCharge, transformParameters.MaxMW, transformParameters.MaxFit,
                     //  transformParameters.MinS2N, transformParameters.CCMass,transformParameters.DeleteIntensityThreshold,
                     //  transformParameters.MinIntensityForScore, transformParameters.NumPeaksForShoulder,
