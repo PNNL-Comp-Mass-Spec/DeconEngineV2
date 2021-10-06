@@ -916,7 +916,12 @@ namespace Engine.PeakProcessing
         {
             public int Compare(T x, T y)
             {
-                return y.CompareTo(x);
+                if (y != null)
+                {
+                    return y.CompareTo(x);
+                }
+
+                return -1;
             }
         }
     }
