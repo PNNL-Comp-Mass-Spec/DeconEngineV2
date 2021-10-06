@@ -338,17 +338,17 @@ namespace Engine.Readers
                 while (!afin.EndOfStream)
                 {
                     buffer = afin.ReadLine();
-                    if (string.IsNullOrWhiteSpace(buffer) || buffer.ToLower().StartsWith(end_tag.ToLower()))
+                    if (string.IsNullOrWhiteSpace(buffer) || buffer.StartsWith(end_tag, StringComparison.OrdinalIgnoreCase))
                     {
                         break;
                     }
-                    if (buffer.ToLower().StartsWith(comment_tag.ToLower()))
+                    if (buffer.StartsWith(comment_tag, StringComparison.OrdinalIgnoreCase))
                     {
                         while (!afin.EndOfStream)
                         {
                             buffer = afin.ReadLine();
                             if (string.IsNullOrWhiteSpace(buffer) ||
-                                buffer.ToLower().StartsWith(commentend_tag.ToLower()))
+                                buffer.StartsWith(commentend_tag, StringComparison.OrdinalIgnoreCase))
                             {
                                 break;
                             }

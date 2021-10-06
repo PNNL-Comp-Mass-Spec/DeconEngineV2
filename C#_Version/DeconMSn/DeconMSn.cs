@@ -102,13 +102,13 @@ namespace DeconMSn
                         return 0;
                     }
 
-                    if (currentArg.ToLower().StartsWith("-progress"))
+                    if (currentArg.StartsWith("-progress", StringComparison.OrdinalIgnoreCase))
                     {
                         dtaGenParameters.WriteProgressFile = true;
                         continue;
                     }
 
-                    if (currentArg.ToLower().StartsWith("-centroid"))
+                    if (currentArg.StartsWith("-centroid", StringComparison.OrdinalIgnoreCase))
                     {
                         dtaGenParameters.CentroidMSn = true;
                         continue;

@@ -227,7 +227,7 @@ namespace Engine.Readers
         public override bool IsZoomScan(int scanNum)
         {
             var scanInfo = GetScanInfo(scanNum);
-            return scanInfo.FilterText.ToLower().Contains("z ms");
+            return scanInfo.FilterText.IndexOf("z ms", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public override bool IsFTScan(int scanNum)
