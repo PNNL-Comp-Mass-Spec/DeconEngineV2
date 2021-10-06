@@ -239,7 +239,7 @@ namespace DeconToolsV2
                 var tempMzs = new List<double>();
                 var tempIntensities = tempMzs;
 
-                var startTime = DateTime.Now;
+                // var startTime = DateTime.Now;
 
                 var minScan = 1;
                 if (transformParameters.UseScanRange && transformParameters.MinScan > 1)
@@ -269,7 +269,7 @@ namespace DeconToolsV2
                 //DateTime currentTime;
                 //DateTime ticTime;
                 //DateTime peakDiscoverTime;
-                //2009-04-03 [gord] will no longer use the SlidingWindow. It has litte speed benefit and there might be a bug
+                //2009-04-03 [gord] will no longer use the SlidingWindow. It has little speed benefit and there might be a bug
                 /*if (transformParameters.SumSpectraAcrossScanRange())
                 {
                     if (fileType == DeconToolsV2.Readers.PNNL_UIMF)
@@ -292,8 +292,9 @@ namespace DeconToolsV2
                     tempMzs.Clear();
                     tempIntensities.Clear();
 
-                    short scanMsLevel = 1;
-                    var centroid = false;
+                    short scanMsLevel;
+                    bool centroid;
+
                     //Check if it needs to be processed
                     if (rawData.IsMSScan(scanNum))
                     {
@@ -328,7 +329,6 @@ namespace DeconToolsV2
                         }
                         else
                         {
-                            var num_mzs_this_scan = mzs.Count;
                             minMz = mzs[0];
                             maxMz = mzs[mzs.Count - 1];
                         }
@@ -349,26 +349,27 @@ namespace DeconToolsV2
                         {
                             sgSmoother.Smooth(ref mzs, ref intensities);
                         }
-                        var origThres = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
-                        var origBackgroundIntensity = DeconEngine.Utils.GetAverage(intensities,
-                            (float) (5 * origThres));
-                        originalPeakProcessor.SetPeakIntensityThreshold(origBackgroundIntensity *
-                                                                          peakParameters.PeakBackgroundRatio);
-                        var origNumPeaks = 0;
+                        var origAverageIntensity = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
+                        var origBackgroundIntensity = DeconEngine.Utils.GetAverage(intensities, (float)(5 * origAverageIntensity));
+                        originalPeakProcessor.SetPeakIntensityThreshold(origBackgroundIntensity * peakParameters.PeakBackgroundRatio);
+
                         if (HornTransformParameters.UseMZRange)
-                            origNumPeaks = originalPeakProcessor.DiscoverPeaks(tempMzs,
-                                tempIntensities, HornTransformParameters.MinMZ,
+                        {
+                            originalPeakProcessor.DiscoverPeaks(tempMzs, tempIntensities,
+                                HornTransformParameters.MinMZ,
                                 HornTransformParameters.MaxMZ);
+                        }
                         else
-                            origNumPeaks = originalPeakProcessor.DiscoverPeaks(tempMzs,
-                                tempIntensities);
+                        {
+                            originalPeakProcessor.DiscoverPeaks(tempMzs, tempIntensities);
+                        }
 
                         // now sum
                         mzs.Clear();
                         intensities.Clear();
                         var scanRange = transformParameters.NumScansToSumOver;
 
-                        //2009-04-03 [gord] will no longer use the SlidingWindow. It has litte speed benefit and there might be a bug
+                        //2009-04-03 [gord] will no longer use the SlidingWindow. It has little speed benefit and there might be a bug
                         //if (fileType == DeconToolsV2.Readers.PNNL_UIMF)
                         //  ((Engine.Readers.UIMFRawData)rawData).GetSummedSpectraSlidingWindow(mzs, intensities, scanNum, scanRange);
                         //  //((Engine.Readers.UIMFRawData)rawData).GetSummedSpectra(mzs, intensities, scanNum, scanRange);  //Gord added this
@@ -418,29 +419,30 @@ namespace DeconToolsV2
                     var minMZ = mzs[0];
                     var maxMZ = mzs[mzs.Count - 1];
 
-                    var thres = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
-                    var backgroundIntensity = DeconEngine.Utils.GetAverage(intensities, (float) (5 * thres));
+                    var averageIntensity = DeconEngine.Utils.GetAverage(intensities, float.MaxValue);
+                    var backgroundIntensity = DeconEngine.Utils.GetAverage(intensities, (float)(5 * averageIntensity));
 
                     // currentTime = DateTime.Now;
 
-                    var ticIntensity = 0d;
+                    double ticIntensity;
                     var bpi = 0d;
                     var bpMz = 0d;
                     if (HornTransformParameters.UseMZRange)
                     {
                         ticIntensity = DeconEngine.Utils.GetTIC(HornTransformParameters.MinMZ,
                             HornTransformParameters.MaxMZ, ref mzs, ref intensities,
-                            (float) (backgroundIntensity * peakParameters.PeakBackgroundRatio),
+                            (float)(backgroundIntensity * peakParameters.PeakBackgroundRatio),
                             ref bpi, ref bpMz);
                     }
                     else
                     {
                         ticIntensity = DeconEngine.Utils.GetTIC(400.0, 2000.0, ref mzs, ref intensities,
-                            (float) (backgroundIntensity * peakParameters.PeakBackgroundRatio), ref bpi, ref bpMz);
+                            (float)(backgroundIntensity * peakParameters.PeakBackgroundRatio), ref bpi, ref bpMz);
                     }
 
                     peakProcessor.SetPeakIntensityThreshold(backgroundIntensity * peakParameters.PeakBackgroundRatio);
-                    var numPeaks = 0;
+
+                    int numPeaks;
                     if (HornTransformParameters.UseMZRange)
                     {
                         numPeaks = peakProcessor.DiscoverPeaks(mzs, intensities,
@@ -551,8 +553,8 @@ namespace DeconToolsV2
 
                         lcmsResults.AddTransforms(transformRecords);
                         //  lcmsChecker.AddTransformsToCheck(transformRecords);
-                        if (fileType != DeconToolsV2.Readers.FileType.PNNL_UIMF)
-                            //if (fileType != DeconToolsV2.Readers.PNNL_UIMF && scan_num % 20 == 0)
+                        if (fileType != FileType.PNNL_UIMF)
+                        //if (fileType != DeconToolsV2.Readers.PNNL_UIMF && scan_num % 20 == 0)
                         {
                             //int iso_time = 0,
                             //    fit_time = 0,
@@ -567,21 +569,22 @@ namespace DeconToolsV2
                             //    out fit_time,
                             //    out remainder_time, out get_fit_score_time, out find_peak_calc, out find_peak_cached);
 
-                            Console.WriteLine(string.Concat("Scan # =", Convert.ToString(scanNum)//,
-                                //" CS= ", Convert.ToString(cs_time),
-                                //" Isotope= ", Convert.ToString(iso_time),
-                                //" FitScore= ", Convert.ToString(fit_time),
-                                //" GetFitScore= ", Convert.ToString(get_fit_score_time),
-                                //" GetFitScore-Isotope-FitScore-FindPeak= ",
-                                //Convert.ToString(get_fit_score_time - fit_time - find_peak_cached - find_peak_calc -
-                                //                 iso_time),
-                                //" Raw Reading Time = ", Convert.ToString(rawDataReadTime),
-                                //" PreProcessing Time = ", Convert.ToString(preprocessingTime),
-                                //" Transform= ", Convert.ToString(transformTime),
-                                //" Remaining= ", Convert.ToString(remainder_time),
-                                //" transform-cs-get_fit= ", Convert.ToString(transformTime - cs_time - get_fit_score_time),
-                                //" All= ", Convert.ToString(all)
-                                //" all-transform-preprocess-read= ", Convert.ToString(all-transformTime-preprocessingTime-rawDataReadTime)
+                            Console.WriteLine(string.Concat("Scan # =", Convert.ToString(scanNum)
+                                 //,
+                                 //" CS= ", Convert.ToString(cs_time),
+                                 //" Isotope= ", Convert.ToString(iso_time),
+                                 //" FitScore= ", Convert.ToString(fit_time),
+                                 //" GetFitScore= ", Convert.ToString(get_fit_score_time),
+                                 //" GetFitScore-Isotope-FitScore-FindPeak= ",
+                                 //Convert.ToString(get_fit_score_time - fit_time - find_peak_cached - find_peak_calc -
+                                 //                 iso_time),
+                                 //" Raw Reading Time = ", Convert.ToString(rawDataReadTime),
+                                 //" PreProcessing Time = ", Convert.ToString(preprocessingTime),
+                                 //" Transform= ", Convert.ToString(transformTime),
+                                 //" Remaining= ", Convert.ToString(remainder_time),
+                                 //" transform-cs-get_fit= ", Convert.ToString(transformTime - cs_time - get_fit_score_time),
+                                 //" All= ", Convert.ToString(all)
+                                 //" all-transform-preprocess-read= ", Convert.ToString(all-transformTime-preprocessingTime-rawDataReadTime)
                             ));
                         }
                     }
