@@ -114,7 +114,7 @@ namespace Engine.Readers
         private int FindHeaderParams()
         {
             string line;
-            string sub;
+
             var pos = 0;
             double ML1 = 0;
             double ML2 = 0;

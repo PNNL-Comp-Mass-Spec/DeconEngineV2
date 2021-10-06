@@ -5,7 +5,6 @@ namespace Engine
 {
     internal static class FFT
     {
-        private const double Pi = 3.14159265358979323846;
         private const double TwoPi = 2 * 3.14159265358979323846;
 
         public static void Swap<T>(ref T a, ref T b)

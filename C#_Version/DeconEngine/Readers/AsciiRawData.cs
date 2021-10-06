@@ -21,7 +21,6 @@ namespace Engine.Readers
         private List<double> mvect_scan_bpi_mz = new List<double>();
 
         private BinaryReader mint_file_handle;
-        private double mdbl_signal_range;
         private char mchar_delimiter;
         private int mint_percent_done;
 

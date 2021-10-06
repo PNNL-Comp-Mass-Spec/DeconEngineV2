@@ -93,7 +93,7 @@ namespace DeconToolsV2.HornTransform
             var transformRecords = new List<clsHornTransformResults>();
             var numTotalPeaks = peakData.GetNumPeaks();
             StatusMessage = "Performing Horn Transform on peaks";
-            //mobj_transform.mbln_debug = true;
+
             while (found)
             {
                 var numPeaksLeft = peakData.GetNumUnprocessedPeaks();

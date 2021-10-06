@@ -163,7 +163,6 @@ namespace DeconToolsV2
                 ProcessState = enmProcessState.RUNNING;
 
                 // Create a RawData object and read through each scan and discover peaks.
-                var file_name_ch = fileName;
 
                 // enumerations of file type are the same in Readers namespace and
                 // DeconWrapperManaged namespace.
@@ -595,10 +594,6 @@ namespace DeconToolsV2
                 }
 
                 transformResults.SetLCMSTransformResults(lcmsResults);
-
-                // Anoop: write out those ones which are probably wrong
-                /*string output_file_str = fileName.Remove(dotIndex, mstr_file_name.Length - dotIndex);
-                lcmsChecker.WriteOutTransformsToCheck(output_file_str); */
 
                 _percentDone = 100;
             }
@@ -1037,8 +1032,8 @@ namespace DeconToolsV2
 
             // Write out profile
             dtaProcessor.WriteProfileFile();
+
             //Shutdown
-            //dta_processor.mfile_log.close();
             if (DTAGenerationParameters.OutputType == DTAGeneration.OUTPUT_TYPE.CDTA)
             {
                 dtaProcessor.CombinedDTAFileWriter.Close();
@@ -1103,40 +1098,6 @@ namespace DeconToolsV2
             }
             HornTransformResults = CreateTransformResults(InputFilePath, FileType, PeakProcessorParameters,
                 HornTransformParameters, FTICRPreprocessOptions, true, true);
-        }
-
-        [Obsolete("Artifact from C++ version", true)]
-        public void MemoryTest()
-        {
-            /*
-            int how_many = 6000000;
-            int sizeofPeak = sizeof (Engine.PeakProcessing.Peak);
-            int sizeofLcmsPeak = sizeof (Peak);
-
-            List<Peak> mvect_peaks;
-            mvect_peaks.Capacity = how_many;
-
-            Peak lc_peak;
-            Engine.PeakProcessing.Peak pk;
-            for (int i = 0; i < how_many; i++)
-            {
-                lc_peak.mobj_peak = pk;
-                lc_peak.mint_scan_num = 0;
-                mvect_peaks.Add(lc_peak);
-            }
-            char* temp = new char[how_many * 2 * sizeofLcmsPeak];
-            char* temp1 = new char[how_many * 2 * sizeofLcmsPeak];
-            char* temp2 = new char[how_many * 2 * sizeofLcmsPeak];
-            if (temp2 == null)
-            {
-                std.cerr << "UnSuccessful" << std.flush;
-            }
-            delete[] temp;
-            delete[] temp1;
-            delete[] temp2;
-
-            mvect_peaks.Capacity = 2 * how_many;
-            std.cerr << "Blah" << std.endl;*/
         }
     }
 }

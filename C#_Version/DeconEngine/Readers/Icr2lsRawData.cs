@@ -32,8 +32,6 @@ namespace Engine.Readers
         private double mdbl_sample_rate;
         private double mdbl_low_mass_freq;
         private double mdbl_freq_shift;
-        private int mint_num_segments;
-        private double mdbl_max_point;
         private ApodizationType menmApodizationType;
         private int mint_apodization_apex_percent;
         private double mdbl_apodization_min_x;

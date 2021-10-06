@@ -104,66 +104,6 @@ namespace DeconToolsV2.Peaks
 #endif
 
         /// <summary>
-        ///     mz of the peak.
-        /// </summary>
-        [Obsolete("Use Mz", false)]
-        public double mdbl_mz
-        {
-            get => Mz;
-            set => Mz = value;
-        }
-
-        /// <summary>
-        ///     intensity of peak.
-        /// </summary>
-        [Obsolete("Use Intensity", false)]
-        public double mdbl_intensity
-        {
-            get => Intensity;
-            set => Intensity = value;
-        }
-
-        /// <summary>
-        ///     Signal to noise ratio
-        /// </summary>
-        [Obsolete("Use SignalToNoise", false)]
-        public double mdbl_SN
-        {
-            get => SignalToNoise;
-            set => SignalToNoise = value;
-        }
-
-        /// <summary>
-        ///     index in <see cref="Engine.PeakProcessing.PeakData.PeakTops" /> List.
-        /// </summary>
-        [Obsolete("Use PeakIndex", false)]
-        public int mint_peak_index
-        {
-            get => PeakIndex;
-            set => PeakIndex = value;
-        }
-
-        /// <summary>
-        ///     index in mzs, intensity vectors that were used to create the peaks in
-        ///     <see cref="Engine.PeakProcessing.PeakProcessor.DiscoverPeaks" />.
-        /// </summary>
-        [Obsolete("Use DataIndex", false)]
-        public int mint_data_index
-        {
-            get => DataIndex;
-            set => DataIndex = value;
-        }
-
-        /// <summary>
-        ///     Full width at half maximum for peak.
-        /// </summary>
-        [Obsolete("Use FwHm", false)]
-        public double mdbl_FWHM
-        {
-            get => FWHM;
-            set => FWHM = value;
-        }
-
         /// Compare 2 peaks, for sorting by intensity. Follow Sort() call with a Reverse() call to get sorted by descending
         /// intensity
         /// </summary>

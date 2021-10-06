@@ -33,7 +33,6 @@ namespace Engine.Readers
         private int mint_start_bin;
         private int mint_stop_bin;
         private int mint_time_offset;
-        private int mint_bin_width;
         private int mint_last_scan_num;
 
         private double mdbl_avg_tof_length;
@@ -53,7 +52,6 @@ namespace Engine.Readers
 
         private SortedDictionary<int, double> mmap_bin_intensity_map = new SortedDictionary<int, double>();
 
-        private Utilities.SavGolSmoother mobj_savgol = new SavGolSmoother();
 
         private double GetMassFromBin(int bin)
         {
@@ -140,7 +138,7 @@ namespace Engine.Readers
             marr_filename = file;
             var stringBuf = "";
             int pStr;
-            var dataType = 0;
+
             double agilent_t0 = 0;
             double agilent_k0 = 0;
 

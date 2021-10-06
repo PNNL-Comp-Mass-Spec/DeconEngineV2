@@ -32,9 +32,6 @@ namespace Engine.Readers
         private float[] mptr_data;
         private float[] mptr_data_copy;
         private int mint_num_points_in_scan;
-
-        private double mdbl_calib_const_a;
-        private double mdbl_calib_const_b;
         private double mdbl_calib_const_c;
 
         private int mint_data_section_start;
@@ -46,7 +43,6 @@ namespace Engine.Readers
 
         private bool mbln_zero_fill;
         private short mshort_num_zero_fill;
-        private int mint_num_scans;
         private int mint_last_scan_num;
         private double mdbl_signal_range;
 
