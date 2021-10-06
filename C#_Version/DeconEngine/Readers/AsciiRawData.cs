@@ -29,20 +29,22 @@ namespace Engine.Readers
            return mint_percent_done;
        }
 
-       public override FileType GetFileType()
-       {
-           return FileType.ASCII;
-       }
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+        public override FileType GetFileType()
+        {
+            return FileType.ASCII;
+        }
 
        public override int GetLastScanNum()
        {
            return GetNumScans() - 1;
        }
 
-       public override int GetNumScansLoaded()
-       {
-           return mint_num_spectra;
-       }
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+        public override int GetNumScansLoaded()
+        {
+            return mint_num_spectra;
+        }
 
        public override int GetParentScan(int scan_num)
         {
@@ -103,7 +105,8 @@ namespace Engine.Readers
             }
         }
 
-       public override string GetFileName()
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+        public override string GetFileName()
         {
             return marr_file_name;
         }
@@ -309,6 +312,7 @@ namespace Engine.Readers
         }
 
         // Note that Centroid is ignored by this class
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
@@ -406,7 +410,8 @@ namespace Engine.Readers
             return 1;
         }
 
-       public override int GetScanSize()
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
+        public override int GetScanSize()
         {
             return mint_num_points_in_scan;
         }
@@ -458,6 +463,7 @@ namespace Engine.Readers
             return intensity_sum;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times, bool base_peak_tic)
         {
             intensities = new List<double>();

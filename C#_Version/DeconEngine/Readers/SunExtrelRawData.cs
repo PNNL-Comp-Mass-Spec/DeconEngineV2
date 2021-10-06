@@ -54,16 +54,19 @@ namespace Engine.Readers
         //     '   3  m/z = A/f + |Vt|B/f^2 + C
         //     '   2  m/z = A/f + |Vt|B/f^2 + I|Vt|C/f^2
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.SUNEXTREL;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return mint_last_scan_num;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
@@ -413,6 +416,7 @@ namespace Engine.Readers
             return scan_num;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
@@ -588,11 +592,13 @@ namespace Engine.Readers
         {
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return marr_file_name;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return mint_num_points_in_scan;
@@ -603,6 +609,7 @@ namespace Engine.Readers
             return mmap_files_names.Count;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNextScanNum(int current_scan_num)
         {
             return mmap_files_names.Select(x => x.Key).Where(x => x > current_scan_num).DefaultIfEmpty(-1).First();

@@ -20,11 +20,13 @@ namespace Engine.Readers
         private int mint_last_scan_num;
         private double mdbl_signal_range;
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override FileType GetFileType()
         {
             return FileType.BRUKER;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetNumScansLoaded()
         {
             return mint_last_scan_num;
@@ -62,6 +64,7 @@ namespace Engine.Readers
             mint_last_scan_num = -1;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override string GetFileName()
         {
             return marr_serName;
@@ -304,6 +307,7 @@ namespace Engine.Readers
             return true;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override double GetSignalRange(int scan_num, bool centroid)
         {
             // only returns a value if the current scan is the one we are asking for.
@@ -371,6 +375,7 @@ namespace Engine.Readers
             return mint_num_spectra;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override int GetScanSize()
         {
             return mint_num_points_in_scan;
@@ -421,6 +426,7 @@ namespace Engine.Readers
             return intensity_sum;
         }
 
+        [Obsolete("Only used by DeconTools for ICR2LSRun and IMFRun; BrukerV2 exists, but has no use path", false)]
         public override void GetTicFromFile(out List<double> intensities, out List<double> scan_times,
             bool base_peak_tic)
         {
