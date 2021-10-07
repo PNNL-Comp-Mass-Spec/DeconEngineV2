@@ -78,7 +78,8 @@ Process sample.raw, use processing options specified by parameter file LTQ_FT_No
 
 .NET 4.7.2 runtime
 
--------------------------------------------------------------------------------
+## Contacts
+
 Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy \
 Ported to C# by Bryson Gibbons \
 (PNNL, Richland, WA) in 2006-2007. \
@@ -86,7 +87,8 @@ Copyright 2007, Battelle Memorial Institute.  All Rights Reserved.
 
 E-mail: matthew.monroe@pnnl.gov or proteomics@pnnl.gov \
 Website: https://github.com/PNNL-Comp-Mass-Spec/ or https://panomics.pnnl.gov/ or https://www.pnnl.gov/integrative-omics
--------------------------------------------------------------------------------
+
+## License
 
 Licensed under the Apache License, Version 2.0; you may not use this file 
 except in compliance with the License.  You may obtain a copy of the License 
