@@ -1,10 +1,8 @@
 # DeconMSn
 
 DeconMSn creates spectrum files for tandem mass spectrometry data. DeconMSn
-can read in Finnigan .RAW files provided that XRawFile2.dll v2.2 is installed
-on the computer.  This file is installed with Xcalibur 2.2, but can also be
-installed using MSFileReader v2.2, available at:
-http://sjsupport.thermofinnigan.com/public/detail.asp?id=703
+read Thermo .raw files using the ThermoRawFileReader DLL, which interfaces
+with .raw files using ThermoFisher.CommonCore DLLs (included in the .zip file available at GitHub).
 
 DeconMSn also supports the mzXML format.  You can use Proteowizard's MSConvert
 tool to convert most vendor formats into the mzXML format:
@@ -20,7 +18,12 @@ Proteowizard's MSConvert tool.
 
 Results can be saved as .DTA files, .MGF files, or _DTA.txt files.  These files
 can then be used for peptide identifications using search engines such as 
-SEQUEST, X!Tandem, MASCOT, or MSGF+
+SEQUEST, X!Tandem, MASCOT, or MS-GF+
+
+Note that Thermo Instrument released after ~2020 have improved algorithms 
+for determining monoisotopic mass values of precursor ions (parent ions),
+and thus DeconMSn is less useful. We suggest that you instead convert Thermo .raw files
+to .mzML files using MSConvert.
 
 ## Downloads
 
@@ -30,29 +33,29 @@ Download DeconMSn from the DeconMSn Releases page [on GitHub](https://github.com
 
 DeconMSn usage: `DeconMSn [options] filename`
 
-| Parameter   | Description                                                    | Default  |
-| ----------- |----------------------------------------------------------------| ------------|
-| `-Ivalue`   | value is the minimum Number of ions peaks for a scan to be considered   | 35 |
-| `-Fvalue`   | value is the first Scan to be considered                       | 1           |
-| `-Lvalue`   | value is the last Scan to be considered                        | 1000000     |
-| `-Bvalue`   | value is the minimum setting for Mass Range                    | 200         |
-| `-Tvalue`   | value is the maximum setting for Mass Range                    | 5000        |
-| `-Cvalue`   | value is a single charge state to filter the results on        | not-defined |
-| `-Pname`    | name is the parameter XML file name to be used for processing  | not-defined |
-| `-Dpath`    | path is the output directory                                   | same directory as input file |
-| `-Centroid` | Enables centroiding MSn data (when acquired as profile data)   | off by default |
-| `-Progress` | Creates a _progress.txt file with a percent complete value every 50 scans | n/a |
-| `-Stype`    | type is the type of spectra to process, options are ALL, CID, ETD, or HCD     | ALL |
-| `-Xtype`    | type is output file format, options are DTA, LOG, MGF, CDTA    | CDTA |
-| filename    | input file (mzXML or RAW)                                      | n/a  |
+| Parameter   | Description                                                               | Default        |
+| ----------- |---------------------------------------------------------------------------|----------------|
+| `-Ivalue`   | value is the minimum number of ions peaks for a scan to be considered     | 35             |
+| `-Fvalue`   | value is the first scan to be considered                                  | 1              |
+| `-Lvalue`   | value is the last scan to be considered                                   | 1000000        |
+| `-Bvalue`   | value is the minimum setting for mass range                               | 200            |
+| `-Tvalue`   | value is the maximum setting for mass range                               | 5000           |
+| `-Cvalue`   | value is a single charge state to filter the results on                   | not-defined    |
+| `-Pname`    | name is the parameter XML file name to be used for processing             | not-defined    |
+| `-Dpath`    | path is the output directory                                              | same directory as input file |
+| `-Centroid` | Enables centroiding MSn data (when acquired as profile data)              | off by default |
+| `-Progress` | Creates a _progress.txt file with a percent complete value every 50 scans | n/a            |
+| `-Stype`    | type is the type of spectra to process, options are ALL, CID, ETD, or HCD | ALL            |
+| `-Xtype`    | type is output file format, options are DTA, LOG, MGF, CDTA               | CDTA           |
+| filename    | input file (mzXML or RAW)                                                 | n/a            |
 
 Output file formats:
 
-| Type     | Description   |
-| ---------|---------------|
-| DTA      | Creates .dta files along with a log file (_log.txt) and profile file (_profile.txt) |
-| LOG      | Creates only log file (_log.txt) and profile file (_profile.txt) |
-| MGF      | Creates .mgf file along with log file(_log.txt) and profile file (_profile.txt) |
+| Type     | Description                                                                                   |
+| ---------|-----------------------------------------------------------------------------------------------|
+| DTA      | Creates .dta files along with a log file (_log.txt) and profile file (_profile.txt)           |
+| LOG      | Creates only log file (_log.txt) and profile file (_profile.txt)                              |
+| MGF      | Creates .mgf file along with log file(_log.txt) and profile file (_profile.txt)               |
 | CDTA     | Creates a composite dta file (_dta.txt) along with a log file (_log.txt) and profile file (_profile.txt) |
 
 Note that the switch parameters are case-sensitive (for example you must use -P an not -p)
