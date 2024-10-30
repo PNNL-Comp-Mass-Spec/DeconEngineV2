@@ -76,7 +76,8 @@ Process sample.raw, use processing options specified by parameter file LTQ_FT_No
 
 ## Dependencies
 
-.NET 4.7.2 runtime
+.NET Framework 4.8 runtime
+* https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48
 
 ## Contacts
 
