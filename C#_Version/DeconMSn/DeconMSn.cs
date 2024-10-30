@@ -12,9 +12,9 @@ namespace DeconMSn
 {
     public class DeconMSn
     {
-        // Ignore Spelling: Bryson, Anoop Mayampurath, Navdeep Jaitly
+        // Ignore Spelling: Bryson, Anoop Mayampurath, Navdeep Jaitly, Decon
 
-        public const string PROGRAM_DATE = "2021-10-05";
+        public const string PROGRAM_DATE = "2024-10-30";
 
         public int RunDeconMSn(string[] args)
         {
