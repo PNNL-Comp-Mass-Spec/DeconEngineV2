@@ -313,7 +313,7 @@ namespace DeconMSn
             {
                 Console.WriteLine();
                 Console.WriteLine("Error processing: " + ex.Message);
-                Console.WriteLine(PRISM.StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
+                Console.WriteLine(StackTraceFormatter.GetExceptionStackTraceMultiLine(ex));
                 System.Threading.Thread.Sleep(2000);
                 return -1;
             }
@@ -337,7 +337,7 @@ namespace DeconMSn
 
         public static string GetExeVersion()
         {
-            return PRISM.FileProcessor.ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE);
+            return AppUtils.GetAppVersion(PROGRAM_DATE);
         }
 
         private bool GetParamDbl(string currentArg, string argName, out double argValue)
