@@ -199,15 +199,25 @@ namespace DeconMSn
                         case 'X':
                             var outputFileFormat = currentArg.Substring(2);
                             if (string.Equals(outputFileFormat, "MGF", StringComparison.OrdinalIgnoreCase))
+                            {
                                 dtaGenParameters.OutputType = OUTPUT_TYPE.MGF;
+                            }
                             else if (string.Equals(outputFileFormat, "LOG", StringComparison.OrdinalIgnoreCase))
+                            {
                                 dtaGenParameters.OutputType = OUTPUT_TYPE.LOG;
+                            }
                             else if (string.Equals(outputFileFormat, "CDTA", StringComparison.OrdinalIgnoreCase))
+                            {
                                 dtaGenParameters.OutputType = OUTPUT_TYPE.CDTA;
+                            }
                             else if (string.Equals(outputFileFormat, "MZXML", StringComparison.OrdinalIgnoreCase))
+                            {
                                 dtaGenParameters.OutputType = OUTPUT_TYPE.MZXML;
+                            }
                             else if (string.Equals(outputFileFormat, "DTA", StringComparison.OrdinalIgnoreCase))
+                            {
                                 dtaGenParameters.OutputType = OUTPUT_TYPE.DTA;
+                            }
                             else
                             {
                                 PrintUsage();
@@ -367,6 +377,8 @@ namespace DeconMSn
             Console.WriteLine();
             Console.WriteLine("[options] are");
             Console.WriteLine();
+
+            // ReSharper disable StringLiteralTypo
             Console.WriteLine("\t -Istring : string is the minimum Number of ions peaks for a scan to be considered [35]");
             Console.WriteLine("\t -Fstring : string is the first Scan to be considered [1]");
             Console.WriteLine("\t -Lstring : string is the last Scan to be considered [1000000]");
@@ -388,6 +400,8 @@ namespace DeconMSn
             Console.WriteLine("\t \t LOG  : Creates only the log file (_log.txt) and profile file (_profile.txt)");
             Console.WriteLine("\t \t MGF  : Creates a .mgf file along with the log file and profile file");
             Console.WriteLine("\t \t CDTA : Creates a concatenated DTA file (_dta.txt), a log file, and a profile file [default option]");
+            // ReSharper restore StringLiteralTypo
+
             Console.WriteLine("filename : input file [mzXML or RAW]");
             Console.WriteLine();
             Console.WriteLine("Written by Anoop Mayampurath and Navdeep Jaitly for the Department of Energy");
