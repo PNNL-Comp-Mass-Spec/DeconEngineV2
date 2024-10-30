@@ -11,8 +11,8 @@ namespace Engine.Readers
         private int mint_num_scans;
         private int mint_current_scan;
         private double mdbl_signal_level;
-        private clsSpectrumInfo mobj_CurrentScanData;
-        private clsMzXMLFileAccessor mobj_MzXmlFile;
+        private MSDataFileReader.SpectrumInfo mobj_CurrentScanData;
+        private MSDataFileReader.MzXMLFileAccessor mobj_MzXmlFile;
 
         public override short GetSpectrumType(int scan_num)
         {
@@ -98,7 +98,7 @@ namespace Engine.Readers
             }
             else
             {
-                var scanData = new clsSpectrumInfo();
+                var scanData = new SpectrumInfo();
 
                 // its time to read in that scan.
                 mint_current_scan = scan_num;
@@ -117,7 +117,7 @@ namespace Engine.Readers
         {
             mstr_file_name = file_name;
             Close();
-            mobj_MzXmlFile = new clsMzXMLFileAccessor();
+            mobj_MzXmlFile = new MzXMLFileAccessor();
             mobj_MzXmlFile.OpenFile(mstr_file_name);
             mobj_MzXmlFile.ReadAndCacheEntireFile();
         }
@@ -125,7 +125,7 @@ namespace Engine.Readers
         public override int GetParentScan(int scan_num)
         {
             var scan = scan_num;
-            var scanData = new clsSpectrumInfo();
+            var scanData = new SpectrumInfo();
             mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan, out scanData);
 
             for (scan = scan_num - 1;; scan--)
@@ -141,7 +141,7 @@ namespace Engine.Readers
         public override bool IsFTScan(int scan_num)
         {
             var scan = scan_num;
-            var scanData = new clsSpectrumInfo();
+            var scanData = new SpectrumInfo();
             mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan, out scanData);
             mobj_MzXmlFile.GetSourceXMLByScanNumber(scan_num, out var xmlText);
             // TODO: Validate this solution
@@ -160,7 +160,7 @@ namespace Engine.Readers
 
         public override bool IsProfileScan(int scan_num)
         {
-            var scanData = new clsSpectrumInfo();
+            var scanData = new SpectrumInfo();
             mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan_num, out scanData);
             // TODO: Validate this solution
             //if (scanData.profileType == 'p')
@@ -220,7 +220,7 @@ namespace Engine.Readers
             mzs = new List<double>();
             intensities = new List<double>();
 
-            var scanData = new clsSpectrumInfo();
+            var scanData = new SpectrumInfo();
             mobj_MzXmlFile.GetSpectrumByScanNumber(scan_num, out scanData);
 
             var num_points = scanData.DataCount;
@@ -237,7 +237,7 @@ namespace Engine.Readers
             var min_intensity = double.MaxValue;
             for (var i = 0; i < scanData.DataCount; i++)
             {
-                fMass = scanData.MZList[i];
+                fMass = scanData.MzList[i];
                 fInten = scanData.IntensityList[i];
                 if (fInten > max_intensity)
                     max_intensity = fInten;
@@ -273,7 +273,7 @@ namespace Engine.Readers
             {
                 // its time to read in that scan.
                 mint_current_scan = scan_num;
-                var scanData = new clsSpectrumInfo();
+                var scanData = new SpectrumInfo();
                 mobj_MzXmlFile.GetSpectrumHeaderInfoByScanNumber(scan_num, out scanData);
                 scan_times.Add(scanData.RetentionTimeMin);
                 if (scanData.RetentionTimeMin != 0.0)
