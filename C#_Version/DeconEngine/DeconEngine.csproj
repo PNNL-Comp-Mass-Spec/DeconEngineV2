@@ -133,21 +133,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ThermoFisher.CommonCore.BackgroundSubtraction">
-      <HintPath>..\lib\ThermoFisher.CommonCore.BackgroundSubtraction.dll</HintPath>
-    </Reference>
-    <Reference Include="ThermoFisher.CommonCore.Data">
-      <HintPath>..\lib\ThermoFisher.CommonCore.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="ThermoFisher.CommonCore.MassPrecisionEstimator">
-      <HintPath>..\lib\ThermoFisher.CommonCore.MassPrecisionEstimator.dll</HintPath>
-    </Reference>
-    <Reference Include="ThermoFisher.CommonCore.RawFileReader">
-      <HintPath>..\lib\ThermoFisher.CommonCore.RawFileReader.dll</HintPath>
-    </Reference>
-    <Reference Include="ThermoRawFileReader">
-      <HintPath>..\lib\ThermoRawFileReader.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApodizationType.cs" />
@@ -248,6 +233,9 @@
     </PackageReference>
     <PackageReference Include="PRISM-Library">
       <Version>2.8.40</Version>
+    </PackageReference>
+    <PackageReference Include="ThermoRawFileReader">
+      <Version>4.2.32</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
